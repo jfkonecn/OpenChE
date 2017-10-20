@@ -9,21 +9,29 @@
     <Import_RootNamespace>CheApp</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\MainPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\OrificePlate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Calculations\Fluids.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Tests\Assert.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Tests\CheUnitTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Tests\FluidsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\HelperFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Mass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Pressure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Temperature.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Time.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Volume.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\ButtonData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\MainMenuTab.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestPages\CheMath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestPages\MainPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThermoPages\MainPage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)MainPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
+    <Folder Include="$(MSBuildThisFileDirectory)Templates\MainMenu\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Templates\Tests\" />
+    <Folder Include="$(MSBuildThisFileDirectory)ThermoPages\" />
   </ItemGroup>
 </Project>

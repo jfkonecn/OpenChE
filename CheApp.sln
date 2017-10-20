@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CheApp", "CheApp\CheApp\CheApp.shproj", "{AD8750C4-C32E-448C-9D01-3E076D93DCB8}"
 EndProject
@@ -11,9 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheApp.iOS", "CheApp\CheApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheApp.UWP", "CheApp\CheApp.UWP\CheApp.UWP.csproj", "{367F943C-CAEE-4BF5-A6B6-1008AD732ABD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{08FC5973-F1C8-4B99-A727-87469E6DBDB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{070E052F-A543-4CAB-8309-B89F8E2557C9}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CheApp\CheApp\CheApp.projitems*{04a2008c-b61e-4b68-953d-ed3888d7c9a5}*SharedItemsImports = 4
+		CheApp\CheApp\CheApp.projitems*{367f943c-caee-4bf5-a6b6-1008ad732abd}*SharedItemsImports = 4
 		CheApp\CheApp\CheApp.projitems*{ad8750c4-c32e-448c-9d01-3e076d93dcb8}*SharedItemsImports = 13
 		CheApp\CheApp\CheApp.projitems*{e04ffbc1-4a4c-4de0-b30d-3e867097a9ca}*SharedItemsImports = 4
 	EndGlobalSection
@@ -211,6 +216,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AD8750C4-C32E-448C-9D01-3E076D93DCB8} = {070E052F-A543-4CAB-8309-B89F8E2557C9}
+		{E04FFBC1-4A4C-4DE0-B30D-3E867097A9CA} = {08FC5973-F1C8-4B99-A727-87469E6DBDB0}
+		{04A2008C-B61E-4B68-953D-ED3888D7C9A5} = {08FC5973-F1C8-4B99-A727-87469E6DBDB0}
+		{367F943C-CAEE-4BF5-A6B6-1008AD732ABD} = {08FC5973-F1C8-4B99-A727-87469E6DBDB0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DA8CDE1-F8EE-400C-BE65-1DEC9B9155C2}
