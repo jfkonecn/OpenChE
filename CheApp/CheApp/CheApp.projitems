@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\AbstractUnit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\OrificePlate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainMenu.cs" />
@@ -23,6 +24,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Temperature.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Time.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Volume.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericFieldData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\MainMenuTab.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestPages\CheMath.cs" />

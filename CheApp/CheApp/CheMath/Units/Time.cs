@@ -7,56 +7,61 @@ namespace CheApp.CheMath.Units
     /// <summary>
     /// Contains all time unit functions
     /// </summary>
-    public class Time
+    public class Time : AbstractUnit
     {
         /// <summary>
         /// seconds
         /// </summary>
-        public static readonly Time sec = new Time(86400);
+        public static readonly Time sec = new Time("sec", 86400);
 
         /// <summary>
         /// minutes
         /// </summary>
-        public static readonly Time min = new Time(1440);
+        public static readonly Time min = new Time("min", 1440);
 
         /// <summary>
         /// hours
         /// </summary>
-        public static readonly Time hr = new Time(24);
+        public static readonly Time hr = new Time("hr", 24);
 
         /// <summary>
         /// days
         /// </summary>
-        public static readonly Time day = new Time(1);
+        public static readonly Time day = new Time("day", 1);
 
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
         public static readonly Dictionary<string, Time> StringToUnit = new Dictionary<string, Time>
         {
-            { "sec", sec },
-            { "min", min },
-            { "hr", hr },
-            { "day", day }
+            { sec.ToString(), sec },
+            { min.ToString(), min },
+            { hr.ToString(), hr },
+            { day.ToString(), day }
         };
 
         /// <summary>
         /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
         /// </summary>
+        /// <param name="name"></param>
         /// <param name="conversionFactor"></param>
-        private Time(double conversionFactor)
+        private Time(string name, double conversionFactor)
         {
             this.ConversionFactor = conversionFactor;
-
+            this.Name = name;
         }
 
-
         /// <summary>
-        /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
-        /// <para>Example: If 1 ft is the standard then 12 would be the inch's conversionFactor and 1 would be the foot's conversionFactor</para>
-        /// <para>Note that the standard is picked within the class which inherits this class </para>
+        /// Converts from "this" object to the one represented by the string
         /// </summary>
-        private double ConversionFactor { set; get; }
+        /// <param name="curValue">The value in "this" units</param>
+        /// <param name="desiredUnitName">String name od desired unit</param>
+        /// <returns>The curValue in the desired units</returns>
+        public override double ConvertTo(double curValue, string desiredUnitName)
+        {
+            return Convert(curValue, this, StringToUnit[desiredUnitName]);
+        }
+
 
         /// <summary>
         /// Converts between two different time units

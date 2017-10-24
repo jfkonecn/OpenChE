@@ -7,29 +7,29 @@ namespace CheApp.CheMath.Units
     /// <summary>
     /// Contains all pressure unit functions
     /// </summary>
-    public class Pressure
+    public class Pressure : AbstractUnit
     {
 
         /// <summary>
         /// Pascal
         /// </summary>
-        public static readonly Pressure Pa = new Pressure(1);
+        public static readonly Pressure Pa = new Pressure("Pa", 1);
         /// <summary>
         /// kilopascals
         /// </summary>
-        public static readonly Pressure kPa = new Pressure(0.001);
+        public static readonly Pressure kPa = new Pressure("kPa", 0.001);
         /// <summary>
         /// pounds per square inch
         /// </summary>
-        public static readonly Pressure psi = new Pressure(0.000145038);
+        public static readonly Pressure psi = new Pressure("psi", 0.000145038);
         /// <summary>
         /// atmospheres
         /// </summary>
-        public static readonly Pressure atm = new Pressure(9.8692e-6);
+        public static readonly Pressure atm = new Pressure("atm", 9.8692e-6);
         /// <summary>
         /// bar
         /// </summary>
-        public static readonly Pressure bar = new Pressure(1e-5);
+        public static readonly Pressure bar = new Pressure("bar", 1e-5);
 
 
         /// <summary>
@@ -37,21 +37,33 @@ namespace CheApp.CheMath.Units
         /// </summary>
         public static readonly Dictionary<string, Pressure> StringToUnit = new Dictionary<string, Pressure>
         {
-            { "kPa", kPa },
-            { "Pa", Pa },
-            { "psi", psi },
-            { "atm", atm },
-            { "bar", bar }
+            { kPa.ToString(), kPa },
+            { Pa.ToString(), Pa },
+            { psi.ToString(), psi },
+            { atm.ToString(), atm },
+            { bar.ToString(), bar }
         };
 
         /// <summary>
         /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
         /// </summary>
+        /// <param name="name"></param>
         /// <param name="conversionFactor"></param>
-        private Pressure(double conversionFactor)
+        private Pressure(string name, double conversionFactor)
         {
             this.ConversionFactor = conversionFactor;
-            
+            this.Name = name;
+        }
+
+        /// <summary>
+        /// Converts from "this" object to the one represented by the string
+        /// </summary>
+        /// <param name="curValue">The value in "this" units</param>
+        /// <param name="desiredUnitName">String name od desired unit</param>
+        /// <returns>The curValue in the desired units</returns>
+        public override double ConvertTo(double curValue, string desiredUnitName)
+        {
+            return Convert(curValue, this, StringToUnit[desiredUnitName]);
         }
 
 

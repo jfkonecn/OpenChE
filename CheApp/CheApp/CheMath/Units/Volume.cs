@@ -7,62 +7,67 @@ namespace CheApp.CheMath.Units
     /// <summary>
     /// Contains all volume unit functions
     /// </summary>
-    public class Volume
+    public class Volume : AbstractUnit
     {
         /// <summary>
         /// cubic meters
         /// </summary>
-        public static readonly Volume m3 = new Volume(1);
+        public static readonly Volume m3 = new Volume("m\xB3", 1);
 
         /// <summary>
         /// liters
         /// </summary>
-        public static readonly Volume liter = new Volume(1000);
+        public static readonly Volume liter = new Volume("l", 1000);
 
         /// <summary>
         /// milliliters
         /// </summary>
-        public static readonly Volume ml = new Volume(1e+6);
+        public static readonly Volume ml = new Volume("ml", 1e+6);
 
         /// <summary>
         /// cubic feet
         /// </summary>
-        public static readonly Volume ft3 = new Volume(35.3147);
+        public static readonly Volume ft3 = new Volume("ft\xB3", 35.3147);
 
         /// <summary>
         /// US Gallon
         /// </summary>
-        public static readonly Volume USGallon = new Volume(264.172);
+        public static readonly Volume USGallon = new Volume("US Gallon", 264.172);
 
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
         public static readonly Dictionary<string, Volume> StringToUnit = new Dictionary<string, Volume>
         {
-            { "ft\xB3", ft3 },
-            { "l", liter },
-            { "m\xB3", m3 },
-            { "ml", ml },
-            { "US Gallon", USGallon }
+            { ft3.ToString(), ft3 },
+            { liter.ToString(), liter },
+            { m3.ToString(), m3 },
+            { ml.ToString(), ml },
+            { USGallon.ToString(), USGallon }
         };
 
         /// <summary>
         /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
         /// </summary>
+        /// <param name="name"></param>
         /// <param name="conversionFactor"></param>
-        private Volume(double conversionFactor)
+        private Volume(string name, double conversionFactor)
         {
             this.ConversionFactor = conversionFactor;
-
+            this.Name = name;
         }
 
-
         /// <summary>
-        /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
-        /// <para>Example: If 1 ft is the standard then 12 would be the inch's conversionFactor and 1 would be the foot's conversionFactor</para>
-        /// <para>Note that the standard is picked within the class which inherits this class </para>
+        /// Converts from "this" object to the one represented by the string
         /// </summary>
-        private double ConversionFactor { set; get; }
+        /// <param name="curValue">The value in "this" units</param>
+        /// <param name="desiredUnitName">String name od desired unit</param>
+        /// <returns>The curValue in the desired units</returns>
+        public override double ConvertTo(double curValue, string desiredUnitName)
+        {
+            return Convert(curValue, this, StringToUnit[desiredUnitName]);
+        }
+
 
         /// <summary>
         /// Converts between two different volume units
