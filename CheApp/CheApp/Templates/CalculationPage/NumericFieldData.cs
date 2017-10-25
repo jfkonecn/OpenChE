@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using CheApp.CheMath.Units;
+using Xamarin.Forms;
 
 namespace CheApp.Templates.CalculationPage
 {
     /// <summary>
     /// Stores all of the data required to have a field which handles data inputs
     /// </summary>
-    internal class NumericFieldData
+    abstract internal class NumericFieldData
     {
         /// <summary>
         /// Stores all of the data required to have a field which handles data inputs
@@ -27,7 +28,7 @@ namespace CheApp.Templates.CalculationPage
         private Type UnitType { get; set; }
 
 
-        internal List<string> ListOfUnitNames
+        protected List<string> ListOfUnitNames
         {
             get
             {
@@ -57,6 +58,14 @@ namespace CheApp.Templates.CalculationPage
                 }
             }
         }
+
+        /// <summary>
+        /// Section intended to be placed in a grid
+        /// </summary>
+        abstract internal Grid GetGridSection();
+
+
+
 
         /// <summary>
         /// Title of the field

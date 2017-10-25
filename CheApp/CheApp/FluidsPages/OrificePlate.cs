@@ -19,13 +19,16 @@ namespace CheApp.FluidsPages
     public class OrificePlate : ContentPage
     {
 
-        private static readonly new NumericFieldData[] inputFields = {
-                new NumericFieldData("Mass", typeof(Mass)),
-                new NumericFieldData("Pressure", typeof(Pressure))};
+        private static readonly NumericInputField[] inputFields = {
+                new NumericInputField("Mass", typeof(Mass)),
+                new NumericInputField("Pressure", typeof(Pressure))};
 
-    public OrificePlate()
+        private static readonly NumericOutputField outputField = 
+                new NumericOutputField("Mass", typeof(Mass));
+
+        public OrificePlate()
         {
-            BasicPage.BasicInputPage(this, inputFields);
+            BasicPage.BasicInputPage(this, inputFields, outputField);
         }
     }
 }

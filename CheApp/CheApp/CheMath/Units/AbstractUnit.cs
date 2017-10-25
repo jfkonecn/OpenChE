@@ -9,6 +9,17 @@ namespace CheApp.CheMath.Units
     /// </summary>
     public abstract class AbstractUnit
     {
+        /// <summary>
+        /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="conversionFactor"></param>
+        protected AbstractUnit(string name, double conversionFactor)
+        {
+            this.ConversionFactor = conversionFactor;
+            this.Name = name;
+        }
+
         protected string Name { get; set; }
 
         public override string ToString()

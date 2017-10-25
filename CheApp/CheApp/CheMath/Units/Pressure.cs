@@ -49,11 +49,7 @@ namespace CheApp.CheMath.Units
         /// </summary>
         /// <param name="name"></param>
         /// <param name="conversionFactor"></param>
-        private Pressure(string name, double conversionFactor)
-        {
-            this.ConversionFactor = conversionFactor;
-            this.Name = name;
-        }
+        private Pressure(string name, double conversionFactor) : base(name, conversionFactor) { }
 
         /// <summary>
         /// Converts from "this" object to the one represented by the string

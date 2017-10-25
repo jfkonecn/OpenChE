@@ -51,11 +51,7 @@ namespace CheApp.CheMath.Units
         /// </summary>
         /// <param name="name"></param>
         /// <param name="conversionFactor"></param>
-        private Temperature(string name, double conversionFactor)
-        {
-            this.ConversionFactor = conversionFactor;
-            this.Name = name;
-        }
+        private Temperature(string name, double conversionFactor) : base(name, conversionFactor) { }
 
 
         /// <summary>

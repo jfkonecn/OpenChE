@@ -26,6 +26,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Volume.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericFieldData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericInputField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericOutputField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\MainMenuTab.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestPages\CheMath.cs" />

@@ -48,12 +48,8 @@ namespace CheApp.CheMath.Units
         /// </summary>
         /// <param name="name">string name of the unit</param>
         /// <param name="conversionFactor"></param>
-        private Mass(string name, double conversionFactor)
-        {
-            this.ConversionFactor = conversionFactor;
-            this.Name = name;
+        private Mass(string name, double conversionFactor) : base(name, conversionFactor) { }
 
-        }
 
 
         /// <summary>
