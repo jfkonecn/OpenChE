@@ -7,7 +7,7 @@ namespace CheApp.Templates.CalculationPage
 {
     class NumericOutputField : NumericFieldData
     {
-        internal NumericOutputField(string title, Type unitType) : base(title, unitType){}
+        internal NumericOutputField(string title, Type[] unitType) : base(title, unitType){}
 
 
         private Label _Label;
@@ -20,7 +20,7 @@ namespace CheApp.Templates.CalculationPage
             {
                 return _Label.Text;
             }
-            private set
+            set
             {
                 _Label.Text = value;
             }
@@ -33,83 +33,23 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         internal override Grid GetGridSection()
         {
-            const int ROW_MARIGN = 20;
-            const int COL_MARIGN = 20;
-            const int ROW_HEIGHT = 50;
+            Grid grid = base.GetGridSection();
 
 
-            Grid grid = new Grid
-            {
-                
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = new GridLength(ROW_MARIGN, GridUnitType.Absolute) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(ROW_MARIGN, GridUnitType.Absolute) }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(COL_MARIGN, GridUnitType.Absolute) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(COL_MARIGN, GridUnitType.Absolute)  }
-                }
-            };
-
-            
-            
-
-            // create the picker
-            Picker picker = new Picker
-            {
 
 
-            };
-            foreach (string str in this.ListOfUnitNames)
-            {
-                picker.Items.Add(str);
-            }
-            picker.SelectedIndex = 0;
-
-            // create entry cell
-            Label title = new Label
-            {
-                Text = this.Title,
-                HorizontalTextAlignment = TextAlignment.Center
-            };
-
-
-            // create entry cell
             this._Label = new Label
             {
-                Text = "0.0",
-                VerticalTextAlignment = TextAlignment.Center
+                Text = "0.0"
             };
-
-            Button button = new Button
-            {
-                Text = "Calculate!"
-            };
-
-            // row 1
-            grid.Children.Add(title, 1, 1);
-            Grid.SetColumnSpan(title, 2);
 
             // row 2
-            grid.Children.Add(new Label { Text = "Result" }, 1, 2);
-            grid.Children.Add(new Label { Text = "Units" }, 2, 2);
+            grid.Children.Add(new Label { Text = "Result" }, 0, 1);
 
             // row 3
-            grid.Children.Add(this._Label, 1, 3);
-            grid.Children.Add(picker, 2, 3);
+            grid.Children.Add(this._Label, 0, 2);
 
-            // row 4
-            grid.Children.Add(button, 1, 4);
-            Grid.SetColumnSpan(button, 2);
+
 
             return grid;
         }

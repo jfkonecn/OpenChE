@@ -28,7 +28,7 @@ namespace CheApp.Templates.MainMenu
         {
             contentPage.Title = title;
             contentPage.Icon = iconUrl;
-            Grid grid = TabbedPageGrid(btnData.Length);
+            Grid grid = BasicGrids.SimpleGrid(btnData.Length, 1, 20, 40);
 
             for (int i = 0; i < btnData.Length; i++)
             {
@@ -45,39 +45,7 @@ namespace CheApp.Templates.MainMenu
 
         }
 
-        /// <summary>
-        /// creates a grid for a tabbed page
-        /// </summary>
-        /// /// <param name="rows">Total rows in the grid</param>
-        private static Grid TabbedPageGrid(int rows)
-        {
-            const int ROW_MARIGN = 20;
-            const int COL_MARIGN = 20;
-            const int ROW_HEIGHT = 50;
 
-            // create rows
-            RowDefinitionCollection rowDefs = new RowDefinitionCollection();
-            rowDefs.Add(new RowDefinition { Height = new GridLength(ROW_MARIGN, GridUnitType.Absolute) });
-
-            for(int i = 0; i < rows; i++)
-            {
-                rowDefs.Add(new RowDefinition { Height = new GridLength(ROW_HEIGHT, GridUnitType.Absolute) });
-            }
-
-            rowDefs.Add(new RowDefinition { Height = new GridLength(ROW_MARIGN, GridUnitType.Absolute) });
-
-            return new Grid
-            {
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                RowDefinitions = rowDefs,
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(COL_MARIGN, GridUnitType.Absolute) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(COL_MARIGN, GridUnitType.Absolute)  }
-                }
-            };
-        }
 
         /// <summary>
         /// Creates a button with a click event to navigate to a page which handles the function calculations

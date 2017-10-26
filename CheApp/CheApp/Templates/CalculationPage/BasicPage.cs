@@ -7,33 +7,51 @@ namespace CheApp.Templates.CalculationPage
 {
     internal class BasicPage
     {
-        internal static void BasicInputPage(ContentPage contentPage, NumericInputField[] inputFieldData, NumericOutputField outputFieldData)
+
+
+        /// <summary>
+        /// Sets up a basic page which handles a single function
+        /// </summary>
+        /// <param name="contentPage">The page which will be performing the function</param>
+        /// <param name="inputFieldData">Objects which help build input fields</param>
+        /// <param name="outputFieldData">Objects which help build output fields</param>
+        /// <param name="calFun">Responsible for performing the calculations</param>
+        internal static void BasicInputPage(
+            ContentPage contentPage, 
+            NumericInputField[] inputFieldData, 
+            NumericOutputField[] outputFieldData,
+            EventHandler calFun)
         {
+            
+            Grid grid = BasicGrids.SimpleGrid(inputFieldData.Length + outputFieldData.Length + 1, 1);
 
-            const int ROW_MARIGN = 20;
-            const int COL_MARIGN = 20;
-            const int ROW_HEIGHT = 50;
-
-
-
-            StackLayout stackLayout = new StackLayout
+            for (int i = 0; i < inputFieldData.Length; i++)
             {
-
-            };
-
-            foreach (NumericFieldData field in inputFieldData)
-            {
-                stackLayout.Children.Add(field.GetGridSection());
+                grid.Children.Add(inputFieldData[i].GetGridSection(), 1, i + 1);
             }
 
-            stackLayout.Children.Add(outputFieldData.GetGridSection());
 
+            for (int i = 0; i < outputFieldData.Length; i++)
+            {
+                grid.Children.Add(outputFieldData[i].GetGridSection(), 1, i + 1 + inputFieldData.Length);
+            }
 
+            // setup calculate button
+            Button calculateBtn = new Button
+            {
+                Text = "Calculate!",
+                Margin = 20
+            };
 
+            calculateBtn.Clicked += calFun;
+
+            grid.Children.Add(calculateBtn, 1, 1 + inputFieldData.Length + outputFieldData.Length);
+            Grid.SetColumnSpan(calculateBtn, grid.ColumnDefinitions.Count - 2);
+
+            // finish up
             contentPage.Content = new ScrollView
             {
-                Content = stackLayout
-
+                Content = grid
             };
         }
     }

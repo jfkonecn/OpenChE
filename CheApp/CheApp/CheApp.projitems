@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Temperature.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Time.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Volume.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\BasicGrids.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericFieldData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericInputField.cs" />
