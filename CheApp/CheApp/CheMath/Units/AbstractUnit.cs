@@ -32,7 +32,7 @@ namespace CheApp.CheMath.Units
         /// <para>Example: If 1 ft is the standard then 12 would be the inch's conversionFactor and 1 would be the foot's conversionFactor</para>
         /// <para>Note that the standard is picked within the class which inherits this class </para>
         /// </summary>
-        protected double ConversionFactor { set; get; }
+        public double ConversionFactor { protected set; get; }
 
         /// <summary>
         /// Converts from "this" object to the one represented by the string
@@ -41,5 +41,6 @@ namespace CheApp.CheMath.Units
         /// <param name="desiredUnitName">String name od desired unit</param>
         /// <returns>The curValue in the desired units</returns>
         public abstract double ConvertTo(double curValue, string desiredUnitName);
+
     }
 }

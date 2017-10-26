@@ -11,6 +11,9 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\AbstractUnit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Density.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Length.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Unitless.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\OrificePlate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainMenu.cs" />

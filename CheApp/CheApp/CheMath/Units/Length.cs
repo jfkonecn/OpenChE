@@ -4,58 +4,39 @@ using System.Text;
 
 namespace CheApp.CheMath.Units
 {
-    /// <summary>
-    /// Contains all volume unit functions
-    /// </summary>
-    public class Volume : AbstractUnit
+    class Length : AbstractUnit
     {
-        /*
-         * Since volume is based on length, there is no conversion factor of 1
-         */
-        
         /// <summary>
-        /// cubic meters
+        /// meters
         /// </summary>
-        public static readonly Volume m3 = new Volume("m\xB3", Math.Pow(Length.m.ConversionFactor, 3));
-
-        /// <summary>
-        /// liters
-        /// </summary>
-        public static readonly Volume liter = new Volume("l", m3.ConversionFactor * 1000);
-
-        /// <summary>
-        /// milliliters
-        /// </summary>
-        public static readonly Volume ml = new Volume("ml", m3.ConversionFactor * 1e+6);
+        public static readonly Length m = new Length("m", 1);
 
         /// <summary>
         /// cubic feet
         /// </summary>
-        public static readonly Volume ft3 = new Volume("ft\xB3", Math.Pow(Length.ft.ConversionFactor, 3));
+        public static readonly Length ft = new Length("ft", 3.28084);
 
         /// <summary>
-        /// US Gallon
+        /// cubic feet
         /// </summary>
-        public static readonly Volume USGallon = new Volume("US Gallon", m3.ConversionFactor * 264.172);
+        public static readonly Length inch = new Length("in", 3.28084);
 
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
-        public static readonly Dictionary<string, Volume> StringToUnit = new Dictionary<string, Volume>
+        public static readonly Dictionary<string, Length> StringToUnit = new Dictionary<string, Length>
         {
-            { m3.ToString(), m3 },
-            { ft3.ToString(), ft3 },
-            { liter.ToString(), liter },            
-            { ml.ToString(), ml },
-            { USGallon.ToString(), USGallon }
+            { m.ToString(), m },
+            { ft.ToString(), ft },            
+            { inch.ToString(), inch }
         };
 
         /// <summary>
-        /// Based on length^3
+        /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
         /// </summary>
         /// <param name="name"></param>
         /// <param name="conversionFactor"></param>
-        private Volume(string name, double conversionFactor) : base(name, conversionFactor) { }
+        private Length(string name, double conversionFactor) : base(name, conversionFactor) { }
 
 
         /// <summary>
@@ -71,16 +52,15 @@ namespace CheApp.CheMath.Units
 
 
         /// <summary>
-        /// Conversion factors are all determined by Length ^ 3
+        /// Converts between two different volume units
         /// </summary>
         /// <param name="value">The value to be converted</param>
         /// <param name="currentUnit">Current volume unit of "value"</param>
         /// <param name="desiredUnit">Desired volume unit of "value"</param>
         /// <returns>The value in the "desired units"</returns>
-        public static double Convert(double value, Volume currentUnit, Volume desiredUnit)
+        public static double Convert(double value, Length currentUnit, Length desiredUnit)
         {
             return HelperFunctions.Converter(value, currentUnit.ConversionFactor, desiredUnit.ConversionFactor);
         }
-
     }
 }

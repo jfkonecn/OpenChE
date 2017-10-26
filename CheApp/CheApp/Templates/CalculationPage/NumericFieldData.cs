@@ -52,6 +52,18 @@ namespace CheApp.Templates.CalculationPage
                 {
                     return new List<string>(Volume.StringToUnit.Keys);
                 }
+                else if (UnitType == typeof(Unitless))
+                {
+                    return new List<string>(Unitless.StringToUnit.Keys);
+                }
+                else if (UnitType == typeof(Density))
+                {
+                    return new List<string>(Density.StringToUnit.Keys);
+                }
+                else if (UnitType == typeof(Length))
+                {
+                    return new List<string>(Length.StringToUnit.Keys);
+                }
                 else
                 {
                     throw new NotImplementedException();

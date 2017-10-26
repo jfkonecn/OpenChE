@@ -75,7 +75,8 @@ namespace CheApp.Templates.CalculationPage
             {
                 picker.Items.Add(str);
             }
-            
+
+            picker.SelectedIndex = 0;
 
             // create entry cell
             this._Entry = new Entry

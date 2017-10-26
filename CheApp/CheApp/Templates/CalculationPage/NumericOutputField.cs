@@ -73,7 +73,7 @@ namespace CheApp.Templates.CalculationPage
             {
                 picker.Items.Add(str);
             }
-
+            picker.SelectedIndex = 0;
 
             // create entry cell
             Label title = new Label
