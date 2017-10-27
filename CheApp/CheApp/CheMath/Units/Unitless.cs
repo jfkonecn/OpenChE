@@ -14,7 +14,7 @@ namespace CheApp.CheMath.Units
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
-        public static readonly Dictionary<string, Unitless> StringToUnit = new Dictionary<string, Unitless>
+        public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { unitless.ToString(), unitless }
         };

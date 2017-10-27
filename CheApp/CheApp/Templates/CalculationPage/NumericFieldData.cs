@@ -11,25 +11,52 @@ namespace CheApp.Templates.CalculationPage
     /// </summary>
     abstract internal class NumericFieldData
     {
+        // TODO: make it so that unit type and convertionsUnits are group to be in the same class
         /// <summary>
         /// Stores all of the data required to have a field which handles data inputs
         /// </summary>
+        /// <param name="id">Desired ID number, not used internally</param>
         /// <param name="title">Title of the field</param>
         /// <param name="unitType">The types of units being represented in the unit list</param>
-        internal NumericFieldData(string title, Type[] unitType)
+        /// <param name="convertUnits">Used to create a conversion factor</param>
+        internal NumericFieldData(int id, string title, Type[] unitType, AbstractUnit[] convertionUnits)
         {
             if (unitType.Length > 2)
             {
                 throw new Exception("unit type is out of range");
             }
+            else if (convertionUnits.Length > 2)
+            {
+                throw new Exception("convertion units out of range");
+            }
+            else if (convertionUnits.Length != unitType.Length)
+            {
+                throw new Exception("convertion units and unit type must be same length");
+            }
+
             this.Title = title;
             this.UnitType = unitType;
+            this.ID = id;
+            
+            if (convertionUnits.Length == 1)
+            {
+                ConvertionFactor = convertionUnits[0].ConversionFactor;
+            }
+            else
+            {
+                // convertionUnits must have length == 2
+                ConvertionFactor = convertionUnits[0].ConversionFactor / convertionUnits[1].ConversionFactor;
+            }
         }
+
+        protected double ConvertionFactor { get; private set; }
+
+        internal int ID { get; private set; }
 
         /// <summary>
         /// The unit this field represents
         /// </summary>
-        private Type[] UnitType { get; set; }
+        protected Type[] UnitType { get; private set; }
 
         /// <summary>
         /// Stores reference to all pickers
@@ -64,42 +91,7 @@ namespace CheApp.Templates.CalculationPage
 
         private List<string> ListOfUnitNames(Type unitType)
         {
-            if (unitType == typeof(Mass))
-            {
-                return new List<string>(Mass.StringToUnit.Keys);
-            }
-            else if (unitType == typeof(Pressure))
-            {
-                return new List<string>(Pressure.StringToUnit.Keys);
-            }
-            else if (unitType == typeof(Temperature))
-            {
-                return new List<string>(Temperature.StringToUnit.Keys);
-            }
-            else if (unitType == typeof(Time))
-            {
-                return new List<string>(Time.StringToUnit.Keys);
-            }
-            else if (unitType == typeof(Volume))
-            {
-                return new List<string>(Volume.StringToUnit.Keys);
-            }
-            else if (unitType == typeof(Unitless))
-            {
-                return new List<string>(Unitless.StringToUnit.Keys);
-            }
-            else if (unitType == typeof(Density))
-            {
-                return new List<string>(Density.StringToUnit.Keys);
-            }
-            else if (unitType == typeof(Length))
-            {
-                return new List<string>(Length.StringToUnit.Keys);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            return new List<string>(StaticUnitProperties.AllUnits[unitType].Keys);
         }
 
         /// <summary>
@@ -203,42 +195,6 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         internal string Title { get; private set; }
 
-        /// <summary>
-        /// Converts between two different "unitType" units (the type is determined in the constructor)
-        /// </summary>
-        /// <param name="value">The value to be converted</param>
-        /// <param name="currentUnit">Current unit of "value"</param>
-        /// <param name="desiredUnit">Desired unit of "value"</param>
-        /// <returns>The value in the "desired units"</returns>
-        public double Convert(double value, string currentUnit, string desiredUnit)
-        {
-            /*
-            if (UnitType == typeof(Mass))
-            {
-                return Mass.StringToUnit[currentUnit].ConvertTo(value, desiredUnit);
-            }
-            else if(UnitType == typeof(Pressure))
-            {
-                return Pressure.StringToUnit[currentUnit].ConvertTo(value, desiredUnit);
-            }
-            else if (UnitType == typeof(Temperature))
-            {
-                return Temperature.StringToUnit[currentUnit].ConvertTo(value, desiredUnit);
-            }
-            else if (UnitType == typeof(Time))
-            {
-                return Time.StringToUnit[currentUnit].ConvertTo(value, desiredUnit);
-            }
-            else if (UnitType == typeof(Volume))
-            {
-                return Volume.StringToUnit[currentUnit].ConvertTo(value, desiredUnit);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-            */
-            throw new NotImplementedException();
-        }
+
     }
 }

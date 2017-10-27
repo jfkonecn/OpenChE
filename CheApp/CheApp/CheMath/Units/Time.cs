@@ -32,7 +32,7 @@ namespace CheApp.CheMath.Units
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
-        public static readonly Dictionary<string, Time> StringToUnit = new Dictionary<string, Time>
+        public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { sec.ToString(), sec },
             { min.ToString(), min },
@@ -55,7 +55,7 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Time)StringToUnit[desiredUnitName]);
         }
 
 

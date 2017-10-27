@@ -20,7 +20,7 @@ namespace CheApp.CheMath.Units
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
-        public static readonly Dictionary<string, Density> StringToUnit = new Dictionary<string, Density>
+        public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { kgm3.ToString(), kgm3 },
         };
@@ -42,7 +42,7 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Density)StringToUnit[desiredUnitName]);
         }
 
 

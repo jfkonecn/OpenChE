@@ -24,7 +24,7 @@ namespace CheApp.CheMath.Units
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
-        public static readonly Dictionary<string, Length> StringToUnit = new Dictionary<string, Length>
+        public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { m.ToString(), m },
             { ft.ToString(), ft },            
@@ -47,7 +47,7 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Length)StringToUnit[desiredUnitName]);
         }
 
 

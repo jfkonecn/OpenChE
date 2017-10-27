@@ -38,7 +38,7 @@ namespace CheApp.CheMath.Units
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
-        public static readonly Dictionary<string, Temperature> StringToUnit = new Dictionary<string, Temperature>
+        public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { C.ToString(), C },
             { F.ToString(), F },
@@ -62,7 +62,7 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Temperature)StringToUnit[desiredUnitName]);
         }
 
 

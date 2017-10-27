@@ -35,7 +35,7 @@ namespace CheApp.CheMath.Units
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
-        public static readonly Dictionary<string, Pressure> StringToUnit = new Dictionary<string, Pressure>
+        public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { kPa.ToString(), kPa },
             { Pa.ToString(), Pa },
@@ -59,16 +59,9 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Pressure)StringToUnit[desiredUnitName]);
         }
 
-
-        /// <summary>
-        /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
-        /// <para>Example: If 1 ft is the standard then 12 would be the inch's conversionFactor and 1 would be the foot's conversionFactor</para>
-        /// <para>Note that the standard is picked within the class which inherits this class </para>
-        /// </summary>
-        private double ConversionFactor { set; get; }
 
         /// <summary>
         /// Converts between two different pressure units
