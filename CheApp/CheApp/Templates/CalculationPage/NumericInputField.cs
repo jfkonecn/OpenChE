@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace CheApp.Templates.CalculationPage
 {
-    internal class NumericInputField : NumericFieldData
+    public class NumericInputField : NumericFieldData
     {
         /// <summary>
         /// Handles the numeric inputs from the user
@@ -13,14 +13,14 @@ namespace CheApp.Templates.CalculationPage
         /// <param name="title"></param>
         /// <param name="unitType">If there is 2 elements, then the format will be treated as element 1 per element 2. </param>
         /// <param name="desiredUnits">The units which are desired for the purpose of performing internal calculations</param>
-        internal NumericInputField(int id, string title, Type[] unitType, CheMath.Units.AbstractUnit[] desiredUnits) : base(id, title, unitType, desiredUnits) {  }
+        public NumericInputField(int id, string title, CheMath.Units.AbstractUnit[] desiredUnits) : base(id, title, desiredUnits) {  }
 
 
         private Entry _Entry;
         /// <summary>
         /// Contains the user entered text
         /// </summary>
-        internal string EntryText
+        public string EntryText
         {
             get
             {
@@ -38,24 +38,11 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         internal double GetUserInput()
         {
-            // TODO: fix this bad naming
-            string unitName = Pickers[0].Items[Pickers[0].SelectedIndex];
-            string unitName2 = Pickers[1].Items[Pickers[1].SelectedIndex];
-            if (Pickers.Length == 1)
-            {
-
-                return ((this.ConvertionFactor 
-                    / CheMath.Units.StaticUnitProperties.AllUnits[UnitType[0]][unitName].ConversionFactor) 
-                    * Convert.ToDouble(EntryText));
-            }
-            else
-            {
-                return ((this.ConvertionFactor / 
-                    (CheMath.Units.StaticUnitProperties.AllUnits[UnitType[0]][unitName].ConversionFactor
-                    / CheMath.Units.StaticUnitProperties.AllUnits[UnitType[1]][unitName2].ConversionFactor)
-                    ) 
-                    * Convert.ToDouble(EntryText));
-            }
+            // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
+            return CheMath.Units.HelperFunctions.ConvertFrom(
+                Convert.ToDouble(EntryText), 
+                ConvertionUnits, 
+                SelectedStrings);
         }
 
         /// <summary>

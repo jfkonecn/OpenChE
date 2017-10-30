@@ -57,10 +57,6 @@ namespace CheApp.CheMath.Calculations
             
             if (disCo <= 0 || disCo > 1)
             {
-                throw new System.ArgumentOutOfRangeException(GREATER_THAN, "deltaP");
-            }
-            else if (disCo <= 0 || disCo > 1)
-            {
                 throw new System.ArgumentOutOfRangeException("Parameter must greater than 0 and less than or equal to 1", "disCo");
             }
             else if (density <= 0)

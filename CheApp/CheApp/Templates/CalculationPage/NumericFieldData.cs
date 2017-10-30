@@ -9,7 +9,7 @@ namespace CheApp.Templates.CalculationPage
     /// <summary>
     /// Stores all of the data required to have a field which handles data inputs
     /// </summary>
-    abstract internal class NumericFieldData
+    abstract public class NumericFieldData
     {
         // TODO: make it so that unit type and convertionsUnits are group to be in the same class
         /// <summary>
@@ -19,44 +19,28 @@ namespace CheApp.Templates.CalculationPage
         /// <param name="title">Title of the field</param>
         /// <param name="unitType">The types of units being represented in the unit list</param>
         /// <param name="convertUnits">Used to create a conversion factor</param>
-        internal NumericFieldData(int id, string title, Type[] unitType, AbstractUnit[] convertionUnits)
+        public NumericFieldData(int id, string title, AbstractUnit[] convertionUnits)
         {
-            if (unitType.Length > 2)
-            {
-                throw new Exception("unit type is out of range");
-            }
-            else if (convertionUnits.Length > 2)
+
+            if (convertionUnits.Length > 2)
             {
                 throw new Exception("convertion units out of range");
             }
-            else if (convertionUnits.Length != unitType.Length)
-            {
-                throw new Exception("convertion units and unit type must be same length");
-            }
 
             this.Title = title;
-            this.UnitType = unitType;
+            this.ConvertionUnits = convertionUnits;
             this.ID = id;
-            
-            if (convertionUnits.Length == 1)
-            {
-                ConvertionFactor = convertionUnits[0].ConversionFactor;
-            }
-            else
-            {
-                // convertionUnits must have length == 2
-                ConvertionFactor = convertionUnits[0].ConversionFactor / convertionUnits[1].ConversionFactor;
-            }
+
+
         }
 
-        protected double ConvertionFactor { get; private set; }
 
         internal int ID { get; private set; }
 
         /// <summary>
         /// The unit this field represents
         /// </summary>
-        protected Type[] UnitType { get; private set; }
+        protected AbstractUnit[] ConvertionUnits { get; private set; }
 
         /// <summary>
         /// Stores reference to all pickers
@@ -69,9 +53,9 @@ namespace CheApp.Templates.CalculationPage
         /// <returns></returns>
         private Picker[] CreatePickers()
         {
-            Picker[] allPickers = new Picker[UnitType.Length];
+            Picker[] allPickers = new Picker[ConvertionUnits.Length];
 
-            for(int i = 0; i < UnitType.Length; i++)
+            for(int i = 0; i < ConvertionUnits.Length; i++)
             {
                 // create the picker
                 allPickers[i] = new Picker
@@ -79,7 +63,7 @@ namespace CheApp.Templates.CalculationPage
 
 
                 };
-                foreach (string str in this.ListOfUnitNames(UnitType[i]))
+                foreach (string str in this.ListOfUnitNames(ConvertionUnits[i].GetType()))
                 {
                     allPickers[i].Items.Add(str);
                 }
@@ -87,6 +71,34 @@ namespace CheApp.Templates.CalculationPage
             }
 
             return allPickers;
+        }
+
+
+        string[] _SelectedStrings;
+        /// <summary>
+        /// Strings selected by the user at the pickers
+        /// </summary>
+        protected string[] SelectedStrings
+        {
+            get
+            {
+                if(_SelectedStrings == null)
+                {
+                    _SelectedStrings = new string[Pickers.Length];
+                }
+
+                // update the array
+                for (int i = 0; i < this.ConvertionUnits.Length; i++)
+                {
+                    _SelectedStrings[i] = Pickers[i].Items[Pickers[i].SelectedIndex];
+                }
+
+                return _SelectedStrings;
+            }
+            private set
+            {
+                _SelectedStrings = value;
+            }
         }
 
         private List<string> ListOfUnitNames(Type unitType)

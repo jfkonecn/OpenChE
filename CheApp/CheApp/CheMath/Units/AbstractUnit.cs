@@ -42,5 +42,16 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public abstract double ConvertTo(double curValue, string desiredUnitName);
 
+        /// <summary>
+        /// Converts from unit represented by the string curUnitName to "this" object
+        /// </summary>
+        /// <param name="curValue">The value in curUnitName units</param>
+        /// <param name="curUnitName">The current unit</param>
+        /// <returns>The curValue in the desired units</returns>
+        public double ConvertFrom(double curValue, string curUnitName)
+        {
+            return StaticUnitProperties.AllUnits[this.GetType()][curUnitName].ConvertTo(curValue, this.ToString());
+        }
+
     }
 }
