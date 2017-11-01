@@ -30,7 +30,7 @@ namespace CheApp.Templates.CalculationPage
             }
         }
 
-        // TODO: not good for temperature... Try and find a way to use the convertTo function instead
+
         /// <summary>
         /// gets the user input in the desired units specified in constructor
         /// </summary>

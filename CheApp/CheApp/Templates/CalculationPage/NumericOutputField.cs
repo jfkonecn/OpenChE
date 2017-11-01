@@ -18,9 +18,7 @@ namespace CheApp.Templates.CalculationPage
         private Label _Label;
 
 
-        private string _LabelText = "0.0";
 
-        // TODO: not good for temperature... Try and find a way to use the convertTo function instead
         /// <summary>
         /// Updates the label with the value of 
         /// </summary>
@@ -28,7 +26,7 @@ namespace CheApp.Templates.CalculationPage
         internal void SetFinalResult(double finalResult)
         {
             // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
-            BindedObject.LabelText = CheMath.Units.HelperFunctions.ConvertFrom(
+            BindedObject.LabelText = CheMath.Units.HelperFunctions.ConvertTo(
                 finalResult,
                 BindedObject.ConvertionUnits,
                 SelectedStrings).ToString();

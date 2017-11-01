@@ -68,7 +68,7 @@ namespace CheApp.FluidsPages
             outputFields[(int)Outputs.volFlow].SetFinalResult(0.0);
         }
 
-        // TODO: get calculate button up and running
+
         private void CalculateButtonClicked(object sender, EventArgs e)
         {
 

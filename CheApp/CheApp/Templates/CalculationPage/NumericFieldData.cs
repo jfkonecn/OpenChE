@@ -11,7 +11,7 @@ namespace CheApp.Templates.CalculationPage
     /// </summary>
     abstract public class NumericFieldData
     {
-        // TODO: make it so that unit type and convertionsUnits are group to be in the same class
+
         /// <summary>
         /// Stores all of the data required to have a field which handles data inputs
         /// </summary>
