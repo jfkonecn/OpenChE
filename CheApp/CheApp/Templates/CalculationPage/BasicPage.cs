@@ -16,8 +16,7 @@ namespace CheApp.Templates.CalculationPage
         /// <param name="inputFieldData">Objects which help build input fields</param>
         /// <param name="outputFieldData">Objects which help build output fields</param>
         /// <param name="calFun">Responsible for performing the calculations</param>
-        internal static void BasicInputPage(
-            ContentPage contentPage, 
+        internal static ScrollView BasicInputPage(
             NumericInputField[] inputFieldData, 
             NumericOutputField[] outputFieldData,
             EventHandler calFun)
@@ -49,7 +48,7 @@ namespace CheApp.Templates.CalculationPage
             Grid.SetColumnSpan(calculateBtn, grid.ColumnDefinitions.Count - 2);
 
             // finish up
-            contentPage.Content = new ScrollView
+            return new ScrollView
             {
                 Content = grid
             };

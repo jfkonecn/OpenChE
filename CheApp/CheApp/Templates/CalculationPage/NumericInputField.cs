@@ -10,10 +10,8 @@ namespace CheApp.Templates.CalculationPage
         /// <summary>
         /// Handles the numeric inputs from the user
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="unitType">If there is 2 elements, then the format will be treated as element 1 per element 2. </param>
-        /// <param name="desiredUnits">The units which are desired for the purpose of performing internal calculations</param>
-        public NumericInputField(int id, string title, CheMath.Units.AbstractUnit[] desiredUnits) : base(id, title, desiredUnits) {  }
+        /// <param name="bindedObject">Object which is binded to the field</param>
+        public NumericInputField(ref FieldBindData bindedObject) : base(ref bindedObject) {  }
 
 
         private Entry _Entry;
@@ -24,11 +22,11 @@ namespace CheApp.Templates.CalculationPage
         {
             get
             {
-                return _Entry.Text;
+                return BindedObject.LabelText;
             }
             set
             {
-                _Entry.Text = value;
+                BindedObject.LabelText = value;
             }
         }
 
@@ -40,8 +38,8 @@ namespace CheApp.Templates.CalculationPage
         {
             // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
             return CheMath.Units.HelperFunctions.ConvertFrom(
-                Convert.ToDouble(EntryText), 
-                ConvertionUnits, 
+                Convert.ToDouble(EntryText),
+                BindedObject.ConvertionUnits, 
                 SelectedStrings);
         }
 
@@ -58,6 +56,10 @@ namespace CheApp.Templates.CalculationPage
                 Keyboard = Keyboard.Numeric,
                 HeightRequest = 10
             };
+
+            // bind it up!
+            _Entry.SetBinding(Entry.TextProperty, new Binding("LabelText"));
+            _Entry.BindingContext = BindedObject;
 
             // row 2
             grid.Children.Add(new Label { Text = "Input" }, 0, 1);

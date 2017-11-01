@@ -15,32 +15,43 @@ namespace CheApp.Templates.CalculationPage
         /// <summary>
         /// Stores all of the data required to have a field which handles data inputs
         /// </summary>
-        /// <param name="id">Desired ID number, not used internally</param>
-        /// <param name="title">Title of the field</param>
-        /// <param name="unitType">The types of units being represented in the unit list</param>
-        /// <param name="convertUnits">Used to create a conversion factor</param>
-        public NumericFieldData(int id, string title, AbstractUnit[] convertionUnits)
+        /// <param name="bindedObject">Object which is binded to the field</param>
+        public NumericFieldData(ref FieldBindData bindedObject)
         {
-
-            if (convertionUnits.Length > 2)
+            if (bindedObject.ConvertionUnits.Length > 2)
             {
                 throw new Exception("convertion units out of range");
             }
-
-            this.Title = title;
-            this.ConvertionUnits = convertionUnits;
-            this.ID = id;
-
-
+            this.BindedObject = bindedObject;
         }
 
 
-        internal int ID { get; private set; }
+        /// <summary>
+        /// Object which will bind to the field
+        /// </summary>
+        public FieldBindData BindedObject { get; set; }
+
+
+        internal int ID
+        {
+            get
+            {
+                return BindedObject.ID;
+            }
+        }
 
         /// <summary>
-        /// The unit this field represents
+        /// Title of the field
         /// </summary>
-        protected AbstractUnit[] ConvertionUnits { get; private set; }
+        internal string Title
+        {
+            get
+            {
+                return BindedObject.Title;
+            }
+        }
+
+
 
         /// <summary>
         /// Stores reference to all pickers
@@ -53,9 +64,9 @@ namespace CheApp.Templates.CalculationPage
         /// <returns></returns>
         private Picker[] CreatePickers()
         {
-            Picker[] allPickers = new Picker[ConvertionUnits.Length];
+            Picker[] allPickers = new Picker[BindedObject.ConvertionUnits.Length];
 
-            for(int i = 0; i < ConvertionUnits.Length; i++)
+            for(int i = 0; i < BindedObject.ConvertionUnits.Length; i++)
             {
                 // create the picker
                 allPickers[i] = new Picker
@@ -63,11 +74,14 @@ namespace CheApp.Templates.CalculationPage
 
 
                 };
-                foreach (string str in this.ListOfUnitNames(ConvertionUnits[i].GetType()))
+                foreach (string str in this.ListOfUnitNames(BindedObject.ConvertionUnits[i].GetType()))
                 {
                     allPickers[i].Items.Add(str);
                 }
-                allPickers[i].SelectedIndex = 0;
+
+                // bind it up!
+                allPickers[i].SetBinding(Picker.SelectedIndexProperty, new Binding($"SelectedIndex[{i}]"));
+                allPickers[i].BindingContext = BindedObject;
             }
 
             return allPickers;
@@ -88,9 +102,9 @@ namespace CheApp.Templates.CalculationPage
                 }
 
                 // update the array
-                for (int i = 0; i < this.ConvertionUnits.Length; i++)
+                for (int i = 0; i < BindedObject.ConvertionUnits.Length; i++)
                 {
-                    _SelectedStrings[i] = Pickers[i].Items[Pickers[i].SelectedIndex];
+                    _SelectedStrings[i] = Pickers[i].Items[BindedObject.SelectedIndex[i]];
                 }
 
                 return _SelectedStrings;
@@ -114,7 +128,7 @@ namespace CheApp.Templates.CalculationPage
             // create entry cell
             Label title = new Label
             {
-                Text = this.Title,
+                Text = BindedObject.Title,
                 HorizontalTextAlignment = TextAlignment.Center
             };
 
@@ -202,10 +216,7 @@ namespace CheApp.Templates.CalculationPage
 
 
 
-        /// <summary>
-        /// Title of the field
-        /// </summary>
-        internal string Title { get; private set; }
+
 
 
     }

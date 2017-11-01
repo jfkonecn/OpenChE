@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+
 using System.Text;
 using Xamarin.Forms;
 
@@ -11,64 +11,14 @@ namespace CheApp.Templates.CalculationPage
         /// <summary>
         /// Handles results of internal calculations
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="title"></param>
-        /// <param name="unitType">If there is 2 elements, then the format will be treated as element 1 per element 2. </param>
-        /// <param name="resultUnits">The units which the results of the internal calculations will be in</param>
-        public NumericOutputField(int id, string title, CheMath.Units.AbstractUnit[] resultUnits) : base(id, title, resultUnits) {}
+        /// <param name="bindedObject">Object which is binded to the field</param>
+        public NumericOutputField(ref FieldBindData bindedObject) : base(ref bindedObject) {}
 
 
         private Label _Label;
 
 
-
-        public class InputBindObject : INotifyPropertyChanged
-        {
-
-
-            string _LabelText;
-            /// <summary>
-            /// Contains the user entered text
-            /// </summary>
-            public string LabelText
-            {
-                get
-                {
-                    return _LabelText;
-                }
-                set
-                {
-                    _LabelText = value;
-                    OnPropertyChanged("LabelText");
-                }
-            }
-
-
-            protected virtual void OnPropertyChanged(string property)
-            {
-                if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
-
-            #region INotifyPropertyChanged Members
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            #endregion
-
-        }
-
-
-
-
-
-        /// <summary>
-        /// Object which will bind to the page
-        /// </summary>
-        public InputBindObject BindingObject { get; set; }
-
         private string _LabelText = "0.0";
-
 
         // TODO: not good for temperature... Try and find a way to use the convertTo function instead
         /// <summary>
@@ -78,15 +28,14 @@ namespace CheApp.Templates.CalculationPage
         internal void SetFinalResult(double finalResult)
         {
             // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
-            BindingObject.LabelText = CheMath.Units.HelperFunctions.ConvertFrom(
+            BindedObject.LabelText = CheMath.Units.HelperFunctions.ConvertFrom(
                 finalResult,
-                ConvertionUnits,
+                BindedObject.ConvertionUnits,
                 SelectedStrings).ToString();
-
-            BindingObject.LabelText = "NYes";
 
 
         }
+
 
 
         /// <summary>
@@ -96,18 +45,14 @@ namespace CheApp.Templates.CalculationPage
         {
             Grid grid = base.GetGridSection();
 
-
-
-
             this._Label = new Label
             {
                 
             };
 
-            BindingObject = new InputBindObject { LabelText = "Hello" };
-
+            // bind it up!
             _Label.SetBinding(Label.TextProperty, new Binding("LabelText"));
-            _Label.BindingContext = BindingObject;
+            _Label.BindingContext = BindedObject;
 
             
             // row 2

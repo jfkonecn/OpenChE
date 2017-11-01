@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Volume.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\BasicGrids.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\FieldBindData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericFieldData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericInputField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericOutputField.cs" />

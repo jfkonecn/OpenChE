@@ -29,33 +29,41 @@ namespace CheApp.FluidsPages
             volFlow
         };
 
-        private static readonly NumericInputField[] inputFields = 
+
+        private static readonly FieldBindData[] inputFieldData =
         {
-                new NumericInputField((int)Inputs.disCo, "Discharge Coefficient", new AbstractUnit[] { Unitless.unitless }),
-                new NumericInputField((int)Inputs.density, "Density", new AbstractUnit[] { Density.kgm3 }),
-                new NumericInputField((int)Inputs.pDia, "Inlet Pipe Diameter", new AbstractUnit[] { Length.m }),
-                new NumericInputField((int)Inputs.oDia, "Orifice Diameter", new AbstractUnit[] { Length.m }),
-                new NumericInputField((int)Inputs.deltaP, "Drop in Pressure (pIn - pOut) Across Orifice Plate", new AbstractUnit[] { Pressure.Pa })
+                new FieldBindData((int)Inputs.disCo, "Discharge Coefficient", new AbstractUnit[] { Unitless.unitless }),
+                new FieldBindData((int)Inputs.density, "Density", new AbstractUnit[] { Density.kgm3 }),
+                new FieldBindData((int)Inputs.pDia, "Inlet Pipe Diameter", new AbstractUnit[] { Length.m }),
+                new FieldBindData((int)Inputs.oDia, "Orifice Diameter", new AbstractUnit[] { Length.m }),
+                new FieldBindData((int)Inputs.deltaP, "Drop in Pressure (pIn - pOut) Across Orifice Plate", new AbstractUnit[] { Pressure.Pa })
         };
+
+        private static readonly NumericInputField[] inputFields = inputFieldData.Select(item => new NumericInputField(ref item)).ToArray();
 
         private static readonly Dictionary<int, NumericInputField> inputFieldsDic = inputFields.ToDictionary(item => item.ID, item => item);
 
-        private static readonly NumericOutputField[] outputFields = 
+
+        private static readonly FieldBindData[] outputFieldData =
         {
-                new NumericOutputField((int)Outputs.volFlow, "Volumetric Flow Rate", new AbstractUnit[] { Volume.m3,  Time.sec })
+                 new FieldBindData((int)Outputs.volFlow, "Volumetric Flow Rate", new AbstractUnit[] { Volume.m3,  Time.sec })
         };
+
+
+        private static readonly NumericOutputField[] outputFields = outputFieldData.Select(item => new NumericOutputField(ref item)).ToArray();
 
         private static readonly Dictionary<int, NumericOutputField> outputFieldsDic = outputFields.ToDictionary(item => item.ID, item => item);
 
+
         public OrificePlate()
         {
-            BasicPage.BasicInputPage(this, inputFields, outputFields, CalculateButtonClicked);
-#if DEBUG
+            this.Content = BasicPage.BasicInputPage(inputFields, outputFields, CalculateButtonClicked);
+#if DEBUG            
             inputFields[0].EntryText = "1";
             inputFields[1].EntryText = "1000";
             inputFields[2].EntryText = "10";
             inputFields[3].EntryText = "8";
-            inputFields[4].EntryText = "10";
+            inputFields[4].EntryText = "10";            
 #endif
             outputFields[(int)Outputs.volFlow].SetFinalResult(0.0);
         }
@@ -65,7 +73,7 @@ namespace CheApp.FluidsPages
         {
 
             
-
+            
 
             try
             {
@@ -84,6 +92,7 @@ namespace CheApp.FluidsPages
             {
                 this.DisplayAlert("Invalid Input", "All input must be numbers!", "OK");
             }
+            
         }
     }
 }
