@@ -7,7 +7,9 @@ namespace CheApp.Templates.CalculationPage
 {
     internal class BasicPage
     {
-
+        // TODO: make it so that more than one function can be used on a page 
+        // ie switch between a direct input for density and using the ideal gas law to calculate density
+        // TODO: make it so that the user can solve for any parameter in the function.
 
         /// <summary>
         /// Sets up a basic page which handles a single function

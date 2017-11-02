@@ -15,6 +15,8 @@ namespace CheApp.FluidsPages
     /// </summary>
     public class OrificePlate : ContentPage
     {
+
+        // TODO: put all of this into basic page class and inherit
         enum Inputs
         {
             disCo,
@@ -88,9 +90,15 @@ namespace CheApp.FluidsPages
                 outputFields[(int)Outputs.volFlow].SetFinalResult(orfFlow);
 
             }
-            catch
+            catch(OverflowException)
             {
-                this.DisplayAlert("Invalid Input", "All input must be numbers!", "OK");
+                this.DisplayAlert("ERROR!", $"The result is greater than {double.MaxValue}!", "OK!");
+            }
+            catch(Exception err)
+            {
+                this.DisplayAlert("ERROR!", 
+                    string.Format("Unexpected exception of type {0} caught: {1}", err.GetType(), err.Message), 
+                    "OK");
             }
             
         }
