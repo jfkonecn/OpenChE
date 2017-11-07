@@ -1,12 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xamarin.Forms;
+using CheApp.Templates.CalculationPage;
+using CheApp.CheMath.Units;
 
 namespace CheApp.Templates.CalculationPage
 {
-    internal class BasicPage
+    public abstract class BasicPage : ContentPage
     {
+        protected FieldBindData[] inputFieldData;
+        protected NumericInputField[] inputFields;
+        public Dictionary<int, NumericInputField> inputFieldsDic;
+
+        protected FieldBindData[] outputFieldData;
+        protected NumericOutputField[] outputFields;
+        public Dictionary<int, NumericOutputField> outputFieldsDic;
+
+
+
         // TODO: make it so that more than one function can be used on a page 
         // ie switch between a direct input for density and using the ideal gas law to calculate density
         // TODO: make it so that the user can solve for any parameter in the function.
@@ -14,27 +27,25 @@ namespace CheApp.Templates.CalculationPage
         /// <summary>
         /// Sets up a basic page which handles a single function
         /// </summary>
-        /// <param name="contentPage">The page which will be performing the function</param>
-        /// <param name="inputFieldData">Objects which help build input fields</param>
-        /// <param name="outputFieldData">Objects which help build output fields</param>
-        /// <param name="calFun">Responsible for performing the calculations</param>
-        internal static ScrollView BasicInputPage(
-            NumericInputField[] inputFieldData, 
-            NumericOutputField[] outputFieldData,
-            EventHandler calFun)
+        internal void PageSetup()
         {
-            
-            Grid grid = BasicGrids.SimpleGrid(inputFieldData.Length + outputFieldData.Length + 1, 1);
+            inputFields = inputFieldData.Select(item => new NumericInputField(ref item)).ToArray();
+            inputFieldsDic = inputFields.ToDictionary(item => item.ID, item => item);
+            outputFields = outputFieldData.Select(item => new NumericOutputField(ref item)).ToArray();
+            outputFieldsDic = outputFields.ToDictionary(item => item.ID, item => item);
 
-            for (int i = 0; i < inputFieldData.Length; i++)
+
+            Grid grid = BasicGrids.SimpleGrid(inputFields.Length + inputFields.Length + 1, 1);
+
+            for (int i = 0; i < inputFields.Length; i++)
             {
-                grid.Children.Add(inputFieldData[i].GetGridSection(), 1, i + 1);
+                grid.Children.Add(inputFields[i].GetGridSection(), 1, i + 1);
             }
 
 
-            for (int i = 0; i < outputFieldData.Length; i++)
+            for (int i = 0; i < outputFields.Length; i++)
             {
-                grid.Children.Add(outputFieldData[i].GetGridSection(), 1, i + 1 + inputFieldData.Length);
+                grid.Children.Add(outputFields[i].GetGridSection(), 1, i + 1 + inputFields.Length);
             }
 
             // setup calculate button
@@ -44,16 +55,24 @@ namespace CheApp.Templates.CalculationPage
                 Margin = 20
             };
 
-            calculateBtn.Clicked += calFun;
+            calculateBtn.Clicked += CalculateButtonClicked;
 
             grid.Children.Add(calculateBtn, 1, 1 + inputFieldData.Length + outputFieldData.Length);
             Grid.SetColumnSpan(calculateBtn, grid.ColumnDefinitions.Count - 2);
 
             // finish up
-            return new ScrollView
+            this.Content = new ScrollView
             {
-                Content = grid
+                Content = grid,
+                BackgroundColor = Color.WhiteSmoke
             };
         }
+
+        /// <summary>
+        /// Make sure parameters are valid and execute function
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected abstract void CalculateButtonClicked(object sender, EventArgs e);
     }
 }

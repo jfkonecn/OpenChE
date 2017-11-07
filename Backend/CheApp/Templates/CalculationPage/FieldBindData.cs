@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using CheApp.CheMath.Units;
+using Xamarin.Forms;
 
 namespace CheApp.Templates.CalculationPage
 {
@@ -48,6 +49,21 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         public int[] SelectedIndex { get; set; }
 
+        Color _BackgroundColor = Color.LightGray;
+        /// <summary>
+        /// Color of 
+        /// </summary>
+        public Color BackgroundColor {
+            get
+            {
+                return _BackgroundColor;
+            }
+            set
+            {
+                _BackgroundColor = value;
+                OnPropertyChanged("BackgroundColor");
+            }
+        }
 
         string _LabelText;
         /// <summary>

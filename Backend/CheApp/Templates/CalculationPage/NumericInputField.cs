@@ -31,16 +31,29 @@ namespace CheApp.Templates.CalculationPage
         }
 
 
+
         /// <summary>
         /// gets the user input in the desired units specified in constructor
         /// </summary>
         internal double GetUserInput()
         {
-            // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
-            return CheMath.Units.HelperFunctions.ConvertFrom(
+            try
+            {
+                double temp = CheMath.Units.HelperFunctions.ConvertFrom(
                 Convert.ToDouble(EntryText),
-                BindedObject.ConvertionUnits, 
+                BindedObject.ConvertionUnits,
                 SelectedStrings);
+                BindedObject.BackgroundColor = Color.LightGreen;
+                return temp;
+            }
+            catch (System.FormatException)
+            {
+                BindedObject.BackgroundColor = Color.PaleVioletRed;
+                throw new FormatException();
+            }
+
+            // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
+            
         }
 
         /// <summary>
@@ -61,14 +74,14 @@ namespace CheApp.Templates.CalculationPage
             _Entry.SetBinding(Entry.TextProperty, new Binding("LabelText"));
             _Entry.BindingContext = BindedObject;
 
+            grid.SetBinding(Grid.BackgroundColorProperty, new Binding("BackgroundColor"));
+            grid.BindingContext = BindedObject;
+
             // row 2
-            grid.Children.Add(new Label { Text = "Input" }, 0, 1);
+            grid.Children.Add(new Label { Text = "Input" }, 1, 2);
 
             // row 3
-            grid.Children.Add(this._Entry, 0, 2);
-
-
-
+            grid.Children.Add(this._Entry, 1, 3);
 
 
             return grid;

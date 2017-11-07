@@ -139,9 +139,9 @@ namespace CheApp.Templates.CalculationPage
             // create columns
             ColumnDefinitionCollection colDefs = new ColumnDefinitionCollection();
 
-            
 
-            
+            colDefs.Add(new ColumnDefinition { Width = new GridLength(20, GridUnitType.Absolute) });
+
             if (this.Pickers.Length == 1)
             {
                 // for input/ouput cell
@@ -151,7 +151,6 @@ namespace CheApp.Templates.CalculationPage
             }
             else
             {
-
                 // for input/ouput cell
                 colDefs.Add(new ColumnDefinition { Width = new GridLength(5, GridUnitType.Star) });
                 // for unit pickers
@@ -160,55 +159,50 @@ namespace CheApp.Templates.CalculationPage
                 colDefs.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
             }
 
-
+            colDefs.Add(new ColumnDefinition { Width = new GridLength(20, GridUnitType.Absolute) });
 
             Grid grid = new Grid
             {
-                Margin = 20,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 RowDefinitions =
                 {
+                    new RowDefinition { Height = new GridLength(20, GridUnitType.Absolute) },
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(20, GridUnitType.Absolute) }
                 },
-                ColumnDefinitions = colDefs
+                ColumnDefinitions = colDefs                
             };
 
 
-
-
             // row 1
-            grid.Children.Add(title, 0, 0);
-            Grid.SetColumnSpan(title, grid.ColumnDefinitions.Count);
+            grid.Children.Add(title, 1, 1);
+            Grid.SetColumnSpan(title, grid.ColumnDefinitions.Count - 2);
 
 
 
             Label unitLb = new Label { Text = "Units" };
-            grid.Children.Add(unitLb, 1, 1);
+            grid.Children.Add(unitLb, 2, 2);
 
             // row 3
             // Entry cell will be taken care of by the classes which inherit this class
             if (this.Pickers.Length == 1)
             {
-                grid.Children.Add(this.Pickers[0], 1, 2);
+                grid.Children.Add(this.Pickers[0], 2, 3);
                 
             }
             else
             {
-                grid.Children.Add(this.Pickers[0], 1, 2);
+                grid.Children.Add(this.Pickers[0], 2, 3);
                 grid.Children.Add(new Label
                 {
                     Text = "Per",
                     HorizontalTextAlignment = TextAlignment.Center
-                }, 2, 2);
-                grid.Children.Add(this.Pickers[1], 3, 2);
+                }, 3, 3);
+                grid.Children.Add(this.Pickers[1], 4, 3);
                 Grid.SetColumnSpan(unitLb, 3);
             }
-
-
-
-
 
             return grid;
         }

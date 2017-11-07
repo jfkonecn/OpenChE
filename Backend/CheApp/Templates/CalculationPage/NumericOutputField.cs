@@ -25,6 +25,7 @@ namespace CheApp.Templates.CalculationPage
         /// <param name="finalResult">Result of internal calculation assumed to be in the same units as "resultUnits" specificed in the constructor</param>
         internal void SetFinalResult(double finalResult)
         {
+            
             // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
             BindedObject.LabelText = CheMath.Units.HelperFunctions.ConvertTo(
                 finalResult,
@@ -54,10 +55,10 @@ namespace CheApp.Templates.CalculationPage
 
             
             // row 2
-            grid.Children.Add(new Label { Text = "Result" }, 0, 1);
+            grid.Children.Add(new Label { Text = "Result" }, 1, 2);
 
             // row 3
-            grid.Children.Add(this._Label, 0, 2);
+            grid.Children.Add(this._Label, 1, 3);
 
             return grid;
         }
