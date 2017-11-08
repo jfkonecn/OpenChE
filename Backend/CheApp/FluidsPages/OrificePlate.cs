@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CheApp.Templates.CalculationPage;
-using CheApp.CheMath.Units;
+using EngineeringMath.Units;
 
 using Xamarin.Forms;
 
@@ -75,7 +75,7 @@ namespace CheApp.FluidsPages
 
             try
             {
-                double orfFlow = CheMath.Calculations.Fluids.OrificePlate(
+                double orfFlow = EngineeringMath.Calculations.Fluids.OrificePlate(
     inputFieldsDic[(int)Inputs.disCo].GetUserInput(),
     inputFieldsDic[(int)Inputs.density].GetUserInput(),
     inputFieldsDic[(int)Inputs.pDia].GetUserInput(),

@@ -39,7 +39,7 @@ namespace CheApp.Templates.CalculationPage
         {
             try
             {
-                double temp = CheMath.Units.HelperFunctions.ConvertFrom(
+                double temp = EngineeringMath.Units.HelperFunctions.ConvertFrom(
                 Convert.ToDouble(EntryText),
                 BindedObject.ConvertionUnits,
                 SelectedStrings);

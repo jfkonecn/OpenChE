@@ -27,7 +27,7 @@ namespace CheApp.Templates.CalculationPage
         {
             
             // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
-            BindedObject.LabelText = CheMath.Units.HelperFunctions.ConvertTo(
+            BindedObject.LabelText = EngineeringMath.Units.HelperFunctions.ConvertTo(
                 finalResult,
                 BindedObject.ConvertionUnits,
                 SelectedStrings).ToString();

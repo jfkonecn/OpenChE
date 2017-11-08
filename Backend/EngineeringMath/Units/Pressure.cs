@@ -2,42 +2,46 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheApp.CheMath.Units
+namespace EngineeringMath.Units
 {
     /// <summary>
-    /// Contains all time unit functions
+    /// Contains all pressure unit functions
     /// </summary>
-    public class Time : AbstractUnit
+    public class Pressure : AbstractUnit
     {
-        /// <summary>
-        /// seconds
-        /// </summary>
-        public static readonly Time sec = new Time("sec", 86400);
 
         /// <summary>
-        /// minutes
+        /// Pascal
         /// </summary>
-        public static readonly Time min = new Time("min", 1440);
-
+        public static readonly Pressure Pa = new Pressure("Pa", 1);
         /// <summary>
-        /// hours
+        /// kilopascals
         /// </summary>
-        public static readonly Time hr = new Time("hr", 24);
-
+        public static readonly Pressure kPa = new Pressure("kPa", 0.001);
         /// <summary>
-        /// days
+        /// pounds per square inch
         /// </summary>
-        public static readonly Time day = new Time("day", 1);
+        public static readonly Pressure psi = new Pressure("psi", 0.000145038);
+        /// <summary>
+        /// atmospheres
+        /// </summary>
+        public static readonly Pressure atm = new Pressure("atm", 9.8692e-6);
+        /// <summary>
+        /// bar
+        /// </summary>
+        public static readonly Pressure bar = new Pressure("bar", 1e-5);
+
 
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
-            { sec.ToString(), sec },
-            { min.ToString(), min },
-            { hr.ToString(), hr },
-            { day.ToString(), day }
+            { kPa.ToString(), kPa },
+            { Pa.ToString(), Pa },
+            { psi.ToString(), psi },
+            { atm.ToString(), atm },
+            { bar.ToString(), bar }
         };
 
         /// <summary>
@@ -45,7 +49,7 @@ namespace CheApp.CheMath.Units
         /// </summary>
         /// <param name="name"></param>
         /// <param name="conversionFactor"></param>
-        private Time(string name, double conversionFactor) : base(name, conversionFactor) { }
+        private Pressure(string name, double conversionFactor) : base(name, conversionFactor) { }
 
         /// <summary>
         /// Converts from "this" object to the one represented by the string
@@ -55,20 +59,23 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, (Time)StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Pressure)StringToUnit[desiredUnitName]);
         }
 
 
         /// <summary>
-        /// Converts between two different time units
+        /// Converts between two different pressure units
         /// </summary>
         /// <param name="value">The value to be converted</param>
-        /// <param name="currentUnit">Current time unit of "value"</param>
-        /// <param name="desiredUnit">Desired time unit of "value"</param>
+        /// <param name="currentUnit">Current pressure unit of "value"</param>
+        /// <param name="desiredUnit">Desired pressure unit of "value"</param>
         /// <returns>The value in the "desired units"</returns>
-        public static double Convert(double value, Time currentUnit, Time desiredUnit)
+        public static double Convert(double value, Pressure currentUnit, Pressure desiredUnit)
         {
             return HelperFunctions.Converter(value, currentUnit.ConversionFactor, desiredUnit.ConversionFactor);
         }
+
+
+
     }
 }

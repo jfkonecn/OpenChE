@@ -1,14 +1,11 @@
-﻿using System;
-using CheApp.CheMath.Units;
-
-namespace CheApp.CheMath.Tests
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using EngineeringMath.Units;
+namespace BackendTesting
 {
-    /// <summary>
-    /// Test to see if the basic unit functions are bug free
-    /// </summary>
-    public class CheUnitTest
+    [TestClass]
+    public class EngineeringUnits
     {
-
+        [TestMethod]
         /// <summary>
         /// Checks if the Unit.Covert methods are correct
         /// </summary>

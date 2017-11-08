@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheApp.CheMath.Units
+namespace EngineeringMath.Units
 {
     public class Unitless : AbstractUnit
     {

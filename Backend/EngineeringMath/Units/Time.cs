@@ -2,55 +2,50 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheApp.CheMath.Units
+namespace EngineeringMath.Units
 {
     /// <summary>
-    /// Contains all mass unit functions
+    /// Contains all time unit functions
     /// </summary>
-    public class Mass : AbstractUnit
+    public class Time : AbstractUnit
     {
         /// <summary>
-        /// grams
+        /// seconds
         /// </summary>
-        public static readonly Mass g = new Mass("g", 1);
-        /// <summary>
-        /// pounds mass
-        /// </summary>
-        public static readonly Mass lbsm = new Mass("lbs\x208m", 0.00220462);
-        /// <summary>
-        /// kilograms
-        /// </summary>
-        public static readonly Mass kg = new Mass("kg", 0.001);
-        /// <summary>
-        /// metric tons
-        /// </summary>
-        public static readonly Mass MetricTon = new Mass("Metric Ton", 1e-6);
-        /// <summary>
-        /// US tons
-        /// </summary>
-        public static readonly Mass USTon = new Mass("US Ton", 1.1023e-6);
+        public static readonly Time sec = new Time("sec", 86400);
 
+        /// <summary>
+        /// minutes
+        /// </summary>
+        public static readonly Time min = new Time("min", 1440);
+
+        /// <summary>
+        /// hours
+        /// </summary>
+        public static readonly Time hr = new Time("hr", 24);
+
+        /// <summary>
+        /// days
+        /// </summary>
+        public static readonly Time day = new Time("day", 1);
 
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
-            { g.ToString(), g },
-            { lbsm.ToString(), lbsm },
-            { kg.ToString(), kg },
-            { MetricTon.ToString(), MetricTon },
-            { USTon.ToString(), USTon }
+            { sec.ToString(), sec },
+            { min.ToString(), min },
+            { hr.ToString(), hr },
+            { day.ToString(), day }
         };
 
         /// <summary>
         /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
         /// </summary>
-        /// <param name="name">string name of the unit</param>
+        /// <param name="name"></param>
         /// <param name="conversionFactor"></param>
-        private Mass(string name, double conversionFactor) : base(name, conversionFactor) { }
-
-
+        private Time(string name, double conversionFactor) : base(name, conversionFactor) { }
 
         /// <summary>
         /// Converts from "this" object to the one represented by the string
@@ -60,18 +55,18 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, (Mass)StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Time)StringToUnit[desiredUnitName]);
         }
 
 
         /// <summary>
-        /// Converts between two different mass units
+        /// Converts between two different time units
         /// </summary>
         /// <param name="value">The value to be converted</param>
-        /// <param name="currentUnit">Current mass unit of "value"</param>
-        /// <param name="desiredUnit">Desired mass unit of "value"</param>
+        /// <param name="currentUnit">Current time unit of "value"</param>
+        /// <param name="desiredUnit">Desired time unit of "value"</param>
         /// <returns>The value in the "desired units"</returns>
-        public static double Convert(double value, Mass currentUnit, Mass desiredUnit)
+        public static double Convert(double value, Time currentUnit, Time desiredUnit)
         {
             return HelperFunctions.Converter(value, currentUnit.ConversionFactor, desiredUnit.ConversionFactor);
         }

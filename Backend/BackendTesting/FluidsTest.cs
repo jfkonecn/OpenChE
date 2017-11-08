@@ -1,12 +1,10 @@
-using CheApp.CheMath.Calculations;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using EngineeringMath.Calculations;
 
-namespace CheApp.CheMath.Tests
+namespace BackendTesting
 {
-
-    /// <summary>
-    /// Tests the Fluids class in the core namespace within the CheApp project
-    /// </summary>
+    [TestClass]
     public class FluidsTest
     {
         // use this for when you expect the test method to throw an exception
@@ -15,6 +13,7 @@ namespace CheApp.CheMath.Tests
         /// <summary>
         /// Tests the orifice plate function
         /// </summary>
+        [TestMethod]
         public void OrificePlateTest()
         {
             // in m
@@ -38,7 +37,7 @@ namespace CheApp.CheMath.Tests
             Assert.AreEqual(expected, actual, 0.001, "Standard Case");
 
             //Invalid Inputs
-            
+
 
             string failedToThrow = "An exception should have been thrown";
 

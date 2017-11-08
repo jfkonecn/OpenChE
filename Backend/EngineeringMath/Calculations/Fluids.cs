@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheApp.CheMath.Calculations
+namespace EngineeringMath.Calculations
 {
     // TODO: make it so that functions have an object that set high and low parameter inputs
     // TODO: creat object to throw in case of an exception so that the basic page can know what parameter was the reason for the error

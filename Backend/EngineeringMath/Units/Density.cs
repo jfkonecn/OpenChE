@@ -2,41 +2,36 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheApp.CheMath.Units
+namespace EngineeringMath.Units
 {
-    class Length : AbstractUnit
+    public class Density : AbstractUnit
     {
-        /// <summary>
-        /// meters
-        /// </summary>
-        public static readonly Length m = new Length("m", 1);
+
+        /*
+        * Since density is based on Mass / Volume, there is no conversion factor of 1
+        */
 
         /// <summary>
-        /// cubic feet
+        /// kg / m3
         /// </summary>
-        public static readonly Length ft = new Length("ft", 3.28084);
+        public static readonly Density kgm3 = new Density($"{Mass.kg}/{Volume.m3}", Mass.kg.ConversionFactor / Volume.m3.ConversionFactor);
 
-        /// <summary>
-        /// cubic feet
-        /// </summary>
-        public static readonly Length inch = new Length("in", 3.28084);
 
         /// <summary>
         /// Relates all units to a string representation
         /// </summary>
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
-            { m.ToString(), m },
-            { ft.ToString(), ft },            
-            { inch.ToString(), inch }
+            { kgm3.ToString(), kgm3 },
         };
 
         /// <summary>
-        /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
+        /// Conversion factors are all determined by Mass / Volume
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">string name of the unit</param>
         /// <param name="conversionFactor"></param>
-        private Length(string name, double conversionFactor) : base(name, conversionFactor) { }
+        private Density(string name, double conversionFactor) : base(name, conversionFactor) { }
+
 
 
         /// <summary>
@@ -47,18 +42,18 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, (Length)StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Density)StringToUnit[desiredUnitName]);
         }
 
 
         /// <summary>
-        /// Converts between two different volume units
+        /// Converts between two different density units
         /// </summary>
         /// <param name="value">The value to be converted</param>
-        /// <param name="currentUnit">Current volume unit of "value"</param>
-        /// <param name="desiredUnit">Desired volume unit of "value"</param>
+        /// <param name="currentUnit">Current density unit of "value"</param>
+        /// <param name="desiredUnit">Desired density unit of "value"</param>
         /// <returns>The value in the "desired units"</returns>
-        public static double Convert(double value, Length currentUnit, Length desiredUnit)
+        public static double Convert(double value, Density currentUnit, Density desiredUnit)
         {
             return HelperFunctions.Converter(value, currentUnit.ConversionFactor, desiredUnit.ConversionFactor);
         }

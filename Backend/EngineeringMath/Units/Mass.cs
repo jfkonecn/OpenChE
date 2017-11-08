@@ -2,34 +2,33 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheApp.CheMath.Units
+namespace EngineeringMath.Units
 {
     /// <summary>
-    /// Contains all pressure unit functions
+    /// Contains all mass unit functions
     /// </summary>
-    public class Pressure : AbstractUnit
+    public class Mass : AbstractUnit
     {
-
         /// <summary>
-        /// Pascal
+        /// grams
         /// </summary>
-        public static readonly Pressure Pa = new Pressure("Pa", 1);
+        public static readonly Mass g = new Mass("g", 1);
         /// <summary>
-        /// kilopascals
+        /// pounds mass
         /// </summary>
-        public static readonly Pressure kPa = new Pressure("kPa", 0.001);
+        public static readonly Mass lbsm = new Mass("lbs\x208m", 0.00220462);
         /// <summary>
-        /// pounds per square inch
+        /// kilograms
         /// </summary>
-        public static readonly Pressure psi = new Pressure("psi", 0.000145038);
+        public static readonly Mass kg = new Mass("kg", 0.001);
         /// <summary>
-        /// atmospheres
+        /// metric tons
         /// </summary>
-        public static readonly Pressure atm = new Pressure("atm", 9.8692e-6);
+        public static readonly Mass MetricTon = new Mass("Metric Ton", 1e-6);
         /// <summary>
-        /// bar
+        /// US tons
         /// </summary>
-        public static readonly Pressure bar = new Pressure("bar", 1e-5);
+        public static readonly Mass USTon = new Mass("US Ton", 1.1023e-6);
 
 
         /// <summary>
@@ -37,19 +36,21 @@ namespace CheApp.CheMath.Units
         /// </summary>
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
-            { kPa.ToString(), kPa },
-            { Pa.ToString(), Pa },
-            { psi.ToString(), psi },
-            { atm.ToString(), atm },
-            { bar.ToString(), bar }
+            { g.ToString(), g },
+            { lbsm.ToString(), lbsm },
+            { kg.ToString(), kg },
+            { MetricTon.ToString(), MetricTon },
+            { USTon.ToString(), USTon }
         };
 
         /// <summary>
         /// The equivalent of 1 unit equal to the standard. (The standard's Conversion Factor is equal to 1)
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">string name of the unit</param>
         /// <param name="conversionFactor"></param>
-        private Pressure(string name, double conversionFactor) : base(name, conversionFactor) { }
+        private Mass(string name, double conversionFactor) : base(name, conversionFactor) { }
+
+
 
         /// <summary>
         /// Converts from "this" object to the one represented by the string
@@ -59,23 +60,20 @@ namespace CheApp.CheMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, string desiredUnitName)
         {
-            return Convert(curValue, this, (Pressure)StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Mass)StringToUnit[desiredUnitName]);
         }
 
 
         /// <summary>
-        /// Converts between two different pressure units
+        /// Converts between two different mass units
         /// </summary>
         /// <param name="value">The value to be converted</param>
-        /// <param name="currentUnit">Current pressure unit of "value"</param>
-        /// <param name="desiredUnit">Desired pressure unit of "value"</param>
+        /// <param name="currentUnit">Current mass unit of "value"</param>
+        /// <param name="desiredUnit">Desired mass unit of "value"</param>
         /// <returns>The value in the "desired units"</returns>
-        public static double Convert(double value, Pressure currentUnit, Pressure desiredUnit)
+        public static double Convert(double value, Mass currentUnit, Mass desiredUnit)
         {
             return HelperFunctions.Converter(value, currentUnit.ConversionFactor, desiredUnit.ConversionFactor);
         }
-
-
-
     }
 }

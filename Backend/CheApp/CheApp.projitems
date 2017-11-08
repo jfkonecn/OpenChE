@@ -10,24 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\AbstractUnit.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Density.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Length.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\StaticUnitProperties.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Unitless.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\OrificePlate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainMenu.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Calculations\Fluids.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Tests\Assert.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Tests\CheUnitTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Tests\FluidsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\HelperFunctions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Mass.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Pressure.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Temperature.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Time.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheMath\Units\Volume.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\BasicGrids.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\FieldBindData.cs" />

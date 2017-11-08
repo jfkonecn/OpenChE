@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheApp.CheMath.Units
+namespace EngineeringMath.Units
 {
     /// <summary>
     /// Stores data structures which include all unit types
     /// </summary>
-    internal class StaticUnitProperties
+    public class StaticUnitProperties
     {
         /// <summary>
         /// quick reference lookup of all units
         /// </summary>
-        internal readonly static Dictionary<Type, Dictionary<string, AbstractUnit>> AllUnits =
+        public readonly static Dictionary<Type, Dictionary<string, AbstractUnit>> AllUnits =
         new Dictionary<Type, Dictionary<string, AbstractUnit>>
         {
             { typeof(Density) , Density.StringToUnit },

@@ -154,6 +154,12 @@
   <ItemGroup>
     <BundleResource Include="Resources\scale-balance.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Backend\EngineeringMath\EngineeringMath.csproj">
+      <Project>{96d0dac3-18df-4df6-9dd4-db9ecaa955e4}</Project>
+      <Name>EngineeringMath</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\CheApp\CheApp.projitems" Label="Shared" Condition="Exists('..\CheApp\CheApp.projitems')" />
   <Import Project="..\..\Backend\CheApp\CheApp.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

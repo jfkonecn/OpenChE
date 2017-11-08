@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 using CheApp.Templates.CalculationPage;
-using CheApp.CheMath.Units;
+using EngineeringMath.Units;
 
 namespace CheApp.Templates.CalculationPage
 {

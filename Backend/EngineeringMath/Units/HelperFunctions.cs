@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheApp.CheMath.Units
+namespace EngineeringMath.Units
 {
-    internal class HelperFunctions
+    public class HelperFunctions
     {
         /// <summary>
         /// A generic conversion which all functions in the class reference
@@ -14,7 +14,7 @@ namespace CheApp.CheMath.Units
         /// <param name="currentConversionFactor">Current unit's conversion factor</param>
         /// <param name="desiredConversionFactor">Desired unit's conversion factor</param>
         /// <returns>Converted value</returns>
-        internal static double Converter(double value, double currentConversionFactor, double desiredConversionFactor)
+        public static double Converter(double value, double currentConversionFactor, double desiredConversionFactor)
         {
             return value * desiredConversionFactor / currentConversionFactor;
         }
@@ -27,7 +27,7 @@ namespace CheApp.CheMath.Units
         /// <param name="curUnits">Current units</param>
         /// <param name="desiredUnitNames">String names of desired unit</param>
         /// <returns>The curValue in the desired units</returns>
-        internal static double ConvertTo(double curValue, AbstractUnit[] curUnits, string[] desiredUnitNames)
+        public static double ConvertTo(double curValue, AbstractUnit[] curUnits, string[] desiredUnitNames)
         {
             if(curUnits.Length != desiredUnitNames.Length || curUnits.Length > 2)
             {
@@ -54,7 +54,7 @@ namespace CheApp.CheMath.Units
         /// <param name="curUnits">Current units</param>
         /// <param name="desiredUnitNames">String names of desired unit</param>
         /// <returns>The curValue in the desired units</returns>
-        internal static double ConvertFrom(double curValue, AbstractUnit[] desiredUnits, string[] curUnitNames)
+        public static double ConvertFrom(double curValue, AbstractUnit[] desiredUnits, string[] curUnitNames)
         {
             AbstractUnit[] curUnits = new AbstractUnit[curUnitNames.Length];
             string[] desiredUnitNames = new string[desiredUnits.Length];

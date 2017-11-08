@@ -147,6 +147,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Backend\EngineeringMath\EngineeringMath.csproj">
+      <Project>{96d0dac3-18df-4df6-9dd4-db9ecaa955e4}</Project>
+      <Name>EngineeringMath</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
