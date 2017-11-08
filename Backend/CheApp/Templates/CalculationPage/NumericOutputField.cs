@@ -25,12 +25,12 @@ namespace CheApp.Templates.CalculationPage
         /// <param name="finalResult">Result of internal calculation assumed to be in the same units as "resultUnits" specificed in the constructor</param>
         internal void SetFinalResult(double finalResult)
         {
-            
+
             // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
-            BindedObject.LabelText = EngineeringMath.Units.HelperFunctions.ConvertTo(
+            BindedObject.LabelText = String.Format("{0:G4}", EngineeringMath.Units.HelperFunctions.ConvertTo(
                 finalResult,
                 BindedObject.ConvertionUnits,
-                SelectedStrings).ToString();
+                SelectedStrings));
 
 
         }

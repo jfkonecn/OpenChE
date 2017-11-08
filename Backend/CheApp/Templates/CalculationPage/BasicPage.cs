@@ -35,17 +35,33 @@ namespace CheApp.Templates.CalculationPage
             outputFieldsDic = outputFields.ToDictionary(item => item.ID, item => item);
 
 
-            Grid grid = BasicGrids.SimpleGrid(inputFields.Length + inputFields.Length + 1, 1);
+            Grid grid = BasicGrids.SimpleGrid(inputFields.Length + inputFields.Length + 2, 1);
+
+            Picker solveForPicker = new Picker();
+            foreach (NumericFieldData obj in this.inputFieldsDic.Values)
+            {
+                solveForPicker.Items.Add(obj.Title);
+            }
+
+            solveForPicker.Title = "Solve For:";
+
+            grid.Children.Add(new Grid
+            {
+                Children =
+                {
+                    solveForPicker
+                }
+            }, 1, 1);
 
             for (int i = 0; i < inputFields.Length; i++)
             {
-                grid.Children.Add(inputFields[i].GetGridSection(), 1, i + 1);
+                grid.Children.Add(inputFields[i].GetGridSection(), 1, i + 2);
             }
 
 
             for (int i = 0; i < outputFields.Length; i++)
             {
-                grid.Children.Add(outputFields[i].GetGridSection(), 1, i + 1 + inputFields.Length);
+                grid.Children.Add(outputFields[i].GetGridSection(), 1, i + 2 + inputFields.Length);
             }
 
             // setup calculate button
@@ -57,7 +73,7 @@ namespace CheApp.Templates.CalculationPage
 
             calculateBtn.Clicked += CalculateButtonClicked;
 
-            grid.Children.Add(calculateBtn, 1, 1 + inputFieldData.Length + outputFieldData.Length);
+            grid.Children.Add(calculateBtn, 1, 2 + inputFieldData.Length + outputFieldData.Length);
             Grid.SetColumnSpan(calculateBtn, grid.ColumnDefinitions.Count - 2);
 
             // finish up

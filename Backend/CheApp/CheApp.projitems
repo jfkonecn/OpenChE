@@ -21,13 +21,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\NumericOutputField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\MainMenuTab.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TestPages\CheMath.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TestPages\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThermoPages\MainPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Templates\MainMenu\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Templates\Tests\" />
     <Folder Include="$(MSBuildThisFileDirectory)ThermoPages\" />
   </ItemGroup>
 </Project>

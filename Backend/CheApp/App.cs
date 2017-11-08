@@ -7,10 +7,30 @@ using Xamarin.Forms;
 
 namespace CheApp
 {
+    /*
+     * https://developer.xamarin.com/guides/xamarin-forms/user-interface/styles/application/
+     */
     public partial class App : Application
     {
         public App()
         {
+            Resources = new ResourceDictionary();
+
+            Style buttonStyle = new Style(typeof(Button))
+            {
+                Setters =
+                {
+                    new Setter { Property = Button.TextColorProperty,   Value = Color.White },
+                    new Setter { Property = Button.BackgroundColorProperty,   Value = Color.Gray }
+                }
+            };
+            Resources.Add("buttonStyle", buttonStyle);
+
+            Style pageStyle = new Style(typeof(ContentPage))
+            {
+
+            };
+
             MainPage = new NavigationPage(new CheApp.MainMenu());
         }
 

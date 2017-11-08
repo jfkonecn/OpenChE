@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 /// </summary>
 namespace CheApp.Templates.MainMenu
 {
-    internal class MainMenuTab : ContentPage
+    internal class MainMenuTab
     {
 
         /// <summary>
@@ -28,8 +28,7 @@ namespace CheApp.Templates.MainMenu
         {
             contentPage.Title = title;
             contentPage.Icon = iconUrl;
-            Grid grid = BasicGrids.SimpleGrid(btnData.Length, 1, 20, 40);
-
+            Grid grid = BasicGrids.SimpleGrid(btnData.Length, 1, 20, 40);           
             for (int i = 0; i < btnData.Length; i++)
             {
                 Button btn = TabbedPageButton(contentPage, btnData[i]);
@@ -57,6 +56,7 @@ namespace CheApp.Templates.MainMenu
         {
             Button btn = new Button();
             btn.Text = btnData.Text;
+            btn.Style = (Style)Application.Current.Resources["buttonStyle"];
 
             btn.Clicked += async delegate (System.Object o, System.EventArgs e)
             { await tabbedPage.Navigation.PushAsync(btnData.NavPage); };

@@ -18,7 +18,9 @@ namespace CheApp
         public MainMenu()
 		{
             this.Title = "Open ChE";
-
+            this.BarBackgroundColor = Color.Blue;
+            
+            this.BackgroundColor = Color.Brown;
 
             switch (Device.RuntimePlatform)
             {
@@ -33,14 +35,8 @@ namespace CheApp
                     break;
             }
 
-            this.Children.Add(new ThermoPages.MainPage());
             this.Children.Add(new FluidsPages.MainPage());
-            
-#if DEBUG
-            this.Children.Add(new TestPages.MainPage());
-#endif
-
-
+            this.Children.Add(new ThermoPages.MainPage());            
         }
 
 

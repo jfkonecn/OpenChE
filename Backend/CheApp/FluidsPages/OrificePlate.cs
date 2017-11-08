@@ -76,12 +76,12 @@ namespace CheApp.FluidsPages
             try
             {
                 double orfFlow = EngineeringMath.Calculations.Fluids.OrificePlate(
-    inputFieldsDic[(int)Inputs.disCo].GetUserInput(),
-    inputFieldsDic[(int)Inputs.density].GetUserInput(),
-    inputFieldsDic[(int)Inputs.pDia].GetUserInput(),
-    inputFieldsDic[(int)Inputs.oDia].GetUserInput(),
-    inputFieldsDic[(int)Inputs.deltaP].GetUserInput()
-    );
+                    inputFieldsDic[(int)Inputs.disCo].GetUserInput(),
+                    inputFieldsDic[(int)Inputs.density].GetUserInput(),
+                    inputFieldsDic[(int)Inputs.pDia].GetUserInput(),
+                    inputFieldsDic[(int)Inputs.oDia].GetUserInput(),
+                    inputFieldsDic[(int)Inputs.deltaP].GetUserInput()
+                );
 
                 outputFields[(int)Outputs.volFlow].SetFinalResult(orfFlow);
 
