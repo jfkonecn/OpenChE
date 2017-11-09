@@ -18,13 +18,14 @@ namespace CheApp.Templates.CalculationPage
         /// <param name="id">Desired ID number, not used internally</param>
         /// <param name="title">Title of the field</param>
         /// <param name="convertionUnits">Used to create a conversion factor</param>
-        public FieldBindData(int id, string title, AbstractUnit[] convertionUnits)
+        public FieldBindData(int id, string title, AbstractUnit[] convertionUnits, bool isInput = true)
         {
             if (convertionUnits.Length > 2)
             {
                 throw new Exception("convertion units out of range");
             }
 
+            this.isInput = isInput;
             this.Title = title;
             this.ConvertionUnits = convertionUnits;
             this.ID = id;
@@ -64,6 +65,36 @@ namespace CheApp.Templates.CalculationPage
                 OnPropertyChanged("BackgroundColor");
             }
         }
+
+        bool _isInput;
+        public bool isInput
+        {
+            get
+            {
+                return _isInput;
+            }
+            set
+            {
+                _isInput = value;
+                OnPropertyChanged("isInput");
+            }
+        }
+
+        public bool isOutput
+        {
+            get
+            {
+                // should always be the opposite of isInput
+                return !this.isInput;
+            }
+            set
+            {
+                this.isInput = !value;
+                OnPropertyChanged("isOutput");
+            }
+        }
+
+
 
         string _LabelText;
         /// <summary>

@@ -9,7 +9,7 @@ namespace CheApp.Templates.CalculationPage
     /// <summary>
     /// Stores all of the data required to have a field which handles data inputs
     /// </summary>
-    abstract public class NumericFieldData
+    public class NumericFieldData
     {
 
         /// <summary>
@@ -49,6 +49,67 @@ namespace CheApp.Templates.CalculationPage
             {
                 return BindedObject.Title;
             }
+        }
+
+        private Entry _InputEntry;
+        /// <summary>
+        /// Contains the user entered text
+        /// </summary>
+        public string EntryText
+        {
+            get
+            {
+                return BindedObject.LabelText;
+            }
+            set
+            {
+                BindedObject.LabelText = value;
+            }
+        }
+
+        private Label _ResultsLb;
+        private Label _ResultsTitleLb;
+        private Label _InputTitleLb;
+
+
+        /// <summary>
+        /// Updates the label with the value of 
+        /// </summary>
+        /// <param name="finalResult">Result of internal calculation assumed to be in the same units as "resultUnits" specificed in the constructor</param>
+        internal void SetFinalResult(double finalResult)
+        {
+
+            // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
+            BindedObject.LabelText = String.Format("{0:G4}", EngineeringMath.Units.HelperFunctions.ConvertTo(
+                finalResult,
+                BindedObject.ConvertionUnits,
+                SelectedStrings));
+
+
+        }
+
+        /// <summary>
+        /// gets the user input in the desired units specified in constructor
+        /// </summary>
+        internal double GetUserInput()
+        {
+            try
+            {
+                double temp = EngineeringMath.Units.HelperFunctions.ConvertFrom(
+                Convert.ToDouble(EntryText),
+                BindedObject.ConvertionUnits,
+                SelectedStrings);
+                BindedObject.BackgroundColor = Color.LightGreen;
+                return temp;
+            }
+            catch (System.FormatException)
+            {
+                BindedObject.BackgroundColor = Color.PaleVioletRed;
+                throw new FormatException();
+            }
+
+            // WE ARE ASSUMING THAT A MAX OF 2 ELEMENTS WILL BE IN THE ARRAY
+
         }
 
 
@@ -203,6 +264,51 @@ namespace CheApp.Templates.CalculationPage
                 grid.Children.Add(this.Pickers[1], 4, 3);
                 Grid.SetColumnSpan(unitLb, 3);
             }
+
+
+            // create entry cell
+            this._InputEntry = new Entry
+            {
+                Keyboard = Keyboard.Numeric,
+                HeightRequest = 10
+            };
+
+            this._ResultsLb = new Label
+            {
+
+            };
+
+            // bind it up!
+            _InputEntry.SetBinding(Entry.TextProperty, new Binding("LabelText"));
+            _InputEntry.BindingContext = BindedObject;
+            _ResultsLb.SetBinding(Label.TextProperty, new Binding("LabelText"));
+            _ResultsLb.BindingContext = BindedObject;
+
+            grid.SetBinding(Grid.BackgroundColorProperty, new Binding("BackgroundColor"));
+            grid.BindingContext = BindedObject;
+
+            // row 2
+            _InputTitleLb = new Label { Text = "Input" };
+            _ResultsTitleLb = new Label { Text = "Result" };
+
+            _ResultsLb.SetBinding(Entry.IsVisibleProperty, new Binding("isOutput"));
+            _ResultsLb.BindingContext = BindedObject;
+
+            _ResultsTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("isOutput"));
+            _ResultsTitleLb.BindingContext = BindedObject;
+
+            _InputEntry.SetBinding(Entry.IsVisibleProperty, new Binding("isInput"));
+            _InputEntry.BindingContext = BindedObject;
+
+            _InputTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("isInput"));
+            _InputTitleLb.BindingContext = BindedObject;
+
+            grid.Children.Add(_InputTitleLb, 1, 2);
+            grid.Children.Add(_ResultsTitleLb, 1, 2);
+
+            // row 3
+            grid.Children.Add(this._InputEntry, 1, 3);
+            grid.Children.Add(this._ResultsLb, 1, 3);
 
             return grid;
         }

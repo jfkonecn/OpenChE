@@ -17,17 +17,13 @@ namespace CheApp.FluidsPages
     {
 
         // TODO: put all of this into basic page class and inherit
-        enum Inputs
+        enum Field
         {
             disCo,
             density,
             pDia,
             oDia,
-            deltaP
-        };
-
-        enum Outputs
-        {
+            deltaP,
             volFlow
         };
 
@@ -39,31 +35,26 @@ namespace CheApp.FluidsPages
         public OrificePlate()
         {
 
-            inputFieldData = new FieldBindData[]
+            bindFieldData = new FieldBindData[]
             {
-                new FieldBindData((int)Inputs.disCo, "Discharge Coefficient", new AbstractUnit[] { Unitless.unitless }),
-                new FieldBindData((int)Inputs.density, "Density", new AbstractUnit[] { Density.kgm3 }),
-                new FieldBindData((int)Inputs.pDia, "Inlet Pipe Diameter", new AbstractUnit[] { Length.m }),
-                new FieldBindData((int)Inputs.oDia, "Orifice Diameter", new AbstractUnit[] { Length.m }),
-                new FieldBindData((int)Inputs.deltaP, "Drop in Pressure (pIn - pOut) Across Orifice Plate", new AbstractUnit[] { Pressure.Pa })
+                new FieldBindData((int)Field.disCo, "Discharge Coefficient", new AbstractUnit[] { Unitless.unitless }),
+                new FieldBindData((int)Field.density, "Density", new AbstractUnit[] { Density.kgm3 }),
+                new FieldBindData((int)Field.pDia, "Inlet Pipe Diameter", new AbstractUnit[] { Length.m }),
+                new FieldBindData((int)Field.oDia, "Orifice Diameter", new AbstractUnit[] { Length.m }),
+                new FieldBindData((int)Field.deltaP, "Drop in Pressure (pIn - pOut) Across Orifice Plate", new AbstractUnit[] { Pressure.Pa }),
+                new FieldBindData((int)Field.volFlow, "Volumetric Flow Rate", new AbstractUnit[] { Volume.m3, Time.sec })
             };
 
-
-
-            outputFieldData = new FieldBindData[]
-            {
-                new FieldBindData((int)Outputs.volFlow, "Volumetric Flow Rate", new AbstractUnit[] { Volume.m3, Time.sec })
-            };
 
             this.PageSetup();
 #if DEBUG            
-            inputFields[0].EntryText = "1";
-            inputFields[1].EntryText = "1000";
-            inputFields[2].EntryText = "10";
-            inputFields[3].EntryText = "8";
-            inputFields[4].EntryText = "10";            
+            fields[0].EntryText = "1";
+            fields[1].EntryText = "1000";
+            fields[2].EntryText = "10";
+            fields[3].EntryText = "8";
+            fields[4].EntryText = "10";
 #endif
-            outputFields[(int)Outputs.volFlow].SetFinalResult(0.0);
+            fields[5].SetFinalResult(0.0);
         }
 
 
@@ -76,14 +67,14 @@ namespace CheApp.FluidsPages
             try
             {
                 double orfFlow = EngineeringMath.Calculations.Fluids.OrificePlate(
-                    inputFieldsDic[(int)Inputs.disCo].GetUserInput(),
-                    inputFieldsDic[(int)Inputs.density].GetUserInput(),
-                    inputFieldsDic[(int)Inputs.pDia].GetUserInput(),
-                    inputFieldsDic[(int)Inputs.oDia].GetUserInput(),
-                    inputFieldsDic[(int)Inputs.deltaP].GetUserInput()
+                    fieldsDic[(int)Field.disCo].GetUserInput(),
+                    fieldsDic[(int)Field.density].GetUserInput(),
+                    fieldsDic[(int)Field.pDia].GetUserInput(),
+                    fieldsDic[(int)Field.oDia].GetUserInput(),
+                    fieldsDic[(int)Field.deltaP].GetUserInput()
                 );
 
-                outputFields[(int)Outputs.volFlow].SetFinalResult(orfFlow);
+                fieldsDic[(int)Field.volFlow].SetFinalResult(orfFlow);
 
             }
             catch(OverflowException)

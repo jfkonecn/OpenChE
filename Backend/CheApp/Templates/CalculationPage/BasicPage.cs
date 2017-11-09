@@ -5,19 +5,18 @@ using System.Text;
 using Xamarin.Forms;
 using CheApp.Templates.CalculationPage;
 using EngineeringMath.Units;
+using System.Diagnostics;
 
 namespace CheApp.Templates.CalculationPage
 {
     public abstract class BasicPage : ContentPage
     {
-        protected FieldBindData[] inputFieldData;
-        protected NumericInputField[] inputFields;
-        public Dictionary<int, NumericInputField> inputFieldsDic;
-
-        protected FieldBindData[] outputFieldData;
-        protected NumericOutputField[] outputFields;
-        public Dictionary<int, NumericOutputField> outputFieldsDic;
-
+        protected FieldBindData[] bindFieldData;
+        protected SolveForBindData solveForBindData;
+        private Picker solveForPicker;
+        protected NumericFieldData[] fields;
+        public Dictionary<int, NumericFieldData> fieldsDic;
+       
 
 
         // TODO: make it so that more than one function can be used on a page 
@@ -29,19 +28,24 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         internal void PageSetup()
         {
-            inputFields = inputFieldData.Select(item => new NumericInputField(ref item)).ToArray();
-            inputFieldsDic = inputFields.ToDictionary(item => item.ID, item => item);
-            outputFields = outputFieldData.Select(item => new NumericOutputField(ref item)).ToArray();
-            outputFieldsDic = outputFields.ToDictionary(item => item.ID, item => item);
+            fields = bindFieldData.Select(item => new NumericFieldData(ref item)).ToArray();
+            fieldsDic = fields.ToDictionary(item => item.ID, item => item);
 
 
-            Grid grid = BasicGrids.SimpleGrid(inputFields.Length + inputFields.Length + 2, 1);
+            Grid grid = BasicGrids.SimpleGrid(fields.Length + 2, 1);
 
-            Picker solveForPicker = new Picker();
-            foreach (NumericFieldData obj in this.inputFieldsDic.Values)
+            // setup solve for picker
+            solveForBindData = new SolveForBindData();
+            solveForPicker = new Picker();
+            foreach (NumericFieldData obj in this.fieldsDic.Values)
             {
                 solveForPicker.Items.Add(obj.Title);
             }
+
+            solveForPicker.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
+            solveForPicker.BindingContext = solveForBindData;
+
+            solveForPicker.SelectedIndexChanged += SolveForPicker_SelectedIndexChanged;
 
             solveForPicker.Title = "Solve For:";
 
@@ -53,15 +57,9 @@ namespace CheApp.Templates.CalculationPage
                 }
             }, 1, 1);
 
-            for (int i = 0; i < inputFields.Length; i++)
+            for (int i = 0; i < fields.Length; i++)
             {
-                grid.Children.Add(inputFields[i].GetGridSection(), 1, i + 2);
-            }
-
-
-            for (int i = 0; i < outputFields.Length; i++)
-            {
-                grid.Children.Add(outputFields[i].GetGridSection(), 1, i + 2 + inputFields.Length);
+                grid.Children.Add(fields[i].GetGridSection(), 1, i + 2);
             }
 
             // setup calculate button
@@ -73,7 +71,7 @@ namespace CheApp.Templates.CalculationPage
 
             calculateBtn.Clicked += CalculateButtonClicked;
 
-            grid.Children.Add(calculateBtn, 1, 2 + inputFieldData.Length + outputFieldData.Length);
+            grid.Children.Add(calculateBtn, 1, 2 + fields.Length);
             Grid.SetColumnSpan(calculateBtn, grid.ColumnDefinitions.Count - 2);
 
             // finish up
@@ -82,6 +80,12 @@ namespace CheApp.Templates.CalculationPage
                 Content = grid,
                 BackgroundColor = Color.WhiteSmoke
             };
+        }
+
+        private void SolveForPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedString = solveForPicker.Items[solveForBindData.SelectedIndex];
+            Debug.WriteLine($"\"{selectedString}\" was selected");
         }
 
         /// <summary>
