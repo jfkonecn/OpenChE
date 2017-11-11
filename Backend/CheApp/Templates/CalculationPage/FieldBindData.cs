@@ -77,6 +77,8 @@ namespace CheApp.Templates.CalculationPage
             {
                 _isInput = value;
                 OnPropertyChanged("isInput");
+                // let output know about the change since it shares the bool
+                OnPropertyChanged("isOutput");
             }
         }
 

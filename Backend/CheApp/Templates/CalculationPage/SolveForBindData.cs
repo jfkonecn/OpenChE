@@ -9,9 +9,9 @@ namespace CheApp.Templates.CalculationPage
     public class SolveForBindData : INotifyPropertyChanged
     {
 
-        public SolveForBindData()
+        public SolveForBindData(int selectedIndex = 0)
         {
-            SelectedIndex = 0;
+            SelectedIndex = selectedIndex;
         }
 
         /// <summary>

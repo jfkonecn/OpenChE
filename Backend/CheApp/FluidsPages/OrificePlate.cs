@@ -60,22 +60,32 @@ namespace CheApp.FluidsPages
 
         protected override void CalculateButtonClicked(object sender, EventArgs e)
         {
-
-
+            // stores all inputs from the user
+            Dictionary<Field, double> allUserInputs = new Dictionary<Field, double>();
+            Field outputField;
+            // step size used when solving
+            double stepSize = 1000,
+                // maximum allowed error of final solution (as fraction)
+                maxErrorFrac = 0.1,
+                // the current error
+                curErrorFrac = double.MaxValue;
 
 
             try
             {
-                double orfFlow = EngineeringMath.Calculations.Fluids.OrificePlate(
-                    fieldsDic[(int)Field.disCo].GetUserInput(),
-                    fieldsDic[(int)Field.density].GetUserInput(),
-                    fieldsDic[(int)Field.pDia].GetUserInput(),
-                    fieldsDic[(int)Field.oDia].GetUserInput(),
-                    fieldsDic[(int)Field.deltaP].GetUserInput()
-                );
-
-                fieldsDic[(int)Field.volFlow].SetFinalResult(orfFlow);
-
+                foreach (NumericFieldData obj in fieldsDic.Values)
+                {
+                    if (obj.BindedObject.isOutput)
+                    {
+                        outputField = (Field)obj.ID;
+                        allUserInputs.Add((Field)obj.ID, 0.0);
+                    }
+                    else
+                    {
+                        // extract all user data inside of try block just in case there is an invalid input
+                        allUserInputs.Add((Field)obj.ID, fieldsDic[obj.ID].GetUserInput());
+                    }
+                }
             }
             catch(OverflowException)
             {
@@ -91,7 +101,26 @@ namespace CheApp.FluidsPages
                     string.Format("Unexpected exception of type {0} caught: {1}", err.GetType(), err.Message), 
                     "OK");
             }
-            
+
+
+            do
+            {
+                 double funOutput = EngineeringMath.Calculations.Fluids.OrificePlate(
+                    allUserInputs[Field.disCo],
+                    allUserInputs[Field.density],
+                    allUserInputs[Field.pDia],
+                    allUserInputs[Field.oDia],
+                    allUserInputs[Field.deltaP]
+                );
+
+                curErrorFrac = Math.Abs(funOutput - allUserInputs[Field.volFlow]) / allUserInputs[Field.volFlow];
+
+            } while (maxErrorFrac < curErrorFrac) ;
+
+
+
+                fieldsDic[(int)Field.volFlow].SetFinalResult(allUserInputs[Field.volFlow]);
+
         }
     }
 }

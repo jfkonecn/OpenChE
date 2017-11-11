@@ -25,17 +25,17 @@ namespace CheApp.Templates.CalculationPage
 
         /// <summary>
         /// Sets up a basic page which handles a single function
+        /// <para>Solve for data defaults to having last element in the solve for picker being selected</para>
         /// </summary>
         internal void PageSetup()
         {
             fields = bindFieldData.Select(item => new NumericFieldData(ref item)).ToArray();
             fieldsDic = fields.ToDictionary(item => item.ID, item => item);
 
-
             Grid grid = BasicGrids.SimpleGrid(fields.Length + 2, 1);
 
             // setup solve for picker
-            solveForBindData = new SolveForBindData();
+            solveForBindData = new SolveForBindData(bindFieldData.Length - 1);
             solveForPicker = new Picker();
             foreach (NumericFieldData obj in this.fieldsDic.Values)
             {
@@ -48,6 +48,9 @@ namespace CheApp.Templates.CalculationPage
             solveForPicker.SelectedIndexChanged += SolveForPicker_SelectedIndexChanged;
 
             solveForPicker.Title = "Solve For:";
+
+            // Make fields correct format
+            updateInputOutputs();
 
             grid.Children.Add(new Grid
             {
@@ -84,8 +87,28 @@ namespace CheApp.Templates.CalculationPage
 
         private void SolveForPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
+            updateInputOutputs();
+        }
+
+        /// <summary>
+        /// Turn fields into inputs or outputs depending on the state of 
+        /// </summary>
+        private void updateInputOutputs()
+        {
             string selectedString = solveForPicker.Items[solveForBindData.SelectedIndex];
             Debug.WriteLine($"\"{selectedString}\" was selected");
+            foreach(FieldBindData obj in bindFieldData)
+            {
+                if (obj.Title.Equals(selectedString))
+                {
+                    obj.isOutput = true;
+                }
+                else
+                {
+                    obj.isInput = true;
+                }
+            }
+
         }
 
         /// <summary>
