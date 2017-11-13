@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CheApp.Templates.CalculationPage;
 using EngineeringMath.Units;
+using EngineeringMath.Calculations;
 
 using Xamarin.Forms;
 
@@ -62,13 +63,7 @@ namespace CheApp.FluidsPages
         {
             // stores all inputs from the user
             Dictionary<Field, double> allUserInputs = new Dictionary<Field, double>();
-            Field outputField;
-            // step size used when solving
-            double stepSize = 1000,
-                // maximum allowed error of final solution (as fraction)
-                maxErrorFrac = 0.1,
-                // the current error
-                curErrorFrac = double.MaxValue;
+            Field outputField = Field.volFlow;
 
 
             try
@@ -103,24 +98,95 @@ namespace CheApp.FluidsPages
             }
 
 
-            do
+
+
+            if (outputField.Equals(Field.volFlow))
             {
-                 double funOutput = EngineeringMath.Calculations.Fluids.OrificePlate(
-                    allUserInputs[Field.disCo],
-                    allUserInputs[Field.density],
-                    allUserInputs[Field.pDia],
-                    allUserInputs[Field.oDia],
-                    allUserInputs[Field.deltaP]
+                fieldsDic[(int)Field.volFlow].SetFinalResult(EngineeringMath.Calculations.Fluids.OrificePlate(
+                   allUserInputs[Field.disCo],
+                   allUserInputs[Field.density],
+                   allUserInputs[Field.pDia],
+                   allUserInputs[Field.oDia],
+                   allUserInputs[Field.deltaP])
                 );
+            }
+            else
+            {
+                Solver.MyFunction fun = solver_function(outputField, allUserInputs);
+                fieldsDic[(int)outputField].SetFinalResult(Solver.NewtonsMethod(allUserInputs[outputField], fun));
+            }
 
-                curErrorFrac = Math.Abs(funOutput - allUserInputs[Field.volFlow]) / allUserInputs[Field.volFlow];
+        }
 
-            } while (maxErrorFrac < curErrorFrac) ;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private Solver.MyFunction solver_function(Field outputField, Dictionary<Field, double> allUserInputs)
+        {
 
+            switch (outputField)
+            {
+                case Field.disCo:
+                    return delegate (double x)
+                    {
+                        return EngineeringMath.Calculations.Fluids.OrificePlate(
+                            x,
+                            allUserInputs[Field.density],
+                            allUserInputs[Field.pDia],
+                            allUserInputs[Field.oDia],
+                            allUserInputs[Field.deltaP]
+                        );
+                    };
+                case Field.density:
+                    return delegate (double x)
+                    {
+                        return EngineeringMath.Calculations.Fluids.OrificePlate(
+                            allUserInputs[Field.disCo],
+                            x,
+                            allUserInputs[Field.pDia],
+                            allUserInputs[Field.oDia],
+                            allUserInputs[Field.deltaP]
+                        );
+                    };
+                case Field.pDia:
+                    return delegate (double x)
+                    {
 
-
-                fieldsDic[(int)Field.volFlow].SetFinalResult(allUserInputs[Field.volFlow]);
-
+                        return EngineeringMath.Calculations.Fluids.OrificePlate(
+                            allUserInputs[Field.disCo],
+                            allUserInputs[Field.density],
+                            x,
+                            allUserInputs[Field.oDia],
+                            allUserInputs[Field.deltaP]
+                        );
+                    };
+                case Field.oDia:
+                    return delegate (double x)
+                    {
+                        return EngineeringMath.Calculations.Fluids.OrificePlate(
+                            allUserInputs[Field.disCo],
+                            allUserInputs[Field.density],
+                            allUserInputs[Field.pDia],
+                            x,
+                            allUserInputs[Field.deltaP]
+                        );
+                    };
+                case Field.deltaP:
+                    return delegate (double x)
+                    {
+                        return EngineeringMath.Calculations.Fluids.OrificePlate(
+                            allUserInputs[Field.disCo],
+                            allUserInputs[Field.density],
+                            allUserInputs[Field.pDia],
+                            allUserInputs[Field.oDia],
+                            x
+                        );
+                    };
+                case Field.volFlow:
+                default:
+                    throw new NotImplementedException("That field is not included in this function");
+            }
         }
     }
 }

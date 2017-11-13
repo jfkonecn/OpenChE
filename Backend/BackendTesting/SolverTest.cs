@@ -13,14 +13,17 @@ namespace BackendTesting
         {
             double expected = 0,
                 actual = 0;
-            for (int i = 0; i < 1e10; i++)
+            
+            
+
+            for (int i = 0; i < 1e2; i++)
             {
-                expected = (rnd.NextDouble() - 0.5) * 1e1;
+                expected = (rnd.NextDouble()) * 1e10 + 1;
                 double y = Math.Log(expected);
                 if (!y.Equals(double.NaN))
                 {
-                    actual = Solver.NewtonsMethod(y, x => Math.Log(x), 1e-6, 1e-63);
-                    Assert.AreEqual(expected, actual, 0.001, "Standard Case");
+                    actual = Solver.NewtonsMethod(y, x => Math.Log(x), minValueDbl: 1d);
+                    Assert.AreEqual(expected, actual, expected * 1e-3, "Standard Case");
                 }
                 
 

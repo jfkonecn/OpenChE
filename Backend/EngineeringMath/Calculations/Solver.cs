@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace EngineeringMath.Calculations
 {
@@ -31,15 +32,40 @@ namespace EngineeringMath.Calculations
         /// </summary>
         /// <param name="y">f(x)</param>
         /// <param name="fun"></param>
-        /// <param name="maxFracError">The maximum error allowed between y and actual fun(x) result
+        /// <param name="maxFracErrorDbl">A double which is the maximum error allowed between y and actual fun(x) result
         /// <para>(parameter in terms of fraction)</para></param>
+        /// <param name="maxValueDbl">A double which is the maximum allowed values for x to be</param>
+        /// /// <param name="minValueDbl">A double which is the minimum allowed values for x to be</param>
         /// <returns>x</returns>
-        public static double NewtonsMethod(double y, MyFunction fun, double maxFracError = 1e-6, 
-            double minValue = double.MinValue, 
-            double maxValue = double.MaxValue)
+        public static double NewtonsMethod(double y, MyFunction fun, [Optional]object maxFracErrorDbl,
+            [Optional]object minValueDbl,
+            [Optional]object maxValueDbl)
         {
+            double maxFracError = 1e-10;
+            if (!(maxFracErrorDbl is System.Reflection.Missing))
+            {
+                maxFracError = (double)maxFracErrorDbl;
+            }
+
+            double minValue = double.MinValue;
+            if (!(minValueDbl is System.Reflection.Missing))
+            {
+                minValue = (double)minValueDbl;
+            }
+
+            double maxValue = double.MaxValue;
+            if (!(maxValueDbl is System.Reflection.Missing))
+            {
+                maxValue = (double)maxValueDbl;
+            }
+
+            if (minValue >= maxValue)
+            {
+                throw new ArgumentException("minValue is greater than maxValue!");
+            }
+            
             // maximum amount of tries allowed to attempt to solve the function
-            double maxTries = 1e6;
+            double maxTries = 1e3;
             double curFracError = double.MaxValue;
             double curX = 0;
             double totalTries = 0;
@@ -50,17 +76,8 @@ namespace EngineeringMath.Calculations
             // newton's method function... returns a new value for x
             MyFunction newMethFun = x => x - (zeroFun(x) / FirstDerivative(x, zeroFun));
 
-            // this function may not be defined for all real number
-            // try to find a valid x value to start
-            while ((newMethFun(curX)).Equals(double.NaN))
-            {
-                curX = (rnd.NextDouble() - 0.5) * 1e1;
-                if (totalTries++ > maxTries)
-                {
-                    Debug.WriteLine($"{y:n} maxed me out when trying random numbers!");
-                    throw new UnsolvableException("Maximum Tries Reached");
-                }
-            }
+            // start in center of the given range
+            curX = (maxValue - minValue) / 2.0d;
 
             // the last step size x had
             double lastStep = 1e6;
@@ -69,6 +86,16 @@ namespace EngineeringMath.Calculations
             {
                 double tempX = newMethFun(curX);
                 totalTries++;
+
+                if (tempX < minValue)
+                {
+                    tempX = minValue;
+                }
+                else if (tempX > maxValue)
+                {
+                    tempX = maxValue;
+                }
+
                 if (!((tempX).Equals(double.NaN) || double.IsInfinity(tempX)))
                 {
                     lastStep = tempX - curX;
