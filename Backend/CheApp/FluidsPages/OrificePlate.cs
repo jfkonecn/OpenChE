@@ -115,6 +115,7 @@ namespace CheApp.FluidsPages
                 Solver.MyFunction fun = solver_function(outputField, allUserInputs);
                 fieldsDic[(int)outputField].SetFinalResult(Solver.NewtonsMethod(allUserInputs[outputField], fun));
             }
+            solveOutput;
 
         }
 
@@ -122,13 +123,15 @@ namespace CheApp.FluidsPages
         /// 
         /// </summary>
         /// <returns></returns>
-        private Solver.MyFunction solver_function(Field outputField, Dictionary<Field, double> allUserInputs)
+        private void solveOutput(Field outputField, Dictionary<Field, double> allUserInputs)
         {
 
+            double finalOutput = 0;
+            Solver.MyFunction fun;
             switch (outputField)
             {
                 case Field.disCo:
-                    return delegate (double x)
+                    fun = delegate (double x)
                     {
                         return EngineeringMath.Calculations.Fluids.OrificePlate(
                             x,
@@ -138,8 +141,10 @@ namespace CheApp.FluidsPages
                             allUserInputs[Field.deltaP]
                         );
                     };
+                    finalOutput = Solver.NewtonsMethod(allUserInputs[outputField], fun, minValueDbl: 0);
+                    break;
                 case Field.density:
-                    return delegate (double x)
+                    fun = delegate (double x)
                     {
                         return EngineeringMath.Calculations.Fluids.OrificePlate(
                             allUserInputs[Field.disCo],
@@ -149,8 +154,10 @@ namespace CheApp.FluidsPages
                             allUserInputs[Field.deltaP]
                         );
                     };
+                    finalOutput = Solver.NewtonsMethod(allUserInputs[outputField], fun);
+                    break;
                 case Field.pDia:
-                    return delegate (double x)
+                    fun = delegate (double x)
                     {
 
                         return EngineeringMath.Calculations.Fluids.OrificePlate(
@@ -161,8 +168,10 @@ namespace CheApp.FluidsPages
                             allUserInputs[Field.deltaP]
                         );
                     };
+                    finalOutput = Solver.NewtonsMethod(allUserInputs[outputField], fun);
+                    break;
                 case Field.oDia:
-                    return delegate (double x)
+                    fun = delegate (double x)
                     {
                         return EngineeringMath.Calculations.Fluids.OrificePlate(
                             allUserInputs[Field.disCo],
@@ -172,8 +181,10 @@ namespace CheApp.FluidsPages
                             allUserInputs[Field.deltaP]
                         );
                     };
+                    finalOutput = Solver.NewtonsMethod(allUserInputs[outputField], fun);
+                    break;
                 case Field.deltaP:
-                    return delegate (double x)
+                    fun = delegate (double x)
                     {
                         return EngineeringMath.Calculations.Fluids.OrificePlate(
                             allUserInputs[Field.disCo],
@@ -183,10 +194,22 @@ namespace CheApp.FluidsPages
                             x
                         );
                     };
+                    finalOutput = Solver.NewtonsMethod(allUserInputs[outputField], fun);
+                    break;
                 case Field.volFlow:
+                    finalOutput = EngineeringMath.Calculations.Fluids.OrificePlate(
+                        allUserInputs[Field.disCo],
+                        allUserInputs[Field.density],
+                        allUserInputs[Field.pDia],
+                        allUserInputs[Field.oDia],
+                        allUserInputs[Field.deltaP]
+                    );
+                    break;
                 default:
                     throw new NotImplementedException("That field is not included in this function");
             }
+
+            fieldsDic[(int)outputField].SetFinalResult(finalOutput);
         }
     }
 }
