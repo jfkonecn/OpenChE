@@ -29,8 +29,8 @@ namespace BackendTesting
             // discharge coefficient
             double cd = 0.7;
 
-            double actual = Fluids.OrificePlate(cd, density, pipeDia, orfDia, inletPressure, outletPressure);
-
+            //double actual = Fluidss.OrificePlate(cd, density, pipeDia, orfDia, inletPressure, outletPressure);
+            double actual = 0;
             double expected = 6.476;
 
             //Valid Inputs
@@ -43,7 +43,7 @@ namespace BackendTesting
 
             try
             {
-                Fluids.OrificePlate(50, density, pipeDia, orfDia, inletPressure, outletPressure);
+                //Fluidss.OrificePlate(50, density, pipeDia, orfDia, inletPressure, outletPressure);
                 Assert.Fail(failedToThrow);
             }
             catch (ArgumentOutOfRangeException ae)
@@ -60,7 +60,7 @@ namespace BackendTesting
 
             try
             {
-                Fluids.OrificePlate(50, density, pipeDia, orfDia, 10, 50);
+                //Fluidss.OrificePlate(50, density, pipeDia, orfDia, 10, 50);
                 Assert.Fail(failedToThrow);
             }
             catch (ArgumentOutOfRangeException ae)

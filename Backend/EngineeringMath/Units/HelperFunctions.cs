@@ -51,8 +51,8 @@ namespace EngineeringMath.Units
         /// <para>If the arrays have 2 elements assumes units of element[0] per element[1]</para>
         /// </summary>
         /// <param name="curValue">The value in "this" units</param>
-        /// <param name="curUnits">Current units</param>
-        /// <param name="desiredUnitNames">String names of desired unit</param>
+        /// <param name="desiredUnits">Desired units</param>
+        /// <param name="curUnitNames">String names of current units</param>
         /// <returns>The curValue in the desired units</returns>
         public static double ConvertFrom(double curValue, AbstractUnit[] desiredUnits, string[] curUnitNames)
         {
