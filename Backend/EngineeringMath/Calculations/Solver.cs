@@ -76,11 +76,19 @@ namespace EngineeringMath.Calculations
             // newton's method function... returns a new value for x
             MyFunction newMethFun = x => x - (zeroFun(x) / FirstDerivative(x, zeroFun));
 
-            // start in center of the given range
-            curX = (maxValue - minValue) / 2.0d;
+            // make starting guess as low as possible to reduce the risk of double overflowing
+            if(minValue > 0)
+            {
+                curX = minValue;
+            }
+            else
+            {
+                curX = 0.1;
+            }
+            
 
             // the last step size x had
-            double lastStep = 1e6;
+            double lastStep = 1;
 
             while (maxFracError < curFracError || curFracError.Equals(double.NaN))
             {

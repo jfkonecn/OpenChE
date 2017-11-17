@@ -15,7 +15,7 @@ namespace EngineeringMath.GenericObject
         /// <param name="upperLimit">The highest number the paramter is allowed to be</param>
         /// <param name="desiredUnits">Used to create a conversion factor</param>
         /// <param name="isInput">If this parameter(else it's an output)</param>
-        internal Parameter( string title, AbstractUnit[] desiredUnits, 
+        internal Parameter( int ID, string title, AbstractUnit[] desiredUnits, 
             bool isInput = true, double lowerLimit = double.MinValue, 
             double upperLimit = double.MaxValue)
         {
@@ -28,7 +28,7 @@ namespace EngineeringMath.GenericObject
             {
                 throw new ArgumentOutOfRangeException("Cannot have more than 2 elements in desiredUnits");
             }
-
+            this.ID = ID;
             this.LowerLimit = lowerLimit;
             this.UpperLimit = upperLimit;
             // prevent pointer sharing
@@ -47,6 +47,7 @@ namespace EngineeringMath.GenericObject
            
         }
 
+        public int ID { get; private set; }
 
         private double _Value = 0.0;
 
@@ -99,7 +100,7 @@ namespace EngineeringMath.GenericObject
 
 
             _Value = temp;
-            ValueStr = string.Format("{0:G4}", temp.ToString());
+            ValueStr = string.Format("{0:G4}", temp);
             OnPropertyChanged("Value");
         }
 

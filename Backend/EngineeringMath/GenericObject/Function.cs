@@ -10,13 +10,10 @@ namespace EngineeringMath.GenericObject
 {
     public abstract class Function
     {
-        /// <summary>
-        /// Field which the function
-        /// </summary>
-        protected int STANDARD_OUTPUT;
 
         /// <summary>
         /// Store all paramter
+        /// <para>int represents the id of the parameters</para>
         /// </summary>
         public Dictionary<int, Parameter> fieldDic;
 
@@ -25,39 +22,27 @@ namespace EngineeringMath.GenericObject
         /// </summary>
         public void Solve()
         {
-            int outputField = 0;
+            int outputID = 0;
 
-            foreach (int key in fieldDic.Keys)
+            foreach (Parameter obj in fieldDic.Values)
             {
-                if (fieldDic[key].isOutput)
+                if (obj.isOutput)
                 {
-                    outputField = key;
+                    outputID = obj.ID;
                     break;
                 }
             }
 
-            if (STANDARD_OUTPUT == outputField)
-            {
-                fieldDic[STANDARD_OUTPUT].SetValue(Calculation());
-            }
-            else
-            {
-                fieldDic[outputField].SetValue(
-                    Solver.NewtonsMethod(fieldDic[STANDARD_OUTPUT].GetValue(), delegate (double x)
-                {
-                    fieldDic[outputField].SetValue(x);
-                    return Calculation();
-                }, minValueDbl: fieldDic[outputField].LowerLimit, maxValueDbl: fieldDic[outputField].UpperLimit)
-                );
-            }
+            fieldDic[outputID].SetValue(Calculation(outputID));
 
         }
 
         /// <summary>
         /// Performs the calculation this function object represents using the current state of the parameter objects
         /// </summary>
+        /// <param name="outputID">ID of the parameter which is to be solved for</param>
         /// <returns></returns>
-        protected abstract double Calculation();
+        protected abstract double Calculation(int outputID);
 
 
     }
