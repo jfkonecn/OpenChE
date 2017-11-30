@@ -6,7 +6,7 @@ using Xamarin.Forms;
 using CheApp.Templates.CalculationPage;
 using EngineeringMath.Units;
 using System.Diagnostics;
-using EngineeringMath.GenericObject;
+using EngineeringMath.Calculations;
 
 namespace CheApp.Templates.CalculationPage
 {
@@ -53,9 +53,6 @@ namespace CheApp.Templates.CalculationPage
 
             solveForPicker.Title = "Solve For:";
 
-            // Make fields correct format
-            updateInputOutputs();
-
             grid.Children.Add(new Grid
             {
                 Children =
@@ -63,8 +60,11 @@ namespace CheApp.Templates.CalculationPage
                     solveForPicker
                 }
             }, 1, 1);
-
-            CreateInputFields(ref grid);
+            for (int i = 0; i < myFun.fieldDic.Count; i++)
+            {
+                CreateInputFields(ref grid, myFun.fieldDic[i], fieldStyle[i], i);
+            }
+                
 
             // setup calculate button
             Button calculateBtn = new Button
@@ -86,30 +86,25 @@ namespace CheApp.Templates.CalculationPage
             };
         }
 
-        private void SolveForPicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            updateInputOutputs();
-        }
-
         /// <summary>
-        /// Turn fields into inputs or outputs depending on the state of 
-        /// </summary>
-        private void updateInputOutputs()
+        /// Update the output fields and input fields when changes the desired output
+        /// </summary
+        private void SolveForPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedString = solveForPicker.Items[solveForBindData.SelectedIndex];
             Debug.WriteLine($"\"{selectedString}\" was selected");
-            foreach(Parameter obj in myFun.fieldDic.Values)
+
+            // TODO: Can we bind the selected output fielded to the isOuput setter so that we can get rid of this loop
+            foreach (Parameter obj in myFun.fieldDic.Values)
             {
                 if (obj.Title.Equals(selectedString))
                 {
+                    // We found the new output
+                    // input fields will be updated by an event within the isOuput setter
                     obj.isOutput = true;
-                }
-                else
-                {
-                    obj.isInput = true;
+                    break;
                 }
             }
-
         }
 
         /// <summary>
@@ -145,51 +140,48 @@ namespace CheApp.Templates.CalculationPage
         /// <summary>
         /// Section intended to be placed in a grid
         /// </summary>
-        private void CreateInputFields(ref Grid mainGrid)
+        private void CreateInputFields(ref Grid mainGrid, Parameter para, FieldStyle style, int rowIdx)
         {
-
-            for (int i = 0; i < myFun.fieldDic.Count; i++)
+            // create entry cell
+            Label title = new Label
             {
-                // create entry cell
-                Label title = new Label
-                {
-                    Text = myFun.fieldDic[i].Title,
-                    HorizontalTextAlignment = TextAlignment.Center
-                };
+                Text = para.Title,
+                HorizontalTextAlignment = TextAlignment.Center
+            };
 
 
-                // create the pickers
-                Picker[] pickers = CreatePickers(myFun.fieldDic[i]);
+            // create the pickers
+            Picker[] pickers = CreatePickers(para);
 
-                // create columns
-                ColumnDefinitionCollection colDefs = new ColumnDefinitionCollection();
+            // create columns
+            ColumnDefinitionCollection colDefs = new ColumnDefinitionCollection();
 
 
-                colDefs.Add(new ColumnDefinition { Width = new GridLength(20, GridUnitType.Absolute) });
+            colDefs.Add(new ColumnDefinition { Width = new GridLength(20, GridUnitType.Absolute) });
 
-                if (pickers.Length == 1)
-                {
-                    // for input/ouput cell
-                    colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                    // for unit pickers
-                    colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                }
-                else
-                {
-                    // for input/ouput cell
-                    colDefs.Add(new ColumnDefinition { Width = new GridLength(5, GridUnitType.Star) });
-                    // for unit pickers
-                    colDefs.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-                    colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                    colDefs.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-                }
+            if (pickers.Length == 1)
+            {
+                // for input/ouput cell
+                colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                // for unit pickers
+                colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            }
+            else
+            {
+                // for input/ouput cell
+                colDefs.Add(new ColumnDefinition { Width = new GridLength(5, GridUnitType.Star) });
+                // for unit pickers
+                colDefs.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+                colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                colDefs.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+            }
 
-                colDefs.Add(new ColumnDefinition { Width = new GridLength(20, GridUnitType.Absolute) });
+            colDefs.Add(new ColumnDefinition { Width = new GridLength(20, GridUnitType.Absolute) });
 
-                Grid grid = new Grid
-                {
-                    HorizontalOptions = LayoutOptions.FillAndExpand,
-                    RowDefinitions =
+            Grid grid = new Grid
+            {
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                RowDefinitions =
                 {
                     new RowDefinition { Height = new GridLength(20, GridUnitType.Absolute) },
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
@@ -197,85 +189,85 @@ namespace CheApp.Templates.CalculationPage
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                     new RowDefinition { Height = new GridLength(20, GridUnitType.Absolute) }
                 },
-                    ColumnDefinitions = colDefs
-                };
+                ColumnDefinitions = colDefs
+            };
 
 
-                // row 1
-                grid.Children.Add(title, 1, 1);
-                Grid.SetColumnSpan(title, grid.ColumnDefinitions.Count - 2);
+            // row 1
+            grid.Children.Add(title, 1, 1);
+            Grid.SetColumnSpan(title, grid.ColumnDefinitions.Count - 2);
 
 
 
-                Label unitLb = new Label { Text = "Units" };
-                grid.Children.Add(unitLb, 2, 2);
+            Label unitLb = new Label { Text = "Units" };
+            grid.Children.Add(unitLb, 2, 2);
 
-                // row 3
-                // Entry cell will be taken care of by the classes which inherit this class
-                if (pickers.Length == 1)
-                {
-                    grid.Children.Add(pickers[0], 2, 3);
+            // row 3
+            // Entry cell will be taken care of by the classes which inherit this class
+            if (pickers.Length == 1)
+            {
+                grid.Children.Add(pickers[0], 2, 3);
 
-                }
-                else
-                {
-                    grid.Children.Add(pickers[0], 2, 3);
-                    grid.Children.Add(new Label
-                    {
-                        Text = "Per",
-                        HorizontalTextAlignment = TextAlignment.Center
-                    }, 3, 3);
-                    grid.Children.Add(pickers[1], 4, 3);
-                    Grid.SetColumnSpan(unitLb, 3);
-                }
-
-
-                // create entry cell
-                Entry inputEntry = new Entry
-                {
-                    Keyboard = Keyboard.Numeric,
-                    HeightRequest = 10
-                };
-
-                Label resultsLb = new Label
-                {
-
-                };
-
-                // bind it up!
-                inputEntry.SetBinding(Entry.TextProperty, new Binding("ValueStr"));
-                inputEntry.BindingContext = myFun.fieldDic[i];
-                resultsLb.SetBinding(Label.TextProperty, new Binding("ValueStr"));
-                resultsLb.BindingContext = myFun.fieldDic[i];
-
-                grid.SetBinding(Grid.BackgroundColorProperty, new Binding("BackgroundColor"));
-                grid.BindingContext = fieldStyle[i];
-
-                // row 2
-                Label inputTitleLb = new Label { Text = "Input" };
-                Label resultsTitleLb = new Label { Text = "Result" };
-
-                resultsLb.SetBinding(Entry.IsVisibleProperty, new Binding("isOutput"));
-                resultsLb.BindingContext = myFun.fieldDic[i];
-
-                resultsTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("isOutput"));
-                resultsTitleLb.BindingContext = myFun.fieldDic[i];
-
-                inputEntry.SetBinding(Entry.IsVisibleProperty, new Binding("isInput"));
-                inputEntry.BindingContext = myFun.fieldDic[i];
-
-                inputTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("isInput"));
-                inputTitleLb.BindingContext = myFun.fieldDic[i];
-
-                grid.Children.Add(inputTitleLb, 1, 2);
-                grid.Children.Add(resultsTitleLb, 1, 2);
-
-                // row 3
-                grid.Children.Add(inputEntry, 1, 3);
-                grid.Children.Add(resultsLb, 1, 3);
-
-                mainGrid.Children.Add(grid, 1, i + 2);
             }
+            else
+            {
+                grid.Children.Add(pickers[0], 2, 3);
+                grid.Children.Add(new Label
+                {
+                    Text = "Per",
+                    HorizontalTextAlignment = TextAlignment.Center
+                }, 3, 3);
+                grid.Children.Add(pickers[1], 4, 3);
+                Grid.SetColumnSpan(unitLb, 3);
+            }
+
+
+            // create entry cell
+            Entry inputEntry = new Entry
+            {
+                Keyboard = Keyboard.Numeric,
+                HeightRequest = 10
+            };
+
+            Label resultsLb = new Label
+            {
+
+            };
+
+            // bind it up!
+            inputEntry.SetBinding(Entry.TextProperty, new Binding("ValueStr"));
+            inputEntry.BindingContext = para;
+            resultsLb.SetBinding(Label.TextProperty, new Binding("ValueStr"));
+            resultsLb.BindingContext = para;
+
+            grid.SetBinding(Grid.BackgroundColorProperty, new Binding("BackgroundColor"));
+            grid.BindingContext = style;
+
+            // row 2
+            Label inputTitleLb = new Label { Text = "Input" };
+            Label resultsTitleLb = new Label { Text = "Result" };
+
+            resultsLb.SetBinding(Entry.IsVisibleProperty, new Binding("isOutput"));
+            resultsLb.BindingContext = para;
+
+            resultsTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("isOutput"));
+            resultsTitleLb.BindingContext = para;
+
+            inputEntry.SetBinding(Entry.IsVisibleProperty, new Binding("isInput"));
+            inputEntry.BindingContext = para;
+
+            inputTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("isInput"));
+            inputTitleLb.BindingContext = para;
+
+            grid.Children.Add(inputTitleLb, 1, 2);
+            grid.Children.Add(resultsTitleLb, 1, 2);
+
+            // row 3
+            grid.Children.Add(inputEntry, 1, 3);
+            grid.Children.Add(resultsLb, 1, 3);
+
+            mainGrid.Children.Add(grid, 1, rowIdx + 2);
+
         }
 
         /// <summary>

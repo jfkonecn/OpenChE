@@ -6,17 +6,23 @@ using System.Threading.Tasks;
 using EngineeringMath.Units;
 using System.ComponentModel;
 
-namespace EngineeringMath.GenericObject
+namespace EngineeringMath.Calculations
 {
     public class Parameter : INotifyPropertyChanged
     {
         /// <param name="title">Title of the field</param>
+        /// <param name="ID">Id of the parameter</param>
+        /// <param name="subFunctions">The functions which this parameter may be replaced by 
+        /// <para>EX: An area parameter can replaced by a function which calculates the area of a circle</para>
+        /// </param>
         /// <param name="lowerLimit">The lowest number the parameter is allowed to be</param>
         /// <param name="upperLimit">The highest number the paramter is allowed to be</param>
         /// <param name="desiredUnits">Used to create a conversion factor</param>
         /// <param name="isInput">If this parameter(else it's an output)</param>
-        internal Parameter( int ID, string title, AbstractUnit[] desiredUnits, 
-            bool isInput = true, double lowerLimit = double.MinValue, 
+        internal Parameter( int ID, string title, AbstractUnit[] desiredUnits,
+            List<FunctionFactory.FactoryData> subFunctions,
+            bool isInput = true,              
+            double lowerLimit = double.MinValue, 
             double upperLimit = double.MaxValue)
         {
             if(lowerLimit >= upperLimit)
@@ -28,12 +34,14 @@ namespace EngineeringMath.GenericObject
             {
                 throw new ArgumentOutOfRangeException("Cannot have more than 2 elements in desiredUnits");
             }
+            this.subFunctions = subFunctions;
             this.ID = ID;
             this.LowerLimit = lowerLimit;
             this.UpperLimit = upperLimit;
             // prevent pointer sharing
             this.DesiredUnits = desiredUnits.ToArray();
-            this.isInput = isInput;
+            // don't use setter because this will call an event which is currently null
+            _isInput = isInput;
             this.Title = title;
 
             this.SelectedIndex = new int[desiredUnits.Length];
@@ -47,6 +55,17 @@ namespace EngineeringMath.GenericObject
            
         }
 
+        /// <summary>
+        /// Contains all of the functions which will be allowed to substituted out all the fields within the function 
+        /// <para>int represents the id of the parameters</para>
+        /// </summary>
+        public List<FunctionFactory.FactoryData> subFunctions;
+
+        /// <summary>
+        /// This is the function which is currently replacing this parameter
+        /// It is null when no function is replacing it.
+        /// </summary>
+        public Function ReplaceFunction { get; set; }
         public int ID { get; private set; }
 
         private double _Value = 0.0;
@@ -184,6 +203,12 @@ namespace EngineeringMath.GenericObject
             set
             {
                 _isInput = value;
+
+                if (!value)
+                {
+                    OnMadeOuput(this.ID);
+                }
+                
                 OnPropertyChanged("isInput");
                 OnPropertyChanged("isOutput");
             }
@@ -202,6 +227,20 @@ namespace EngineeringMath.GenericObject
                 this.isInput = !value;                
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ID">ID of the Parameter which was just changed</param>
+        public delegate void MadeOuputHandler(int ID);
+
+        /// <summary>
+        /// Called when this parameter is made to be an output
+        /// </summary>
+        public event MadeOuputHandler OnMadeOuput;
+
+
+
 
         protected virtual void OnPropertyChanged(string property)
         {

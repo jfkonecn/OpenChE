@@ -21,15 +21,7 @@ namespace CheApp.FluidsPages
         public OrificePlate() : base()
         {
 
-
-
-            this.PageSetup(new EngineeringMath.Calculations.Fluids.OrificePlate(
-                "Discharge Coefficient",
-                "Density",
-                "Inlet Pipe Diameter",
-                "Orifice Diameter",
-                "Drop in Pressure (pIn - pOut) Across Orifice Plate",
-                "Volumetric Flow Rate"));
+            this.PageSetup(FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.OrificePlate)));
 #if DEBUG            
             myFun.fieldDic[0].ValueStr = "1";
             myFun.fieldDic[1].ValueStr = "1000";

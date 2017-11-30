@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using EngineeringMath.Units;
-using EngineeringMath.GenericObject;
+using EngineeringMath.Calculations;
 using Xamarin.Forms;
 
 namespace CheApp.Templates.CalculationPage

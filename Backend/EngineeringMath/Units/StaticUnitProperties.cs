@@ -22,7 +22,8 @@ namespace EngineeringMath.Units
             { typeof(Temperature) , Temperature.StringToUnit },
             { typeof(Time) , Time.StringToUnit },
             { typeof(Unitless) , Unitless.StringToUnit },
-            { typeof(Volume) , Volume.StringToUnit }
+            { typeof(Volume) , Volume.StringToUnit },
+            { typeof(Area), Area.StringToUnit }
         };
     }
 }
