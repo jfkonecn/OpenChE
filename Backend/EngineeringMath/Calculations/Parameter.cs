@@ -35,20 +35,20 @@ namespace EngineeringMath.Calculations
                 throw new ArgumentOutOfRangeException("Cannot have more than 2 elements in desiredUnits");
             }
             
-            if(subFunctions != null)
-            {
-                // add a default selection
-                Dictionary< string, FunctionFactory.FactoryData > temp = new Dictionary<string, FunctionFactory.FactoryData>
+            // Build SubFunctionSelection
+            // add a default selection
+            Dictionary<string, FunctionFactory.FactoryData> temp = new Dictionary<string, FunctionFactory.FactoryData>
                 {
                     { "Direct Input", null }
                 };
+            if (subFunctions != null)
+            {
                 foreach (KeyValuePair<string, FunctionFactory.FactoryData> ele in subFunctions)
                     temp.Add(ele.Key, ele.Value);
-
-                this.SubFunctionSelection = new PickerSelection<FunctionFactory.FactoryData>(temp);
             }
+            this.SubFunctionSelection = new PickerSelection<FunctionFactory.FactoryData>(temp);
+            this.SubFunctionSelection.OnSelectedIndexChanged += SubFunctionSelection_OnSelectedIndexChanged;
 
-            
             this.ID = ID;
             this.LowerLimit = lowerLimit;
             this.UpperLimit = upperLimit;
@@ -65,6 +65,22 @@ namespace EngineeringMath.Calculations
             }
             
            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SubFunctionSelection_OnSelectedIndexChanged()
+        {
+            bool enable = true;
+            if (SubFunctionSelection.SelectedObject != null)
+            {
+                enable = false;
+            }
+            foreach (PickerSelection<AbstractUnit> obj in UnitSelection)
+            {
+                obj.IsEnabled = enable;
+            }
         }
 
         /// <summary>
@@ -195,8 +211,11 @@ namespace EngineeringMath.Calculations
 
                 if (!value)
                 {
+                    SubFunctionSelection.SelectedObject = null;
                     OnMadeOuput(this.ID);
                 }
+
+                SubFunctionSelection.IsEnabled = AllowUserInput;
 
                 // This could change the state of allowing user inputs
                 OnPropertyChanged("AllowUserInput");

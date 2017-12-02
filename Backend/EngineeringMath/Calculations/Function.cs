@@ -43,6 +43,12 @@ namespace EngineeringMath.Calculations
             OutputSelection = new PickerSelection<Parameter>(
                 FieldDic.Values.ToDictionary(x => x.Title, x => x)
                 );
+            OutputSelection.OnSelectedIndexChanged += OutputSelection_OnSelectedIndexChanged;
+        }
+
+        private void OutputSelection_OnSelectedIndexChanged()
+        {
+            OutputSelection.SelectedObject.isOutput = true;
         }
 
         /// <summary>

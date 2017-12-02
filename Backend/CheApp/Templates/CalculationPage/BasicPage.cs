@@ -86,14 +86,6 @@ namespace CheApp.Templates.CalculationPage
         }
 
         /// <summary>
-        /// Update the output fields and input fields when changes the desired output
-        /// </summary
-        private void SolveForPicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            myFun.OutputSelection.SelectedObject.isOutput = true;
-        }
-
-        /// <summary>
         /// Make sure parameters are valid and execute function
         /// </summary>
         /// <param name="sender"></param>
@@ -137,7 +129,7 @@ namespace CheApp.Templates.CalculationPage
 
 
             // create the pickers
-            Picker[] pickers = CreateUnitPickers(para);
+            Picker[] unitPickers = CreateUnitPickers(para);
 
             // create columns
             ColumnDefinitionCollection colDefs = new ColumnDefinitionCollection();
@@ -145,7 +137,7 @@ namespace CheApp.Templates.CalculationPage
 
             colDefs.Add(new ColumnDefinition { Width = new GridLength(20, GridUnitType.Absolute) });
 
-            if (pickers.Length == 1)
+            if (unitPickers.Length == 1)
             {
                 // for input/ouput cell
                 colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
@@ -173,41 +165,18 @@ namespace CheApp.Templates.CalculationPage
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                     new RowDefinition { Height = new GridLength(20, GridUnitType.Absolute) }
                 },
                 ColumnDefinitions = colDefs
             };
 
 
-            // row 1
-            grid.Children.Add(title, 1, 1);
-            Grid.SetColumnSpan(title, grid.ColumnDefinitions.Count - 2);
 
 
-
+            
             Label unitLb = new Label { Text = "Units" };
-            grid.Children.Add(unitLb, 2, 2);
-
-            // row 3
-            // Entry cell will be taken care of by the classes which inherit this class
-            if (pickers.Length == 1)
-            {
-                grid.Children.Add(pickers[0], 2, 3);
-
-            }
-            else
-            {
-                grid.Children.Add(pickers[0], 2, 3);
-                grid.Children.Add(new Label
-                {
-                    Text = "Per",
-                    HorizontalTextAlignment = TextAlignment.Center
-                }, 3, 3);
-                grid.Children.Add(pickers[1], 4, 3);
-                Grid.SetColumnSpan(unitLb, 3);
-            }
-
-
             // create entry cell
             Entry inputEntry = new Entry
             {
@@ -219,7 +188,6 @@ namespace CheApp.Templates.CalculationPage
             {
 
             };
-
             // bind it up!
             inputEntry.SetBinding(Entry.TextProperty, new Binding("ValueStr"));
             inputEntry.BindingContext = para;
@@ -229,7 +197,6 @@ namespace CheApp.Templates.CalculationPage
             grid.SetBinding(Grid.BackgroundColorProperty, new Binding("BackgroundColor"));
             grid.BindingContext = style;
 
-            // row 2
             Label inputTitleLb = new Label { Text = "Input" };
             Label resultsTitleLb = new Label { Text = "Result" };
 
@@ -244,13 +211,46 @@ namespace CheApp.Templates.CalculationPage
 
             inputTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("AllowUserInput"));
             inputTitleLb.BindingContext = para;
+            Picker subFunctionPicker = CreateSubFunctionPicker(para);
 
-            grid.Children.Add(inputTitleLb, 1, 2);
-            grid.Children.Add(resultsTitleLb, 1, 2);
+
+
+            // row 1
+            grid.Children.Add(title, 1, 1);
+            Grid.SetColumnSpan(title, grid.ColumnDefinitions.Count - 2);
+
+            // row 2
+            grid.Children.Add(subFunctionPicker, 1, 2);
+            Grid.SetColumnSpan(subFunctionPicker, grid.ColumnDefinitions.Count - 2);
 
             // row 3
-            grid.Children.Add(inputEntry, 1, 3);
-            grid.Children.Add(resultsLb, 1, 3);
+            grid.Children.Add(inputTitleLb, 1, 3);
+            grid.Children.Add(resultsTitleLb, 1, 3);
+            grid.Children.Add(unitLb, 2, 3);
+
+
+            // row 4
+            // Entry cell will be taken care of by the classes which inherit this class
+            if (unitPickers.Length == 1)
+            {
+                grid.Children.Add(unitPickers[0], 2, 4);
+
+            }
+            else
+            {
+                grid.Children.Add(unitPickers[0], 2, 4);
+                grid.Children.Add(new Label
+                {
+                    Text = "Per",
+                    HorizontalTextAlignment = TextAlignment.Center
+                }, 3, 3);
+                grid.Children.Add(unitPickers[1], 4, 4);
+                Grid.SetColumnSpan(unitLb, 3);
+            }
+            grid.Children.Add(inputEntry, 1, 4);
+            grid.Children.Add(resultsLb, 1, 4);
+
+
 
             mainGrid.Children.Add(grid, 1, rowIdx + 2);
 
@@ -263,26 +263,28 @@ namespace CheApp.Templates.CalculationPage
         /// <returns></returns>
         private Picker CreateSolverForPicker(Function fun)
         {
-            Picker picker = new Picker();
-
-            picker.SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
-
-            // bind it up!
-            picker.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
-            picker.BindingContext = fun.OutputSelection;
-
-            picker.SelectedIndexChanged += SolveForPicker_SelectedIndexChanged;
-
+            Picker picker = BindingFactory.GenericBindings<Parameter>.PickerFactory(ref fun.OutputSelection);
             picker.Title = "Solve For:";
             fun.OutputSelection.SelectedIndex = fun.OutputSelection.PickerList.Count - 1;
             return picker;
         }
 
-
+        /// <summary>
+        /// Creates the a picker to allow the user to select substitute functions for the given parameter
+        /// </summary>
+        /// <param name="para"></param>
+        /// <returns></returns>
+        private Picker CreateSubFunctionPicker(Parameter para)
+        {
+            Picker picker = BindingFactory.GenericBindings<FunctionFactory.FactoryData>.PickerFactory(ref para.SubFunctionSelection);
+            para.SubFunctionSelection.SelectedIndex = 0;
+            return picker;
+        }
 
         /// <summary>
         /// creates a pickers for selecting units for the field
         /// </summary>
+        /// <param name="para"></param>
         /// <returns></returns>
         private Picker[] CreateUnitPickers(Parameter para)
         {
@@ -290,25 +292,19 @@ namespace CheApp.Templates.CalculationPage
 
             for (int i = 0; i < para.DesiredUnits.Length; i++)
             {
-                // create the picker
-                allPickers[i] = new Picker
-                {
-
-                    
-                };
-                // this is an example of how to bind to an array
-                // Not needed here, but was used at one point
-                // allPickers[i].SetBinding(Picker.ItemsSourceProperty, new Binding($"PickerStrings[{i}]"));
-
-                allPickers[i].SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
-
-                // bind it up!
-                allPickers[i].SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
-                allPickers[i].BindingContext = para.UnitSelection[i];
+                allPickers[i] = BindingFactory.GenericBindings<AbstractUnit>.PickerFactory(ref para.UnitSelection[i]);
                 para.UnitSelection[i].SelectedIndex = 0;
             }
 
             return allPickers;
+        }
+
+
+
+
+        private Button CreateSubFunctionButton()
+        {
+            return null;
         }
     }
 }
