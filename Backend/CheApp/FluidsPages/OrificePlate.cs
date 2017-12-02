@@ -23,13 +23,13 @@ namespace CheApp.FluidsPages
 
             this.PageSetup(FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.OrificePlate)));
 #if DEBUG            
-            myFun.fieldDic[0].ValueStr = "1";
-            myFun.fieldDic[1].ValueStr = "1000";
-            myFun.fieldDic[2].ValueStr = "10";
-            myFun.fieldDic[3].ValueStr = "8";
-            myFun.fieldDic[4].ValueStr = "10";
+            myFun.FieldDic[0].ValueStr = "1";
+            myFun.FieldDic[1].ValueStr = "1000";
+            myFun.FieldDic[2].ValueStr = "10";
+            myFun.FieldDic[3].ValueStr = "8";
+            myFun.FieldDic[4].ValueStr = "10";
 #endif
-            myFun.fieldDic[5].ValueStr = "0.0";
+            myFun.FieldDic[5].ValueStr = "0.0";
         }
 
 

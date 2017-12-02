@@ -16,7 +16,7 @@ namespace EngineeringMath.Calculations.Fluids
         internal OrificePlate()
         {
             this.Title = "Orifice Plate";
-            fieldDic = new Dictionary<int, Parameter>
+            FieldDic = new Dictionary<int, Parameter>
             {
                 { (int)Field.disCo, new Parameter((int)Field.disCo, "Discharge Coefficient", new AbstractUnit[] { Unitless.unitless }, null, true, 0, 1.0) },
                 { (int)Field.density, new Parameter((int)Field.density, "Density", new AbstractUnit[] { Density.kgm3 }, null, true, 0) },
@@ -81,12 +81,12 @@ namespace EngineeringMath.Calculations.Fluids
             switch ((Field)outputID)
             {
                 case Field.disCo:
-                    return  fieldDic[(int)Field.volFlow].GetValue() / 
-                        (fieldDic[(int)Field.pArea].GetValue() *
+                    return  FieldDic[(int)Field.volFlow].GetValue() / 
+                        (FieldDic[(int)Field.pArea].GetValue() *
                             Math.Sqrt(
-                                (2 * fieldDic[(int)Field.deltaP].GetValue()) /
-                                (fieldDic[(int)Field.density].GetValue() *
-                                (Math.Pow(fieldDic[(int)Field.pArea].GetValue(), 2) / Math.Pow(fieldDic[(int)Field.pArea].GetValue(), 2) - 1))
+                                (2 * FieldDic[(int)Field.deltaP].GetValue()) /
+                                (FieldDic[(int)Field.density].GetValue() *
+                                (Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2) / Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2) - 1))
                                 ));
                 case Field.density:
                     throw new NotImplementedException();
@@ -97,11 +97,11 @@ namespace EngineeringMath.Calculations.Fluids
                 case Field.deltaP:
                     throw new NotImplementedException();
                 case Field.volFlow:
-                    return fieldDic[(int)Field.disCo].GetValue() * fieldDic[(int)Field.pArea].GetValue() *
+                    return FieldDic[(int)Field.disCo].GetValue() * FieldDic[(int)Field.pArea].GetValue() *
                         Math.Sqrt(
-                            (2 * fieldDic[(int)Field.deltaP].GetValue()) /
-                            (fieldDic[(int)Field.density].GetValue() *
-                            (Math.Pow(fieldDic[(int)Field.pArea].GetValue(), 2) / Math.Pow(fieldDic[(int)Field.oArea].GetValue(), 2) - 1))
+                            (2 * FieldDic[(int)Field.deltaP].GetValue()) /
+                            (FieldDic[(int)Field.density].GetValue() *
+                            (Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2) / Math.Pow(FieldDic[(int)Field.oArea].GetValue(), 2) - 1))
                             );
                 default:
                     throw new NotImplementedException();

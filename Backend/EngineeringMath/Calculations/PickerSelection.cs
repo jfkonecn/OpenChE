@@ -37,7 +37,7 @@ namespace EngineeringMath.Calculations
             }
         }
 
-        private int _SelectedIndex = 0;
+        private int _SelectedIndex = -1;
         /// <summary>
         /// The index selected in the picker (to be binded with the picker)
         /// </summary>
@@ -49,7 +49,8 @@ namespace EngineeringMath.Calculations
             }
             set
             {
-                if(value < _ObjectLookup.Count && value >= 0)
+                // -1 means nothing is selected
+                if (value < _ObjectLookup.Count && value >= -1)
                 {
                     _SelectedIndex = value;
                 }
@@ -68,6 +69,12 @@ namespace EngineeringMath.Calculations
         {
             get
             {
+                if(SelectedIndex == -1)
+                {
+                    Debug.WriteLine($"Nothing is selected");
+                    return default(T);
+                }
+                Debug.WriteLine($"\"{ObjectLookup.Keys.ToList()[SelectedIndex]}\" was selected");
                 return ObjectLookup.Values.ToList()[SelectedIndex];
             }
         }

@@ -52,7 +52,7 @@ namespace EngineeringMath.Calculations
                 throw new NotImplementedException("This function has not been implemented");
             }
 
-            myFun.SetupOutputChangeEvent();
+            myFun.FinishSetup();
 
             return myFun;
         }
@@ -65,7 +65,7 @@ namespace EngineeringMath.Calculations
         public static Function BuildFunction(Type funType, int outputID)
         {
             Function myFun = BuildFunction(funType);
-            myFun.fieldDic[outputID].isOutput = true;
+            myFun.FieldDic[outputID].isOutput = true;
             return myFun;
         }
         /// <summary>

@@ -17,7 +17,7 @@ namespace EngineeringMath.Calculations.Area
         /// <param name="cirDiaTitle">Title of circle diameter field</param>
         public Circle(string cirDiaTitle, string cirAreaTitle)
         {
-            fieldDic = new Dictionary<int, Parameter>
+            FieldDic = new Dictionary<int, Parameter>
             {
                 { (int)Field.cirDia, new Parameter((int)Field.cirDia, "Diameter", new AbstractUnit[] { Length.m }, null, true, 0, 1.0) },
                 { (int)Field.cirArea, new Parameter((int)Field.cirArea, "Area", new AbstractUnit[] { Units.Area.m2 }, null, false, 0.0) }
@@ -51,9 +51,9 @@ namespace EngineeringMath.Calculations.Area
             switch ((Field)outputID)
             {
                 case Field.cirDia:
-                    return Math.PI / 4 * Math.Pow( fieldDic[(int)Field.cirDia].GetValue(), 2);
+                    return Math.PI / 4 * Math.Pow( FieldDic[(int)Field.cirDia].GetValue(), 2);
                 case Field.cirArea:
-                    return Math.Sqrt((4d * fieldDic[(int)Field.cirArea].GetValue()) / Math.PI );
+                    return Math.Sqrt((4d * FieldDic[(int)Field.cirArea].GetValue()) / Math.PI );
                 default:
                     throw new NotImplementedException();
             }

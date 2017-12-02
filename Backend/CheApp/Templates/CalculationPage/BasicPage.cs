@@ -13,8 +13,6 @@ namespace CheApp.Templates.CalculationPage
     public abstract class BasicPage : ContentPage
     {
         protected FieldStyle[] fieldStyle;
-        protected SolveForBindData solveForBindData;
-        private Picker solveForPicker;
         protected Function myFun;
 
 
@@ -30,10 +28,10 @@ namespace CheApp.Templates.CalculationPage
         public void PageSetup(Function pageFun)
         {
             myFun = pageFun;
-            Grid grid = BasicGrids.SimpleGrid(myFun.fieldDic.Count + 2, 1);
+            Grid grid = BasicGrids.SimpleGrid(myFun.FieldDic.Count + 2, 1);
 
-            fieldStyle = new FieldStyle[myFun.fieldDic.Count];
-            for (int i = 0; i < myFun.fieldDic.Count; i++)
+            fieldStyle = new FieldStyle[myFun.FieldDic.Count];
+            for (int i = 0; i < myFun.FieldDic.Count; i++)
             {
                 fieldStyle[i] = new FieldStyle();
             }
@@ -47,27 +45,12 @@ namespace CheApp.Templates.CalculationPage
             pageTitle.SetBinding(Label.TextProperty, new Binding("Title"));
             pageTitle.BindingContext = myFun;
 
-            // setup solve for picker
-            solveForBindData = new SolveForBindData(myFun.fieldDic.Count - 1);
-            solveForPicker = new Picker();
-            foreach (Parameter obj in myFun.fieldDic.Values)
-            {
-                solveForPicker.Items.Add(obj.Title);
-            }
-
-            solveForPicker.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
-            solveForPicker.BindingContext = solveForBindData;
-
-            solveForPicker.SelectedIndexChanged += SolveForPicker_SelectedIndexChanged;
-
-            solveForPicker.Title = "Solve For:";
-
 
 
             // create title block
             Grid titleGrid = BasicGrids.SimpleGrid(2, 1);
             titleGrid.Children.Add(pageTitle, 1, 1);
-            titleGrid.Children.Add(solveForPicker, 1, 2);
+            titleGrid.Children.Add(CreateSolverForPicker(myFun), 1, 2);
 
             grid.Children.Add(new Grid
             {
@@ -76,9 +59,9 @@ namespace CheApp.Templates.CalculationPage
                     titleGrid
                 }
             }, 1, 1);
-            for (int i = 0; i < myFun.fieldDic.Count; i++)
+            for (int i = 0; i < myFun.FieldDic.Count; i++)
             {
-                CreateInputFields(ref grid, myFun.fieldDic[i], fieldStyle[i], i);
+                CreateInputFields(ref grid, myFun.FieldDic[i], fieldStyle[i], i);
             }
                 
 
@@ -91,7 +74,7 @@ namespace CheApp.Templates.CalculationPage
 
             calculateBtn.Clicked += CalculateButtonClicked;
 
-            grid.Children.Add(calculateBtn, 1, 2 + myFun.fieldDic.Count);
+            grid.Children.Add(calculateBtn, 1, 2 + myFun.FieldDic.Count);
             Grid.SetColumnSpan(calculateBtn, grid.ColumnDefinitions.Count - 2);
 
             // finish up
@@ -107,20 +90,7 @@ namespace CheApp.Templates.CalculationPage
         /// </summary
         private void SolveForPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedString = solveForPicker.Items[solveForBindData.SelectedIndex];
-            Debug.WriteLine($"\"{selectedString}\" was selected");
-
-            // TODO: Can we bind the selected output fielded to the isOuput setter so that we can get rid of this loop
-            foreach (Parameter obj in myFun.fieldDic.Values)
-            {
-                if (obj.Title.Equals(selectedString))
-                {
-                    // We found the new output
-                    // input fields will be updated by an event within the isOuput setter
-                    obj.isOutput = true;
-                    break;
-                }
-            }
+            myFun.OutputSelection.SelectedObject.isOutput = true;
         }
 
         /// <summary>
@@ -167,7 +137,7 @@ namespace CheApp.Templates.CalculationPage
 
 
             // create the pickers
-            Picker[] pickers = CreatePickers(para);
+            Picker[] pickers = CreateUnitPickers(para);
 
             // create columns
             ColumnDefinitionCollection colDefs = new ColumnDefinitionCollection();
@@ -286,11 +256,35 @@ namespace CheApp.Templates.CalculationPage
 
         }
 
+
         /// <summary>
-        /// creates a pickers for the input field
+        /// creates a pickers for selecting the output field
         /// </summary>
         /// <returns></returns>
-        private Picker[] CreatePickers(Parameter para)
+        private Picker CreateSolverForPicker(Function fun)
+        {
+            Picker picker = new Picker();
+
+            picker.SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
+
+            // bind it up!
+            picker.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
+            picker.BindingContext = fun.OutputSelection;
+
+            picker.SelectedIndexChanged += SolveForPicker_SelectedIndexChanged;
+
+            picker.Title = "Solve For:";
+            fun.OutputSelection.SelectedIndex = fun.OutputSelection.PickerList.Count - 1;
+            return picker;
+        }
+
+
+
+        /// <summary>
+        /// creates a pickers for selecting units for the field
+        /// </summary>
+        /// <returns></returns>
+        private Picker[] CreateUnitPickers(Parameter para)
         {
             Picker[] allPickers = new Picker[para.DesiredUnits.Length];
 
@@ -303,13 +297,15 @@ namespace CheApp.Templates.CalculationPage
                     
                 };
                 // this is an example of how to bind to an array
+                // Not needed here, but was used at one point
                 // allPickers[i].SetBinding(Picker.ItemsSourceProperty, new Binding($"PickerStrings[{i}]"));
 
-                allPickers[i].SetBinding(Picker.ItemsSourceProperty, new Binding($"PickerList"));
+                allPickers[i].SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
 
                 // bind it up!
-                allPickers[i].SetBinding(Picker.SelectedIndexProperty, new Binding($"SelectedIndex"));
+                allPickers[i].SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
                 allPickers[i].BindingContext = para.UnitSelection[i];
+                para.UnitSelection[i].SelectedIndex = 0;
             }
 
             return allPickers;

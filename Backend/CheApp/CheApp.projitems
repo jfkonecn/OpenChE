@@ -16,7 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\BasicGrids.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\FieldStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\SolveForBindData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\MainMenuTab.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThermoPages\MainPage.cs" />

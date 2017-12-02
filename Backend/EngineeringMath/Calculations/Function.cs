@@ -14,9 +14,12 @@ namespace EngineeringMath.Calculations
         /// Store all paramter
         /// <para>int represents the id of the parameters</para>
         /// </summary>
-        public Dictionary<int, Parameter> fieldDic;
+        public Dictionary<int, Parameter> FieldDic;
 
-
+        /// <summary>
+        /// Stores the output parameter the user selected (intended to be binded with a picker)
+        /// </summary>
+        public PickerSelection<Parameter> OutputSelection;
 
         /// <summary>
         /// Solves function based on what the current output parameter is
@@ -24,18 +27,22 @@ namespace EngineeringMath.Calculations
         public void Solve()
         {
             int outputID = getOutputID();
-            fieldDic[outputID].SetValue(Calculation(outputID));
+            FieldDic[outputID].SetValue(Calculation(outputID));
         }
 
         /// <summary>
-        /// Call this function after creating the function to setup output change event on all of the parameters
+        /// Call this function after creating the function object to finish building the object
         /// </summary>
-        internal void SetupOutputChangeEvent()
+        internal void FinishSetup()
         {
-            foreach (Parameter obj in fieldDic.Values)
+            foreach (Parameter obj in FieldDic.Values)
             {
                 obj.OnMadeOuput += new Parameter.MadeOuputHandler(UpdateAllParametersInputOutput);
             }
+
+            OutputSelection = new PickerSelection<Parameter>(
+                FieldDic.Values.ToDictionary(x => x.Title, x => x)
+                );
         }
 
         /// <summary>
@@ -44,7 +51,7 @@ namespace EngineeringMath.Calculations
         /// <param name="outputID">ID of parameter which is the new output</param>
         private void UpdateAllParametersInputOutput(int outputID)
         {
-            foreach (Parameter obj in fieldDic.Values)
+            foreach (Parameter obj in FieldDic.Values)
             {
                 if (obj.ID != outputID)
                 {
@@ -76,7 +83,7 @@ namespace EngineeringMath.Calculations
         /// <returns>ID of the output parameter</returns>
         private int getOutputID()
         {
-            foreach (Parameter obj in fieldDic.Values)
+            foreach (Parameter obj in FieldDic.Values)
             {
                 if (obj.isOutput)
                 {
