@@ -25,25 +25,64 @@ namespace EngineeringMath.Units
         /// </summary>
         /// <param name="curValue">The value in "this" units</param>
         /// <param name="curUnits">Current units</param>
-        /// <param name="desiredUnitNames">String names of desired unit</param>
+        /// <param name="desiredUnits">Type of desired unit</param>
         /// <returns>The curValue in the desired units</returns>
-        public static double ConvertTo(double curValue, AbstractUnit[] curUnits, string[] desiredUnitNames)
+        public static double ConvertTo(double curValue, AbstractUnit[] curUnits, AbstractUnit[] desiredUnits)
         {
-            if(curUnits.Length != desiredUnitNames.Length || curUnits.Length > 2)
+            if(curUnits.Length != desiredUnits.Length || curUnits.Length > 2)
             {
                 throw new Exception("Array out of range");
             }
 
-            curValue = curUnits[0].ConvertTo(curValue, desiredUnitNames[0]);
+            curValue = curUnits[0].ConvertTo(curValue, desiredUnits[0]);
 
             if (curUnits.Length == 2)
             {
                 curValue = 1 / curValue;
-                curValue = curUnits[1].ConvertTo(curValue, desiredUnitNames[1]);
+                curValue = curUnits[1].ConvertTo(curValue, desiredUnits[1]);
                 curValue = 1 / curValue;
             }
 
             return curValue;
+        }
+
+        /// <summary>
+        /// Converts from curUnitNames to the one represented by desiredUnits
+        /// <para>If the arrays have 2 elements assumes units of element[0] per element[1]</para>
+        /// </summary>
+        /// <param name="curValue">The value in "this" units</param>
+        /// <param name="desiredUnits">Desired units</param>
+        /// <param name="curUnits">Type of current units</param>
+        /// <returns>The curValue in the desired units</returns>
+        public static double ConvertFrom(double curValue, AbstractUnit[] desiredUnits, AbstractUnit[] curUnits)
+        {
+            return ConvertTo(
+                curValue,
+                curUnits,
+                desiredUnits);
+        }
+
+
+        /// <summary>
+        /// Converts from curUnits to the one represented by the desiredUnitNames
+        /// <para>If the arrays have 2 elements assumes units of element[0] per element[1]</para>
+        /// </summary>
+        /// <param name="curValue">The value in "this" units</param>
+        /// <param name="curUnits">Current units</param>
+        /// <param name="desiredUnitNames">String names of desired unit</param>
+        /// <returns>The curValue in the desired units</returns>
+        public static double ConvertTo(double curValue, AbstractUnit[] curUnits, string[] desiredUnitNames)
+        {
+
+            AbstractUnit[] desiredUnits = new AbstractUnit[desiredUnitNames.Length];
+
+            // do in two loops to catch an array mismatch in the ConvertTo function
+            for (int i = 0; i < desiredUnitNames.Length; i++)
+            {
+                desiredUnits[i] = StaticUnitProperties.AllUnits[curUnits[i].GetType()][desiredUnitNames[i]];
+            }
+
+            return ConvertTo(curValue, curUnits, desiredUnits);
         }
 
         /// <summary>
@@ -57,7 +96,6 @@ namespace EngineeringMath.Units
         public static double ConvertFrom(double curValue, AbstractUnit[] desiredUnits, string[] curUnitNames)
         {
             AbstractUnit[] curUnits = new AbstractUnit[curUnitNames.Length];
-            string[] desiredUnitNames = new string[desiredUnits.Length];
 
             // do in two loops to catch an array mismatch in the ConvertTo function
             for (int i = 0; i < curUnitNames.Length; i++)
@@ -65,15 +103,8 @@ namespace EngineeringMath.Units
                 curUnits[i] = StaticUnitProperties.AllUnits[desiredUnits[i].GetType()][curUnitNames[i]];
             }
 
-            for (int i = 0; i < desiredUnitNames.Length; i++)
-            {
-                desiredUnitNames[i] = desiredUnits[i].ToString();
-            }
 
-            return ConvertTo(
-                curValue,
-                curUnits,
-                desiredUnitNames);
+            return ConvertFrom(curValue, desiredUnits, curUnits);
         }
     }
 }

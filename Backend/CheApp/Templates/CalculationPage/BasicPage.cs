@@ -38,6 +38,15 @@ namespace CheApp.Templates.CalculationPage
                 fieldStyle[i] = new FieldStyle();
             }
 
+            // Setup title for the page
+            Label pageTitle = new Label()
+            {
+                FontSize = Device.GetNamedSize (NamedSize.Large, typeof(Label))
+            };
+
+            pageTitle.SetBinding(Label.TextProperty, new Binding("Title"));
+            pageTitle.BindingContext = myFun;
+
             // setup solve for picker
             solveForBindData = new SolveForBindData(myFun.fieldDic.Count - 1);
             solveForPicker = new Picker();
@@ -53,11 +62,18 @@ namespace CheApp.Templates.CalculationPage
 
             solveForPicker.Title = "Solve For:";
 
+
+
+            // create title block
+            Grid titleGrid = BasicGrids.SimpleGrid(2, 1);
+            titleGrid.Children.Add(pageTitle, 1, 1);
+            titleGrid.Children.Add(solveForPicker, 1, 2);
+
             grid.Children.Add(new Grid
             {
                 Children =
                 {
-                    solveForPicker
+                    titleGrid
                 }
             }, 1, 1);
             for (int i = 0; i < myFun.fieldDic.Count; i++)
@@ -247,16 +263,16 @@ namespace CheApp.Templates.CalculationPage
             Label inputTitleLb = new Label { Text = "Input" };
             Label resultsTitleLb = new Label { Text = "Result" };
 
-            resultsLb.SetBinding(Entry.IsVisibleProperty, new Binding("isOutput"));
+            resultsLb.SetBinding(Entry.IsVisibleProperty, new Binding("DontAllowUserInput"));
             resultsLb.BindingContext = para;
 
-            resultsTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("isOutput"));
+            resultsTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("DontAllowUserInput"));
             resultsTitleLb.BindingContext = para;
 
-            inputEntry.SetBinding(Entry.IsVisibleProperty, new Binding("isInput"));
+            inputEntry.SetBinding(Entry.IsVisibleProperty, new Binding("AllowUserInput"));
             inputEntry.BindingContext = para;
 
-            inputTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("isInput"));
+            inputTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("AllowUserInput"));
             inputTitleLb.BindingContext = para;
 
             grid.Children.Add(inputTitleLb, 1, 2);
@@ -286,12 +302,14 @@ namespace CheApp.Templates.CalculationPage
 
                     
                 };
+                // this is an example of how to bind to an array
+                // allPickers[i].SetBinding(Picker.ItemsSourceProperty, new Binding($"PickerStrings[{i}]"));
 
-                allPickers[i].ItemsSource = para._PickerStrings[i];
+                allPickers[i].SetBinding(Picker.ItemsSourceProperty, new Binding($"PickerList"));
 
                 // bind it up!
-                allPickers[i].SetBinding(Picker.SelectedIndexProperty, new Binding($"SelectedIndex[{i}]"));
-                allPickers[i].BindingContext = para;
+                allPickers[i].SetBinding(Picker.SelectedIndexProperty, new Binding($"SelectedIndex"));
+                allPickers[i].BindingContext = para.UnitSelection[i];
             }
 
             return allPickers;

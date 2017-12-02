@@ -12,7 +12,7 @@ namespace EngineeringMath.Calculations
     {
         /// <param name="title">Title of the field</param>
         /// <param name="ID">Id of the parameter</param>
-        /// <param name="subFunctions">The functions which this parameter may be replaced by 
+        /// <param name="subFunctions">The functions which this parameter may be replaced by the string key is the title which is intended to be stored in a picker
         /// <para>EX: An area parameter can replaced by a function which calculates the area of a circle</para>
         /// </param>
         /// <param name="lowerLimit">The lowest number the parameter is allowed to be</param>
@@ -20,7 +20,7 @@ namespace EngineeringMath.Calculations
         /// <param name="desiredUnits">Used to create a conversion factor</param>
         /// <param name="isInput">If this parameter(else it's an output)</param>
         internal Parameter( int ID, string title, AbstractUnit[] desiredUnits,
-            List<FunctionFactory.FactoryData> subFunctions,
+            Dictionary<string, FunctionFactory.FactoryData> subFunctions,
             bool isInput = true,              
             double lowerLimit = double.MinValue, 
             double upperLimit = double.MaxValue)
@@ -34,7 +34,21 @@ namespace EngineeringMath.Calculations
             {
                 throw new ArgumentOutOfRangeException("Cannot have more than 2 elements in desiredUnits");
             }
-            this.subFunctions = subFunctions;
+            
+            if(subFunctions != null)
+            {
+                // add a default selection
+                Dictionary< string, FunctionFactory.FactoryData > temp = new Dictionary<string, FunctionFactory.FactoryData>
+                {
+                    { "Direct Input", null }
+                };
+                foreach (KeyValuePair<string, FunctionFactory.FactoryData> ele in subFunctions)
+                    temp.Add(ele.Key, ele.Value);
+
+                this.SubFunctionSelection = new PickerSelection<FunctionFactory.FactoryData>(temp);
+            }
+
+            
             this.ID = ID;
             this.LowerLimit = lowerLimit;
             this.UpperLimit = upperLimit;
@@ -44,22 +58,19 @@ namespace EngineeringMath.Calculations
             _isInput = isInput;
             this.Title = title;
 
-            this.SelectedIndex = new int[desiredUnits.Length];
-
-            _PickerStrings = new List<string>[desiredUnits.Length];
+            UnitSelection = new PickerSelection<AbstractUnit>[desiredUnits.Length];
             for(int i = 0; i < desiredUnits.Length; i++)
             {
-                _PickerStrings[i] = new List<string>(StaticUnitProperties.AllUnits[desiredUnits[i].GetType()].Keys);
+                UnitSelection[i] = new PickerSelection<AbstractUnit>(StaticUnitProperties.AllUnits[desiredUnits[i].GetType()]);
             }
             
            
         }
 
         /// <summary>
-        /// Contains all of the functions which will be allowed to substituted out all the fields within the function 
-        /// <para>int represents the id of the parameters</para>
+        /// Contains all of the functions which will be allowed to substituted out all the fields within the function (intended to binded with a picker
         /// </summary>
-        public List<FunctionFactory.FactoryData> subFunctions;
+        public PickerSelection<FunctionFactory.FactoryData> SubFunctionSelection;
 
         /// <summary>
         /// This is the function which is currently replacing this parameter
@@ -81,7 +92,7 @@ namespace EngineeringMath.Calculations
             temp = HelperFunctions.ConvertFrom(
             temp,
             DesiredUnits,
-            SelectedStrings);
+            UnitSelection.Select(x => x.SelectedObject).ToArray());
             if (temp < LowerLimit)
             {
                 throw new ArgumentOutOfRangeException("Value below lower limit!");
@@ -107,7 +118,7 @@ namespace EngineeringMath.Calculations
             double temp = HelperFunctions.ConvertTo(
                         value,
                         DesiredUnits,
-                        SelectedStrings);
+                        UnitSelection.Select(x => x.SelectedObject).ToArray());
             if(temp < LowerLimit)
             {
                 throw new ArgumentOutOfRangeException("Value below lower limit!");
@@ -144,32 +155,10 @@ namespace EngineeringMath.Calculations
 
 
         /// <summary>
-        /// The selected indexes of the pickers of the current units (Intented to binded with a picker)
+        /// Stores data related to the units the user picker for this parameter (Intented to binded with a picker)
         /// </summary>
-        public int[] SelectedIndex { get; set; }
+        public PickerSelection<AbstractUnit>[] UnitSelection { get; set; }
 
-        /// <summary>
-        /// Contains all strings which will be stored in the pickers (Intented to binded with a picker)
-        /// </summary>
-        public List<string>[] _PickerStrings;
-
-        /// <summary>
-        /// Strings selected by the user at the pickers
-        /// </summary>
-        protected string[] SelectedStrings
-        {
-            get
-            {
-                string[] temp = new string[SelectedIndex.Length];
-
-                for(int i = 0; i < SelectedIndex.Length; i++)
-                {
-                    temp[i] = _PickerStrings[i][SelectedIndex[i]];
-                }
-
-                return temp;
-            }
-        }
 
         /// <summary>
         /// Title of the field
@@ -208,9 +197,10 @@ namespace EngineeringMath.Calculations
                 {
                     OnMadeOuput(this.ID);
                 }
-                
-                OnPropertyChanged("isInput");
-                OnPropertyChanged("isOutput");
+
+                // This could change the state of allowing user inputs
+                OnPropertyChanged("AllowUserInput");
+                OnPropertyChanged("DontAllowUserInput");
             }
         }
 
@@ -225,6 +215,35 @@ namespace EngineeringMath.Calculations
             {
                 // property change event handled in the isInput parameter
                 this.isInput = !value;                
+            }
+        }
+
+        /// <summary>
+        /// True when the this parameter should take a user input
+        /// <para>It is false when this parameter is the output or when another function is calculating the this parameter's value</para>
+        /// </summary>
+        public bool AllowUserInput
+        {
+            get
+            {
+                if(this.ReplaceFunction == null)
+                {
+                    return isInput;
+                }
+                // another function is calculating the value of this parameter
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// True when user input should not be allowed
+        /// <para>This bool is always the opposite of AllowUserInput</para>
+        /// </summary>
+        public bool DontAllowUserInput
+        {
+            get
+            {
+                return !AllowUserInput;
             }
         }
 

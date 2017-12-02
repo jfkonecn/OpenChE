@@ -62,11 +62,11 @@ namespace EngineeringMath.Units
         /// Converts from "this" object to the one represented by the string
         /// </summary>
         /// <param name="curValue">The value in "this" units</param>
-        /// <param name="desiredUnitName">String name od desired unit</param>
+        /// <param name="desiredUnit">String name od desired unit</param>
         /// <returns>The curValue in the desired units</returns>
-        public override double ConvertTo(double curValue, string desiredUnitName)
+        public override double ConvertTo(double curValue, AbstractUnit desiredUnit)
         {
-            return Convert(curValue, this, (Volume)StringToUnit[desiredUnitName]);
+            return Convert(curValue, this, (Volume)desiredUnit);
         }
 
 

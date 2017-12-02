@@ -15,19 +15,21 @@ namespace EngineeringMath.Calculations.Fluids
         /// </summary>
         internal OrificePlate()
         {
-
+            this.Title = "Orifice Plate";
             fieldDic = new Dictionary<int, Parameter>
             {
                 { (int)Field.disCo, new Parameter((int)Field.disCo, "Discharge Coefficient", new AbstractUnit[] { Unitless.unitless }, null, true, 0, 1.0) },
                 { (int)Field.density, new Parameter((int)Field.density, "Density", new AbstractUnit[] { Density.kgm3 }, null, true, 0) },
                 { (int)Field.pArea, new Parameter((int)Field.pArea, "Inlet Pipe Area", new AbstractUnit[] { Units.Area.m2 },
-                    new List<FunctionFactory.FactoryData>{
-                        new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea)
+                    new Dictionary<string, FunctionFactory.FactoryData>
+                    {
+                        { "Circular Pipe", new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
                     } , true, 0)
                 },
-                { (int)Field.oArea, new Parameter((int)Field.oArea, "Orifice Area", new AbstractUnit[] { Units.Area.m2 }, 
-                    new List<FunctionFactory.FactoryData>{
-                        new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea)
+                { (int)Field.oArea, new Parameter((int)Field.oArea, "Orifice Area", new AbstractUnit[] { Units.Area.m2 },
+                    new Dictionary<string, FunctionFactory.FactoryData>
+                    {
+                        { "Circular Pipe", new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
                     }, true, 0)
                 },
                 { (int)Field.deltaP, new Parameter((int)Field.deltaP, "Drop in Pressure (pIn - pOut) Across Orifice Plate", new AbstractUnit[] { Pressure.Pa }, null, true, 0.0) },

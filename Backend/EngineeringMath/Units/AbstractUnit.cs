@@ -34,24 +34,24 @@ namespace EngineeringMath.Units
         /// </summary>
         public double ConversionFactor { protected set; get; }
 
+
         /// <summary>
-        /// Converts from "this" object to the one represented by the string
+        /// Converts from "this" object to the one represented by the unit object
         /// </summary>
         /// <param name="curValue">The value in "this" units</param>
-        /// <param name="desiredUnitName">String name od desired unit</param>
-        /// <returns>The curValue in the desired units</returns>
-        public abstract double ConvertTo(double curValue, string desiredUnitName);
+        /// <param name="desiredUnit">The type of unit which we are converting to</param>
+        /// <returns></returns>
+        public abstract double ConvertTo(double curValue, AbstractUnit desiredUnit);
 
         /// <summary>
         /// Converts from unit represented by the string curUnitName to "this" object
         /// </summary>
-        /// <param name="curValue">The value in curUnitName units</param>
-        /// <param name="curUnitName">The current unit</param>
-        /// <returns>The curValue in the desired units</returns>
-        public double ConvertFrom(double curValue, string curUnitName)
+        /// <param name="curValue">The value in curUnit units</param>
+        /// <param name="curUnit">The type of unit which we converting from</param>
+        /// <returns></returns>
+        public double ConvertFrom(double curValue, AbstractUnit curUnit)
         {
-            return StaticUnitProperties.AllUnits[this.GetType()][curUnitName].ConvertTo(curValue, this.ToString());
+            return curUnit.ConvertTo(curValue, this);
         }
-
     }
 }

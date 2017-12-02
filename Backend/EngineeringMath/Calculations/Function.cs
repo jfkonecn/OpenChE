@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace EngineeringMath.Calculations
 {
-    public abstract class Function
+    public abstract class Function : INotifyPropertyChanged
     {
 
         /// <summary>
@@ -52,13 +53,25 @@ namespace EngineeringMath.Calculations
             }
         }
 
+        string _Title;
         /// <summary>
         /// Title of the function
         /// </summary>
-        public string Title { get; set; }
+        public string Title {
+            get
+            {
+                return _Title;
+            }
+            set
+            {
+                _Title = value;
+                OnPropertyChanged("Title");
+            }
+
+        }
 
         /// <summary>
-        /// Gets the id of the parameter which is the output
+        ///  of the parameter which is the output
         /// </summary>
         /// <returns>ID of the output parameter</returns>
         private int getOutputID()
@@ -82,6 +95,19 @@ namespace EngineeringMath.Calculations
         /// <returns></returns>
         protected abstract double Calculation(int outputID);
 
+
+
+        protected virtual void OnPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
 
     }
 }
