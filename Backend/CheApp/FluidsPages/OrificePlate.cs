@@ -16,12 +16,10 @@ namespace CheApp.FluidsPages
     /// </summary>
     public class OrificePlate : BasicPage
     {
+        private static readonly Function PAGE_FUN = FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.OrificePlate));
 
-
-        public OrificePlate() : base()
+        public OrificePlate() : base(PAGE_FUN)
         {
-
-            this.PageSetup(FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.OrificePlate)));
 #if DEBUG            
             myFun.FieldDic[0].ValueStr = "1";
             myFun.FieldDic[1].ValueStr = "1000";

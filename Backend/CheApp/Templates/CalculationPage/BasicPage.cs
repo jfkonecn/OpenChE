@@ -10,12 +10,10 @@ using EngineeringMath.Calculations;
 
 namespace CheApp.Templates.CalculationPage
 {
-    public abstract class BasicPage : ContentPage
+    public class BasicPage : ContentPage
     {
         protected FieldStyle[] fieldStyle;
         protected Function myFun;
-
-
 
         // TODO: make it so that more than one function can be used on a page 
         // ie switch between a direct input for density and using the ideal gas law to calculate density
@@ -25,7 +23,7 @@ namespace CheApp.Templates.CalculationPage
         /// <para>Solve for data defaults to having last element in the solve for picker being selected</para>
         /// </summary>
         /// <param name="pageFun">Function which the page will represent</param>
-        public void PageSetup(Function pageFun)
+        public BasicPage(Function pageFun)
         {
             myFun = pageFun;
             Grid grid = BasicGrids.SimpleGrid(myFun.FieldDic.Count + 2, 1);
@@ -213,7 +211,7 @@ namespace CheApp.Templates.CalculationPage
             inputTitleLb.BindingContext = para;
             Picker subFunctionPicker = CreateSubFunctionPicker(para);
 
-
+            Button subFunctionBtn = BindingFactory.CreateSubFunctionButton(this, para);
 
             // row 1
             grid.Children.Add(title, 1, 1);
@@ -243,7 +241,7 @@ namespace CheApp.Templates.CalculationPage
                 {
                     Text = "Per",
                     HorizontalTextAlignment = TextAlignment.Center
-                }, 3, 3);
+                }, 3, 4);
                 grid.Children.Add(unitPickers[1], 4, 4);
                 Grid.SetColumnSpan(unitLb, 3);
             }
@@ -251,6 +249,9 @@ namespace CheApp.Templates.CalculationPage
             grid.Children.Add(resultsLb, 1, 4);
 
 
+            // row 5
+            grid.Children.Add(subFunctionBtn, 1, 5);
+            Grid.SetColumnSpan(subFunctionBtn, grid.ColumnDefinitions.Count - 2);
 
             mainGrid.Children.Add(grid, 1, rowIdx + 2);
 
@@ -297,14 +298,6 @@ namespace CheApp.Templates.CalculationPage
             }
 
             return allPickers;
-        }
-
-
-
-
-        private Button CreateSubFunctionButton()
-        {
-            return null;
         }
     }
 }

@@ -39,9 +39,37 @@ namespace CheApp.Templates.CalculationPage
 
                 return picker;
             }
+
+
+
         }
-        
-        
+
+        /// <summary>
+        /// Binds a button to a parameter to handle using a function in the place of the parameter
+        /// </summary>
+        /// <param name="page">Current Page</param>
+        /// <param name="para">Parameter to be binded to</param>
+        /// <returns></returns>
+        internal static Button CreateSubFunctionButton(ContentPage page, Parameter para)
+        {
+            Button subFunctionButton = new Button
+            {
+                Text = "Subfunction"
+            };
+
+            subFunctionButton.Clicked += async delegate (System.Object o, System.EventArgs e)
+            {
+
+                if(para.SubFunctionSelection.SelectedObject != null)
+                {
+                    BasicPage calPage = new BasicPage(FunctionFactory.BuildFunction(para.SubFunctionSelection.SelectedObject.FunType));
+                    await page.Navigation.PushAsync(calPage);
+                }
+ 
+            };
+            return subFunctionButton;
+        }
+
 
     }
 }

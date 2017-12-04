@@ -14,8 +14,7 @@ namespace EngineeringMath.Calculations.Area
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cirDiaTitle">Title of circle diameter field</param>
-        public Circle(string cirDiaTitle, string cirAreaTitle)
+        public Circle()
         {
             FieldDic = new Dictionary<int, Parameter>
             {

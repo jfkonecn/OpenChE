@@ -47,6 +47,10 @@ namespace EngineeringMath.Calculations
             {
                 myFun = new Calculations.Fluids.OrificePlate();
             }
+            else if (funType == typeof(Calculations.Area.Circle))
+            {
+                myFun = new Calculations.Area.Circle();
+            }
             else
             {
                 throw new NotImplementedException("This function has not been implemented");
