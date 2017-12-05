@@ -18,8 +18,8 @@ namespace EngineeringMath.Calculations.Area
         {
             FieldDic = new Dictionary<int, Parameter>
             {
-                { (int)Field.cirDia, new Parameter((int)Field.cirDia, "Diameter", new AbstractUnit[] { Length.m }, null, true, 0, 1.0) },
-                { (int)Field.cirArea, new Parameter((int)Field.cirArea, "Area", new AbstractUnit[] { Units.Area.m2 }, null, false, 0.0) }
+                { (int)Field.cirDia, new Parameter((int)Field.cirDia, "Diameter", new AbstractUnit[] { Length.m }, null, true, 0) },
+                { (int)Field.cirArea, new Parameter((int)Field.cirArea, "Area", new AbstractUnit[] { Units.Area.m2 }, null, false, 0) }
             };
         }
 
@@ -50,9 +50,9 @@ namespace EngineeringMath.Calculations.Area
             switch ((Field)outputID)
             {
                 case Field.cirDia:
-                    return Math.PI / 4 * Math.Pow( FieldDic[(int)Field.cirDia].GetValue(), 2);
+                    return Math.Sqrt((4d * FieldDic[(int)Field.cirArea].GetValue()) / Math.PI);
                 case Field.cirArea:
-                    return Math.Sqrt((4d * FieldDic[(int)Field.cirArea].GetValue()) / Math.PI );
+                    return Math.PI / 4 * Math.Pow(FieldDic[(int)Field.cirDia].GetValue(), 2);
                 default:
                     throw new NotImplementedException();
             }

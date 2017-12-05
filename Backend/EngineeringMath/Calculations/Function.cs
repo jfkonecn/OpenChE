@@ -26,8 +26,9 @@ namespace EngineeringMath.Calculations
         /// </summary>
         public void Solve()
         {
-            int outputID = getOutputID();
-            FieldDic[outputID].SetValue(Calculation(outputID));
+            FieldDic[OutputSelection.SelectedObject.ID].SetValue(Calculation(OutputSelection.SelectedObject.ID));
+
+            OnSolve?.Invoke();
         }
 
         /// <summary>
@@ -108,6 +109,16 @@ namespace EngineeringMath.Calculations
         /// <returns></returns>
         protected abstract double Calculation(int outputID);
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal delegate void SolveHandler();
+
+        /// <summary>
+        /// Called after the solve function is called
+        /// </summary>
+        internal event SolveHandler OnSolve;
 
 
         protected virtual void OnPropertyChanged(string property)

@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Units;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace EngineeringMath.Calculations
 {
     public class Parameter : INotifyPropertyChanged
     {
+        private static readonly string TAG = "Parameter:";
         /// <param name="title">Title of the field</param>
         /// <param name="ID">Id of the parameter</param>
         /// <param name="subFunctions">The functions which this parameter may be replaced by the string key is the title which is intended to be stored in a picker
@@ -72,6 +74,9 @@ namespace EngineeringMath.Calculations
         /// </summary>
         private void SubFunctionSelection_OnSelectedIndexChanged()
         {
+            // free the memory being used
+            _SubFunction = null;
+
             bool enable = true;
             if (SubFunctionSelection.SelectedObject != null)
             {
@@ -81,6 +86,7 @@ namespace EngineeringMath.Calculations
             {
                 obj.IsEnabled = enable;
             }
+            AllowUserInputChanged();
         }
 
         /// <summary>
@@ -88,11 +94,76 @@ namespace EngineeringMath.Calculations
         /// </summary>
         public PickerSelection<FunctionFactory.FactoryData> SubFunctionSelection;
 
+
+        private Function _SubFunction;
         /// <summary>
         /// This is the function which is currently replacing this parameter
         /// It is null when no function is replacing it.
         /// </summary>
-        public Function ReplaceFunction { get; set; }
+        public Function SubFunction
+        {
+            get
+            {
+                if(SubFunctionSelection.SelectedObject == null)
+                {
+                    _SubFunction = null;
+                }
+                else
+                {
+                    // Do not rebuild if right function is already in place
+                    if (_SubFunction == null || !SubFunctionSelection.SelectedObject.FunType.Equals(_SubFunction.GetType()))
+                    {
+                        Debug.WriteLine($"{TAG} Building a new SubFunction");
+                        _SubFunction = FunctionFactory.BuildFunction(SubFunctionSelection.SelectedObject.FunType);
+
+
+                        // double check that that the parameter is the type of unit as the desired output of the subfunction
+                        Parameter outputPara = _SubFunction.FieldDic[SubFunctionSelection.SelectedObject.OuputID];
+                        for (int i = 0; i < outputPara.UnitSelection.Length; i++)
+                        {
+                            if(this.UnitSelection[i].GetType() != outputPara.UnitSelection[i].GetType())
+                            {
+                                throw new Exception("Output parameter in subfunction does not match this parameter's units");
+                            }
+                        }
+
+
+                        for (int i = 0; i < _SubFunction.FieldDic[SubFunctionSelection.SelectedObject.OuputID].UnitSelection.Length; i++)
+                        {
+                            
+                            _SubFunction.FieldDic[SubFunctionSelection.SelectedObject.OuputID].UnitSelection[i].SelectedObject = 
+                                this.UnitSelection[i].SelectedObject;
+                        }
+
+                        _SubFunction.FieldDic[SubFunctionSelection.SelectedObject.OuputID].ValueStr = this.ValueStr;
+                        _SubFunction.Title = this.Title;
+
+                        // dont allow user to be able to change the output function
+                        _SubFunction.OutputSelection.SelectedObject = this;
+                        _SubFunction.OutputSelection.IsEnabled = false;
+
+                        _SubFunction.OnSolve += delegate()
+                        {
+                            for (int i = 0; i < _SubFunction.FieldDic[SubFunctionSelection.SelectedObject.OuputID].UnitSelection.Length; i++)
+                            {
+                                this.UnitSelection[i].SelectedObject = 
+                                _SubFunction.FieldDic[SubFunctionSelection.SelectedObject.OuputID].UnitSelection[i].SelectedObject;
+                            }
+                            
+                            this.ValueStr = _SubFunction.FieldDic[SubFunctionSelection.SelectedObject.OuputID].ValueStr;
+                        };
+
+
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"{TAG} Keep old SubFunction");
+                    }
+                }
+
+                return _SubFunction;
+            }
+        }
         public int ID { get; private set; }
 
         private double _Value = 0.0;
@@ -217,10 +288,18 @@ namespace EngineeringMath.Calculations
 
                 SubFunctionSelection.IsEnabled = AllowUserInput;
 
-                // This could change the state of allowing user inputs
-                OnPropertyChanged("AllowUserInput");
-                OnPropertyChanged("DontAllowUserInput");
+                AllowUserInputChanged();
             }
+        }
+
+        /// <summary>
+        /// calls all property change events when the allowed user input may have changed
+        /// </summary>
+        private void AllowUserInputChanged()
+        {
+            // This could change the state of allowing user inputs
+            OnPropertyChanged("AllowUserInput");
+            OnPropertyChanged("DontAllowUserInput");
         }
 
         public bool isOutput
@@ -245,7 +324,7 @@ namespace EngineeringMath.Calculations
         {
             get
             {
-                if(this.ReplaceFunction == null)
+                if(this.SubFunctionSelection.SelectedObject == null)
                 {
                     return isInput;
                 }

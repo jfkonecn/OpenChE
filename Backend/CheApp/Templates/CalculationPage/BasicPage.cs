@@ -15,17 +15,25 @@ namespace CheApp.Templates.CalculationPage
         protected FieldStyle[] fieldStyle;
         protected Function myFun;
 
-        // TODO: make it so that more than one function can be used on a page 
-        // ie switch between a direct input for density and using the ideal gas law to calculate density
+        /// <summary>
+        /// Sets up a basic page which handles a single function
+        /// <para>Solve for data defaults to having last element in the solve for picker being selected</para>
+        /// </summary>
+        /// <param name="funType">The type of function which the page will represent</param>
+        public BasicPage(Type funType) : this(FunctionFactory.BuildFunction(funType))
+        {
+
+        }
+
 
         /// <summary>
         /// Sets up a basic page which handles a single function
         /// <para>Solve for data defaults to having last element in the solve for picker being selected</para>
         /// </summary>
-        /// <param name="pageFun">Function which the page will represent</param>
-        public BasicPage(Function pageFun)
+        /// <param name="fun">The function which the page will represent</param>
+        public BasicPage(Function fun)
         {
-            myFun = pageFun;
+            myFun = fun;
             Grid grid = BasicGrids.SimpleGrid(myFun.FieldDic.Count + 2, 1);
 
             fieldStyle = new FieldStyle[myFun.FieldDic.Count];

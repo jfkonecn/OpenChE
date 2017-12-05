@@ -62,7 +62,7 @@ namespace CheApp.Templates.CalculationPage
 
                 if(para.SubFunctionSelection.SelectedObject != null)
                 {
-                    BasicPage calPage = new BasicPage(FunctionFactory.BuildFunction(para.SubFunctionSelection.SelectedObject.FunType));
+                    BasicPage calPage = new BasicPage(para.SubFunction);
                     await page.Navigation.PushAsync(calPage);
                 }
  
