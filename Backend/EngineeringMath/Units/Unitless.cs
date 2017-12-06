@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using EngineeringMath.Resources;
 
 namespace EngineeringMath.Units
 {
     public class Unitless : AbstractUnit
     {
         /// <summary>
-        /// grams
+        ///
         /// </summary>
-        public static readonly Unitless unitless = new Unitless("Unitless", 1);
+        public static readonly Unitless unitless = new Unitless(LibraryResources.Unitless, 1);
 
         /// <summary>
         /// Relates all units to a string representation

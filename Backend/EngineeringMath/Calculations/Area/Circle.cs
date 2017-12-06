@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EngineeringMath.Resources;
 
 namespace EngineeringMath.Calculations.Area
 {
@@ -18,8 +19,8 @@ namespace EngineeringMath.Calculations.Area
         {
             FieldDic = new Dictionary<int, Parameter>
             {
-                { (int)Field.cirDia, new Parameter((int)Field.cirDia, "Diameter", new AbstractUnit[] { Length.m }, null, true, 0) },
-                { (int)Field.cirArea, new Parameter((int)Field.cirArea, "Area", new AbstractUnit[] { Units.Area.m2 }, null, false, 0) }
+                { (int)Field.cirDia, new Parameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, null, true, 0) },
+                { (int)Field.cirArea, new Parameter((int)Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, null, false, 0) }
             };
         }
 

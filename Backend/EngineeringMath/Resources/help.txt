@@ -1,0 +1,38 @@
+﻿To setup the resource file correctly:
+
+From
+https://stackoverflow.com/questions/1327692/what-does-missingmanifestresourceexception-mean-and-how-to-fix-it
+
+All I needed to do to fix this problem was to right-click the Resources.resx file in the Solution Explorer and click Run Custom Tool. This re-generates the auto-generated Resources.Designer.cs file.
+
+If the .resx file was added to the project manually, the Custom Tool property of the file must be set to "ResXFileCodeGenerator".
+
+The problem is due to a mismatch of namespaces, which occurs if you change the "default namespace" of the assembly in the project settings. (I changed it from (previously) "Servers" to (now) "RT.Servers".)
+
+In the auto-generated code in Resources.Designer.cs, there is the following code:
+
+internal static global::System.Resources.ResourceManager ResourceManager {
+    get {
+        if (object.ReferenceEquals(resourceMan, null)) {
+            global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Servers.Resources", typeof(Resources).Assembly);
+            resourceMan = temp;
+        }
+        return resourceMan;
+    }
+}
+
+
+Other embedded resources:
+https://stackoverflow.com/questions/10963781/how-to-read-a-resource-file-within-a-portable-class-library
+
+Your path is wrong. You're using slashes, but in the embedded manifest resource names slashes were converted to periods during the build. Also depending on your PCL targeted platforms, you may not even be able to call Assembly.GetExecutingAssembly().
+
+Here is what you can do:
+
+var assembly = typeof(AnyTypeInYourAssembly).GetTypeInfo().Assembly;
+
+// Use this help aid to figure out what the actual manifest resource name is.
+string[] resources = assembly.GetManifestResourceNames();
+
+// Once you figure out the name, pass it in as the argument here.
+Stream stream = assembly.GetManifestResourceStream("Some.Path.AndFileName.Ext");

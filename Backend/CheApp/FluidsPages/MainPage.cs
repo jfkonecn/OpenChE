@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CheApp.Templates.MainMenu;
 using Xamarin.Forms;
+using EngineeringMath.Resources;
 
 namespace CheApp.FluidsPages
 {
@@ -14,7 +15,7 @@ namespace CheApp.FluidsPages
 
             CheApp.Templates.MainMenu.MainMenuTab.TabbedPage(
             this,
-            "Fluids",
+            LibraryResources.Fluids,
             "water.png",
             new CheApp.Templates.MainMenu.ButtonData[] {
                     new CheApp.Templates.MainMenu.ButtonData("Orifice Plate", new FluidsPages.OrificePlate()),

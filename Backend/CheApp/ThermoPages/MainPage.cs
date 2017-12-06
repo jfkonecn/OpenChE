@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using EngineeringMath.Resources;
 using Xamarin.Forms;
 /*
  * Grid Help
@@ -17,7 +17,7 @@ namespace CheApp.ThermoPages
 		{
             CheApp.Templates.MainMenu.MainMenuTab.TabbedPage(
             this,
-            "Thermo",
+            LibraryResources.Thermo,
             "thermodynamics.png",
             new CheApp.Templates.MainMenu.ButtonData[] {
                     new CheApp.Templates.MainMenu.ButtonData("Hello", new FluidsPages.OrificePlate()),

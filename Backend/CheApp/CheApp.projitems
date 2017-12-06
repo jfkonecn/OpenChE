@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ThermoPages\MainPage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Resources\" />
     <Folder Include="$(MSBuildThisFileDirectory)Templates\MainMenu\" />
     <Folder Include="$(MSBuildThisFileDirectory)ThermoPages\" />
   </ItemGroup>

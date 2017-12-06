@@ -84,23 +84,6 @@ namespace EngineeringMath.Calculations
 
         }
 
-        /// <summary>
-        ///  of the parameter which is the output
-        /// </summary>
-        /// <returns>ID of the output parameter</returns>
-        private int getOutputID()
-        {
-            foreach (Parameter obj in FieldDic.Values)
-            {
-                if (obj.isOutput)
-                {
-                    return obj.ID;
-                }
-            }
-
-            throw new Exception("No Output Found in function!");
-        }
-
 
         /// <summary>
         /// Performs the calculation this function object represents using the current state of the parameter objects
