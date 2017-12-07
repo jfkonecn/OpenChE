@@ -299,7 +299,6 @@ namespace EngineeringMath.Calculations
         {
             // This could change the state of allowing user inputs
             OnPropertyChanged("AllowUserInput");
-            OnPropertyChanged("DontAllowUserInput");
         }
 
         public bool isOutput
@@ -330,18 +329,6 @@ namespace EngineeringMath.Calculations
                 }
                 // another function is calculating the value of this parameter
                 return false;
-            }
-        }
-
-        /// <summary>
-        /// True when user input should not be allowed
-        /// <para>This bool is always the opposite of AllowUserInput</para>
-        /// </summary>
-        public bool DontAllowUserInput
-        {
-            get
-            {
-                return !AllowUserInput;
             }
         }
 

@@ -147,12 +147,25 @@
   <data name="PDAcrossOP" xml:space="preserve">
     <value>Drop in Pressure (pIn - pOut) Across Orifice Plate</value>
   </data>
+  <data name="Per" xml:space="preserve">
+    <value>Per</value>
+    <comment>As in meters per second</comment>
+  </data>
+  <data name="SubFunction" xml:space="preserve">
+    <value>Calculate Value Using Substitute Function</value>
+  </data>
   <data name="Thermo" xml:space="preserve">
     <value>Thermo</value>
     <comment>abbreviation for thermodynamics</comment>
   </data>
   <data name="Unitless" xml:space="preserve">
     <value>Unitless</value>
+  </data>
+  <data name="Units" xml:space="preserve">
+    <value>Units</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
   </data>
   <data name="VolumetricFlowRate" xml:space="preserve">
     <value>Volumetric Flow Rate</value>

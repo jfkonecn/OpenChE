@@ -152,6 +152,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Per.
+        /// </summary>
+        public static string Per {
+            get {
+                return ResourceManager.GetString("Per", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculate Value Using Substitute Function.
+        /// </summary>
+        public static string SubFunction {
+            get {
+                return ResourceManager.GetString("SubFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thermo.
         /// </summary>
         public static string Thermo {
@@ -166,6 +184,24 @@ namespace EngineeringMath.Resources {
         public static string Unitless {
             get {
                 return ResourceManager.GetString("Unitless", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Units.
+        /// </summary>
+        public static string Units {
+            get {
+                return ResourceManager.GetString("Units", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string Value {
+            get {
+                return ResourceManager.GetString("Value", resourceCulture);
             }
         }
         
