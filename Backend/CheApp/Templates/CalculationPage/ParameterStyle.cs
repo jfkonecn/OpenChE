@@ -4,6 +4,7 @@ using System.Text;
 using System.ComponentModel;
 using Xamarin.Forms;
 using EngineeringMath.Calculations;
+using EngineeringMath.Units;
 
 namespace CheApp.Templates.CalculationPage
 {
@@ -25,9 +26,34 @@ namespace CheApp.Templates.CalculationPage
             this.SetBinding(EntryTextProperty, new Binding("ValueStr", BindingMode.TwoWay));
             this.SetBinding(EntryIsEnabledProperty, new Binding("AllowUserInput", BindingMode.TwoWay));
 
+            // Unit Pickers
+            UnitPickersStyles = new PickerSelectionStyle<AbstractUnit>[para.UnitSelection.Length];
+            for(int i = 0; i < para.UnitSelection.Length; i++)
+            {
+                UnitPickersStyles[i] = new PickerSelectionStyle<AbstractUnit>(para.UnitSelection[i]);
+                para.UnitSelection[i].SelectedIndex = 0;
+            }
+
+            // Substitute function picker
+            SubFunctionPickersStyles = new PickerSelectionStyle<FunctionFactory.FactoryData>(para.SubFunctionSelection);
+            para.SubFunctionSelection.SelectedIndex = 0;
+
+
             this.BindingContext = para;
         }
 
+
+        /// <summary>
+        /// Stores the styles for the binded parameter's substitute function picker
+        /// <para>Each element is intended to binded to its own picker</para>
+        /// </summary>
+        public PickerSelectionStyle<FunctionFactory.FactoryData> SubFunctionPickersStyles { get; set; }
+
+        /// <summary>
+        /// Stores the styles for the binded parameter's unit pickers
+        /// <para>Each element is intended to binded to its own picker</para>
+        /// </summary>
+        public PickerSelectionStyle<AbstractUnit>[] UnitPickersStyles { get; set; }
 
         public static readonly BindableProperty EntryTextProperty =
              BindableProperty.Create("EntryText", typeof(string),
@@ -83,6 +109,24 @@ namespace CheApp.Templates.CalculationPage
         }
 
 
+        private Style _GridStyle = (Style)Application.Current.Resources["gridStyleLevel2"];
+        /// <summary>
+        /// To be binded with an entry form object which stores the user input
+        /// </summary>
+        public Style GridStyle
+        {
+            get
+            {
+                return _GridStyle;
+            }
+            private set
+            {
+                _GridStyle = value;
+                OnPropertyChanged("GridStyle");
+            }
+        }
+
+
 
 
         private Style _TitleStyle = (Style)Application.Current.Resources["minorHeaderStyle"];
@@ -101,6 +145,25 @@ namespace CheApp.Templates.CalculationPage
                 OnPropertyChanged("TitleStyle");
             }
         }
+
+        private Style _ValueTitleStyle = (Style)Application.Current.Resources["standardLabelStyle"];
+        /// <summary>
+        /// This is the style for the parameter title
+        /// </summary>
+        public Style StandardLabelStyle
+        {
+            get
+            {
+                return _ValueTitleStyle;
+            }
+            private set
+            {
+                _ValueTitleStyle = value;
+                OnPropertyChanged("StandardLabelStyle");
+            }
+        }
+
+
 
         private Style _PickerStyle = (Style)Application.Current.Resources["pickerStyle"];
         public Style PickerStyle
@@ -149,17 +212,5 @@ namespace CheApp.Templates.CalculationPage
                 OnPropertyChanged("BackgroundColor");
             }
         }
-
-        protected virtual void OnPropertyChanged(string property)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
     }
 }

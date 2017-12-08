@@ -27,6 +27,17 @@ namespace CheApp
             };
             Resources.Add("gridStyleLevel1", gridStyleLevel1);
 
+            // Style for grids with only one parent grid
+            Style gridStyleLevel2 = new Style(typeof(Grid))
+            {
+                Setters =
+                {
+                    new Setter { Property = Button.TextColorProperty,   Value = Color.White },
+                    new Setter { Property = Button.BackgroundColorProperty,   Value = Color.Blue }
+                }
+            };
+            Resources.Add("gridStyleLevel2", gridStyleLevel2);
+
 
 
             Style buttonStyle = new Style(typeof(Button))
@@ -54,7 +65,7 @@ namespace CheApp
             {
                 Setters =
                 {
-                    new Setter { Property = Picker.BackgroundColorProperty,   Value =  Color.LightGray }
+                    new Setter { Property = Picker.BackgroundColorProperty,   Value =  Color.Red }
                 }
             };
             Resources.Add("pickerStyle", numericEntryStyle);
@@ -89,6 +100,17 @@ namespace CheApp
                 }
             };
             Resources.Add("minorHeaderStyle", minorHeaderStyle);
+
+
+            Style standardLabelStyle = new Style(typeof(Label))
+            {
+                Setters =
+                {
+                    new Setter { Property = Label.HorizontalTextAlignmentProperty, Value = TextAlignment.Center},
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.GetNamedSize(NamedSize.Medium, typeof(Label))}
+                }
+            };
+            Resources.Add("standardLabelStyle", standardLabelStyle);
 
             Style pageStyle = new Style(typeof(ContentPage))
             {

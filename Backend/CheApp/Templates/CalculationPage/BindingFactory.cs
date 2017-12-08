@@ -42,8 +42,6 @@ namespace CheApp.Templates.CalculationPage
                 return picker;
             }
 
-
-
         }
 
         /// <summary>
@@ -90,17 +88,20 @@ namespace CheApp.Templates.CalculationPage
 
 
             // create the pickers
-            Picker[] unitPickers = CreateUnitPickers(para);
+            Picker[] unitPickers = CreateUnitPickers(paraStyle);
 
 
             Grid grid = CreateParameterGrid(unitPickers.Length);
 
-
+            
+            grid.SetBinding(Grid.StyleProperty, new Binding("GridStyle"));
+            grid.BindingContext = paraStyle;
 
 
             Label unitLb = new Label { Text = LibraryResources.Units };
-            
-            
+            unitLb.SetBinding(Entry.StyleProperty, new Binding("StandardLabelStyle"));
+            unitLb.BindingContext = paraStyle;
+
             // Create input/output cells
 
             Entry inputEntry = new Entry
@@ -116,11 +117,11 @@ namespace CheApp.Templates.CalculationPage
 
 
             Label valueTitleLb = new Label { Text = LibraryResources.Value };
-            valueTitleLb.SetBinding(Entry.IsVisibleProperty, new Binding("AllowUserInput"));
-            valueTitleLb.BindingContext = para;
+            valueTitleLb.SetBinding(Entry.StyleProperty, new Binding("StandardLabelStyle"));
+            valueTitleLb.BindingContext = paraStyle;
 
 
-            Picker subFunctionPicker = CreateSubFunctionPicker(para, paraStyle);
+            Picker subFunctionPicker = CreateSubFunctionPicker(paraStyle);
 
             Button subFunctionBtn = CreateSubFunctionButton(page, para);
 
@@ -224,14 +225,9 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         /// <param name="paraStyle"></param>
         /// <returns></returns>
-        private static Picker CreateSubFunctionPicker(Parameter para, ParameterStyle paraStyle)
+        private static Picker CreateSubFunctionPicker(ParameterStyle paraStyle)
         {
-            Picker picker = BindingFactory.GenericBindings<FunctionFactory.FactoryData>.PickerFactory(para.SubFunctionSelection);
-            para.SubFunctionSelection.SelectedIndex = 0;
-            
-            picker.SetBinding(Picker.StyleProperty, new Binding("PickerStyle"));
-            //picker.BindingContext = paraStyle;
-            return picker;
+            return paraStyle.SubFunctionPickersStyles.CreatePicker();
         }
 
         /// <summary>
@@ -239,18 +235,20 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         /// <param name="para"></param>
         /// <returns></returns>
-        private static Picker[] CreateUnitPickers(Parameter para)
+        private static Picker[] CreateUnitPickers(ParameterStyle paraStyle)
         {
-            Picker[] allPickers = new Picker[para.DesiredUnits.Length];
+            Picker[] allPickers = new Picker[paraStyle.UnitPickersStyles.Length];
             
-            for (int i = 0; i < para.DesiredUnits.Length; i++)
+            for (int i = 0; i < paraStyle.UnitPickersStyles.Length; i++)
             {
-                allPickers[i] = BindingFactory.GenericBindings<AbstractUnit>.PickerFactory(para.UnitSelection[i]);
-                para.UnitSelection[i].SelectedIndex = 0;
+                allPickers[i] = paraStyle.UnitPickersStyles[i].CreatePicker();
             }
 
             return allPickers;
         }
+
+
+
 
 
     }
