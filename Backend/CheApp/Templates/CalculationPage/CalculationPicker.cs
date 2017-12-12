@@ -13,19 +13,13 @@ namespace CheApp.Templates.CalculationPage
     /// <typeparam name="T"></typeparam>
     public class CalculationPicker<T> : Picker
     {
-        public CalculationPicker(PickerSelectionStyle<T> obj)
+        public CalculationPicker(PickerSelection<T> obj, string title = null)
         {
-            this.SetBinding(Picker.ItemsSourceProperty, new Binding("ItemsSource"));
+            this.SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
             this.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
             this.SetBinding(Picker.IsEnabledProperty, new Binding("IsEnabled"));
-            this.SetBinding(Picker.StyleProperty, new Binding("PickerStyle"));
             this.SetBinding(Picker.TitleProperty, new Binding("Title"));
             this.BindingContext = obj;
-        }
-
-        public CalculationPicker(PickerSelection<T> obj, out PickerSelectionStyle<T> style, string title = null) : this(style = new PickerSelectionStyle<T>(obj, title))
-        {
-            
         }
     }
 }

@@ -27,33 +27,17 @@ namespace CheApp.Templates.ObjectStyleBinders
             this.SetBinding(EntryIsEnabledProperty, new Binding("AllowUserInput", BindingMode.TwoWay));
 
             // Unit Pickers
-            UnitPickersStyles = new PickerSelectionStyle<AbstractUnit>[para.UnitSelection.Length];
             for(int i = 0; i < para.UnitSelection.Length; i++)
             {
-                UnitPickersStyles[i] = new PickerSelectionStyle<AbstractUnit>(para.UnitSelection[i]);
                 para.UnitSelection[i].SelectedIndex = 0;
             }
 
             // Substitute function picker
-            SubFunctionPickersStyles = new PickerSelectionStyle<FunctionFactory.FactoryData>(para.SubFunctionSelection);
             para.SubFunctionSelection.SelectedIndex = 0;
 
 
             this.BindingContext = para;
         }
-
-
-        /// <summary>
-        /// Stores the styles for the binded parameter's substitute function picker
-        /// <para>Each element is intended to binded to its own picker</para>
-        /// </summary>
-        public PickerSelectionStyle<FunctionFactory.FactoryData> SubFunctionPickersStyles { get; set; }
-
-        /// <summary>
-        /// Stores the styles for the binded parameter's unit pickers
-        /// <para>Each element is intended to binded to its own picker</para>
-        /// </summary>
-        public PickerSelectionStyle<AbstractUnit>[] UnitPickersStyles { get; set; }
 
         public static readonly BindableProperty EntryTextProperty =
              BindableProperty.Create("EntryText", typeof(string),
@@ -91,37 +75,20 @@ namespace CheApp.Templates.ObjectStyleBinders
             }
         }
 
-        private Style _EntryStyle = (Style)Application.Current.Resources["numericEntryStyle"];
+
+        private Style _Style = (Style)Application.Current.Resources["gridStyleLevel2"];
         /// <summary>
         /// To be binded with an entry form object which stores the user input
         /// </summary>
-        public Style EntryStyle
+        public Style Style
         {
             get
             {
-                return _EntryStyle;
+                return _Style;
             }
             private set
             {
-                _EntryStyle = value;
-                OnPropertyChanged("EntryStyle");
-            }
-        }
-
-
-        private Style _GridStyle = (Style)Application.Current.Resources["gridStyleLevel2"];
-        /// <summary>
-        /// To be binded with an entry form object which stores the user input
-        /// </summary>
-        public Style GridStyle
-        {
-            get
-            {
-                return _GridStyle;
-            }
-            private set
-            {
-                _GridStyle = value;
+                _Style = value;
                 OnPropertyChanged("GridStyle");
             }
         }
@@ -143,54 +110,6 @@ namespace CheApp.Templates.ObjectStyleBinders
             {
                 _TitleStyle = value;
                 OnPropertyChanged("TitleStyle");
-            }
-        }
-
-        private Style _ValueTitleStyle = (Style)Application.Current.Resources["standardLabelStyle"];
-        /// <summary>
-        /// This is the style for the parameter title
-        /// </summary>
-        public Style StandardLabelStyle
-        {
-            get
-            {
-                return _ValueTitleStyle;
-            }
-            private set
-            {
-                _ValueTitleStyle = value;
-                OnPropertyChanged("StandardLabelStyle");
-            }
-        }
-
-
-
-        private Style _PickerStyle = (Style)Application.Current.Resources["pickerStyle"];
-        public Style PickerStyle
-        {
-            get
-            {
-                return _PickerStyle;
-            }
-            private set
-            {
-                _PickerStyle = value;
-                OnPropertyChanged("PickerStyle");
-            }
-        }
-
-
-        private Style _LabelStyle = (Style)Application.Current.Resources["entryLabelStyle"];
-        public Style LabelStyle
-        {
-            get
-            {
-                return _LabelStyle;
-            }
-            private set
-            {
-                _LabelStyle = value;
-                OnPropertyChanged("LabelStyle");
             }
         }
 

@@ -40,7 +40,8 @@ namespace CheApp.Templates.CalculationPage
             // Setup title for the page
             Label pageTitle = new Label()
             {
-                FontSize = Device.GetNamedSize (NamedSize.Large, typeof(Label))
+                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+                HorizontalTextAlignment = TextAlignment.Center
             };
 
             pageTitle.SetBinding(Label.TextProperty, new Binding("Title"));
@@ -51,9 +52,9 @@ namespace CheApp.Templates.CalculationPage
             // create title block
             Grid titleGrid = BasicGrids.SimpleGrid(2, 1);
             titleGrid.Children.Add(pageTitle, 1, 1);
-
+            
             myFun.OutputSelection.SelectedIndex = fun.OutputSelection.PickerList.Count - 1;
-            titleGrid.Children.Add(new CalculationPicker<Parameter>(fun.OutputSelection, out _, LibraryResources.SolveFor), 1, 2);
+            titleGrid.Children.Add(new CalculationPicker<Parameter>(fun.OutputSelection, LibraryResources.SolveFor), 1, 2);
 
             grid.Children.Add(new Grid
             {
@@ -68,30 +69,34 @@ namespace CheApp.Templates.CalculationPage
             {
                 //parameterStyleDic.Add(para.ID, BindingFactory.CreateInputField(this, grid, para, i));
                 ParameterStyle tempStyle;
-                Grid tempGrid = new ParameterGrid(this, para, out tempStyle);
-                grid.Children.Add(new ParameterGrid(this, para, out tempStyle), 1, i + 2);
+                grid.Children.Add(
+                    new ParameterFrame(this, para, out tempStyle)
+                    , 1, i + 2);
                 parameterStyleDic.Add(para.ID, tempStyle);
                 i++;
             }
-                
 
+            
             // setup calculate button
             Button calculateBtn = new Button
             {
-                Text = "Calculate!",
+                Text = LibraryResources.Calculate,
                 Margin = 20
             };
-
+            
             calculateBtn.Clicked += CalculateButtonClicked;
 
-            grid.Children.Add(calculateBtn, 1, 2 + myFun.FieldDic.Count);
-            Grid.SetColumnSpan(calculateBtn, grid.ColumnDefinitions.Count - 2);
+            Grid endPageGrid = BasicGrids.SimpleGrid(2, 1);
+            endPageGrid.Children.Add(calculateBtn, 1, 1);
+
+            grid.Children.Add(endPageGrid, 1, 2 + myFun.FieldDic.Count);
+            Grid.SetColumnSpan(endPageGrid, grid.ColumnDefinitions.Count - 2);
 
             // finish up
             this.Content = new ScrollView
             {
                 Content = grid,
-                BackgroundColor = Color.WhiteSmoke
+                Style = (Style)Application.Current.Resources["gridStyleLevel1"]                
             };
         }
 

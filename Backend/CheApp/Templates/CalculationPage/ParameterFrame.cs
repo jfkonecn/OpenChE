@@ -12,14 +12,14 @@ namespace CheApp.Templates.CalculationPage
     /// <summary>
     /// A grid representation of a parameter this grid is binded to
     /// </summary>
-    public class ParameterGrid : Grid
+    public class ParameterFrame : Frame
     {
 
         /// <summary>
         /// Section intended to be placed in a grid
         /// </summary>
-        /// <param name="para">The parameter this grid will bind to</param>
-        public ParameterGrid(Page page, Parameter para, out ParameterStyle paraStyle)
+        /// <param name="para">The parameter this frame will bind to</param>
+        public ParameterFrame(Page page, Parameter para, out ParameterStyle paraStyle)
         {
             paraStyle = new ParameterStyle(para);
 
@@ -28,30 +28,26 @@ namespace CheApp.Templates.CalculationPage
             {
                 Text = para.Title
             };
-            title.SetBinding(Label.StyleProperty, new Binding("TitleStyle"));
-            title.BindingContext = paraStyle;
 
 
             // create the pickers
-            Picker[] unitPickers = CreateUnitPickers(paraStyle);
+            Picker[] unitPickers = CreateUnitPickers(para);
 
 
-            CreateParameterGrid(unitPickers.Length);
+            Grid grid = CreateParameterGrid(unitPickers.Length);
 
 
-            this.SetBinding(Grid.StyleProperty, new Binding("GridStyle"));
+            this.SetBinding(Frame.StyleProperty, new Binding("Style"));
             this.BindingContext = paraStyle;
 
 
             Label unitLb = new Label { Text = LibraryResources.Units };
-            unitLb.SetBinding(Entry.StyleProperty, new Binding("StandardLabelStyle"));
-            unitLb.BindingContext = paraStyle;
 
             // Create input/output cells
 
             Entry inputEntry = new Entry
             {
-
+                Keyboard = Keyboard.Numeric
             };
             inputEntry.SetBinding(Entry.TextProperty, new Binding("EntryText"));
             inputEntry.SetBinding(Entry.IsEnabledProperty, new Binding("EntryIsEnabled"));
@@ -62,55 +58,56 @@ namespace CheApp.Templates.CalculationPage
 
 
             Label valueTitleLb = new Label { Text = LibraryResources.Value };
-            valueTitleLb.SetBinding(Entry.StyleProperty, new Binding("StandardLabelStyle"));
-            valueTitleLb.BindingContext = paraStyle;
 
 
-            Picker subFunctionPicker = new CalculationPicker<FunctionFactory.FactoryData>(paraStyle.SubFunctionPickersStyles);
+            Picker subFunctionPicker = new CalculationPicker<FunctionFactory.FactoryData>(para.SubFunctionSelection);
 
 
 
 
             // dont care about storing style
-            Button subFunctionBtn = new LinkToFunctionButton(page, para, out _);
+            Button subFunctionBtn = new LinkToFunctionButton(page, para);
 
             // row 1
-            this.Children.Add(title, 1, 1);
-            Grid.SetColumnSpan(title, this.ColumnDefinitions.Count - 2);
+            grid.Children.Add(title, 1, 1);
+            Grid.SetColumnSpan(title, grid.ColumnDefinitions.Count - 2);
 
             // row 2
-            this.Children.Add(subFunctionPicker, 1, 2);
-            Grid.SetColumnSpan(subFunctionPicker, this.ColumnDefinitions.Count - 2);
+            grid.Children.Add(subFunctionPicker, 1, 2);
+            Grid.SetColumnSpan(subFunctionPicker, grid.ColumnDefinitions.Count - 2);
 
             // row 3
-            this.Children.Add(valueTitleLb, 1, 3);
-            this.Children.Add(unitLb, 2, 3);
+            grid.Children.Add(valueTitleLb, 1, 3);
+            grid.Children.Add(unitLb, 2, 3);
 
 
             // row 4
             // Entry cell will be taken care of by the classes which inherit this class
             if (unitPickers.Length == 1)
             {
-                this.Children.Add(unitPickers[0], 2, 4);
+                grid.Children.Add(unitPickers[0], 2, 4);
 
             }
             else
             {
-                this.Children.Add(unitPickers[0], 2, 4);
-                this.Children.Add(new Label
+                grid.Children.Add(unitPickers[0], 2, 4);
+                grid.Children.Add(new Label
                 {
                     Text = LibraryResources.Per,
                     HorizontalTextAlignment = TextAlignment.Center
                 }, 3, 4);
-                this.Children.Add(unitPickers[1], 4, 4);
+                grid.Children.Add(unitPickers[1], 4, 4);
                 Grid.SetColumnSpan(unitLb, 3);
             }
-            this.Children.Add(inputEntry, 1, 4);
+            grid.Children.Add(inputEntry, 1, 4);
 
 
             // row 5
-            this.Children.Add(subFunctionBtn, 1, 5);
-            Grid.SetColumnSpan(subFunctionBtn, this.ColumnDefinitions.Count - 2);
+            grid.Children.Add(subFunctionBtn, 1, 5);
+            Grid.SetColumnSpan(subFunctionBtn, grid.ColumnDefinitions.Count - 2);
+
+            this.Style = (Style)Application.Current.Resources["parameterStyle"];
+            this.Content = grid;
         }
 
 
@@ -120,8 +117,10 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         /// <param name="unitPickersLength"></param>
         /// <returns></returns>
-        private void CreateParameterGrid(int unitPickersLength)
+        private Grid CreateParameterGrid(int unitPickersLength)
         {
+            Grid grid = new Grid();
+            
             // create columns
             ColumnDefinitionCollection colDefs = new ColumnDefinitionCollection();
 
@@ -146,10 +145,9 @@ namespace CheApp.Templates.CalculationPage
             }
 
             colDefs.Add(new ColumnDefinition { Width = new GridLength(20, GridUnitType.Absolute) });
-
-            this.Style = Style = (Style)Application.Current.Resources["parameterStyle"];
-            this.HorizontalOptions = LayoutOptions.FillAndExpand;
-            this.RowDefinitions = new RowDefinitionCollection
+            
+            grid.HorizontalOptions = LayoutOptions.FillAndExpand;
+            grid.RowDefinitions = new RowDefinitionCollection
                 {
                 new RowDefinition { Height = new GridLength(20, GridUnitType.Absolute) },
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
@@ -160,7 +158,9 @@ namespace CheApp.Templates.CalculationPage
                     new RowDefinition { Height = new GridLength(20, GridUnitType.Absolute) }
                 };
 
-            this.ColumnDefinitions = colDefs;
+            grid.ColumnDefinitions = colDefs;
+
+            return grid;
         }
 
         /// <summary>
@@ -168,13 +168,13 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         /// <param name="para"></param>
         /// <returns></returns>
-        private static Picker[] CreateUnitPickers(ParameterStyle paraStyle)
+        private static Picker[] CreateUnitPickers(Parameter para)
         {
-            Picker[] allPickers = new Picker[paraStyle.UnitPickersStyles.Length];
+            Picker[] allPickers = new Picker[para.UnitSelection.Length];
 
-            for (int i = 0; i < paraStyle.UnitPickersStyles.Length; i++)
+            for (int i = 0; i < para.UnitSelection.Length; i++)
             {
-                allPickers[i] = new CalculationPicker<AbstractUnit>(paraStyle.UnitPickersStyles[i]);
+                allPickers[i] = new CalculationPicker<AbstractUnit>(para.UnitSelection[i]);
             }
 
             return allPickers;

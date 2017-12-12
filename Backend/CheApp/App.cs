@@ -21,8 +21,8 @@ namespace CheApp
             {
                 Setters =
                 {
-                    new Setter { Property = Button.TextColorProperty,   Value = Color.White },
-                    new Setter { Property = Button.BackgroundColorProperty,   Value = Color.Gray }
+                    new Setter { Property = Button.TextColorProperty,   Value = Color.Black },
+                    new Setter { Property = Grid.BackgroundColorProperty,   Value = Color.White }
                 }
             };
             Resources.Add("gridStyleLevel1", gridStyleLevel1);
@@ -33,59 +33,19 @@ namespace CheApp
                 Setters =
                 {
                     new Setter { Property = Button.TextColorProperty,   Value = Color.White },
-                    new Setter { Property = Button.BackgroundColorProperty,   Value = Color.Blue }
+                    new Setter { Property = Grid.BackgroundColorProperty,   Value = Color.WhiteSmoke }
                 }
             };
             Resources.Add("gridStyleLevel2", gridStyleLevel2);
 
 
 
-            Style buttonStyle = new Style(typeof(Button))
+            Style parameterStyle = new Style(typeof(Frame))
             {
                 Setters =
                 {
-                    new Setter { Property = Button.TextColorProperty,   Value = Color.White },
-                    new Setter { Property = Button.BackgroundColorProperty,   Value = Color.Gray }
-                }
-            };
-            Resources.Add("buttonStyle", buttonStyle);
-
-            Style numericEntryStyle = new Style(typeof(Entry))
-            {
-                Setters =
-                {
-                    new Setter { Property = Entry.KeyboardProperty,   Value = Keyboard.Numeric },
-                    new Setter { Property = Entry.HeightRequestProperty, Value = 10 },
-                    new Setter { Property = Entry.BackgroundColorProperty,   Value = Color.LightGray }
-                }
-            };
-            Resources.Add("numericEntryStyle", numericEntryStyle);
-
-            Style pickerStyle = new Style(typeof(Picker))
-            {
-                Setters =
-                {
-                    new Setter { Property = Picker.BackgroundColorProperty,   Value =  Color.Red }
-                }
-            };
-            Resources.Add("pickerStyle", numericEntryStyle);
-
-            Style entryLabelStyle = new Style(typeof(Label))
-            {
-                Setters =
-                {
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.GetNamedSize(NamedSize.Small, typeof(Label))},
-                    new Setter { Property = Label.BackgroundColorProperty,   Value = Color.Gray }
-                }
-            };
-            Resources.Add("entryLabelStyle", entryLabelStyle);
-
-
-            Style parameterStyle = new Style(typeof(Grid))
-            {
-                Setters =
-                {
-                    new Setter { Property = Grid.BackgroundColorProperty, Value = Color.Yellow}
+                    new Setter { Property = Frame.OutlineColorProperty, Value = Color.Silver },
+                    new Setter { Property = Frame.BackgroundColorProperty, Value = Color.WhiteSmoke }
                 }
             };
             Resources.Add("parameterStyle", parameterStyle);
@@ -100,22 +60,6 @@ namespace CheApp
                 }
             };
             Resources.Add("minorHeaderStyle", minorHeaderStyle);
-
-
-            Style standardLabelStyle = new Style(typeof(Label))
-            {
-                Setters =
-                {
-                    new Setter { Property = Label.HorizontalTextAlignmentProperty, Value = TextAlignment.Center},
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.GetNamedSize(NamedSize.Medium, typeof(Label))}
-                }
-            };
-            Resources.Add("standardLabelStyle", standardLabelStyle);
-
-            Style pageStyle = new Style(typeof(ContentPage))
-            {
-
-            };
 
             MainPage = new NavigationPage(new CheApp.MainMenu());
         }

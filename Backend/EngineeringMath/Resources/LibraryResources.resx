@@ -120,6 +120,9 @@
   <data name="Area" xml:space="preserve">
     <value>Area</value>
   </data>
+  <data name="Calculate" xml:space="preserve">
+    <value>Calculate</value>
+  </data>
   <data name="CircularPipe" xml:space="preserve">
     <value>Circular Pipe</value>
   </data>

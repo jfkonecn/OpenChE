@@ -22,10 +22,12 @@ namespace EngineeringMath.Calculations
         /// Bind with PickerList to fill your picker and bind with SelectedIndex to bind with the current index selected
         /// </summary>
         /// <param name="objectLookup">The string key is the string which is intened to be place in the picker to represent object T</param>
-        internal PickerSelection(Dictionary<string, T> objectLookup)
+        /// <param name="title">Title of the picker</param>
+        internal PickerSelection(Dictionary<string, T> objectLookup, string title = null)
         {
             _ObjectLookup = objectLookup;
             this.IsEnabled = true;
+            this.Title = title;
         }
 
         /// <summary>
@@ -67,6 +69,21 @@ namespace EngineeringMath.Calculations
                 OnPropertyChanged("SelectedIndex");
             }
         }
+
+        private string _Title;
+        public string Title
+        {
+            get
+            {
+                return _Title;
+            }
+            set
+            {
+                _Title = value;
+                OnPropertyChanged("Title");
+            }
+        }
+
 
         /// <summary>
         /// 

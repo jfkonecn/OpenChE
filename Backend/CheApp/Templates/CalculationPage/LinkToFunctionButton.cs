@@ -9,37 +9,24 @@ using EngineeringMath.Resources;
 namespace CheApp.Templates.CalculationPage
 {
     /// <summary>
-    /// A button which binds itself to the subfunction 
+    /// A button which binds itself to a parameter and then creates a link to a function 
     /// </summary>
     public class LinkToFunctionButton : Button
     {
         /// <summary>
         /// Binds a button to a parameter to handle using a function in the place of the parameter
         /// </summary>
-
-        /// <param name="style">The style to be binded to this object</param>
-        public LinkToFunctionButton(Page currentPage, Parameter para, out PageLinkStyle style)
+        public LinkToFunctionButton(Page currentPage, Parameter para)
         {
-            // create style
-            style = new PageLinkStyle(currentPage, delegate ()
+            this.Clicked += async delegate(System.Object o, System.EventArgs e) 
             {
-                return new BasicPage(para.SubFunction);
-            });
+                await currentPage.Navigation.PushAsync(new BasicPage(para.SubFunction));
+            };
 
-            // bind style to the parameter object
-            style.SetBinding(PageLinkStyle.IsEnabledProperty, new Binding("AllowSubFunctionClick", BindingMode.TwoWay));
-            style.BindingContext = para;
+            this.Text = LibraryResources.SubFunction;
 
-
-
-            this.Clicked += style.OnClickFunction;
-
-            style.Text = LibraryResources.SubFunction;
-
-            this.SetBinding(Button.TextProperty, new Binding("Text"));
-            this.SetBinding(Button.StyleProperty, new Binding("ButtonStyle"));
-            this.SetBinding(Button.IsEnabledProperty, new Binding("IsEnabled"));
-            this.BindingContext = style;
+            this.SetBinding(Button.IsEnabledProperty, new Binding("AllowSubFunctionClick"));
+            this.BindingContext = para;
         }
     }
 }

@@ -56,7 +56,6 @@ namespace CheApp.Templates.MainMenu
         {
             Button btn = new Button();
             btn.Text = btnData.Text;
-            btn.Style = (Style)Application.Current.Resources["buttonStyle"];
 
             btn.Clicked += async delegate (System.Object o, System.EventArgs e)
             { await tabbedPage.Navigation.PushAsync(btnData.NavPage); };
