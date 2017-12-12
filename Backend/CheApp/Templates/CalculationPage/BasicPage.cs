@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xamarin.Forms;
-using CheApp.Templates.CalculationPage;
 using EngineeringMath.Units;
 using System.Diagnostics;
 using EngineeringMath.Calculations;
+using CheApp.Templates.ObjectStyleBinders;
 
 namespace CheApp.Templates.CalculationPage
 {

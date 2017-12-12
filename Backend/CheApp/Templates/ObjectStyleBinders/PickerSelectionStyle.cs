@@ -8,7 +8,7 @@ using Xamarin.Forms;
 using EngineeringMath.Calculations;
 
 
-namespace CheApp.Templates.CalculationPage
+namespace CheApp.Templates.ObjectStyleBinders
 {
     /// <summary>
     /// Binds to a PickerSelection Object and contains properties which are intended to be binded to a picker

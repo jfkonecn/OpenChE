@@ -5,8 +5,9 @@ using Xamarin.Forms;
 using EngineeringMath.Calculations;
 using EngineeringMath.Units;
 using EngineeringMath.Resources;
+using CheApp.Templates.CalculationPage;
 
-namespace CheApp.Templates.CalculationPage
+namespace CheApp.Templates.ObjectStyleBinders
 {
     /// <summary>
     /// Contains static functions which bind EngineeringMath objects to Xamarin.Forms objects
@@ -123,7 +124,11 @@ namespace CheApp.Templates.CalculationPage
 
             Picker subFunctionPicker = CreateSubFunctionPicker(paraStyle);
 
-            Button subFunctionBtn = CreateSubFunctionButton(page, para);
+
+
+
+            // dont care about storing style
+            Button subFunctionBtn = new LinkToFunctionButton(page, para, out _);
 
             // row 1
             grid.Children.Add(title, 1, 1);

@@ -6,7 +6,7 @@ using Xamarin.Forms;
 using EngineeringMath.Calculations;
 using EngineeringMath.Units;
 
-namespace CheApp.Templates.CalculationPage
+namespace CheApp.Templates.ObjectStyleBinders
 {
     /// <summary>
     /// Binds to a Parameter Object and contains properties which are intended to be binded to a UI

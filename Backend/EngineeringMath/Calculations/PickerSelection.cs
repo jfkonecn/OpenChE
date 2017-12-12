@@ -106,6 +106,7 @@ namespace EngineeringMath.Calculations
                     }
                     temp++;
                 }
+                OnPropertyChanged("SelectedObject");
                 Debug.WriteLine($"{TAG} Couldn't find the object you were looking for");
             }
         }

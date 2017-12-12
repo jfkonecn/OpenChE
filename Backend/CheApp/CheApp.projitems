@@ -15,9 +15,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)MainMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\BasicGrids.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BindingFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\ParameterStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\PickerSelectionStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\LinkToFunctionButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\ObjectStyleBinders\BindingFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\ObjectStyleBinders\PageLinkStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\ObjectStyleBinders\ParameterStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\ObjectStyleBinders\PickerSelectionStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\MainMenuTab.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThermoPages\MainPage.cs" />

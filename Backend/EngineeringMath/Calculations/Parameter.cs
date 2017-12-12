@@ -299,6 +299,7 @@ namespace EngineeringMath.Calculations
         {
             // This could change the state of allowing user inputs
             OnPropertyChanged("AllowUserInput");
+            OnPropertyChanged("AllowSubFunctionClick");
         }
 
         public bool isOutput
@@ -331,6 +332,19 @@ namespace EngineeringMath.Calculations
                 return false;
             }
         }
+
+
+        /// <summary>
+        /// True when user has selected a subfunction
+        /// </summary>
+        public bool AllowSubFunctionClick
+        {
+            get
+            {
+                return this.SubFunctionSelection.SelectedObject != null;
+            }
+        }
+
 
         /// <summary>
         /// 

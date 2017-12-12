@@ -115,7 +115,35 @@
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\water.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\reaction.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\basicChemistry.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\massTransfer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\heatTransfer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\thermodynamics.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\convert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Backend\EngineeringMath\EngineeringMath.csproj">
+      <Project>{96d0dac3-18df-4df6-9dd4-db9ecaa955e4}</Project>
+      <Name>EngineeringMath</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\CheApp\CheApp.projitems" Label="Shared" Condition="Exists('..\CheApp\CheApp.projitems')" />
+  <Import Project="..\..\Backend\CheApp\CheApp.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
