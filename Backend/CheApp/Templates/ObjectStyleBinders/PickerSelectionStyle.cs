@@ -19,8 +19,10 @@ namespace CheApp.Templates.ObjectStyleBinders
         /// 
         /// </summary>
         /// <param name="obj">Selection this object is binding to</param>
-        public PickerSelectionStyle(PickerSelection<T> obj)
+        /// <param name="title">Title of the picker</param>
+        public PickerSelectionStyle(PickerSelection<T> obj, string title = null)
         {
+            this.Title = title;
             this.SetBinding(ItemsSourceProperty, new Binding("PickerList", BindingMode.TwoWay));
             this.SetBinding(SelectedIndexProperty, new Binding("SelectedIndex", BindingMode.TwoWay));
             this.SetBinding(IsEnabledProperty, new Binding("IsEnabled", BindingMode.TwoWay));
@@ -95,19 +97,21 @@ BindableProperty.Create("IsEnabled", typeof(bool),
             }
         }
 
+        private string _Title;
         /// <summary>
-        /// Creates a new picker binded to this object
+        /// This is the style for the picker
         /// </summary>
-        /// <returns>Picker binded to this object</returns>
-        public Picker CreatePicker()
+        public string Title
         {
-            Picker picker = new Picker();
-            picker.SetBinding(Picker.ItemsSourceProperty, new Binding("ItemsSource"));
-            picker.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
-            picker.SetBinding(Picker.IsEnabledProperty, new Binding("IsEnabled"));
-            picker.SetBinding(Picker.StyleProperty, new Binding("PickerStyle"));
-            picker.BindingContext = this;
-            return picker;
+            get
+            {
+                return _Title;
+            }
+            private set
+            {
+                _Title = value;
+                OnPropertyChanged("Title");
+            }
         }
 
     }

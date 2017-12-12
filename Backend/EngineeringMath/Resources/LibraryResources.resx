@@ -151,6 +151,9 @@
     <value>Per</value>
     <comment>As in meters per second</comment>
   </data>
+  <data name="SolveFor" xml:space="preserve">
+    <value>Solve For</value>
+  </data>
   <data name="SubFunction" xml:space="preserve">
     <value>Calculate Value Using Substitute Function</value>
   </data>

@@ -7,6 +7,7 @@ using EngineeringMath.Units;
 using System.Diagnostics;
 using EngineeringMath.Calculations;
 using CheApp.Templates.ObjectStyleBinders;
+using EngineeringMath.Resources;
 
 namespace CheApp.Templates.CalculationPage
 {
@@ -50,7 +51,9 @@ namespace CheApp.Templates.CalculationPage
             // create title block
             Grid titleGrid = BasicGrids.SimpleGrid(2, 1);
             titleGrid.Children.Add(pageTitle, 1, 1);
-            titleGrid.Children.Add(CreateSolverForPicker(myFun), 1, 2);
+
+            myFun.OutputSelection.SelectedIndex = fun.OutputSelection.PickerList.Count - 1;
+            titleGrid.Children.Add(new CalculationPicker<Parameter>(fun.OutputSelection, out _, LibraryResources.SolveFor), 1, 2);
 
             grid.Children.Add(new Grid
             {
@@ -63,7 +66,11 @@ namespace CheApp.Templates.CalculationPage
             int i = 0;
             foreach (Parameter para in myFun.FieldDic.Values)
             {
-                parameterStyleDic.Add(para.ID, BindingFactory.CreateInputField(this, grid, para, i));
+                //parameterStyleDic.Add(para.ID, BindingFactory.CreateInputField(this, grid, para, i));
+                ParameterStyle tempStyle;
+                Grid tempGrid = new ParameterGrid(this, para, out tempStyle);
+                grid.Children.Add(new ParameterGrid(this, para, out tempStyle), 1, i + 2);
+                parameterStyleDic.Add(para.ID, tempStyle);
                 i++;
             }
                 
@@ -119,19 +126,6 @@ namespace CheApp.Templates.CalculationPage
 
 
         
-
-
-        /// <summary>
-        /// creates a pickers for selecting the output field
-        /// </summary>
-        /// <returns></returns>
-        private Picker CreateSolverForPicker(Function fun)
-        {
-            Picker picker = BindingFactory.GenericBindings<Parameter>.PickerFactory(fun.OutputSelection);
-            picker.Title = "Solve For:";
-            fun.OutputSelection.SelectedIndex = fun.OutputSelection.PickerList.Count - 1;
-            return picker;
-        }
 
        
     }

@@ -161,6 +161,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Solve For.
+        /// </summary>
+        public static string SolveFor {
+            get {
+                return ResourceManager.GetString("SolveFor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Calculate Value Using Substitute Function.
         /// </summary>
         public static string SubFunction {
