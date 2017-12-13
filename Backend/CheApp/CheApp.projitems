@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\OrificePlate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NegateBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\BasicGrids.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\CalculationPicker.cs" />

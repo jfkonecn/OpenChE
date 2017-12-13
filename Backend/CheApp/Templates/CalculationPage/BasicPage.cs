@@ -53,8 +53,11 @@ namespace CheApp.Templates.CalculationPage
             Grid titleGrid = BasicGrids.SimpleGrid(2, 1);
             titleGrid.Children.Add(pageTitle, 1, 1);
             
+            // create solve for picker
+            Picker solveForPicker = new CalculationPicker<Parameter>(fun.OutputSelection, LibraryResources.SolveFor);
+            solveForPicker.SelectedIndexChanged += SolveForPicker_SelectedIndexChanged;
             myFun.OutputSelection.SelectedIndex = fun.OutputSelection.PickerList.Count - 1;
-            titleGrid.Children.Add(new CalculationPicker<Parameter>(fun.OutputSelection, LibraryResources.SolveFor), 1, 2);
+            titleGrid.Children.Add(solveForPicker, 1, 2);
 
             grid.Children.Add(new Grid
             {
@@ -100,6 +103,15 @@ namespace CheApp.Templates.CalculationPage
             };
         }
 
+        private void SolveForPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // reset style
+            foreach (ParameterStyle style in parameterStyleDic.Values)
+            {
+                style.Style = (Style)Application.Current.Resources["neutralParameterStyle"];
+            }
+        }
+
         /// <summary>
         /// Make sure parameters are valid and execute function
         /// </summary>
@@ -111,20 +123,25 @@ namespace CheApp.Templates.CalculationPage
             try
             {
                 myFun.Solve();
-            }
-            catch (OverflowException)
-            {
-                this.DisplayAlert("ERROR!", $"The result is greater than {double.MaxValue}!", "OK!");
-            }
-            catch (System.FormatException)
-            {
-                this.DisplayAlert("ERROR!", "All inputs must be a type of number!", "OK!");
+                foreach(Parameter para in myFun.FieldDic.Values)
+                {
+                    if(para.ErrorMessage == null)
+                    {
+                        // valid input
+                        parameterStyleDic[para.ID].Style = (Style)Application.Current.Resources["goodParameterStyle"];
+                    }
+                    else
+                    {
+                        // bad input
+                        parameterStyleDic[para.ID].Style = (Style)Application.Current.Resources["badParameterStyle"];
+                    }
+                }
             }
             catch (Exception err)
             {
-                this.DisplayAlert("ERROR!",
-                    string.Format("Unexpected exception of type {0} caught: {1}", err.GetType(), err.Message),
-                    "OK");
+                this.DisplayAlert(LibraryResources.ErrorMessageTitle,
+                    string.Format(LibraryResources.UnexpectedException, err.GetType(), err.Message),
+                    LibraryResources.Okay);
             }
         }
 

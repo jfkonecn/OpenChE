@@ -116,6 +116,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR!.
+        /// </summary>
+        public static string ErrorMessageTitle {
+            get {
+                return ResourceManager.GetString("ErrorMessageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fluids.
         /// </summary>
         public static string Fluids {
@@ -134,6 +143,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value must be a number!.
+        /// </summary>
+        public static string NotANumber {
+            get {
+                return ResourceManager.GetString("NotANumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Okay.
+        /// </summary>
+        public static string Okay {
+            get {
+                return ResourceManager.GetString("Okay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Orifice Area.
         /// </summary>
         public static string OrificeArea {
@@ -148,6 +175,24 @@ namespace EngineeringMath.Resources {
         public static string OrificePlate {
             get {
                 return ResourceManager.GetString("OrificePlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output could not be calculated!.
+        /// </summary>
+        public static string OutputCouldBeCalculated {
+            get {
+                return ResourceManager.GetString("OutputCouldBeCalculated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a number between {0} and {1}.
+        /// </summary>
+        public static string ParameterValidRange {
+            get {
+                return ResourceManager.GetString("ParameterValidRange", resourceCulture);
             }
         }
         
@@ -197,6 +242,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unexpected exception of type {0} caught: {1}.
+        /// </summary>
+        public static string UnexpectedException {
+            get {
+                return ResourceManager.GetString("UnexpectedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unitless.
         /// </summary>
         public static string Unitless {
@@ -220,6 +274,24 @@ namespace EngineeringMath.Resources {
         public static string Value {
             get {
                 return ResourceManager.GetString("Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value must be less than or equal to {0}!.
+        /// </summary>
+        public static string ValueAboveUpperLimit {
+            get {
+                return ResourceManager.GetString("ValueAboveUpperLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value must be greater than or equal to {0}!.
+        /// </summary>
+        public static string ValueBelowLowerLimit {
+            get {
+                return ResourceManager.GetString("ValueBelowLowerLimit", resourceCulture);
             }
         }
         

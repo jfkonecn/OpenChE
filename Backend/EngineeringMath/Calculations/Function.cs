@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using EngineeringMath.Resources;
 
 namespace EngineeringMath.Calculations
 {
@@ -26,7 +27,23 @@ namespace EngineeringMath.Calculations
         /// </summary>
         public void Solve()
         {
-            FieldDic[OutputSelection.SelectedObject.ID].SetValue(Calculation(OutputSelection.SelectedObject.ID));
+            // reset the error message
+            FieldDic[OutputSelection.SelectedObject.ID].ErrorMessage = null;
+
+            double temp = Calculation(OutputSelection.SelectedObject.ID);
+
+            // check any errors occured
+            foreach (Parameter para in FieldDic.Values)
+            {
+                if( para.ErrorMessage != null && para.ID != OutputSelection.SelectedObject.ID)
+                {
+                    // bad input don't update the output
+                    FieldDic[OutputSelection.SelectedObject.ID].ErrorMessage = LibraryResources.OutputCouldBeCalculated;
+                    return;
+                }
+            }
+
+            FieldDic[OutputSelection.SelectedObject.ID].SetValue(temp);
 
             OnSolve?.Invoke();
         }

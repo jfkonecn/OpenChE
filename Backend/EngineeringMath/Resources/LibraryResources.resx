@@ -135,17 +135,34 @@
   <data name="DischargeCoefficient" xml:space="preserve">
     <value>Discharge Coefficient</value>
   </data>
+  <data name="ErrorMessageTitle" xml:space="preserve">
+    <value>ERROR!</value>
+    <comment>Title of an error popup message</comment>
+  </data>
   <data name="Fluids" xml:space="preserve">
     <value>Fluids</value>
   </data>
   <data name="InletPipeArea" xml:space="preserve">
     <value>Inlet Pipe Area</value>
   </data>
+  <data name="NotANumber" xml:space="preserve">
+    <value>Value must be a number!</value>
+  </data>
+  <data name="Okay" xml:space="preserve">
+    <value>Okay</value>
+  </data>
   <data name="OrificeArea" xml:space="preserve">
     <value>Orifice Area</value>
   </data>
   <data name="OrificePlate" xml:space="preserve">
     <value>Orifice Plate</value>
+  </data>
+  <data name="OutputCouldBeCalculated" xml:space="preserve">
+    <value>Output could not be calculated!</value>
+  </data>
+  <data name="ParameterValidRange" xml:space="preserve">
+    <value>Please enter a number between {0} and {1}</value>
+    <comment>Lets user know the valid range for a Calculations.Parameter object</comment>
   </data>
   <data name="PDAcrossOP" xml:space="preserve">
     <value>Drop in Pressure (pIn - pOut) Across Orifice Plate</value>
@@ -164,6 +181,10 @@
     <value>Thermo</value>
     <comment>abbreviation for thermodynamics</comment>
   </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>Unexpected exception of type {0} caught: {1}</value>
+    <comment>Where {0} is the type and {1} is the message</comment>
+  </data>
   <data name="Unitless" xml:space="preserve">
     <value>Unitless</value>
   </data>
@@ -172,6 +193,12 @@
   </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>
+  </data>
+  <data name="ValueAboveUpperLimit" xml:space="preserve">
+    <value>Value must be less than or equal to {0}!</value>
+  </data>
+  <data name="ValueBelowLowerLimit" xml:space="preserve">
+    <value>Value must be greater than or equal to {0}!</value>
   </data>
   <data name="VolumetricFlowRate" xml:space="preserve">
     <value>Volumetric Flow Rate</value>

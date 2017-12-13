@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EngineeringMath.Units;
 using System.ComponentModel;
 using System.Diagnostics;
+using EngineeringMath.Resources;
 
 namespace EngineeringMath.Calculations
 {
@@ -173,24 +174,60 @@ namespace EngineeringMath.Calculations
         /// </summary>
         public double GetValue()
         {
-            double temp;
-            double.TryParse(_ValueStr, out temp);
+            // Reset error message
+            ErrorMessage = null;
 
-            temp = HelperFunctions.ConvertFrom(
-            temp,
-            DesiredUnits,
-            UnitSelection.Select(x => x.SelectedObject).ToArray());
-            if (temp < LowerLimit)
+            double temp;
+            if(double.TryParse(_ValueStr, out temp))
             {
-                throw new ArgumentOutOfRangeException("Value below lower limit!");
+
+                temp = HelperFunctions.ConvertFrom(
+                        temp,
+                        DesiredUnits,
+                        UnitSelection.Select(x => x.SelectedObject).ToArray());
+                if (temp < LowerLimit)
+                {
+                    ErrorMessage = string.Format(LibraryResources.ValueBelowLowerLimit, LowerLimit);
+                }
+                else if (temp > UpperLimit)
+                {
+                    ErrorMessage = string.Format(LibraryResources.ValueAboveUpperLimit, UpperLimit);
+                }
+                else
+                {
+                    _Value = temp;
+                    OnPropertyChanged("Value");
+                }
+
+
             }
-            else if (temp > UpperLimit)
+            else
             {
-                throw new ArgumentOutOfRangeException("Value above upper limit!");
+                ErrorMessage = string.Format(LibraryResources.NotANumber, LowerLimit);
             }
-            _Value = temp;
-            OnPropertyChanged("Value");
+
+
+
             return _Value;
+        }
+
+
+        string _ErrorMessage;
+        /// <summary>
+        /// String intended to be shown to the user when a bad input is given
+        /// <para>A null ErrorMessage value implies that there is no error</para>
+        /// </summary>
+        public string ErrorMessage
+        {
+            get
+            {
+                return _ErrorMessage;
+            }
+            internal set
+            {
+                _ErrorMessage = value;
+                OnPropertyChanged("ErrorMessage");
+            }
         }
 
 

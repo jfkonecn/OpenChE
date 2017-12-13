@@ -27,20 +27,9 @@ namespace CheApp
             };
             Resources.Add("gridStyleLevel1", gridStyleLevel1);
 
-            // Style for grids with only one parent grid
-            Style gridStyleLevel2 = new Style(typeof(Grid))
-            {
-                Setters =
-                {
-                    new Setter { Property = Button.TextColorProperty,   Value = Color.White },
-                    new Setter { Property = Grid.BackgroundColorProperty,   Value = Color.WhiteSmoke }
-                }
-            };
-            Resources.Add("gridStyleLevel2", gridStyleLevel2);
 
-
-
-            Style parameterStyle = new Style(typeof(Frame))
+            // used before the user takes any actions
+            Style neutralParameterStyle = new Style(typeof(Frame))
             {
                 Setters =
                 {
@@ -48,7 +37,29 @@ namespace CheApp
                     new Setter { Property = Frame.BackgroundColorProperty, Value = Color.WhiteSmoke }
                 }
             };
-            Resources.Add("parameterStyle", parameterStyle);
+            Resources.Add("neutralParameterStyle", neutralParameterStyle);
+
+            // used when the user's parameter inputs are valid
+            Style goodParameterStyle = new Style(typeof(Frame))
+            {
+                Setters =
+                {
+                    new Setter { Property = Frame.OutlineColorProperty, Value = Color.Green },
+                    new Setter { Property = Frame.BackgroundColorProperty, Value = Color.LightGreen }
+                }
+            };
+            Resources.Add("goodParameterStyle", goodParameterStyle);
+
+            // used when the user's parameter inputs are invalid
+            Style badParameterStyle = new Style(typeof(Frame))
+            {
+                Setters =
+                {
+                    new Setter { Property = Frame.OutlineColorProperty, Value = Color.Red },
+                    new Setter { Property = Frame.BackgroundColorProperty, Value = Color.PaleVioletRed }
+                }
+            };
+            Resources.Add("badParameterStyle", badParameterStyle);
 
 
             Style minorHeaderStyle = new Style(typeof(Label))
