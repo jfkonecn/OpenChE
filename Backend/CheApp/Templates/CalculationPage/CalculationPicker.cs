@@ -18,7 +18,6 @@ namespace CheApp.Templates.CalculationPage
             this.SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
             this.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
             this.SetBinding(Picker.IsEnabledProperty, new Binding("IsEnabled"));
-            this.SetBinding(Picker.TitleProperty, new Binding("Title"));
             this.BindingContext = obj;
         }
     }

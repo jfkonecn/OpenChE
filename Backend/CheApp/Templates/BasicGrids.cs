@@ -10,6 +10,23 @@ namespace CheApp.Templates
     /// </summary>
     class BasicGrids
     {
+
+        /// <summary>
+        /// Creates a simple gird
+        /// <para>Note that the first and last rows and columns are used for the margins</para>
+        /// <para>The heights and widths of all cells are stars</para>
+        /// </summary>
+        /// <param name="rows">Total rows in the grid</param>
+        /// <param name="cols">Total cols grid</param>
+        public static Grid SimpleGrid(int rows, int cols)
+        {
+            int rowMargin = (int)Application.Current.Resources["standardRowMargin"];
+            int columnMargin = (int)Application.Current.Resources["standardColumnMargin"];
+            return SimpleGrid(rows, cols, rowMargin, columnMargin);
+        }
+        
+        
+        
         /// <summary>
         /// Creates a simple gird
         /// <para>Note that the first and last rows and columns are used for the margins</para>
@@ -19,7 +36,7 @@ namespace CheApp.Templates
         /// <param name="cols">Total cols grid</param>
         /// <param name="rowMargin">The length of the row margin</param>
         /// <param name="columnMargin">The length of the column margin</param>
-        public static Grid SimpleGrid(int rows, int cols, int rowMargin = 20, int columnMargin = 20)
+        public static Grid SimpleGrid(int rows, int cols, int rowMargin, int columnMargin)
         {
 
 

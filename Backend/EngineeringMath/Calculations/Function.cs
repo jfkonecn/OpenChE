@@ -62,6 +62,7 @@ namespace EngineeringMath.Calculations
                 FieldDic.Values.ToDictionary(x => x.Title, x => x)
                 );
             OutputSelection.OnSelectedIndexChanged += OutputSelection_OnSelectedIndexChanged;
+            OutputSelection.Title = LibraryResources.SolveFor;
         }
 
         private void OutputSelection_OnSelectedIndexChanged()

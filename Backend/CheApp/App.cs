@@ -17,15 +17,14 @@ namespace CheApp
             Resources = new ResourceDictionary();
 
             // Style for grids with no parent grids
-            Style gridStyleLevel1 = new Style(typeof(Grid))
+            Style backgroundStyle = new Style(typeof(Style))
             {
                 Setters =
                 {
-                    new Setter { Property = Button.TextColorProperty,   Value = Color.Black },
-                    new Setter { Property = Grid.BackgroundColorProperty,   Value = Color.White }
+                    new Setter { Property = Grid.BackgroundColorProperty,   Value = Color.LightGray }
                 }
             };
-            Resources.Add("gridStyleLevel1", gridStyleLevel1);
+            Resources.Add("backgroundStyle", backgroundStyle);
 
 
             // used before the user takes any actions
@@ -71,6 +70,13 @@ namespace CheApp
                 }
             };
             Resources.Add("minorHeaderStyle", minorHeaderStyle);
+
+            // used for grid margins
+            int standardRowMargin = 5;
+            Resources.Add("standardRowMargin", standardRowMargin);
+            int standardColumnMargin = 5;
+            Resources.Add("standardColumnMargin", standardColumnMargin);
+
 
             MainPage = new NavigationPage(new CheApp.MainMenu());
         }
