@@ -13,18 +13,18 @@ namespace CheApp.Templates.MainMenu
         /// <summary>
         /// Groups required data to make the a button link to a different page
         /// </summary>
-        /// <param name="text">The page the button should link to on a click event</param>
-        /// <param name="navPage">Text which should be on the button</param>
-        internal ButtonData(string text, ContentPage navPage)
+        /// <param name="navFunctionType">The function which the button should link to on a click event (must be a type of function!)</param>
+        /// <param name="text">Text which should be on the button</param>
+        internal ButtonData(string text, Type navFunctionType)
         {
             this.Text = text;
-            this.NavPage = navPage;
+            this.NavFunctionType = navFunctionType;
         }
 
         /// <summary>
         /// The page the button should link to on a click event
         /// </summary>
-        internal ContentPage NavPage { get; private set; }
+        internal Type NavFunctionType { get; private set; }
 
 
         /// <summary>

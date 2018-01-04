@@ -62,6 +62,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open ChE.
+        /// </summary>
+        public static string AppTitle {
+            get {
+                return ResourceManager.GetString("AppTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Area.
         /// </summary>
         public static string Area {

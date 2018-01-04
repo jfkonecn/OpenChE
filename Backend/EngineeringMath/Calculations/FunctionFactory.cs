@@ -16,7 +16,7 @@ namespace EngineeringMath.Calculations
             public FactoryData(Type funType, int outputID)
             {
                 FunType = funType;
-                OuputID = outputID;
+                OuputID = outputID;                
             }
 
             /// <summary>
@@ -41,20 +41,7 @@ namespace EngineeringMath.Calculations
         public static Function BuildFunction(Type funType)
         {
             // Function to be returned
-            Function myFun;
-
-            if (funType == typeof(Calculations.Fluids.OrificePlate))
-            {
-                myFun = new Calculations.Fluids.OrificePlate();
-            }
-            else if (funType == typeof(Calculations.Area.Circle))
-            {
-                myFun = new Calculations.Area.Circle();
-            }
-            else
-            {
-                throw new NotImplementedException("This function has not been implemented");
-            }
+            Function myFun = (Function)Activator.CreateInstance(funType);
 
             myFun.FinishSetup();
 

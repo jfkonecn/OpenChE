@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EngineeringMath.Resources;
+using EngineeringMath.Calculations;
 using Xamarin.Forms;
 /*
  * Grid Help
@@ -20,8 +21,8 @@ namespace CheApp.ThermoPages
             LibraryResources.Thermo,
             "thermodynamics.png",
             new CheApp.Templates.MainMenu.ButtonData[] {
-                    new CheApp.Templates.MainMenu.ButtonData("Hello", new FluidsPages.OrificePlate()),
-                    new CheApp.Templates.MainMenu.ButtonData("Hello2", new FluidsPages.OrificePlate())
+                    new CheApp.Templates.MainMenu.ButtonData("Hello", typeof(EngineeringMath.Calculations.Fluids.OrificePlate)),
+                    new CheApp.Templates.MainMenu.ButtonData("Hello2", typeof(EngineeringMath.Calculations.Fluids.OrificePlate))
             });
 
 

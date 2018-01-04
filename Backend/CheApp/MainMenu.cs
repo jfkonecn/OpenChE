@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 using CheApp.Templates.MainMenu;
+using EngineeringMath.Resources;
 
 /*
  * For Help
@@ -17,10 +18,8 @@ namespace CheApp
 
         public MainMenu()
 		{
-            this.Title = "Open ChE";
-            this.BarBackgroundColor = Color.Blue;
-            
-            this.BackgroundColor = Color.Brown;
+            this.Title = LibraryResources.AppTitle;
+            this.Style = (Style)Application.Current.Resources["backgroundStyle"];
 
             switch (Device.RuntimePlatform)
             {

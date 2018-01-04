@@ -60,6 +60,15 @@ namespace CheApp
             };
             Resources.Add("badParameterStyle", badParameterStyle);
 
+            Style buttonStyle = new Style(typeof(Button))
+            {
+                Setters =
+                {
+                    new Setter { Property = Button.BackgroundColorProperty, Value = Color.Black },
+                    new Setter { Property = Button.TextColorProperty, Value = Color.White }
+                }
+            };
+            Resources.Add("buttonStyle", buttonStyle);
 
             Style minorHeaderStyle = new Style(typeof(Label))
             {

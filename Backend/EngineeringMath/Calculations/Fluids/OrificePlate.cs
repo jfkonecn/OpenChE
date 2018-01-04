@@ -14,29 +14,40 @@ namespace EngineeringMath.Calculations.Fluids
         /// Create orifice plate function
         /// <para>Note: The default output is volFlow</para>
         /// </summary>
-        internal OrificePlate()
+        public OrificePlate()
         {
             this.Title = LibraryResources.OrificePlate;
-            
-            FieldDic = new Dictionary<int, Parameter>
+
+            FieldDic = new List<Parameter>
             {
-                { (int)Field.disCo, new Parameter((int)Field.disCo, LibraryResources.DischargeCoefficient, new AbstractUnit[] { Unitless.unitless }, null, true, 0, 1.0) },
-                { (int)Field.density, new Parameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Density.kgm3 }, null, true, 0) },
-                { (int)Field.pArea, new Parameter((int)Field.pArea, LibraryResources.CircularPipe, new AbstractUnit[] { Units.Area.m2 },
+                { new Parameter((int)Field.disCo, LibraryResources.DischargeCoefficient, new AbstractUnit[] { Unitless.unitless }, null, true, 0, 1.0) },
+                { new Parameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Density.kgm3 }, null, true, 0) },
+                { new Parameter((int)Field.pArea, LibraryResources.CircularPipe, new AbstractUnit[] { Units.Area.m2 },
                     new Dictionary<string, FunctionFactory.FactoryData>
                     {
                         { LibraryResources.CircularPipe, new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
                     } , true, 0)
                 },
-                { (int)Field.oArea, new Parameter((int)Field.oArea, LibraryResources.OrificeArea, new AbstractUnit[] { Units.Area.m2 },
+                { new Parameter((int)Field.oArea, LibraryResources.OrificeArea, new AbstractUnit[] { Units.Area.m2 },
                     new Dictionary<string, FunctionFactory.FactoryData>
                     {
                         { LibraryResources.CircularPipe, new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
                     }, true, 0)
                 },
-                { (int)Field.deltaP, new Parameter((int)Field.deltaP, LibraryResources.PDAcrossOP, new AbstractUnit[] { Pressure.Pa }, null, true, 0.0) },
-                { (int)Field.volFlow, new Parameter((int)Field.volFlow, LibraryResources.VolumetricFlowRate, new AbstractUnit[] { Volume.m3, Time.sec }, null, false, 0.0) }
-            };
+                { new Parameter((int)Field.deltaP, LibraryResources.PDAcrossOP, new AbstractUnit[] { Pressure.Pa }, null, true, 0.0) },
+                { new Parameter((int)Field.volFlow, LibraryResources.VolumetricFlowRate, new AbstractUnit[] { Volume.m3, Time.sec }, null, false, 0.0) }
+            }.ToDictionary(x => x.ID);
+
+#if DEBUG
+            FieldDic[0].ValueStr = "1";
+            FieldDic[1].ValueStr = "1000";
+            FieldDic[2].ValueStr = "10";
+            FieldDic[3].ValueStr = "8";
+            FieldDic[4].ValueStr = "10";
+            FieldDic[5].ValueStr = "0.0";
+#endif
+
+
 
         }
 

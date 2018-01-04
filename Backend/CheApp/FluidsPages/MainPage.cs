@@ -18,9 +18,9 @@ namespace CheApp.FluidsPages
             LibraryResources.Fluids,
             "water.png",
             new CheApp.Templates.MainMenu.ButtonData[] {
-                    new CheApp.Templates.MainMenu.ButtonData("Orifice Plate", new FluidsPages.OrificePlate()),
-                    new CheApp.Templates.MainMenu.ButtonData("Bernoulli's\n Equation", new FluidsPages.OrificePlate()),
-                    new CheApp.Templates.MainMenu.ButtonData("Pitot Tube", new FluidsPages.OrificePlate())
+                    new CheApp.Templates.MainMenu.ButtonData("Orifice Plate", typeof(EngineeringMath.Calculations.Fluids.OrificePlate)),
+                    new CheApp.Templates.MainMenu.ButtonData("Bernoulli's\n Equation", typeof(EngineeringMath.Calculations.Fluids.OrificePlate)),
+                    new CheApp.Templates.MainMenu.ButtonData("Pitot Tube", typeof(EngineeringMath.Calculations.Fluids.OrificePlate))
             });
         }
 	}

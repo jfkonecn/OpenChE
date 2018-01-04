@@ -197,7 +197,8 @@ namespace CheApp.Templates.CalculationPage
         {
             Button calculateBtn = new Button
             {
-                Text = LibraryResources.Calculate
+                Text = LibraryResources.Calculate,
+                Style = (Style)Application.Current.Resources["buttonStyle"]
             };
 
             calculateBtn.Clicked += CalculateButtonClicked;

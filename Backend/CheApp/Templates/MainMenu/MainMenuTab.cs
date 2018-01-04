@@ -28,6 +28,7 @@ namespace CheApp.Templates.MainMenu
         {
             contentPage.Title = title;
             contentPage.Icon = iconUrl;
+            contentPage.Style = (Style)Application.Current.Resources["neutralParameterStyle"];
             Grid grid = BasicGrids.SimpleGrid(btnData.Length, 1, 20, 40);           
             for (int i = 0; i < btnData.Length; i++)
             {
@@ -56,9 +57,9 @@ namespace CheApp.Templates.MainMenu
         {
             Button btn = new Button();
             btn.Text = btnData.Text;
-
+            btn.Style = (Style)Application.Current.Resources["buttonStyle"];
             btn.Clicked += async delegate (System.Object o, System.EventArgs e)
-            { await tabbedPage.Navigation.PushAsync(btnData.NavPage); };
+            { await tabbedPage.Navigation.PushAsync(new Templates.CalculationPage.BasicPage(btnData.NavFunctionType)); };
 
             return btn;
         }

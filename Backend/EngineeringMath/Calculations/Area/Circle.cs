@@ -9,7 +9,7 @@ using EngineeringMath.Resources;
 
 namespace EngineeringMath.Calculations.Area
 {
-    class Circle : Function
+    public class Circle : Function
     {
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace CheApp.Templates.CalculationPage
             };
 
             this.Text = LibraryResources.SubFunction;
-
+            this.Style = (Style)Application.Current.Resources["buttonStyle"];
             this.SetBinding(Button.IsEnabledProperty, new Binding("AllowSubFunctionClick"));
             this.BindingContext = para;
         }

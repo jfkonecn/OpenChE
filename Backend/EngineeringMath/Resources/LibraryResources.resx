@@ -203,4 +203,7 @@
   <data name="VolumetricFlowRate" xml:space="preserve">
     <value>Volumetric Flow Rate</value>
   </data>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Open ChE</value>
+  </data>
 </root>
