@@ -19,7 +19,7 @@ namespace EngineeringMath.Units
         /// <summary>
         /// cubic feet
         /// </summary>
-        public static readonly Length inch = new Length("in", 3.28084);
+        public static readonly Length inch = new Length("in", 3.28084 * 12);
 
         /// <summary>
         /// Relates all units to a string representation

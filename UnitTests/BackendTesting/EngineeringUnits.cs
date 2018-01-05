@@ -13,7 +13,24 @@ namespace BackendTesting
         {
             double curValue = 1e6,
                 actual = -10,
-                delta = 0.01;
+                delta = 0.1;
+
+            // Area test
+            Area areaUnit = Area.m2;
+            actual = Area.Convert(curValue, areaUnit, Area.ft2);
+            Assert.AreEqual(10763911, actual, 1);
+
+            // Density test
+            Density densityUnit = Density.kgm3;
+            actual = Density.Convert(curValue, densityUnit, Density.kgm3);
+            Assert.AreEqual(1e6, actual, delta);
+
+            // Length test
+            Length lengthUnit = Length.m;
+            actual = Length.Convert(curValue, lengthUnit, Length.ft);
+            Assert.AreEqual(3280840, actual, delta);
+            actual = Length.Convert(curValue, lengthUnit, Length.inch);
+            Assert.AreEqual(3280840 * 12, actual, delta);
 
             // Mass test
             Mass massUnit = Mass.g;

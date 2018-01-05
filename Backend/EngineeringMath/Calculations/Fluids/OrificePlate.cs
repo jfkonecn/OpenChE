@@ -51,7 +51,7 @@ namespace EngineeringMath.Calculations.Fluids
 
         }
 
-        enum Field
+        public enum Field
         {
             /// <summary>
             /// Discharge coefficient (unitless)
@@ -99,16 +99,32 @@ namespace EngineeringMath.Calculations.Fluids
                             Math.Sqrt(
                                 (2 * FieldDic[(int)Field.deltaP].GetValue()) /
                                 (FieldDic[(int)Field.density].GetValue() *
-                                (Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2) / Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2) - 1))
+                                (Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2) / Math.Pow(FieldDic[(int)Field.oArea].GetValue(), 2) - 1))
                                 ));
                 case Field.density:
-                    throw new NotImplementedException();
+                    return (2 * FieldDic[(int)Field.deltaP].GetValue()) / 
+                        ((Math.Pow(FieldDic[(int)Field.volFlow].GetValue() / 
+                        (FieldDic[(int)Field.disCo].GetValue() * FieldDic[(int)Field.pArea].GetValue()), 2)
+                        ) * 
+                        ((Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2) / Math.Pow(FieldDic[(int)Field.oArea].GetValue(), 2)) - 1));
                 case Field.pArea:
-                    throw new NotImplementedException();
+                    return Math.Sqrt(1 / (
+                        (1 / Math.Pow(FieldDic[(int)Field.oArea].GetValue(), 2)) -
+                        ((2 * FieldDic[(int)Field.deltaP].GetValue() * Math.Pow(FieldDic[(int)Field.disCo].GetValue(), 2) ) /
+                        (Math.Pow(FieldDic[(int)Field.volFlow].GetValue(), 2) * FieldDic[(int)Field.density].GetValue())
+                        )));
                 case Field.oArea:
-                    throw new NotImplementedException();
+                    return Math.Sqrt(1 / (
+                        (1 / Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2)) +
+                        ((2 * FieldDic[(int)Field.deltaP].GetValue() * Math.Pow(FieldDic[(int)Field.disCo].GetValue(), 2)) /
+                        (Math.Pow(FieldDic[(int)Field.volFlow].GetValue(), 2) * FieldDic[(int)Field.density].GetValue())
+                        )));
                 case Field.deltaP:
-                    throw new NotImplementedException();
+                    return (Math.Pow(FieldDic[(int)Field.volFlow].GetValue() /
+                        (FieldDic[(int)Field.disCo].GetValue() * FieldDic[(int)Field.pArea].GetValue()), 2) *
+                        (FieldDic[(int)Field.density].GetValue() *
+                            (Math.Pow(FieldDic[(int)Field.pArea].GetValue(), 2) / Math.Pow(FieldDic[(int)Field.oArea].GetValue(), 2) - 1))
+                            ) / 2;
                 case Field.volFlow:
                     return FieldDic[(int)Field.disCo].GetValue() * FieldDic[(int)Field.pArea].GetValue() *
                         Math.Sqrt(
