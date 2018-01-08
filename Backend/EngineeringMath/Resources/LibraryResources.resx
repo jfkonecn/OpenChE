@@ -206,4 +206,46 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Open ChE</value>
   </data>
+  <data name="Done" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="BernoullisEquation" xml:space="preserve">
+    <value>Bernoulli's Equation</value>
+  </data>
+  <data name="DeltaP" xml:space="preserve">
+    <value>Delta P</value>
+    <comment>Inlet Pressure Minus Outlet Pressure</comment>
+  </data>
+  <data name="Inlet" xml:space="preserve">
+    <value>Inlet</value>
+    <comment>As in inlet Pressure</comment>
+  </data>
+  <data name="InletHeight" xml:space="preserve">
+    <value>Inlet Height</value>
+  </data>
+  <data name="InletMinusOutlet" xml:space="preserve">
+    <value>Inlet - Outlet</value>
+  </data>
+  <data name="InletP" xml:space="preserve">
+    <value>Inlet Pressure</value>
+  </data>
+  <data name="InletSquaredMinusOutletSquared" xml:space="preserve">
+    <value>Inlet\xB2 - Outlet\xB2</value>
+  </data>
+  <data name="InletVelo" xml:space="preserve">
+    <value>Inlet Velocity</value>
+  </data>
+  <data name="Outlet" xml:space="preserve">
+    <value>Outlet</value>
+    <comment>As in outlet Pressure</comment>
+  </data>
+  <data name="OutletHeight" xml:space="preserve">
+    <value>Outlet Height</value>
+  </data>
+  <data name="OutletP" xml:space="preserve">
+    <value>Outlet Pressure</value>
+  </data>
+  <data name="OutletVelo" xml:space="preserve">
+    <value>Outlet Velocity</value>
+  </data>
 </root>

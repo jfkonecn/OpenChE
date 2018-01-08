@@ -63,6 +63,11 @@ namespace CheApp.Templates.CalculationPage
             grid.Children.Add(calculateFrame, 1, 2 + myFun.FieldDic.Count);
             Grid.SetColumnSpan(calculateFrame, grid.ColumnDefinitions.Count - 2);
 
+            // create frame for the done button
+            Frame doneButtonFrame = CreateDoneFrame();
+            grid.Children.Add(doneButtonFrame, 1, 3 + myFun.FieldDic.Count);
+            Grid.SetColumnSpan(doneButtonFrame, grid.ColumnDefinitions.Count - 2);
+
             // finish up
             this.Content = new ScrollView
             {
@@ -141,6 +146,9 @@ namespace CheApp.Templates.CalculationPage
             // Calculate button row
             rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
+            // Done Button row
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+
             rowDefs.Add(new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) });
 
             // create columns
@@ -210,7 +218,27 @@ namespace CheApp.Templates.CalculationPage
             };
         }
 
+        /// <summary>
+        /// Creates the done button for this page
+        /// </summary>
+        /// <returns></returns>
+        private Frame CreateDoneFrame()
+        {
+            Button doneBtn = new Button
+            {
+                Text = LibraryResources.Done,
+                Style = (Style)Application.Current.Resources["buttonStyle"]
+            };
 
+            doneBtn.Clicked += async delegate (System.Object o, System.EventArgs e)
+            { await this.Navigation.PopAsync(); };
+
+            return new Frame
+            {
+                Content = doneBtn,
+                Style = (Style)Application.Current.Resources["neutralParameterStyle"]
+            };
+        }
 
     }
 }

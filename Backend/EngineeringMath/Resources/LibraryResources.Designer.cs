@@ -80,6 +80,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bernoulli&apos;s Equation.
+        /// </summary>
+        public static string BernoullisEquation {
+            get {
+                return ResourceManager.GetString("BernoullisEquation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Calculate.
         /// </summary>
         public static string Calculate {
@@ -94,6 +103,15 @@ namespace EngineeringMath.Resources {
         public static string CircularPipe {
             get {
                 return ResourceManager.GetString("CircularPipe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delta P.
+        /// </summary>
+        public static string DeltaP {
+            get {
+                return ResourceManager.GetString("DeltaP", resourceCulture);
             }
         }
         
@@ -125,6 +143,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Done.
+        /// </summary>
+        public static string Done {
+            get {
+                return ResourceManager.GetString("Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ERROR!.
         /// </summary>
         public static string ErrorMessageTitle {
@@ -143,11 +170,65 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inlet.
+        /// </summary>
+        public static string Inlet {
+            get {
+                return ResourceManager.GetString("Inlet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inlet Height.
+        /// </summary>
+        public static string InletHeight {
+            get {
+                return ResourceManager.GetString("InletHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inlet - Outlet.
+        /// </summary>
+        public static string InletMinusOutlet {
+            get {
+                return ResourceManager.GetString("InletMinusOutlet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inlet Pressure.
+        /// </summary>
+        public static string InletP {
+            get {
+                return ResourceManager.GetString("InletP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inlet Pipe Area.
         /// </summary>
         public static string InletPipeArea {
             get {
                 return ResourceManager.GetString("InletPipeArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inlet\xB2 - Outlet\xB2.
+        /// </summary>
+        public static string InletSquaredMinusOutletSquared {
+            get {
+                return ResourceManager.GetString("InletSquaredMinusOutletSquared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inlet Velocity.
+        /// </summary>
+        public static string InletVelo {
+            get {
+                return ResourceManager.GetString("InletVelo", resourceCulture);
             }
         }
         
@@ -184,6 +265,42 @@ namespace EngineeringMath.Resources {
         public static string OrificePlate {
             get {
                 return ResourceManager.GetString("OrificePlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outlet.
+        /// </summary>
+        public static string Outlet {
+            get {
+                return ResourceManager.GetString("Outlet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outlet Height.
+        /// </summary>
+        public static string OutletHeight {
+            get {
+                return ResourceManager.GetString("OutletHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outlet Pressure.
+        /// </summary>
+        public static string OutletP {
+            get {
+                return ResourceManager.GetString("OutletP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outlet Velocity.
+        /// </summary>
+        public static string OutletVelo {
+            get {
+                return ResourceManager.GetString("OutletVelo", resourceCulture);
             }
         }
         

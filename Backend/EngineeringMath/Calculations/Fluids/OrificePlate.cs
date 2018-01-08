@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Units;
 using EngineeringMath.Resources;
+using EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential;
 
 namespace EngineeringMath.Calculations.Fluids
 {
@@ -34,7 +35,11 @@ namespace EngineeringMath.Calculations.Fluids
                         { LibraryResources.CircularPipe, new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
                     }, true, 0)
                 },
-                { new Parameter((int)Field.deltaP, LibraryResources.PDAcrossOP, new AbstractUnit[] { Pressure.Pa }, null, true, 0.0) },
+                { new Parameter((int)Field.deltaP, LibraryResources.PDAcrossOP, new AbstractUnit[] { Pressure.Pa }, 
+                    new Dictionary<string, FunctionFactory.FactoryData>
+                    {
+                        { LibraryResources.DeltaP, new FunctionFactory.FactoryData(typeof(DeltaP), (int)DeltaP.Field.delta) }
+                    }, true, 0.0) },
                 { new Parameter((int)Field.volFlow, LibraryResources.VolumetricFlowRate, new AbstractUnit[] { Volume.m3, Time.sec }, null, false, 0.0) }
             }.ToDictionary(x => x.ID);
 

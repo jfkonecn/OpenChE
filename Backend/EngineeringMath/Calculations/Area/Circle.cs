@@ -17,11 +17,11 @@ namespace EngineeringMath.Calculations.Area
         /// </summary>
         public Circle()
         {
-            FieldDic = new Dictionary<int, Parameter>
+            FieldDic = new List<Parameter>
             {
-                { (int)Field.cirDia, new Parameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, null, true, 0) },
-                { (int)Field.cirArea, new Parameter((int)Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, null, false, 0) }
-            };
+                { new Parameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, null, true, 0) },
+                { new Parameter((int)Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, null, false, 0) }
+            }.ToDictionary(x => x.ID);
         }
 
         public enum Field

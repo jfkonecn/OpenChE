@@ -87,5 +87,88 @@ namespace BackendTesting
                 fun.FieldDic[outputId].GetValue()
                 , 0.05, testName);
         }
+
+        /// <summary>
+        /// Tests the orifice plate function
+        /// </summary>
+        [TestMethod]
+        public void BernoullisEquationTest()
+        {
+            EngineeringMath.Calculations.Fluids.BernoullisEquation fun =
+                (EngineeringMath.Calculations.Fluids.BernoullisEquation)
+                FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.BernoullisEquation));
+
+            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletVelo, "Inlet Velocity");
+            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletVelo, "Outlet Velocity");
+            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletP, "Inlet Pressure");
+            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletP, "Outlet Pressure");
+            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletHeight, "Inlet Height");
+            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletHeight, "Outlet Height");
+            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.density, "Density");
+
+
+        }
+
+        /// <summary>
+        /// Tests the output for Bernoulli's Equation parameter
+        /// </summary>
+        /// <param name="fun"></param>
+        /// <param name="outputId"></param>
+        private void BernoullisEquationSingleOutputTest(ref EngineeringMath.Calculations.Fluids.BernoullisEquation fun, int outputId, string testName)
+        {
+
+            // in m /s
+            double inletVelo = 11,
+                // in m / s
+                outletVelo = 10,
+                // in m
+                inletHeight = 10,
+                // in m
+                outletHeight = 9,
+                // in Pa
+                inletP = 100,
+                // in Pa
+                outletP = 20410,
+                // in kg/m3
+                density = 1000;
+
+            // set all inputs
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletVelo].UnitSelection[0].SelectedObject = Length.m;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletVelo].UnitSelection[1].SelectedObject = Time.sec;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletVelo].SetValue(inletVelo);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletVelo].UnitSelection[0].SelectedObject = Length.m;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletVelo].UnitSelection[1].SelectedObject = Time.sec;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletVelo].SetValue(outletVelo);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletHeight].UnitSelection[0].SelectedObject = Length.m;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletHeight].SetValue(inletHeight);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletHeight].UnitSelection[0].SelectedObject = Length.m;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletHeight].SetValue(outletHeight);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletP].UnitSelection[0].SelectedObject = Pressure.Pa;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletP].SetValue(inletP);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletP].UnitSelection[0].SelectedObject = Pressure.Pa;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletP].SetValue(outletP);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.density].UnitSelection[0].SelectedObject = Density.kgm3;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.density].SetValue(density);
+
+            double actual = 0;
+            double expected = fun.FieldDic[outputId].GetValue();
+
+            // set the output to something completely wrong
+            fun.FieldDic[outputId].SetValue(double.NaN);
+            fun.OutputSelection.SelectedObject = fun.FieldDic[outputId];
+            fun.Solve();
+            actual = fun.FieldDic[outputId].GetValue();
+
+            //Valid Inputs
+            Assert.AreEqual(expected,
+                fun.FieldDic[outputId].GetValue()
+                , 0.05, testName);
+        }
     }
 }

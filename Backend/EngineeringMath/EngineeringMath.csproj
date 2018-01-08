@@ -36,12 +36,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Calculations\Area\Circle.cs" />
+    <Compile Include="Calculations\Fluids\BernoullisEquation.cs" />
     <Compile Include="Calculations\Fluids\OrificePlate.cs" />
     <Compile Include="Calculations\PickerSelection.cs" />
     <Compile Include="Calculations\Solver.cs" />
     <Compile Include="Calculations\Function.cs" />
     <Compile Include="Calculations\FunctionFactory.cs" />
     <Compile Include="Calculations\Parameter.cs" />
+    <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaLength.cs" />
+    <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaP.cs" />
+    <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaVelocitySquared.cs" />
+    <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\InletMinusOutput.cs" />
     <Compile Include="DataStructures\CompositeGraph.cs" />
     <Compile Include="DataStructures\CompositeGraphNode.cs" />
     <Compile Include="DataStructures\CompositeNode.cs" />
