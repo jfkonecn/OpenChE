@@ -20,7 +20,7 @@ namespace CheApp.FluidsPages
             new CheApp.Templates.MainMenu.ButtonData[] {
                     new CheApp.Templates.MainMenu.ButtonData(LibraryResources.OrificePlate, typeof(EngineeringMath.Calculations.Fluids.OrificePlate)),
                     new CheApp.Templates.MainMenu.ButtonData(LibraryResources.BernoullisEquation, typeof(EngineeringMath.Calculations.Fluids.BernoullisEquation)),
-                    new CheApp.Templates.MainMenu.ButtonData("Pitot Tube", typeof(EngineeringMath.Calculations.Fluids.OrificePlate))
+                    new CheApp.Templates.MainMenu.ButtonData(LibraryResources.PitotTube, typeof(EngineeringMath.Calculations.Fluids.PitotTube))
             });
         }
 	}

@@ -89,7 +89,7 @@ namespace BackendTesting
         }
 
         /// <summary>
-        /// Tests the orifice plate function
+        /// Tests Bernoulli's Equation function
         /// </summary>
         [TestMethod]
         public void BernoullisEquationTest()
@@ -169,6 +169,75 @@ namespace BackendTesting
             Assert.AreEqual(expected,
                 fun.FieldDic[outputId].GetValue()
                 , 0.05, testName);
+        }
+
+        /// <summary>
+        /// Tests Pitot Tube function
+        /// </summary>
+        [TestMethod]
+        public void PitotTubeTest()
+        {
+            EngineeringMath.Calculations.Fluids.PitotTube fun =
+                (EngineeringMath.Calculations.Fluids.PitotTube)
+                FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.PitotTube));
+
+            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.correctionCo, "Correction Coefficient");
+            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.deltaH, "Change in Height");
+            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.fluidDensity, "Fluid Density");
+            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.manoDensity, "Manometer Density");
+            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.velo, "Velocity");
+
+        }
+
+        /// <summary>
+        /// Tests the output for Pitot Tube parameter
+        /// </summary>
+        /// <param name="fun"></param>
+        /// <param name="outputId"></param>
+        private void PitotTubeSingleOutputTest(ref EngineeringMath.Calculations.Fluids.PitotTube fun, int outputId, string testName)
+        {
+
+            // unitless
+            double correctionCo = 0.98,
+                // in m
+                deltaH = 0.0107,
+                // in kg/m3
+                manoDensity = 1000,
+                // in kg/m3
+                fluidDensity = 1.063,
+                // in m/sec
+                velo = 13.7648;
+
+            // set all inputs
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.correctionCo].UnitSelection[0].SelectedObject = Unitless.unitless;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.correctionCo].SetValue(correctionCo);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.deltaH].UnitSelection[0].SelectedObject = Length.m;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.deltaH].SetValue(deltaH);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.manoDensity].UnitSelection[0].SelectedObject = Density.kgm3;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.manoDensity].SetValue(manoDensity);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.fluidDensity].UnitSelection[0].SelectedObject = Density.kgm3;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.fluidDensity].SetValue(fluidDensity);
+
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.velo].UnitSelection[0].SelectedObject = Length.m;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.velo].UnitSelection[1].SelectedObject = Time.sec;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.velo].SetValue(velo);
+
+            double actual = 0;
+            double expected = fun.FieldDic[outputId].GetValue();
+
+            // set the output to something completely wrong
+            fun.FieldDic[outputId].SetValue(double.NaN);
+            fun.OutputSelection.SelectedObject = fun.FieldDic[outputId];
+            fun.Solve();
+            actual = fun.FieldDic[outputId].GetValue();
+
+            //Valid Inputs
+            Assert.AreEqual(expected,
+                fun.FieldDic[outputId].GetValue()
+                , 0.8, testName);
         }
     }
 }

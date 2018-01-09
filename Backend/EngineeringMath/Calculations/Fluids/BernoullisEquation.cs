@@ -14,13 +14,13 @@ namespace EngineeringMath.Calculations.Fluids
         {
             FieldDic = new List<Parameter>
             {
-                { new Parameter((int)Field.inletVelo, LibraryResources.InletVelo, new AbstractUnit[] { Length.m, Time.sec }, null, true) },
-                { new Parameter((int)Field.outletVelo, LibraryResources.OutletVelo, new AbstractUnit[] { Length.m, Time.sec }, null, true) },
-                { new Parameter((int)Field.inletHeight, LibraryResources.InletHeight, new AbstractUnit[] { Length.m }, null, true) },
-                { new Parameter((int)Field.outletHeight, LibraryResources.OutletHeight, new AbstractUnit[] { Length.m }, null, true) },
-                { new Parameter((int)Field.inletP, LibraryResources.InletP, new AbstractUnit[] { Pressure.Pa }, null, true) },
-                { new Parameter((int)Field.outletP, LibraryResources.OutletP, new AbstractUnit[] { Pressure.Pa }, null, true) },
-                { new Parameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Density.kgm3 }, null, false) }
+                { new Parameter((int)Field.inletVelo, LibraryResources.InletVelo, new AbstractUnit[] { Length.m, Time.sec }, null, true, 0) },
+                { new Parameter((int)Field.outletVelo, LibraryResources.OutletVelo, new AbstractUnit[] { Length.m, Time.sec }, null, true, 0) },
+                { new Parameter((int)Field.inletHeight, LibraryResources.InletHeight, new AbstractUnit[] { Length.m }, null, true, 0) },
+                { new Parameter((int)Field.outletHeight, LibraryResources.OutletHeight, new AbstractUnit[] { Length.m }, null, true, 0) },
+                { new Parameter((int)Field.inletP, LibraryResources.InletP, new AbstractUnit[] { Pressure.Pa }, null, true, 0) },
+                { new Parameter((int)Field.outletP, LibraryResources.OutletP, new AbstractUnit[] { Pressure.Pa }, null, true, 0) },
+                { new Parameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Density.kgm3 }, null, false, 0) }
             }.ToDictionary(x => x.ID);
 
 
@@ -73,7 +73,7 @@ namespace EngineeringMath.Calculations.Fluids
         };
 
         /// <summary>
-        /// Perform Orifice Plate Calculation
+        /// Perform Bernoulli's Equation Calculation
         /// </summary>
         /// <param name="outputID">ID which represents the enum field</param>
         /// <returns></returns>

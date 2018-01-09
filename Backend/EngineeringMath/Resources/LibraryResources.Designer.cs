@@ -107,6 +107,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Correction Coefficient.
+        /// </summary>
+        public static string CorrectionCo {
+            get {
+                return ResourceManager.GetString("CorrectionCo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delta P.
         /// </summary>
         public static string DeltaP {
@@ -161,11 +170,29 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fluid Density.
+        /// </summary>
+        public static string FluidDensity {
+            get {
+                return ResourceManager.GetString("FluidDensity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fluids.
         /// </summary>
         public static string Fluids {
             get {
                 return ResourceManager.GetString("Fluids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fluid Velocity.
+        /// </summary>
+        public static string FluidVelocity {
+            get {
+                return ResourceManager.GetString("FluidVelocity", resourceCulture);
             }
         }
         
@@ -229,6 +256,24 @@ namespace EngineeringMath.Resources {
         public static string InletVelo {
             get {
                 return ResourceManager.GetString("InletVelo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manometer Height Differential.
+        /// </summary>
+        public static string ManoDeltaH {
+            get {
+                return ResourceManager.GetString("ManoDeltaH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manometer Density.
+        /// </summary>
+        public static string ManoDensity {
+            get {
+                return ResourceManager.GetString("ManoDensity", resourceCulture);
             }
         }
         
@@ -337,6 +382,15 @@ namespace EngineeringMath.Resources {
         public static string Per {
             get {
                 return ResourceManager.GetString("Per", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PitotTube.
+        /// </summary>
+        public static string PitotTube {
+            get {
+                return ResourceManager.GetString("PitotTube", resourceCulture);
             }
         }
         

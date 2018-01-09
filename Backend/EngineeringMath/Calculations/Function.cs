@@ -43,7 +43,18 @@ namespace EngineeringMath.Calculations
                 }
             }
 
-            FieldDic[OutputSelection.SelectedObject.ID].SetValue(temp);
+            try
+            {
+                FieldDic[OutputSelection.SelectedObject.ID].SetValue(temp);
+            }
+            catch
+            {
+                // there was an error so let the user know about it via the parameter error message
+                // show the result
+                FieldDic[OutputSelection.SelectedObject.ID].ValueStr = temp.ToString();
+                // force the error message to be created
+                FieldDic[OutputSelection.SelectedObject.ID].GetValue();
+            }
 
             OnSolve?.Invoke();
         }

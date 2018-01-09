@@ -248,4 +248,22 @@
   <data name="OutletVelo" xml:space="preserve">
     <value>Outlet Velocity</value>
   </data>
+  <data name="CorrectionCo" xml:space="preserve">
+    <value>Correction Coefficient</value>
+  </data>
+  <data name="FluidDensity" xml:space="preserve">
+    <value>Fluid Density</value>
+  </data>
+  <data name="FluidVelocity" xml:space="preserve">
+    <value>Fluid Velocity</value>
+  </data>
+  <data name="ManoDeltaH" xml:space="preserve">
+    <value>Manometer Height Differential</value>
+  </data>
+  <data name="ManoDensity" xml:space="preserve">
+    <value>Manometer Density</value>
+  </data>
+  <data name="PitotTube" xml:space="preserve">
+    <value>PitotTube</value>
+  </data>
 </root>

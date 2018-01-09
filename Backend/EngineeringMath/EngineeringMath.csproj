@@ -38,6 +38,7 @@
     <Compile Include="Calculations\Area\Circle.cs" />
     <Compile Include="Calculations\Fluids\BernoullisEquation.cs" />
     <Compile Include="Calculations\Fluids\OrificePlate.cs" />
+    <Compile Include="Calculations\Fluids\PitotTube.cs" />
     <Compile Include="Calculations\PickerSelection.cs" />
     <Compile Include="Calculations\Solver.cs" />
     <Compile Include="Calculations\Function.cs" />
