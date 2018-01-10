@@ -48,6 +48,7 @@
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaP.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaVelocitySquared.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\InletMinusOutput.cs" />
+    <Compile Include="Calculations\Thermo\RankineCycle.cs" />
     <Compile Include="DataStructures\CompositeGraph.cs" />
     <Compile Include="DataStructures\CompositeGraphNode.cs" />
     <Compile Include="DataStructures\CompositeNode.cs" />
@@ -58,6 +59,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LibraryResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\LookupTables\Interpolation.cs" />
+    <Compile Include="Resources\LookupTables\SteamTable.cs" />
+    <Compile Include="Resources\LookupTables\ThermoTableElements\ThermoConstPressureTable.cs" />
+    <Compile Include="Resources\LookupTables\ThermoTableElements\ThermoEntry.cs" />
     <Compile Include="Units\AbstractUnit.cs" />
     <Compile Include="Units\Area.cs" />
     <Compile Include="Units\Density.cs" />
@@ -73,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\LookupTables\SteamTable.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\LibraryResources.resx">
