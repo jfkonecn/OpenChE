@@ -34,7 +34,7 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
         /// <param name="entry">The entry to be added to this class</param>
         internal void AddThermoEntry(ThermoEntry entry)
         {
-            AllEntries.Add(entry.Temperature, entry);
+            AllEntries.Add(entry);
         }
 
         /// <summary>
@@ -45,65 +45,20 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
         /// <returns></returns>
         internal ThermoEntry GetThermoEntryAtTemperature(double temperature)
         {
-            // to be returned
-            ThermoEntry returnEntry;
-            // check if temperature already is in the dictionary
-            if (AllEntries.TryGetValue(temperature, out returnEntry))
-            {
-                return returnEntry;
-            }
-            else
-            {
-                // else interpolate
-                // Interpolated Specific Volume
-                double interV,
-                    // Interpolated Enthalpy
-                    interH,
-                    // Interpolated Entropy
-                    interS,
-                    lowTemp = double.MinValue,
-                    highTemp = double.MaxValue;
-
-                // find the two closest entries in
-                ThermoEntry lowTempEntry = null, 
-                    highTempEntry = null;
-
-                foreach(ThermoEntry entry in AllEntries.Values)
+            return ThermoEntry.Interpolation<ThermoEntry>.InterpolationThermoEntryFromList(
+                temperature,
+                AllEntries,
+                delegate(ThermoEntry obj) 
                 {
-                    if(entry.Temperature > lowTemp && entry.Temperature < temperature)
-                    {
-                        lowTemp = entry.Temperature;
-                    }
-                    else if(entry.Temperature < highTemp && entry.Temperature > temperature)
-                    {
-                        highTemp = entry.Temperature;
-                    }
-                }
-
-                if (AllEntries.TryGetValue(lowTemp, out lowTempEntry) && AllEntries.TryGetValue(highTemp, out highTempEntry))
+                    return obj.Temperature;
+                },
+                delegate (ThermoEntry obj)
                 {
-                    interV = Interpolation.LinearInterpolation(temperature, 
-                        lowTempEntry.Temperature, lowTempEntry.V, 
-                        highTempEntry.Temperature, highTempEntry.V);
-
-                    interH = Interpolation.LinearInterpolation(temperature,
-                        lowTempEntry.Temperature, lowTempEntry.H,
-                        highTempEntry.Temperature, highTempEntry.H);
-
-                    interS = Interpolation.LinearInterpolation(temperature,
-                        lowTempEntry.Temperature, lowTempEntry.S,
-                        highTempEntry.Temperature, highTempEntry.S);
-
-                    return new ThermoEntry(temperature, interV, interH, interS);
-                }
-                else
-                {
-                    throw new Exception("Temperature is out of range!");
-                }
-            }
+                    return obj;
+                });
         }
 
-        private Dictionary<double, ThermoEntry> AllEntries = new Dictionary<double, ThermoEntry>();
+        private List<ThermoEntry> AllEntries = new List<ThermoEntry>();
 
         /// <summary>
         /// Thermo Entry for the saturated liquid at this object's pressure

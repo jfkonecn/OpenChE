@@ -104,6 +104,28 @@ namespace EngineeringMath.Resources.LookupTables
             return CreateEntry(line, i, double.Parse(line[i]));
         }
 
+        /// <summary>
+        /// Gets ThermoEntry at passed pressure and passed temperature
+        /// </summary>
+        /// <param name="temperature">Desired Temperture</param>
+        /// <param name="pressure">Desired Pressure</param>
+        /// <returns></returns>
+        internal ThermoEntry GetThermoEntryAtTemperatureAndPressure(double temperature, double pressure)
+        {
+            return ThermoEntry.Interpolation<ThermoConstPressureTable>.InterpolationThermoEntryFromList(
+                pressure,
+                TableElements,
+                delegate (ThermoConstPressureTable obj)
+                {
+                    return obj.Pressure;
+                },
+                delegate (ThermoConstPressureTable obj)
+                {
+                    return obj.GetThermoEntryAtTemperature(temperature);
+                });
+        }
+
+
         private List<ThermoConstPressureTable> TableElements = new List<ThermoConstPressureTable>();
     }
 }
