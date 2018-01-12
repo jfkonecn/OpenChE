@@ -6,7 +6,7 @@ using EngineeringMath.Units;
 namespace BackendTesting
 {
     [TestClass]
-    public class FluidsTest
+    public class Fluids
     {
         // use this for when you expect the test method to throw an exception
         //[TestMethod, ExpectedException(typeof(System.ArgumentException))]
@@ -54,10 +54,10 @@ namespace BackendTesting
             double volumeFlowRate = 6.476;
 
             // set all inputs
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.pArea].UnitSelection[0].SelectedObject = Area.m2;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.pArea].UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
             fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.pArea].SetValue(pipeArea);
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.oArea].UnitSelection[0].SelectedObject = Area.m2;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.oArea].UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
             fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.oArea].SetValue(orfArea);
 
             fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.deltaP].UnitSelection[0].SelectedObject = Pressure.Pa;

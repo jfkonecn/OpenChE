@@ -6,7 +6,7 @@ using EngineeringMath.Units;
 namespace BackendTesting
 {
     [TestClass]
-    public class AreaTest
+    public class Area
     {
         /// <summary>
         /// Tests area of a circle
@@ -38,7 +38,7 @@ namespace BackendTesting
             fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirDia].UnitSelection[0].SelectedObject = Length.m;
             fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirDia].SetValue(dia);
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirArea].UnitSelection[0].SelectedObject = Area.m2;
+            fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirArea].UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
             fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirArea].SetValue(area);
 
             double actual = 0;

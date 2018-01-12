@@ -36,8 +36,6 @@ namespace CheApp
 
             this.Children.Add(new FluidsPages.MainPage());
             this.Children.Add(new ThermoPages.MainPage());
-            // TODO: remove me!
-            new EngineeringMath.Resources.LookupTables.SteamTable();
         }
 
         

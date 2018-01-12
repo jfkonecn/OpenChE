@@ -16,8 +16,8 @@ namespace BackendTesting
                 delta = 0.1;
 
             // Area test
-            Area areaUnit = Area.m2;
-            actual = Area.Convert(curValue, areaUnit, Area.ft2);
+            EngineeringMath.Units.Area areaUnit = EngineeringMath.Units.Area.m2;
+            actual = EngineeringMath.Units.Area.Convert(curValue, areaUnit, EngineeringMath.Units.Area.ft2);
             Assert.AreEqual(10763911, actual, 1);
 
             // Density test

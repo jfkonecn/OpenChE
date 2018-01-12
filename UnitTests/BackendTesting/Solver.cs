@@ -5,7 +5,7 @@ using EngineeringMath.Calculations;
 namespace BackendTesting
 {
     [TestClass]
-    public class SolverTest
+    public class Solver
     {
         private static Random rnd = new Random();
         [TestMethod]
@@ -22,7 +22,7 @@ namespace BackendTesting
                 double y = Math.Log(expected);
                 if (!y.Equals(double.NaN))
                 {
-                    actual = Solver.NewtonsMethod(y, x => Math.Log(x), minValueDbl: 1d);
+                    actual = EngineeringMath.Calculations.Solver.NewtonsMethod(y, x => Math.Log(x), minValueDbl: 1d);
                     Assert.AreEqual(expected, actual, expected * 1e-3, "Standard Case");
                 }
                 

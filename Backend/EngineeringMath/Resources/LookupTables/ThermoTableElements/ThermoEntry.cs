@@ -9,7 +9,7 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
     /// <summary>
     /// Specific Volume, Enthalpy and Entropy at a given temperature
     /// </summary>
-    internal class ThermoEntry
+    public class ThermoEntry
     {
         /// <summary>
         /// 
@@ -18,7 +18,7 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
         /// <param name="v">Specific Volume (m3/kg)</param>
         /// <param name="h">Enthalpy (kJ/kg)</param>
         /// <param name="s">Entropy (kJ/(kg*K))</param>
-        internal ThermoEntry(double temperature, double v, double h, double s)
+        public ThermoEntry(double temperature, double v, double h, double s)
         {
             Temperature = temperature;
             V = v;
@@ -27,19 +27,19 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
         }
 
         /// <summary>Temperture this entry is recorded at (in C)</summary>
-        internal readonly double Temperature;
+        public readonly double Temperature;
         /// <summary>
         /// Specific Volume (m3/kg)
         /// </summary>
-        internal readonly double V;
+        public readonly double V;
         /// <summary>
         /// Enthalpy (kJ/kg)
         /// </summary>
-        internal readonly double H;
+        public readonly double H;
         /// <summary>
         /// Entropy (kJ/(kg*K))
         /// </summary>
-        internal readonly double S;
+        public readonly double S;
 
         internal class Interpolation<T>
         {
@@ -57,7 +57,7 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
             internal delegate ThermoEntry ObjectToThermoEntry(T obj);
 
             /// <summary>
-            /// Interpolates a list of T objects to create a ThermoEntry
+            /// Interpolates a list of T objects to create a ThermoEntry. Null when no entry found.
             /// </summary>
             /// <param name="num">The double which is to interpolated to</param>
             /// <param name="ObjCollection">Collect of objection which will be used to create an interpolated ThermoEntry</param>
@@ -109,7 +109,7 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
                     }
 
 
-                    if (!lowValueObject.Equals(default(T)) && !highValueObject.Equals(default(T)))
+                    if (lowValueObject != null && highValueObject != null)
                     {
                         ThermoEntry lowValueThermoEntry = converter(lowValueObject),
                             highValueThermoEntry = converter(highValueObject);
@@ -134,7 +134,7 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
                     }
                     else
                     {
-                        throw new Exception("ThermoEntry could not be found");
+                        return null;
                     }
                 }
             }

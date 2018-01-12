@@ -14,8 +14,8 @@ namespace EngineeringMath.Resources.LookupTables
     /// </summary>
     public class SteamTable
     {
-        public static readonly SteamTable temp = new SteamTable();
-        public SteamTable()
+        public static readonly SteamTable Table = new SteamTable();
+        private SteamTable()
         {
             Assembly assembly = Assembly.Load(new AssemblyName("EngineeringMath"));
             string resourceName = "EngineeringMath.Resources.LookupTables.SteamTable.csv";
@@ -105,12 +105,12 @@ namespace EngineeringMath.Resources.LookupTables
         }
 
         /// <summary>
-        /// Gets ThermoEntry at passed pressure and passed temperature
+        /// Gets ThermoEntry at passed pressure and passed temperature. Null when no entry found.
         /// </summary>
-        /// <param name="temperature">Desired Temperture</param>
-        /// <param name="pressure">Desired Pressure</param>
+        /// <param name="temperature">Desired Temperture (C)</param>
+        /// <param name="pressure">Desired Pressure (Pa)</param>
         /// <returns></returns>
-        internal ThermoEntry GetThermoEntryAtTemperatureAndPressure(double temperature, double pressure)
+        public ThermoEntry GetThermoEntryAtTemperatureAndPressure(double temperature, double pressure)
         {
             return ThermoEntry.Interpolation<ThermoConstPressureTable>.InterpolationThermoEntryFromList(
                 pressure,
@@ -122,6 +122,48 @@ namespace EngineeringMath.Resources.LookupTables
                 delegate (ThermoConstPressureTable obj)
                 {
                     return obj.GetThermoEntryAtTemperature(temperature);
+                });
+        }
+
+
+        /// <summary>
+        /// Gets ThermoEntry for saturated liquid at passed pressure. Null when no entry found.
+        /// </summary>
+        /// <param name="pressure">Desired Pressure (Pa)</param>
+        /// <returns></returns>
+        public ThermoEntry GetThermoEntrySatLiquidAtPressure(double pressure)
+        {
+            return ThermoEntry.Interpolation<ThermoConstPressureTable>.InterpolationThermoEntryFromList(
+                pressure,
+                TableElements,
+                delegate (ThermoConstPressureTable obj)
+                {
+                    return obj.Pressure;
+                },
+                delegate (ThermoConstPressureTable obj)
+                {
+                    return obj.SatLiquidEntry;
+                });
+        }
+
+
+        /// <summary>
+        /// Gets ThermoEntry for saturated vapor at passed pressure. Null when no entry found.
+        /// </summary>
+        /// <param name="pressure">Desired Pressure (Pa)</param>
+        /// <returns></returns>
+        public ThermoEntry GetThermoEntrySatVaporAtPressure(double pressure)
+        {
+            return ThermoEntry.Interpolation<ThermoConstPressureTable>.InterpolationThermoEntryFromList(
+                pressure,
+                TableElements,
+                delegate (ThermoConstPressureTable obj)
+                {
+                    return obj.Pressure;
+                },
+                delegate (ThermoConstPressureTable obj)
+                {
+                    return obj.SatVaporEntry;
                 });
         }
 

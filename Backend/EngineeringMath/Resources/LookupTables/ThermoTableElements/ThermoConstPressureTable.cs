@@ -38,7 +38,7 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
         }
 
         /// <summary>
-        /// Gets ThermoEntry as this object's pressure and passed temperature
+        /// Gets ThermoEntry as this object's pressure and passed temperature. Null when no entry found.
         /// <para>DO NOT get Saturated entries here! Use SatLiquidEntry and SatVaporEntry</para>
         /// </summary>
         /// <param name="temperature">Desired Temperture</param>
