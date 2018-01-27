@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EngineeringMath.Calculations;
 using EngineeringMath.Units;
+using EngineeringMath.Calculations.Components.Functions;
+using EngineeringMath.Calculations.Area;
 
 namespace BackendTesting
 {
@@ -14,12 +16,11 @@ namespace BackendTesting
         [TestMethod]
         public void CircleTest()
         {
-            EngineeringMath.Calculations.Area.Circle fun =
-    (EngineeringMath.Calculations.Area.Circle)
-    FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Area.Circle));
+            Circle fun =
+    (Circle)FunctionFactory.BuildFunction(typeof(Circle));
 
-            CircleSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Area.Circle.Field.cirDia, "Diameter");
-            CircleSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Area.Circle.Field.cirArea, "Area");
+            CircleSingleOutputTest(ref fun, (int)Circle.Field.cirDia, "Diameter");
+            CircleSingleOutputTest(ref fun, (int)Circle.Field.cirArea, "Area");
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace BackendTesting
         /// </summary>
         /// <param name="fun"></param>
         /// <param name="outputId"></param>
-        private void CircleSingleOutputTest(ref EngineeringMath.Calculations.Area.Circle fun, int outputId, string testName)
+        private void CircleSingleOutputTest(ref Circle fun, int outputId, string testName)
         {
             // in m
             double dia = 10;
@@ -35,24 +36,24 @@ namespace BackendTesting
             double area = dia * dia * Math.PI / 4.0;
 
             // set all inputs
-            fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirDia].UnitSelection[0].SelectedObject = Length.m;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirDia].SetValue(dia);
+            fun.GetParameter((int)Circle.Field.cirDia).UnitSelection[0].SelectedObject = Length.m;
+            fun.GetParameter((int)Circle.Field.cirDia).Value = dia;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirArea].UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Area.Circle.Field.cirArea].SetValue(area);
+            fun.GetParameter((int)Circle.Field.cirArea).UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
+            fun.GetParameter((int)Circle.Field.cirArea).Value = area;
 
             double actual = 0;
-            double expected = fun.FieldDic[outputId].GetValue();
+            double expected = fun.GetParameter(outputId).Value;
 
             // set the output to something completely wrong
-            fun.FieldDic[outputId].SetValue(double.NaN);
-            fun.OutputSelection.SelectedObject = fun.FieldDic[outputId];
+            fun.GetParameter(outputId).Value = double.NaN;
+            fun.OutputSelection.SelectedObject = fun.GetParameter(outputId);
             fun.Solve();
-            actual = fun.FieldDic[outputId].GetValue();
+            actual = fun.GetParameter(outputId).Value;
 
             //Valid Inputs
             Assert.AreEqual(expected,
-                fun.FieldDic[outputId].GetValue()
+                actual
                 , 0.05, testName);
         }
     }

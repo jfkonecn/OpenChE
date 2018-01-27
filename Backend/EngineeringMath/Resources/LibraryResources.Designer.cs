@@ -143,6 +143,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Direct Input.
+        /// </summary>
+        public static string DirectInput {
+            get {
+                return ResourceManager.GetString("DirectInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discharge Coefficient.
         /// </summary>
         public static string DischargeCoefficient {

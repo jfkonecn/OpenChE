@@ -266,4 +266,7 @@
   <data name="PitotTube" xml:space="preserve">
     <value>PitotTube</value>
   </data>
+  <data name="DirectInput" xml:space="preserve">
+    <value>Direct Input</value>
+  </data>
 </root>

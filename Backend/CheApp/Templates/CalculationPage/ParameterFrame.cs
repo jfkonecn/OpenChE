@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
 using EngineeringMath.Calculations;
-using CheApp.Templates.ObjectStyleBinders;
 using EngineeringMath.Resources;
 using EngineeringMath.Units;
+using EngineeringMath.Calculations.Components;
 
 namespace CheApp.Templates.CalculationPage
 {
@@ -15,58 +15,66 @@ namespace CheApp.Templates.CalculationPage
     public class ParameterFrame : Frame
     {
 
+
         /// <summary>
         /// Section intended to be placed in a grid
         /// </summary>
         /// <param name="para">The parameter this frame will bind to</param>
-        public ParameterFrame(Page page, Parameter para, out ParameterStyle paraStyle)
+        public ParameterFrame(SimpleParameter para)
         {
-            Grid grid = CreateParameterGrid(para.UnitSelection.Length);
+            Grid grid = CreateParameterGrid(para);
+            FinishUp(para, grid);
+        }
 
+        private void FinishUp(SimpleParameter para, Grid grid)
+        {
             // Bind this frame to a style
-            paraStyle = new ParameterStyle(para);
+            View paraStyle = new Frame();
+            paraStyle.Style = (Style)Application.Current.Resources["neutralParameterStyle"];
             this.SetBinding(Frame.StyleProperty, new Binding("Style"));
             this.BindingContext = paraStyle;
 
-            // row 1
-            grid.Children.Add(CreateTitleLabel(para), 1, 1);
 
-            // row 2
-            grid.Children.Add(CreateSubFunctionGrid(page, para), 1, 2);
+            para.OnResetEvent += delegate ()
+            {
+                paraStyle.Style = (Style)Application.Current.Resources["neutralParameterStyle"];
+            };
 
-            // row 3
-            grid.Children.Add(CreateEntryGrid(para, paraStyle), 1, 3);
+            para.OnErrorEvent += delegate (Exception e)
+            {
+                paraStyle.Style = (Style)Application.Current.Resources["badParameterStyle"];
+            };
 
-            // row 4
-            grid.Children.Add(CreateUnitGrid(para), 1, 4);
-
-            // row 5
-            grid.Children.Add(CreateErrorLabel(para), 1, 5);
+            para.OnSuccessEvent += delegate ()
+            {
+                paraStyle.Style = (Style)Application.Current.Resources["goodParameterStyle"];
+            };
 
             this.Content = grid;
         }
 
 
 
+
         /// <summary>
-        /// Creates intended to be binded to a parameter object
+        /// Creates grid binded to parameter
         /// </summary>
-        /// <param name="unitPickersLength"></param>
+        /// <param name="para"></param>
         /// <returns></returns>
-        private Grid CreateParameterGrid(int unitPickersLength)
+        private Grid CreateParameterGrid(SimpleParameter para)
         {
             int rowMargin = (int)Application.Current.Resources["standardRowMargin"];
             int columnMargin = (int)Application.Current.Resources["standardColumnMargin"];
 
             Grid grid = new Grid();
-            
+
             // create columns
             ColumnDefinitionCollection colDefs = new ColumnDefinitionCollection();
 
 
             colDefs.Add(new ColumnDefinition { Width = new GridLength(columnMargin, GridUnitType.Absolute) });
 
-            if (unitPickersLength == 1)
+            if (para.UnitSelection.Length == 1)
             {
                 colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             }
@@ -77,35 +85,59 @@ namespace CheApp.Templates.CalculationPage
             }
 
             colDefs.Add(new ColumnDefinition { Width = new GridLength(columnMargin, GridUnitType.Absolute) });
-            
-            grid.HorizontalOptions = LayoutOptions.FillAndExpand;
-            grid.RowDefinitions = new RowDefinitionCollection
-                {
-                new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) },
-                    // Title
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    // SubFunction Grid
-                    new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
-                    // Input Value Grid Row
-                    new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-                    // Unit Grid Row
-                    new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-                    // Error Label
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) }
-                };
 
+            grid.HorizontalOptions = LayoutOptions.FillAndExpand;
+
+            RowDefinitionCollection rowDefs = new RowDefinitionCollection();
+
+            rowDefs.Add(new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) });
+
+            // Title
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            grid.Children.Add(CreateTitleLabel(para), 1, 1);
+
+            int row = 2;
+            if (para.GetType().Equals(typeof(SubFunctionParameter)))
+            {
+                // SubFunction Grid
+                rowDefs.Add(new RowDefinition { Height = new GridLength(3, GridUnitType.Star) });
+                grid.Children.Add(CreateSubFunctionGrid((SubFunctionParameter)para), 1, row);
+                row++;
+            }
+
+            // Input Value Grid Row
+            rowDefs.Add(new RowDefinition { Height = new GridLength(2, GridUnitType.Star) });
+            grid.Children.Add(CreateEntryGrid(para), 1, row);
+            row++;
+
+            // Unit Grid Row
+            rowDefs.Add(new RowDefinition { Height = new GridLength(2, GridUnitType.Star) });
+            grid.Children.Add(CreateUnitGrid(para), 1, row);
+            row++;
+
+            // Error Label
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            grid.Children.Add(CreateErrorLabel(para), 1, row);
+            row++;
+
+            rowDefs.Add(new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) });
+
+
+            grid.RowDefinitions = rowDefs;
             grid.ColumnDefinitions = colDefs;
 
             return grid;
         }
+
+
+
 
         /// <summary>
         /// Creates the title for this parameter frame
         /// </summary>
         /// <param name="para"></param>
         /// <returns></returns>
-        private Label CreateTitleLabel(Parameter para)
+        private Label CreateTitleLabel(SimpleParameter para)
         {
             Label title = new Label
             {
@@ -124,11 +156,17 @@ namespace CheApp.Templates.CalculationPage
         /// <param name="page"></param>
         /// <param name="para"></param>
         /// <returns></returns>
-        private Grid CreateSubFunctionGrid(Page page, Parameter para)
+        private Grid CreateSubFunctionGrid(SubFunctionParameter para)
         {
             Grid subFunctionGrid = BasicGrids.SimpleGrid(2, 1, 0, 0);
-            Picker subFunctionPicker = new CalculationPicker<FunctionFactory.FactoryData>(para.SubFunctionSelection);
-            Button subFunctionBtn = new LinkToFunctionButton(page, para);
+
+            Picker subFunctionPicker = new Picker();
+            subFunctionPicker.SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
+            subFunctionPicker.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
+            subFunctionPicker.SetBinding(Picker.IsEnabledProperty, new Binding("IsEnabled"));
+            subFunctionPicker.BindingContext = para.SubFunctionSelection;
+
+            Button subFunctionBtn = CreateSubFunctionButton(para);
             subFunctionGrid.Children.Add(subFunctionPicker, 1, 1);
             subFunctionGrid.Children.Add(subFunctionBtn, 1, 2);
             return subFunctionGrid;
@@ -139,7 +177,7 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         /// <param name="para"></param>
         /// <returns></returns>
-        private Grid CreateEntryGrid(Parameter para, ParameterStyle paraStyle)
+        private Grid CreateEntryGrid(SimpleParameter para)
         {
             Grid inputGrid = BasicGrids.SimpleGrid(2, 1, 0, 0);
 
@@ -157,10 +195,9 @@ namespace CheApp.Templates.CalculationPage
                 Keyboard = Keyboard.Numeric,
                 Placeholder = string.Format(LibraryResources.ParameterValidRange, para.LowerLimit, para.UpperLimit)
             };
-            inputEntry.SetBinding(Entry.TextProperty, new Binding("EntryText"));
-            inputEntry.SetBinding(Entry.IsEnabledProperty, new Binding("EntryIsEnabled"));
-            inputEntry.SetBinding(Entry.StyleProperty, new Binding("EntryStyle"));
-            inputEntry.BindingContext = paraStyle;
+            inputEntry.SetBinding(Entry.TextProperty, new Binding("ValueStr"));
+            inputEntry.SetBinding(Entry.IsEnabledProperty, new Binding("AllowUserInput"));
+            inputEntry.BindingContext = para;
             inputGrid.Children.Add(inputEntry, 1, 2);
 
             return inputGrid;
@@ -172,13 +209,17 @@ namespace CheApp.Templates.CalculationPage
         /// </summary>
         /// <param name="para"></param>
         /// <returns></returns>
-        private Grid CreateUnitGrid(Parameter para)
+        private Grid CreateUnitGrid(SimpleParameter para)
         {
             Picker[] unitPickers = new Picker[para.UnitSelection.Length];
 
             for (int i = 0; i < para.UnitSelection.Length; i++)
             {
-                unitPickers[i] = new CalculationPicker<AbstractUnit>(para.UnitSelection[i]);
+                unitPickers[i] = new Picker();
+                unitPickers[i].SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
+                unitPickers[i].SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
+                unitPickers[i].SetBinding(Picker.IsEnabledProperty, new Binding("IsEnabled"));
+                unitPickers[i].BindingContext = para.UnitSelection[i];
             }
 
             // total columns in this grid
@@ -227,7 +268,7 @@ namespace CheApp.Templates.CalculationPage
         /// Creates the error text label
         /// </summary>
         /// <returns></returns>
-        private Label CreateErrorLabel(Parameter para)
+        private Label CreateErrorLabel(SimpleParameter para)
         {
             Label errorLb = new Label
             {
@@ -237,6 +278,25 @@ namespace CheApp.Templates.CalculationPage
             errorLb.BindingContext = para;
 
             return errorLb;
+        }
+
+        /// <summary>
+        /// Binds a button to a parameter to handle using a function in the place of the parameter
+        /// </summary>
+        public Button CreateSubFunctionButton(SubFunctionParameter para)
+        {
+            Button btn = new Button();
+            btn.Clicked += async delegate (System.Object o, System.EventArgs e)
+            {
+                await this.Navigation.PushAsync(new BasicPage(para.SubFunction));
+            };
+
+            btn.Text = LibraryResources.SubFunction;
+            btn.Style = (Style)Application.Current.Resources["buttonStyle"];
+            btn.SetBinding(Button.IsEnabledProperty, new Binding("AllowSubFunctionClick"));
+            btn.BindingContext = para;
+
+            return btn;
         }
     }
 }

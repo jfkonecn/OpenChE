@@ -36,14 +36,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Calculations\Area\Circle.cs" />
+    <Compile Include="Calculations\Components\AbstractComponent.cs" />
+    <Compile Include="Calculations\Components\Functions\SimpleFunction.cs" />
+    <Compile Include="Calculations\Components\Functions\SolveForFunction.cs" />
+    <Compile Include="Calculations\Components\SimpleParameter.cs" />
+    <Compile Include="Calculations\Components\NumericField.cs" />
+    <Compile Include="Calculations\Components\PickerSelection.cs" />
+    <Compile Include="Calculations\Components\SubFunctionParameter.cs" />
     <Compile Include="Calculations\Fluids\BernoullisEquation.cs" />
     <Compile Include="Calculations\Fluids\OrificePlate.cs" />
     <Compile Include="Calculations\Fluids\PitotTube.cs" />
-    <Compile Include="Calculations\PickerSelection.cs" />
     <Compile Include="Calculations\Solver.cs" />
-    <Compile Include="Calculations\Function.cs" />
     <Compile Include="Calculations\FunctionFactory.cs" />
-    <Compile Include="Calculations\Parameter.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaLength.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaP.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaVelocitySquared.cs" />

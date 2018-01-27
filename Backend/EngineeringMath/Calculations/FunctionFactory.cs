@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EngineeringMath.Calculations.Components.Functions;
 
 namespace EngineeringMath.Calculations
 {
@@ -31,42 +32,19 @@ namespace EngineeringMath.Calculations
         }
 
 
-        
+
         /// <summary>
         /// Builds a function and then returns it to the user
         /// <para>Note: The default output will be used for the function</para>
         /// </summary>
-        /// <param name="funType">The desired function type (which inherits the function class)</param>
+        /// <param name="funType">The desired function type (which inherits the SimpleFunction class)</param>
         /// <returns></returns>
-        public static Function BuildFunction(Type funType)
+        public static SimpleFunction BuildFunction(Type funType)
         {
             // Function to be returned
-            Function myFun = (Function)Activator.CreateInstance(funType);
-
-            myFun.FinishSetup();
+            SimpleFunction myFun = (SimpleFunction)Activator.CreateInstance(funType);
 
             return myFun;
-        }
-
-        /// <summary>
-        /// Builds a function and then returns it to the user
-        /// </summary>
-        /// <param name="funType">The desired function type (which inherits the function class)</param>
-        /// <param name="outputID">Output Id number which will  </param>
-        public static Function BuildFunction(Type funType, int outputID)
-        {
-            Function myFun = BuildFunction(funType);
-            myFun.FieldDic[outputID].isOutput = true;
-            return myFun;
-        }
-        /// <summary>
-        /// Builds a function and then returns it to the user
-        /// </summary>
-        /// <param name="data">Factory data required to build a function</param>
-        /// <returns></returns>
-        public static Function BuildFunction(FactoryData data)
-        {
-            return BuildFunction(data.FunType, data.OuputID);
         }
 
     }

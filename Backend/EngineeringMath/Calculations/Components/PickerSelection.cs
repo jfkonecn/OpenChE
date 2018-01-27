@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel;
 using System.Diagnostics;
 
-namespace EngineeringMath.Calculations
+namespace EngineeringMath.Calculations.Components
 {
     /// <summary>
     /// Stores data where the user selects something in a picker which represents an object
@@ -15,7 +14,7 @@ namespace EngineeringMath.Calculations
     /// <para>Note that the object.equals function is use</para>
     /// </summary>
     /// <typeparam name="T">The object which will represent the user's selection</typeparam>
-    public class PickerSelection<T> : INotifyPropertyChanged
+    public class PickerSelection<T> : AbstractComponent
     {
         private static readonly string TAG = "PickerSelection:";
         /// <summary>
@@ -62,7 +61,7 @@ namespace EngineeringMath.Calculations
                 {
                     Debug.WriteLine($"{TAG} SelectedIndex value is out of range!");
                 }
-                if(OnSelectedIndexChanged != null)
+                if (OnSelectedIndexChanged != null)
                 {
                     OnSelectedIndexChanged();
                 }
@@ -102,7 +101,7 @@ namespace EngineeringMath.Calculations
         {
             get
             {
-                if(SelectedIndex == -1)
+                if (SelectedIndex == -1)
                 {
                     Debug.WriteLine($"{TAG} Nothing is selected");
                     return default(T);
@@ -114,9 +113,9 @@ namespace EngineeringMath.Calculations
             {
                 // object must in the _ObjectLookup
                 int temp = 0;
-                foreach(T obj in _ObjectLookup.Values.ToList())
+                foreach (T obj in _ObjectLookup.Values.ToList())
                 {
-                    if ( (value == null && obj == null) || obj.Equals(value))
+                    if ((value == null && obj == null) || obj.Equals(value))
                     {
                         SelectedIndex = temp;
                         return;
@@ -160,18 +159,5 @@ namespace EngineeringMath.Calculations
             }
         }
 
-
-
-        protected virtual void OnPropertyChanged(string property)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
     }
 }

@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EngineeringMath.Calculations;
 using EngineeringMath.Units;
+using EngineeringMath.Calculations.Fluids;
+using EngineeringMath.Calculations.Components.Functions;
 
 namespace BackendTesting
 {
@@ -17,16 +19,16 @@ namespace BackendTesting
         [TestMethod]
         public void OrificePlateTest()
         {
-            EngineeringMath.Calculations.Fluids.OrificePlate fun = 
-                (EngineeringMath.Calculations.Fluids.OrificePlate)
-                FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.OrificePlate));
+            OrificePlate fun = 
+                (OrificePlate)
+                FunctionFactory.BuildFunction(typeof(OrificePlate));
 
-            OrificePlateSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.disCo, "Discharge Coefficient");
-            OrificePlateSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.density, "Density");
-            OrificePlateSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.pArea, "Pipe Area");
-            OrificePlateSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.oArea, "Orifice Area");
-            OrificePlateSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.deltaP, "Delta P");
-            OrificePlateSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.volFlow, "Volumetric Flow Rate");
+            OrificePlateSingleOutputTest(ref fun, (int)OrificePlate.Field.disCo, "Discharge Coefficient");
+            OrificePlateSingleOutputTest(ref fun, (int)OrificePlate.Field.density, "Density");
+            OrificePlateSingleOutputTest(ref fun, (int)OrificePlate.Field.pArea, "Pipe Area");
+            OrificePlateSingleOutputTest(ref fun, (int)OrificePlate.Field.oArea, "Orifice Area");
+            OrificePlateSingleOutputTest(ref fun, (int)OrificePlate.Field.deltaP, "Delta P");
+            OrificePlateSingleOutputTest(ref fun, (int)OrificePlate.Field.volFlow, "Volumetric Flow Rate");
 
 
 
@@ -36,7 +38,7 @@ namespace BackendTesting
         /// </summary>
         /// <param name="fun"></param>
         /// <param name="outputId"></param>
-        private void OrificePlateSingleOutputTest(ref EngineeringMath.Calculations.Fluids.OrificePlate fun, int outputId, string testName)
+        private void OrificePlateSingleOutputTest(ref OrificePlate fun, int outputId, string testName)
         {
 
 
@@ -54,38 +56,26 @@ namespace BackendTesting
             double volumeFlowRate = 6.476;
 
             // set all inputs
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.pArea].UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.pArea].SetValue(pipeArea);
+            fun.GetParameter((int)OrificePlate.Field.pArea).UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
+            fun.GetParameter((int)OrificePlate.Field.pArea).Value = pipeArea;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.oArea].UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.oArea].SetValue(orfArea);
+            fun.GetParameter((int)OrificePlate.Field.oArea).UnitSelection[0].SelectedObject = EngineeringMath.Units.Area.m2;
+            fun.GetParameter((int)OrificePlate.Field.oArea).Value = orfArea;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.deltaP].UnitSelection[0].SelectedObject = Pressure.Pa;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.deltaP].SetValue(pressureDrop);
+            fun.GetParameter((int)OrificePlate.Field.deltaP).UnitSelection[0].SelectedObject = Pressure.Pa;
+            fun.GetParameter((int)OrificePlate.Field.deltaP).Value = pressureDrop;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.density].UnitSelection[0].SelectedObject = Density.kgm3;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.density].SetValue(density);
+            fun.GetParameter((int)OrificePlate.Field.density).UnitSelection[0].SelectedObject = Density.kgm3;
+            fun.GetParameter((int)OrificePlate.Field.density).Value = density;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.disCo].UnitSelection[0].SelectedObject = Unitless.unitless;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.disCo].SetValue(cd);
+            fun.GetParameter((int)OrificePlate.Field.disCo).UnitSelection[0].SelectedObject = Unitless.unitless;
+            fun.GetParameter((int)OrificePlate.Field.disCo).Value = cd;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.volFlow].UnitSelection[0].SelectedObject = Volume.m3;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.volFlow].UnitSelection[1].SelectedObject = Time.sec;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.OrificePlate.Field.volFlow].SetValue(volumeFlowRate);
+            fun.GetParameter((int)OrificePlate.Field.volFlow).UnitSelection[0].SelectedObject = Volume.m3;
+            fun.GetParameter((int)OrificePlate.Field.volFlow).UnitSelection[1].SelectedObject = Time.sec;
+            fun.GetParameter((int)OrificePlate.Field.volFlow).Value = volumeFlowRate;
 
-            double actual = 0;
-            double expected = fun.FieldDic[outputId].GetValue();
-
-            // set the output to something completely wrong
-            fun.FieldDic[outputId].SetValue(double.NaN);
-            fun.OutputSelection.SelectedObject = fun.FieldDic[outputId];
-            fun.Solve();
-            actual = fun.FieldDic[outputId].GetValue();
-
-            //Valid Inputs
-            Assert.AreEqual(expected,
-                fun.FieldDic[outputId].GetValue()
-                , 0.05, testName);
+            FinishTest(fun, outputId, testName);
         }
 
         /// <summary>
@@ -94,17 +84,17 @@ namespace BackendTesting
         [TestMethod]
         public void BernoullisEquationTest()
         {
-            EngineeringMath.Calculations.Fluids.BernoullisEquation fun =
-                (EngineeringMath.Calculations.Fluids.BernoullisEquation)
-                FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.BernoullisEquation));
+            BernoullisEquation fun =
+                (BernoullisEquation)
+                FunctionFactory.BuildFunction(typeof(BernoullisEquation));
 
-            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletVelo, "Inlet Velocity");
-            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletVelo, "Outlet Velocity");
-            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletP, "Inlet Pressure");
-            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletP, "Outlet Pressure");
-            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletHeight, "Inlet Height");
-            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletHeight, "Outlet Height");
-            BernoullisEquationSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.density, "Density");
+            BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.inletVelo, "Inlet Velocity");
+            BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.outletVelo, "Outlet Velocity");
+            BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.inletP, "Inlet Pressure");
+            BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.outletP, "Outlet Pressure");
+            BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.inletHeight, "Inlet Height");
+            BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.outletHeight, "Outlet Height");
+            BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.density, "Density");
 
 
         }
@@ -114,7 +104,7 @@ namespace BackendTesting
         /// </summary>
         /// <param name="fun"></param>
         /// <param name="outputId"></param>
-        private void BernoullisEquationSingleOutputTest(ref EngineeringMath.Calculations.Fluids.BernoullisEquation fun, int outputId, string testName)
+        private void BernoullisEquationSingleOutputTest(ref BernoullisEquation fun, int outputId, string testName)
         {
 
             // in m /s
@@ -133,42 +123,30 @@ namespace BackendTesting
                 density = 1000;
 
             // set all inputs
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletVelo].UnitSelection[0].SelectedObject = Length.m;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletVelo].UnitSelection[1].SelectedObject = Time.sec;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletVelo].SetValue(inletVelo);
+            fun.GetParameter((int)BernoullisEquation.Field.inletVelo).UnitSelection[0].SelectedObject = Length.m;
+            fun.GetParameter((int)BernoullisEquation.Field.inletVelo).UnitSelection[1].SelectedObject = Time.sec;
+            fun.GetParameter((int)BernoullisEquation.Field.inletVelo).Value = inletVelo;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletVelo].UnitSelection[0].SelectedObject = Length.m;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletVelo].UnitSelection[1].SelectedObject = Time.sec;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletVelo].SetValue(outletVelo);
+            fun.GetParameter((int)BernoullisEquation.Field.outletVelo).UnitSelection[0].SelectedObject = Length.m;
+            fun.GetParameter((int)BernoullisEquation.Field.outletVelo).UnitSelection[1].SelectedObject = Time.sec;
+            fun.GetParameter((int)BernoullisEquation.Field.outletVelo).Value = outletVelo;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletHeight].UnitSelection[0].SelectedObject = Length.m;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletHeight].SetValue(inletHeight);
+            fun.GetParameter((int)BernoullisEquation.Field.inletHeight).UnitSelection[0].SelectedObject = Length.m;
+            fun.GetParameter((int)BernoullisEquation.Field.inletHeight).Value = inletHeight;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletHeight].UnitSelection[0].SelectedObject = Length.m;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletHeight].SetValue(outletHeight);
+            fun.GetParameter((int)BernoullisEquation.Field.outletHeight).UnitSelection[0].SelectedObject = Length.m;
+            fun.GetParameter((int)BernoullisEquation.Field.outletHeight).Value = outletHeight;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletP].UnitSelection[0].SelectedObject = Pressure.Pa;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.inletP].SetValue(inletP);
+            fun.GetParameter((int)BernoullisEquation.Field.inletP).UnitSelection[0].SelectedObject = Pressure.Pa;
+            fun.GetParameter((int)BernoullisEquation.Field.inletP).Value = inletP;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletP].UnitSelection[0].SelectedObject = Pressure.Pa;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.outletP].SetValue(outletP);
+            fun.GetParameter((int)BernoullisEquation.Field.outletP).UnitSelection[0].SelectedObject = Pressure.Pa;
+            fun.GetParameter((int)BernoullisEquation.Field.outletP).Value = outletP;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.density].UnitSelection[0].SelectedObject = Density.kgm3;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.BernoullisEquation.Field.density].SetValue(density);
+            fun.GetParameter((int)BernoullisEquation.Field.density).UnitSelection[0].SelectedObject = Density.kgm3;
+            fun.GetParameter((int)BernoullisEquation.Field.density).Value = density;
 
-            double actual = 0;
-            double expected = fun.FieldDic[outputId].GetValue();
-
-            // set the output to something completely wrong
-            fun.FieldDic[outputId].SetValue(double.NaN);
-            fun.OutputSelection.SelectedObject = fun.FieldDic[outputId];
-            fun.Solve();
-            actual = fun.FieldDic[outputId].GetValue();
-
-            //Valid Inputs
-            Assert.AreEqual(expected,
-                fun.FieldDic[outputId].GetValue()
-                , 0.05, testName);
+            FinishTest(fun, outputId, testName);
         }
 
         /// <summary>
@@ -177,15 +155,15 @@ namespace BackendTesting
         [TestMethod]
         public void PitotTubeTest()
         {
-            EngineeringMath.Calculations.Fluids.PitotTube fun =
-                (EngineeringMath.Calculations.Fluids.PitotTube)
-                FunctionFactory.BuildFunction(typeof(EngineeringMath.Calculations.Fluids.PitotTube));
+            PitotTube fun =
+                (PitotTube)
+                FunctionFactory.BuildFunction(typeof(PitotTube));
 
-            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.correctionCo, "Correction Coefficient");
-            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.deltaH, "Change in Height");
-            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.fluidDensity, "Fluid Density");
-            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.manoDensity, "Manometer Density");
-            PitotTubeSingleOutputTest(ref fun, (int)EngineeringMath.Calculations.Fluids.PitotTube.Field.velo, "Velocity");
+            PitotTubeSingleOutputTest(ref fun, (int)PitotTube.Field.correctionCo, "Correction Coefficient");
+            PitotTubeSingleOutputTest(ref fun, (int)PitotTube.Field.deltaH, "Change in Height");
+            PitotTubeSingleOutputTest(ref fun, (int)PitotTube.Field.fluidDensity, "Fluid Density");
+            PitotTubeSingleOutputTest(ref fun, (int)PitotTube.Field.manoDensity, "Manometer Density");
+            PitotTubeSingleOutputTest(ref fun, (int)PitotTube.Field.velo, "Velocity");
 
         }
 
@@ -194,7 +172,7 @@ namespace BackendTesting
         /// </summary>
         /// <param name="fun"></param>
         /// <param name="outputId"></param>
-        private void PitotTubeSingleOutputTest(ref EngineeringMath.Calculations.Fluids.PitotTube fun, int outputId, string testName)
+        private void PitotTubeSingleOutputTest(ref PitotTube fun, int outputId, string testName)
         {
 
             // unitless
@@ -209,34 +187,39 @@ namespace BackendTesting
                 velo = 13.7648;
 
             // set all inputs
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.correctionCo].UnitSelection[0].SelectedObject = Unitless.unitless;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.correctionCo].SetValue(correctionCo);
+            fun.GetParameter((int)PitotTube.Field.correctionCo).UnitSelection[0].SelectedObject = Unitless.unitless;
+            fun.GetParameter((int)PitotTube.Field.correctionCo).Value = correctionCo;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.deltaH].UnitSelection[0].SelectedObject = Length.m;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.deltaH].SetValue(deltaH);
+            fun.GetParameter((int)PitotTube.Field.deltaH).UnitSelection[0].SelectedObject = Length.m;
+            fun.GetParameter((int)PitotTube.Field.deltaH).Value = deltaH;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.manoDensity].UnitSelection[0].SelectedObject = Density.kgm3;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.manoDensity].SetValue(manoDensity);
+            fun.GetParameter((int)PitotTube.Field.manoDensity).UnitSelection[0].SelectedObject = Density.kgm3;
+            fun.GetParameter((int)PitotTube.Field.manoDensity).Value = manoDensity;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.fluidDensity].UnitSelection[0].SelectedObject = Density.kgm3;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.fluidDensity].SetValue(fluidDensity);
+            fun.GetParameter((int)PitotTube.Field.fluidDensity).UnitSelection[0].SelectedObject = Density.kgm3;
+            fun.GetParameter((int)PitotTube.Field.fluidDensity).Value = fluidDensity;
 
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.velo].UnitSelection[0].SelectedObject = Length.m;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.velo].UnitSelection[1].SelectedObject = Time.sec;
-            fun.FieldDic[(int)EngineeringMath.Calculations.Fluids.PitotTube.Field.velo].SetValue(velo);
+            fun.GetParameter((int)PitotTube.Field.velo).UnitSelection[0].SelectedObject = Length.m;
+            fun.GetParameter((int)PitotTube.Field.velo).UnitSelection[1].SelectedObject = Time.sec;
+            fun.GetParameter((int)PitotTube.Field.velo).Value = velo;
 
+            FinishTest(fun, outputId, testName);
+        }
+
+        private void FinishTest(SolveForFunction fun, int outputId, string testName)
+        {
             double actual = 0;
-            double expected = fun.FieldDic[outputId].GetValue();
+            double expected = fun.GetParameter(outputId).Value;
 
             // set the output to something completely wrong
-            fun.FieldDic[outputId].SetValue(double.NaN);
-            fun.OutputSelection.SelectedObject = fun.FieldDic[outputId];
+            fun.GetParameter(outputId).Value = double.NaN;
+            fun.OutputSelection.SelectedObject = fun.GetParameter(outputId);
             fun.Solve();
-            actual = fun.FieldDic[outputId].GetValue();
+            actual = fun.GetParameter(outputId).Value;
 
             //Valid Inputs
             Assert.AreEqual(expected,
-                fun.FieldDic[outputId].GetValue()
+                actual
                 , 0.8, testName);
         }
     }

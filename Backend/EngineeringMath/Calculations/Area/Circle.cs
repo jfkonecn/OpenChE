@@ -6,22 +6,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Resources;
+using EngineeringMath.Calculations.Components.Functions;
+using EngineeringMath.Calculations.Components;
 
 namespace EngineeringMath.Calculations.Area
 {
-    public class Circle : Function
+    public class Circle : SolveForFunction
     {
 
         /// <summary>
         /// 
         /// </summary>
-        public Circle()
+        public Circle() : base(
+                new SimpleParameter[]
+                {
+                    new SimpleParameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, false, 0),
+                    new SimpleParameter((int)Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, false, 0)
+                }
+            )
         {
-            FieldDic = new List<Parameter>
-            {
-                { new Parameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, null, true, 0) },
-                { new Parameter((int)Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, null, false, 0) }
-            }.ToDictionary(x => x.ID);
+
         }
 
         public enum Field
@@ -36,24 +40,56 @@ namespace EngineeringMath.Calculations.Area
             cirArea
         };
 
+        /// <summary>
+        /// Ciricle diameter (m)
+        /// </summary>
+        public double CircleDiameter
+        {
+            get
+            {
+                return GetParameter((int)Field.cirDia).Value;
+            }
 
-
-
+            set
+            {
+                GetParameter((int)Field.cirDia).Value = value;
+            }
+        }
 
         /// <summary>
-        /// Perform Orifice Plate Calculation
+        /// Ciricle area (m2)
         /// </summary>
-        /// <param name="outputID">ID which represents the enum field</param>
-        /// <returns></returns>
-        protected override double Calculation(int outputID)
+        public double CircleArea
+        {
+            get
+            {
+                return GetParameter((int)Field.cirArea).Value;
+            }
+
+            set
+            {
+                GetParameter((int)Field.cirArea).Value = value;
+            }
+        }
+
+
+
+        protected override SimpleParameter GetDefaultOutput()
+        {
+           return GetParameter((int)Field.cirArea);
+        }
+
+        protected override void Calculation()
         {
 
-            switch ((Field)outputID)
+            switch ((Field)OutputSelection.SelectedObject.ID)
             {
                 case Field.cirDia:
-                    return Math.Sqrt((4d * FieldDic[(int)Field.cirArea].GetValue()) / Math.PI);
+                    CircleDiameter = Math.Sqrt((4d * CircleArea) / Math.PI);
+                    break;
                 case Field.cirArea:
-                    return Math.PI / 4 * Math.Pow(FieldDic[(int)Field.cirDia].GetValue(), 2);
+                    CircleArea = Math.PI / 4 * Math.Pow(CircleDiameter, 2);
+                    break;
                 default:
                     throw new NotImplementedException();
             }

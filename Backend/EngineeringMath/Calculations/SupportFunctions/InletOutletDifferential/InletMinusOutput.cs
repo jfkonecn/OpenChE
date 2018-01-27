@@ -5,29 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Units;
 using EngineeringMath.Resources;
+using EngineeringMath.Calculations.Components.Functions;
+using EngineeringMath.Calculations.Components;
 
 namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
 {
     /// <summary>
     /// Contains function which support delta functions
     /// </summary>
-    public abstract class InletMinusOutput : Function
+    public abstract class InletMinusOutput : SolveForFunction
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="defaultUnit"></param>
         /// <param name="fun">Calculation function is taken from one of the static functions in this class</param>
-        public InletMinusOutput(AbstractUnit[] defaultUnit, CalcualtionFunction fun)
+        public InletMinusOutput(AbstractUnit[] defaultUnit, CalcualtionFunction fun) : base(
+            new SimpleParameter[]
+                {
+                    new SimpleParameter((int)Field.inlet, LibraryResources.Inlet, defaultUnit, true),
+                    new SimpleParameter((int)Field.outlet, LibraryResources.Outlet, defaultUnit, true),
+                    new SimpleParameter((int)Field.delta, LibraryResources.InletMinusOutlet, defaultUnit, false)
+                })
         {
             this.Title = LibraryResources.InletMinusOutlet;
             myCalculationFunction = fun;
-            FieldDic = new List<Parameter>
-            {
-                { new Parameter((int)Field.inlet, LibraryResources.Inlet, defaultUnit, null, true) },
-                { new Parameter((int)Field.outlet, LibraryResources.Outlet, defaultUnit, null, true) },
-                { new Parameter((int)Field.delta, LibraryResources.InletMinusOutlet, defaultUnit, null, false) }
-            }.ToDictionary(x => x.ID);
         }
 
         internal enum Field
@@ -47,6 +49,54 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
         };
 
         /// <summary>
+        /// Inlet in units of T
+        /// </summary>
+        public double Inlet
+        {
+            get
+            {
+                return GetParameter((int)Field.inlet).Value;
+            }
+
+            set
+            {
+                GetParameter((int)Field.inlet).Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Outlet in units of T
+        /// </summary>
+        public double Outlet
+        {
+            get
+            {
+                return GetParameter((int)Field.outlet).Value;
+            }
+
+            set
+            {
+                GetParameter((int)Field.outlet).Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Inlet - Outlet
+        /// </summary>
+        public double Delta
+        {
+            get
+            {
+                return GetParameter((int)Field.delta).Value;
+            }
+
+            set
+            {
+                GetParameter((int)Field.delta).Value = value;
+            }
+        }
+
+        /// <summary>
         /// Function to be used to perform calculations
         /// </summary>
         /// <param name="outputID"></param>
@@ -58,12 +108,17 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
             get; set;
         }
 
-        protected override double Calculation(int outputID)
+        protected override SimpleParameter GetDefaultOutput()
         {
-            return myCalculationFunction(outputID, 
-                FieldDic[(int)Field.inlet].GetValue(), 
-                FieldDic[(int)Field.outlet].GetValue(), 
-                FieldDic[(int)Field.delta].GetValue());
+            return GetParameter((int)Field.delta);
+        }
+
+        protected override void Calculation()
+        {
+            myCalculationFunction(OutputSelection.SelectedObject.ID, 
+                Inlet, 
+                Outlet, 
+                Delta);
         }
 
         /// <summary>

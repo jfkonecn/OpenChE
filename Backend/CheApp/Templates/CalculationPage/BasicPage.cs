@@ -6,15 +6,14 @@ using Xamarin.Forms;
 using EngineeringMath.Units;
 using System.Diagnostics;
 using EngineeringMath.Calculations;
-using CheApp.Templates.ObjectStyleBinders;
+using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Resources;
+using EngineeringMath.Calculations.Components;
 
 namespace CheApp.Templates.CalculationPage
 {
     public class BasicPage : ContentPage
     {
-        protected Dictionary<int, ParameterStyle> parameterStyleDic = new Dictionary<int, ParameterStyle>();
-        protected Function myFun;
 
         /// <summary>
         /// Sets up a basic page which handles a single function
@@ -26,153 +25,104 @@ namespace CheApp.Templates.CalculationPage
 
         }
 
-
-        /// <summary>
-        /// Sets up a basic page which handles a single function
-        /// <para>Solve for data defaults to having last element in the solve for picker being selected</para>
-        /// </summary>
-        /// <param name="fun">The function which the page will represent</param>
-        public BasicPage(Function fun)
+        public BasicPage(AbstractComponent component)
         {
-            myFun = fun;
-            Grid grid = CreatePageGrid();
 
-            this.SetBinding(Page.TitleProperty, new Binding("Title"));
-            this.BindingContext = myFun;
-
-
-            // add solve for frame       
-            grid.Children.Add(CreateSolveForFrame(), 1, 1);
-
-
-            // create parameter grids
-            int i = 0;
-            foreach (Parameter para in myFun.FieldDic.Values)
-            {
-                ParameterStyle tempStyle;
-                grid.Children.Add(
-                    new ParameterFrame(this, para, out tempStyle)
-                    , 1, i + 2);
-                parameterStyleDic.Add(para.ID, tempStyle);
-                i++;
-            }
-
-
-            // create frame for the calcuation button
-            Frame calculateFrame = CreateCalculateFrame();
-            grid.Children.Add(calculateFrame, 1, 2 + myFun.FieldDic.Count);
-            Grid.SetColumnSpan(calculateFrame, grid.ColumnDefinitions.Count - 2);
-
-            // create frame for the done button
-            Frame doneButtonFrame = CreateDoneFrame();
-            grid.Children.Add(doneButtonFrame, 1, 3 + myFun.FieldDic.Count);
-            Grid.SetColumnSpan(doneButtonFrame, grid.ColumnDefinitions.Count - 2);
-
-            // finish up
             this.Content = new ScrollView
             {
-                Content = grid,
-                Style = (Style)Application.Current.Resources["backgroundStyle"]                
+                Content = CreateView(component),
+                Style = (Style)Application.Current.Resources["backgroundStyle"]
             };
         }
 
-        private void SolveForPicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // reset style
-            foreach (ParameterStyle style in parameterStyleDic.Values)
-            {
-                style.Style = (Style)Application.Current.Resources["neutralParameterStyle"];
-            }
-        }
-
         /// <summary>
-        /// Make sure parameters are valid and execute function
+        /// Creates a view out of an abstract component
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void CalculateButtonClicked(object sender, EventArgs e)
+        /// <param name="component"></param>
+        /// <returns></returns>
+        private View CreateView(AbstractComponent component)
         {
-
-            try
+            Type myType = component.CastAs();
+            if (typeof(SimpleFunction).Equals(myType) ||
+                typeof(SolveForFunction).Equals(myType))
             {
-                myFun.Solve();
-                foreach(Parameter para in myFun.FieldDic.Values)
+                return CreateView((SimpleFunction)component);
+            }
+            else if (typeof(SimpleParameter).Equals(myType) ||
+                typeof(SubFunctionParameter).Equals(myType))
+            {
+                component.OnErrorEvent += delegate (Exception e)
                 {
-                    if(para.ErrorMessage == null)
-                    {
-                        // valid input
-                        parameterStyleDic[para.ID].Style = (Style)Application.Current.Resources["goodParameterStyle"];
-                    }
-                    else
-                    {
-                        // bad input
-                        parameterStyleDic[para.ID].Style = (Style)Application.Current.Resources["badParameterStyle"];
-                    }
-                }
+                    this.DisplayAlert(LibraryResources.ErrorMessageTitle,
+                        $"{ ((SimpleParameter)component).Title }: { e.Message }",
+                        LibraryResources.Okay);
+                };
+                return new ParameterFrame((SimpleParameter)component);
             }
-            catch (Exception err)
+            else if (typeof(PickerSelection<SimpleParameter>).Equals(myType))
             {
-                this.DisplayAlert(LibraryResources.ErrorMessageTitle,
-                    string.Format(LibraryResources.UnexpectedException, err.GetType(), err.Message),
-                    LibraryResources.Okay);
+                return CreateSolveForFrame((PickerSelection<SimpleParameter>)component);
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
-
         /// <summary>
-        /// Creates a grid for this page
-        /// <para>myFun cannot be null!</para>
+        /// Creates a grid view to represent a typeof simple function
         /// </summary>
-        /// <param name="rows">Total rows in the grid</param>
-        /// <param name="cols">Total cols grid</param>
-        private Grid CreatePageGrid()
+        /// <param name="fun"></param>
+        /// <returns></returns>
+        private Grid CreateView(SimpleFunction fun)
         {
+            Grid grid = new Grid();
             int rowMargin = (int)Application.Current.Resources["standardRowMargin"];
             int columnMargin = (int)Application.Current.Resources["standardColumnMargin"];
 
-            // create rows
-            RowDefinitionCollection rowDefs = new RowDefinitionCollection();
-            rowDefs.Add(new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) });
-
-            // Solve for picker row
-            rowDefs.Add(new RowDefinition { Height = new GridLength(2, GridUnitType.Star) });
-
-            // Parameter rows
-            for (int i = 0; i < myFun.FieldDic.Count; i++)
-            {
-                rowDefs.Add(new RowDefinition { Height = new GridLength(5, GridUnitType.Star) });
-            }
-
-            // Calculate button row
-            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-
-            // Done Button row
-            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-
-            rowDefs.Add(new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) });
-
-            // create columns
             ColumnDefinitionCollection colDefs = new ColumnDefinitionCollection();
             colDefs.Add(new ColumnDefinition { Width = new GridLength(columnMargin, GridUnitType.Absolute) });
             colDefs.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             colDefs.Add(new ColumnDefinition { Width = new GridLength(columnMargin, GridUnitType.Absolute) });
 
+            // create row margin
+            RowDefinitionCollection rowDefs = new RowDefinitionCollection();
+            rowDefs.Add(new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) });
 
-
-            return new Grid
+            // abstract component rows
+            int i = 0;
+            foreach (AbstractComponent component in fun)
             {
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                RowDefinitions = rowDefs,
-                ColumnDefinitions = colDefs
-            };
+                grid.Children.Add(CreateView(component), 1, i + 1);
+                rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                i++;
+            }
+
+            // Calculate button row
+            grid.Children.Add(CreateCalculateFrame(fun), 1, i + 1);
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            i++;
+
+            // Done Button row
+            grid.Children.Add(CreateDoneFrame(), 1, i + 1);
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            i++;
+
+            // create row margin
+            rowDefs.Add(new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) });
+
+            grid.RowDefinitions = rowDefs;
+            grid.ColumnDefinitions = colDefs;
+            grid.VerticalOptions = LayoutOptions.FillAndExpand;
+            return grid;
         }
 
         /// <summary>
         /// Create a grid to represent the user choosing the parameter to be solved for
-        /// <para>myFun cannot be null!</para>
+        /// <para>outputSelection cannot be null!</para>
         /// </summary>
         /// <returns></returns>
-        private Frame CreateSolveForFrame()
+        private Frame CreateSolveForFrame(PickerSelection<SimpleParameter> outputSelection)
         {
             Grid solveForGrid = BasicGrids.SimpleGrid(2, 1, 0, 0);
 
@@ -181,11 +131,13 @@ namespace CheApp.Templates.CalculationPage
                 Style = (Style)Application.Current.Resources["minorHeaderStyle"]
             };
             label.SetBinding(Label.TextProperty, new Binding("Title"));
-            label.BindingContext = myFun.OutputSelection;
+            label.BindingContext = outputSelection;
 
-            Picker solveForPicker = new CalculationPicker<Parameter>(myFun.OutputSelection, LibraryResources.SolveFor);
-            solveForPicker.SelectedIndexChanged += SolveForPicker_SelectedIndexChanged;
-            myFun.OutputSelection.SelectedIndex = myFun.OutputSelection.PickerList.Count - 1;
+            Picker solveForPicker = new Picker();
+            solveForPicker.SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
+            solveForPicker.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
+            solveForPicker.SetBinding(Picker.IsEnabledProperty, new Binding("IsEnabled"));
+            solveForPicker.BindingContext = outputSelection;
 
             solveForGrid.Children.Add(label, 1, 1);
             solveForGrid.Children.Add(solveForPicker, 1, 2);
@@ -200,22 +152,23 @@ namespace CheApp.Templates.CalculationPage
         /// <summary>
         /// Creates the calcualte button for this page
         /// </summary>
+        /// <param name="myFun"></param>
         /// <returns></returns>
-        private Frame CreateCalculateFrame()
+        private Frame CreateCalculateFrame(SimpleFunction fun)
         {
-            Button calculateBtn = new Button
+            return new ButtonFrame(LibraryResources.Calculate, delegate (System.Object o, System.EventArgs e) 
             {
-                Text = LibraryResources.Calculate,
-                Style = (Style)Application.Current.Resources["buttonStyle"]
-            };
-
-            calculateBtn.Clicked += CalculateButtonClicked;
-
-            return new Frame
-            {
-                Content = calculateBtn,
-                Style = (Style)Application.Current.Resources["neutralParameterStyle"]
-            };
+                try
+                {
+                    fun.Solve();
+                }
+                catch (Exception err)
+                {
+                    this.DisplayAlert(LibraryResources.ErrorMessageTitle,
+                        string.Format(LibraryResources.UnexpectedException, err.GetType(), err.Message),
+                        LibraryResources.Okay);
+                }
+            });
         }
 
         /// <summary>
@@ -224,20 +177,9 @@ namespace CheApp.Templates.CalculationPage
         /// <returns></returns>
         private Frame CreateDoneFrame()
         {
-            Button doneBtn = new Button
-            {
-                Text = LibraryResources.Done,
-                Style = (Style)Application.Current.Resources["buttonStyle"]
-            };
 
-            doneBtn.Clicked += async delegate (System.Object o, System.EventArgs e)
-            { await this.Navigation.PopAsync(); };
-
-            return new Frame
-            {
-                Content = doneBtn,
-                Style = (Style)Application.Current.Resources["neutralParameterStyle"]
-            };
+            return new ButtonFrame(LibraryResources.Done, async delegate (System.Object o, System.EventArgs e)
+            { await this.Navigation.PopAsync(); });
         }
 
     }
