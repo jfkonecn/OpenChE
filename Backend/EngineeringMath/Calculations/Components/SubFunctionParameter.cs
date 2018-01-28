@@ -66,23 +66,21 @@ namespace EngineeringMath.Calculations.Components
             foreach (KeyValuePair<string, FunctionFactory.FactoryData> ele in subFunctions)
                 temp.Add(ele.Key, ele.Value);
 
-            this.SubFunctionSelection = new PickerSelection<FunctionFactory.FactoryData>(temp);
-            this.SubFunctionSelection.OnSelectedIndexChanged += SubFunctionSelection_OnSelectedIndexChanged;
+            this.SubFunctionSelection = new FunctionDataPickerSelection(temp);
+            this.SubFunctionSelection.OnFunctionCreatedEvent += SyncSubFunctionWithParameter;
+            this.SubFunctionSelection.PropertyChanged += SubFunctionSelection_PropertyChanged;
             this.SubFunctionSelection.SelectedObject = null;
         }
 
-
         /// <summary>
-        /// 
+        /// Called when a property is changed in the the field
         /// </summary>
-        private void SubFunctionSelection_OnSelectedIndexChanged()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SubFunctionSelection_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            // free the memory being used
-            _SubFunction = null;
-            OnPropertyChanged("AllowUserInput");
-            OnPropertyChanged("AllowSubFunctionClick");
+            this.OnPropertyChanged(e.PropertyName);
         }
-
 
         /// <summary>
         /// True when user input is allowed
@@ -109,10 +107,9 @@ namespace EngineeringMath.Calculations.Components
         /// <summary>
         /// Contains all of the functions which will be allowed to substituted out all the fields within the function (intended to binded with a picker
         /// </summary>
-        public PickerSelection<FunctionFactory.FactoryData> SubFunctionSelection;
+        public FunctionDataPickerSelection SubFunctionSelection;
 
 
-        private SolveForFunction _SubFunction;
         /// <summary>
         /// This is the function which is currently replacing this parameter
         /// It is null when no function is replacing it.
@@ -121,65 +118,51 @@ namespace EngineeringMath.Calculations.Components
         {
             get
             {
-                if (SubFunctionSelection.SelectedObject == null)
-                {
-                    _SubFunction = null;
-                }
-                else
-                {
-                    // Do not rebuild if right function is already in place
-                    if (_SubFunction == null || !SubFunctionSelection.SelectedObject.FunType.Equals(_SubFunction.GetType()))
-                    {
-                        Debug.WriteLine($"{TAG} Building a new SubFunction");
-                        _SubFunction = (SolveForFunction)FunctionFactory.BuildFunction(SubFunctionSelection.SelectedObject.FunType);
-
-                        // double check that that the parameter is the type of unit as the desired output of the subfunction
-                        SimpleParameter outputPara = _SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID);
-
-                        for (int i = 0; i < outputPara.UnitSelection.Length; i++)
-                        {
-                            if (this.UnitSelection[i].GetType() != outputPara.UnitSelection[i].GetType())
-                            {
-                                throw new Exception("Output parameter in subfunction does not match this parameter's units");
-                            }
-                        }
-
-
-                        for (int i = 0; i < _SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection.Length; i++)
-                        {
-
-                            _SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection[i].SelectedObject =
-                                this.UnitSelection[i].SelectedObject;
-                        }
-
-                        _SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).ValueStr = this.ValueStr;
-                        _SubFunction.Title = this.Title;
-
-                        // dont allow user to be able to change the output function
-                        _SubFunction.OutputSelection.SelectedObject = outputPara;
-                        _SubFunction.OutputSelection.IsEnabled = false;
-
-                        _SubFunction.OnSolve += delegate ()
-                        {
-                            for (int i = 0; i < _SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection.Length; i++)
-                            {
-                                this.UnitSelection[i].SelectedObject =
-                                _SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection[i].SelectedObject;
-                            }
-
-                            this.ValueStr = _SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).ValueStr;
-                        };
-
-
-                    }
-                    else
-                    {
-                        Debug.WriteLine($"{TAG} Kept old SubFunction");
-                    }
-                }
-
-                return _SubFunction;
+                return SubFunctionSelection.SubFunction;
             }
+        }
+
+        /// <summary>
+        /// Syncs the subfunction with its parameter
+        /// </summary>
+        private void SyncSubFunctionWithParameter()
+        {
+            // double check that that the parameter is the type of unit as the desired output of the subfunction
+            SimpleParameter outputPara = SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID);
+
+            for (int i = 0; i < outputPara.UnitSelection.Length; i++)
+            {
+                if (this.UnitSelection[i].GetType() != outputPara.UnitSelection[i].GetType())
+                {
+                    throw new Exception("Output parameter in subfunction does not match this parameter's units");
+                }
+            }
+
+
+            for (int i = 0; i < SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection.Length; i++)
+            {
+
+                SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection[i].SelectedObject =
+                    this.UnitSelection[i].SelectedObject;
+            }
+
+            SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).ValueStr = this.ValueStr;
+            SubFunction.Title = this.Title;
+
+            // dont allow user to be able to change the output function
+            SubFunction.OutputSelection.SelectedObject = outputPara;
+            SubFunction.OutputSelection.IsEnabled = false;
+
+            SubFunction.OnSolve += delegate ()
+            {
+                for (int i = 0; i < SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection.Length; i++)
+                {
+                    this.UnitSelection[i].SelectedObject =
+                    SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection[i].SelectedObject;
+                }
+
+                this.ValueStr = SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).ValueStr;
+            };
         }
     }
 }

@@ -37,8 +37,10 @@
   <ItemGroup>
     <Compile Include="Calculations\Area\Circle.cs" />
     <Compile Include="Calculations\Components\AbstractComponent.cs" />
+    <Compile Include="Calculations\Components\FunctionDataPickerSelection.cs" />
     <Compile Include="Calculations\Components\Functions\SimpleFunction.cs" />
     <Compile Include="Calculations\Components\Functions\SolveForFunction.cs" />
+    <Compile Include="Calculations\Components\Group\GroupOfFunctions.cs" />
     <Compile Include="Calculations\Components\SimpleParameter.cs" />
     <Compile Include="Calculations\Components\NumericField.cs" />
     <Compile Include="Calculations\Components\PickerSelection.cs" />

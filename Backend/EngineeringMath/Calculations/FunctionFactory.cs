@@ -47,5 +47,6 @@ namespace EngineeringMath.Calculations
             return myFun;
         }
 
+
     }
 }
