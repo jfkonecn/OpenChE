@@ -18,8 +18,8 @@ namespace EngineeringMath.Calculations.UnitConverter
         internal AbstractConverter(AbstractUnit[] units) : base(
                             new SimpleParameter[]
                 {
-                    new SimpleParameter((int)Field.input, LibraryResources.Inlet, units.ToArray(), true) ,
-                    new SimpleParameter((int)Field.output, LibraryResources.Outlet, units.ToArray(), false)
+                    new SimpleParameter((int)Field.input, LibraryResources.Input, units.ToArray(), true) ,
+                    new SimpleParameter((int)Field.output, LibraryResources.Output, units.ToArray(), false)
                 }
             )
         {

@@ -194,9 +194,35 @@ namespace CheApp.Templates.CalculationPage
         /// <returns></returns>
         private Frame CreateFunctionSubberFrame(FunctionSubber funSubber)
         {
-            Grid subberGrid = BasicGrids.SimpleGrid(2, 1, 0, 0);
+            Grid subberGrid = new Grid
+            {
+                RowDefinitions = new RowDefinitionCollection
+                {
+                    new RowDefinition { Height = new GridLength(0, GridUnitType.Absolute) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(6, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(0, GridUnitType.Absolute) }
+                },
+                ColumnDefinitions = new ColumnDefinitionCollection
+                {
+                    new ColumnDefinition { Width = new GridLength(0, GridUnitType.Absolute) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(0, GridUnitType.Absolute) }
+                }
+            };
+
             subberGrid.Children.Add(CreateView(funSubber.AllFunctions), 1, 1);
+
+            View funView = CreateView(funSubber.AllFunctions.SubFunction);
             subberGrid.Children.Add(CreateView(funSubber.AllFunctions.SubFunction), 1, 2);
+
+            funSubber.AllFunctions.OnSelectedIndexChanged += delegate ()
+            {
+                subberGrid.Children.Remove(funView);
+                subberGrid.Children.Add(CreateView(funSubber.AllFunctions.SubFunction), 1, 2);
+            };
+
+
             return new Frame
             {
                 Content = subberGrid,
