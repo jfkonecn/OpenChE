@@ -50,6 +50,35 @@ namespace EngineeringMath.Calculations.Components
         }
 
 
+        string _Title;
+        /// <summary>
+        /// Title of the group of functions
+        /// </summary>
+        public virtual string Title
+        {
+            get
+            {
+                return _Title;
+            }
+            set
+            {
+                _Title = value;
+                OnPropertyChanged("Title");
+            }
+
+        }
+
+        /// <summary>
+        /// Called when a property is changed in the the field
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void _Field_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            this.OnPropertyChanged(e.PropertyName);
+        }
+
+
         /// <summary>
         /// On error handler
         /// </summary>

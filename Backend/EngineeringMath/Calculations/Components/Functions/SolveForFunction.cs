@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Resources;
+using EngineeringMath.Calculations.Components.Selectors;
 
 namespace EngineeringMath.Calculations.Components.Functions
 {

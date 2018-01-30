@@ -23,19 +23,19 @@ namespace EngineeringMath.Calculations.Fluids
                     new SimpleParameter((int)Field.disCo, LibraryResources.DischargeCoefficient, new AbstractUnit[] { Unitless.unitless }, true, 0, 1.0),
                     new SimpleParameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Units.Density.kgm3 }, true, 0),
                     new SubFunctionParameter((int)Field.pArea, LibraryResources.CircularPipe, new AbstractUnit[] { Units.Area.m2 },
-                        new Dictionary<string, FunctionFactory.FactoryData>
+                        new Dictionary<string, FunctionFactory.SolveForFactoryData>
                         {
-                            { LibraryResources.CircularPipe, new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
+                            { LibraryResources.CircularPipe, new FunctionFactory.SolveForFactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
                         } , true, 0),
                     new SubFunctionParameter((int)Field.oArea, LibraryResources.OrificeArea, new AbstractUnit[] { Units.Area.m2 },
-                        new Dictionary<string, FunctionFactory.FactoryData>
+                        new Dictionary<string, FunctionFactory.SolveForFactoryData>
                         {
-                            { LibraryResources.CircularPipe, new FunctionFactory.FactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
+                            { LibraryResources.CircularPipe, new FunctionFactory.SolveForFactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
                         }, true, 0),
                     new SubFunctionParameter((int)Field.deltaP, LibraryResources.PDAcrossOP, new AbstractUnit[] { Pressure.Pa },
-                        new Dictionary<string, FunctionFactory.FactoryData>
+                        new Dictionary<string, FunctionFactory.SolveForFactoryData>
                         {
-                            { LibraryResources.DeltaP, new FunctionFactory.FactoryData(typeof(DeltaP), (int)DeltaP.Field.delta) }
+                            { LibraryResources.DeltaP, new FunctionFactory.SolveForFactoryData(typeof(DeltaP), (int)DeltaP.Field.delta) }
                         }, true, 0.0),
                     new SimpleParameter((int)Field.volFlow, LibraryResources.VolumetricFlowRate, new AbstractUnit[] { Volume.m3, Time.sec }, false, 0.0)
                 }

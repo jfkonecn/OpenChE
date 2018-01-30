@@ -269,4 +269,16 @@
   <data name="DirectInput" xml:space="preserve">
     <value>Direct Input</value>
   </data>
+  <data name="Input" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="Output" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="Pressure" xml:space="preserve">
+    <value>Pressure</value>
+  </data>
+  <data name="UnitConverter" xml:space="preserve">
+    <value>Unit Converter</value>
+  </data>
 </root>

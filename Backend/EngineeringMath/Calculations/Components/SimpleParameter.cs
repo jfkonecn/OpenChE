@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Units;
 using EngineeringMath.Resources;
+using EngineeringMath.Calculations.Components.Selectors;
 
 namespace EngineeringMath.Calculations.Components
 {
@@ -47,16 +48,6 @@ namespace EngineeringMath.Calculations.Components
         }
 
         /// <summary>
-        /// Called when a property is changed in the the field
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void _Field_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            this.OnPropertyChanged(e.PropertyName);
-        }
-
-        /// <summary>
         /// The value in the current units (intended to be binded with field)
         /// </summary>
         public double Value
@@ -92,11 +83,6 @@ namespace EngineeringMath.Calculations.Components
         /// Stores the numeric information for this object
         /// </summary>
         private NumericField _Field;
-
-        /// <summary>
-        /// Title of the field
-        /// </summary>
-        public string Title { get; private set; }
 
 
         bool _isInput;
@@ -164,7 +150,6 @@ namespace EngineeringMath.Calculations.Components
         public double UpperLimit { get { return _Field.UpperLimit; } }
 
 
-        private bool _AllowUserInput = true;
         /// <summary>
         /// True when user input is allowed
         /// </summary>

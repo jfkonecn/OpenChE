@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Units;
 using EngineeringMath.Resources;
+using EngineeringMath.Calculations.Components.Selectors;
 
 namespace EngineeringMath.Calculations.Components
 {
     internal class NumericField : AbstractComponent
     {
-        private static readonly string TAG = "Parameter:";
+
 
         /// <param name="ID">Id of the parameter</param>
         /// <param name="lowerLimit">The lowest number the parameter is allowed to be</param>

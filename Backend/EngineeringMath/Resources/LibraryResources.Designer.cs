@@ -269,6 +269,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Input.
+        /// </summary>
+        public static string Input {
+            get {
+                return ResourceManager.GetString("Input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manometer Height Differential.
         /// </summary>
         public static string ManoDeltaH {
@@ -359,6 +368,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output.
+        /// </summary>
+        public static string Output {
+            get {
+                return ResourceManager.GetString("Output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output could not be calculated!.
         /// </summary>
         public static string OutputCouldBeCalculated {
@@ -404,6 +422,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pressure.
+        /// </summary>
+        public static string Pressure {
+            get {
+                return ResourceManager.GetString("Pressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Solve For.
         /// </summary>
         public static string SolveFor {
@@ -436,6 +463,15 @@ namespace EngineeringMath.Resources {
         public static string UnexpectedException {
             get {
                 return ResourceManager.GetString("UnexpectedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit Converter.
+        /// </summary>
+        public static string UnitConverter {
+            get {
+                return ResourceManager.GetString("UnitConverter", resourceCulture);
             }
         }
         

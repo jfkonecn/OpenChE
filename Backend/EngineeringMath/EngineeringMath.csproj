@@ -37,13 +37,14 @@
   <ItemGroup>
     <Compile Include="Calculations\Area\Circle.cs" />
     <Compile Include="Calculations\Components\AbstractComponent.cs" />
-    <Compile Include="Calculations\Components\FunctionDataPickerSelection.cs" />
+    <Compile Include="Calculations\Components\Functions\FunctionSubber.cs" />
+    <Compile Include="Calculations\Components\Selectors\FunctionPickerSelection.cs" />
     <Compile Include="Calculations\Components\Functions\SimpleFunction.cs" />
     <Compile Include="Calculations\Components\Functions\SolveForFunction.cs" />
-    <Compile Include="Calculations\Components\Group\GroupOfFunctions.cs" />
+    <Compile Include="Calculations\Components\Group\GroupOfComponents.cs" />
     <Compile Include="Calculations\Components\SimpleParameter.cs" />
     <Compile Include="Calculations\Components\NumericField.cs" />
-    <Compile Include="Calculations\Components\PickerSelection.cs" />
+    <Compile Include="Calculations\Components\Selectors\PickerSelection.cs" />
     <Compile Include="Calculations\Components\SubFunctionParameter.cs" />
     <Compile Include="Calculations\Fluids\BernoullisEquation.cs" />
     <Compile Include="Calculations\Fluids\OrificePlate.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaVelocitySquared.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\InletMinusOutput.cs" />
     <Compile Include="Calculations\Thermo\RankineCycle.cs" />
+    <Compile Include="Calculations\UnitConverter\AbstractConverter.cs" />
+    <Compile Include="Calculations\UnitConverter\UnitConverterFunctionSubber.cs" />
     <Compile Include="DataStructures\CompositeGraph.cs" />
     <Compile Include="DataStructures\CompositeGraphNode.cs" />
     <Compile Include="DataStructures\CompositeNode.cs" />

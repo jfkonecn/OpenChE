@@ -9,6 +9,7 @@ using EngineeringMath.Calculations;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components;
+using EngineeringMath.Calculations.Components.Selectors;
 
 namespace CheApp.Templates.CalculationPage
 {
@@ -19,8 +20,8 @@ namespace CheApp.Templates.CalculationPage
         /// Sets up a basic page which handles a single function
         /// <para>Solve for data defaults to having last element in the solve for picker being selected</para>
         /// </summary>
-        /// <param name="funType">The type of function which the page will represent</param>
-        public BasicPage(Type funType) : this(FunctionFactory.BuildFunction(funType))
+        /// <param name="componetType">The type of componet which the page will represent</param>
+        public BasicPage(Type componetType) : this((AbstractComponent)Activator.CreateInstance(componetType))
         {
 
         }
@@ -59,9 +60,13 @@ namespace CheApp.Templates.CalculationPage
                 };
                 return new ParameterFrame((SimpleParameter)component);
             }
-            else if (typeof(PickerSelection<SimpleParameter>).Equals(myType))
+            else if (typeof(PickerSelection<SimpleParameter>).Equals(myType) || typeof(FunctionPickerSelection).Equals(myType))
             {
-                return CreateSolveForFrame((PickerSelection<SimpleParameter>)component);
+                return PickerSelectionFrame(component);
+            }
+            else if (typeof(FunctionSubber).Equals(myType))
+            {
+                return CreateFunctionSubberFrame((FunctionSubber)component);
             }
             else
             {
@@ -120,9 +125,10 @@ namespace CheApp.Templates.CalculationPage
         /// <summary>
         /// Create a grid to represent the user choosing the parameter to be solved for
         /// <para>outputSelection cannot be null!</para>
+        /// <para>selector must be a type of PickerSelection</para>
         /// </summary>
         /// <returns></returns>
-        private Frame CreateSolveForFrame(PickerSelection<SimpleParameter> outputSelection)
+        private Frame PickerSelectionFrame(object selector)
         {
             Grid solveForGrid = BasicGrids.SimpleGrid(2, 1, 0, 0);
 
@@ -131,13 +137,13 @@ namespace CheApp.Templates.CalculationPage
                 Style = (Style)Application.Current.Resources["minorHeaderStyle"]
             };
             label.SetBinding(Label.TextProperty, new Binding("Title"));
-            label.BindingContext = outputSelection;
+            label.BindingContext = selector;
 
             Picker solveForPicker = new Picker();
             solveForPicker.SetBinding(Picker.ItemsSourceProperty, new Binding("PickerList"));
             solveForPicker.SetBinding(Picker.SelectedIndexProperty, new Binding("SelectedIndex"));
             solveForPicker.SetBinding(Picker.IsEnabledProperty, new Binding("IsEnabled"));
-            solveForPicker.BindingContext = outputSelection;
+            solveForPicker.BindingContext = selector;
 
             solveForGrid.Children.Add(label, 1, 1);
             solveForGrid.Children.Add(solveForPicker, 1, 2);
@@ -180,6 +186,22 @@ namespace CheApp.Templates.CalculationPage
 
             return new ButtonFrame(LibraryResources.Done, async delegate (System.Object o, System.EventArgs e)
             { await this.Navigation.PopAsync(); });
+        }
+
+        /// <summary>
+        /// Create subber function frame
+        /// </summary>
+        /// <returns></returns>
+        private Frame CreateFunctionSubberFrame(FunctionSubber funSubber)
+        {
+            Grid subberGrid = BasicGrids.SimpleGrid(2, 1, 0, 0);
+            subberGrid.Children.Add(CreateView(funSubber.AllFunctions), 1, 1);
+            subberGrid.Children.Add(CreateView(funSubber.AllFunctions.SubFunction), 1, 2);
+            return new Frame
+            {
+                Content = subberGrid,
+                Style = (Style)Application.Current.Resources["neutralParameterStyle"]
+            };
         }
 
     }

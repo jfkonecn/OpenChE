@@ -34,26 +34,6 @@ namespace EngineeringMath.Calculations.Components.Functions
 
 
 
-
-        string _Title;
-        /// <summary>
-        /// Title of the function
-        /// </summary>
-        public string Title
-        {
-            get
-            {
-                return _Title;
-            }
-            set
-            {
-                _Title = value;
-                OnPropertyChanged("Title");
-            }
-
-        }
-
-
         /// <summary>
         /// Performs the calculation this function object represents using the current state of the parameter objects
         /// <para>Updates parameters accordingly</para>

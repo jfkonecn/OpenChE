@@ -12,9 +12,18 @@ namespace EngineeringMath.Calculations
         /// <summary>
         /// Data structure used to store all required data to build a function
         /// </summary>
-        public class FactoryData
+        public class SolveForFactoryData
         {
-            public FactoryData(Type funType, int outputID)
+            /// <summary>
+            /// The ID when none is given
+            /// </summary>
+            internal static readonly int NULL_ID = -1;
+
+            public SolveForFactoryData(Type funType) : this(funType, NULL_ID)
+            {
+            }
+
+            public SolveForFactoryData(Type funType, int outputID)
             {
                 FunType = funType;
                 OuputID = outputID;                

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace EngineeringMath.Calculations.Components
+namespace EngineeringMath.Calculations.Components.Selectors
 {
     /// <summary>
     /// Stores data where the user selects something in a picker which represents an object
@@ -68,21 +68,6 @@ namespace EngineeringMath.Calculations.Components
                 OnPropertyChanged("SelectedIndex");
             }
         }
-
-        private string _Title;
-        public string Title
-        {
-            get
-            {
-                return _Title;
-            }
-            set
-            {
-                _Title = value;
-                OnPropertyChanged("Title");
-            }
-        }
-
 
         /// <summary>
         /// 

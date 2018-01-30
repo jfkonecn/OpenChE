@@ -7,6 +7,7 @@ using EngineeringMath.Units;
 using EngineeringMath.Resources;
 using System.Diagnostics;
 using EngineeringMath.Calculations.Components.Functions;
+using EngineeringMath.Calculations.Components.Selectors;
 
 namespace EngineeringMath.Calculations.Components
 {
@@ -15,7 +16,7 @@ namespace EngineeringMath.Calculations.Components
     /// </summary>
     public class SubFunctionParameter : SimpleParameter
     {
-        private static readonly string TAG = "SubFunctionParameter:";
+
         /// <param name="title">Title of the field</param>
         /// <param name="ID">Id of the parameter</param>
         /// <param name="subFunctions">The functions which this parameter may be replaced by the string key is the title which is intended to be stored in a picker
@@ -26,7 +27,7 @@ namespace EngineeringMath.Calculations.Components
         /// <param name="desiredUnits">Used to create a conversion factor</param>
         /// <param name="isInput">If this parameter(else it's an output)</param>
         internal SubFunctionParameter(int ID, string title, AbstractUnit[] desiredUnits,
-            Dictionary<string, FunctionFactory.FactoryData> subFunctions,
+            Dictionary<string, FunctionFactory.SolveForFactoryData> subFunctions,
             bool isInput = true,
             double lowerLimit = double.MinValue,
             double upperLimit = double.MaxValue) :
@@ -53,20 +54,20 @@ namespace EngineeringMath.Calculations.Components
         /// </param>
         /// <param name="isInput"></param>
         internal SubFunctionParameter(int ID, string title, NumericField field, 
-            Dictionary<string, FunctionFactory.FactoryData> subFunctions, bool isInput = true) : 
+            Dictionary<string, FunctionFactory.SolveForFactoryData> subFunctions, bool isInput = true) : 
             base(ID, title, field, isInput)
         {
             // Build SubFunctionSelection
             // add a default selection
-            Dictionary<string, FunctionFactory.FactoryData> temp = new Dictionary<string, FunctionFactory.FactoryData>
+            Dictionary<string, FunctionFactory.SolveForFactoryData> temp = new Dictionary<string, FunctionFactory.SolveForFactoryData>
                 {
                     { LibraryResources.DirectInput, null }
                 };
 
-            foreach (KeyValuePair<string, FunctionFactory.FactoryData> ele in subFunctions)
+            foreach (KeyValuePair<string, FunctionFactory.SolveForFactoryData> ele in subFunctions)
                 temp.Add(ele.Key, ele.Value);
 
-            this.SubFunctionSelection = new FunctionDataPickerSelection(temp);
+            this.SubFunctionSelection = new FunctionPickerSelection(temp);
             this.SubFunctionSelection.OnFunctionCreatedEvent += SyncSubFunctionWithParameter;
             this.SubFunctionSelection.PropertyChanged += SubFunctionSelection_PropertyChanged;
             this.SubFunctionSelection.SelectedObject = null;
@@ -107,7 +108,7 @@ namespace EngineeringMath.Calculations.Components
         /// <summary>
         /// Contains all of the functions which will be allowed to substituted out all the fields within the function (intended to binded with a picker
         /// </summary>
-        public FunctionDataPickerSelection SubFunctionSelection;
+        public FunctionPickerSelection SubFunctionSelection;
 
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace EngineeringMath.Calculations.Components
         {
             get
             {
-                return SubFunctionSelection.SubFunction;
+                return (SolveForFunction)SubFunctionSelection.SubFunction;
             }
         }
 

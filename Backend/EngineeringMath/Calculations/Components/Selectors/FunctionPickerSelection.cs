@@ -6,14 +6,22 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using EngineeringMath.Calculations.Components.Functions;
 
-namespace EngineeringMath.Calculations.Components
+namespace EngineeringMath.Calculations.Components.Selectors
 {
     /// <summary>
     /// Creates a PickerSelection object to handle FunctionData
     /// </summary>
-    public class FunctionDataPickerSelection : PickerSelection<FunctionFactory.FactoryData>
+    public class FunctionPickerSelection : PickerSelection<FunctionFactory.SolveForFactoryData>
     {
-        internal FunctionDataPickerSelection(Dictionary<string, FunctionFactory.FactoryData> funData) : base(funData)
+
+        internal FunctionPickerSelection(Dictionary<string, Type> funTypes) : 
+            this(funTypes.ToDictionary(x => x.Key, x => new FunctionFactory.SolveForFactoryData(x.Value)))
+        {
+
+        }
+
+
+        internal FunctionPickerSelection(Dictionary<string, FunctionFactory.SolveForFactoryData> funData) : base(funData)
         {
             this.OnSelectedIndexChanged += SubFunctionSelection_OnSelectedIndexChanged;
         }
@@ -35,15 +43,15 @@ namespace EngineeringMath.Calculations.Components
 
         public override Type CastAs()
         {
-            return typeof(PickerSelection<FunctionFactory.FactoryData>);
+            return typeof(FunctionPickerSelection);
         }
 
-        private SolveForFunction _SubFunction;
+        private SimpleFunction _SubFunction;
         /// <summary>
         /// This is the function which is currently replacing this parameter
         /// It is null when no function is replacing it.
         /// </summary>
-        public SolveForFunction SubFunction
+        public SimpleFunction SubFunction
         {
             get
             {
@@ -57,7 +65,7 @@ namespace EngineeringMath.Calculations.Components
                     if (_SubFunction == null || !this.SelectedObject.FunType.Equals(_SubFunction.GetType()))
                     {
                         Debug.WriteLine($"{TAG} Building a new SubFunction");
-                        _SubFunction = (SolveForFunction)FunctionFactory.BuildFunction(this.SelectedObject.FunType);
+                        _SubFunction = FunctionFactory.BuildFunction(this.SelectedObject.FunType);
                         OnFunctionCreated();
                     }
                     else
