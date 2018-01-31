@@ -28,7 +28,7 @@ namespace CheApp.Templates.CalculationPage
 
         public BasicPage(AbstractComponent component)
         {
-
+            this.Title = component.Title;
             this.Content = new ScrollView
             {
                 Content = CreateView(component),
@@ -214,12 +214,13 @@ namespace CheApp.Templates.CalculationPage
             subberGrid.Children.Add(CreateView(funSubber.AllFunctions), 1, 1);
 
             View funView = CreateView(funSubber.AllFunctions.SubFunction);
-            subberGrid.Children.Add(CreateView(funSubber.AllFunctions.SubFunction), 1, 2);
+            subberGrid.Children.Add(funView, 1, 2);
 
             funSubber.AllFunctions.OnSelectedIndexChanged += delegate ()
             {
                 subberGrid.Children.Remove(funView);
-                subberGrid.Children.Add(CreateView(funSubber.AllFunctions.SubFunction), 1, 2);
+                funView = CreateView(funSubber.AllFunctions.SubFunction);
+                subberGrid.Children.Add(funView, 1, 2);
             };
 
 

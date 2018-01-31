@@ -25,7 +25,7 @@ namespace EngineeringMath.Calculations.Fluids
                 }
             )
         {
-
+            this.Title = LibraryResources.BernoullisEquation;
 
 #if DEBUG
             InletVelocity = 1;

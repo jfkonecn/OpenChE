@@ -56,6 +56,9 @@
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaVelocitySquared.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\InletMinusOutput.cs" />
     <Compile Include="Calculations\Thermo\RankineCycle.cs" />
+    <Compile Include="Calculations\Thermo\SteamTable.cs" />
+    <Compile Include="Calculations\Thermo\ThermoLookupTables\AbstractTable.cs" />
+    <Compile Include="Calculations\Thermo\ThermoLookupTables\SteamTable.cs" />
     <Compile Include="Calculations\UnitConverter\AbstractConverter.cs" />
     <Compile Include="Calculations\UnitConverter\UnitConverterFunctionSubber.cs" />
     <Compile Include="DataStructures\CompositeGraph.cs" />
@@ -70,15 +73,20 @@
     </Compile>
     <Compile Include="Resources\LookupTables\Interpolation.cs" />
     <Compile Include="Resources\LookupTables\SteamTable.cs" />
+    <Compile Include="Resources\LookupTables\ThermoTable.cs" />
     <Compile Include="Resources\LookupTables\ThermoTableElements\ThermoConstPressureTable.cs" />
     <Compile Include="Resources\LookupTables\ThermoTableElements\ThermoEntry.cs" />
     <Compile Include="Units\AbstractUnit.cs" />
     <Compile Include="Units\Area.cs" />
     <Compile Include="Units\Density.cs" />
+    <Compile Include="Units\Energy.cs" />
+    <Compile Include="Units\Enthalpy.cs" />
+    <Compile Include="Units\Entropy.cs" />
     <Compile Include="Units\HelperFunctions.cs" />
     <Compile Include="Units\Length.cs" />
     <Compile Include="Units\Mass.cs" />
     <Compile Include="Units\Pressure.cs" />
+    <Compile Include="Units\SpecificVolume.cs" />
     <Compile Include="Units\StaticUnitProperties.cs" />
     <Compile Include="Units\Temperature.cs" />
     <Compile Include="Units\Time.cs" />

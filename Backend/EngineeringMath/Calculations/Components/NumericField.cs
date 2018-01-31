@@ -112,8 +112,11 @@ namespace EngineeringMath.Calculations.Components
             {
                 OnError(new Exception(string.Format(LibraryResources.ValueAboveUpperLimit, UpperLimit)));
             }
-
-            OnSuccess();
+            else
+            {
+                OnSuccess();
+            }
+            
             _Value = temp;
             ValueStr = string.Format("{0:G4}", temp);
             OnPropertyChanged("Value");

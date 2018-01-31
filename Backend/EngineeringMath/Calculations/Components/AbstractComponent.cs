@@ -49,7 +49,6 @@ namespace EngineeringMath.Calculations.Components
             OnSuccessEvent?.Invoke();
         }
 
-
         string _Title;
         /// <summary>
         /// Title of the group of functions

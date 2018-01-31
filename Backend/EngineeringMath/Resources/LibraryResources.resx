@@ -281,4 +281,43 @@
   <data name="UnitConverter" xml:space="preserve">
     <value>Unit Converter</value>
   </data>
+  <data name="Energy" xml:space="preserve">
+    <value>Energy</value>
+  </data>
+  <data name="Enthalpy" xml:space="preserve">
+    <value>Enthalpy</value>
+  </data>
+  <data name="Entropy" xml:space="preserve">
+    <value>Entropy</value>
+  </data>
+  <data name="Mass" xml:space="preserve">
+    <value>Mass</value>
+  </data>
+  <data name="MassFlowRate" xml:space="preserve">
+    <value>Mass Flow Rate</value>
+  </data>
+  <data name="SatLiquidGivenPressure" xml:space="preserve">
+    <value>Saturated Liquid Given Pressure</value>
+  </data>
+  <data name="SatTemperature" xml:space="preserve">
+    <value>Saturated Temperature</value>
+  </data>
+  <data name="SatVaporGivenPressure" xml:space="preserve">
+    <value>Saturated Vapor Given Pressure</value>
+  </data>
+  <data name="SpecificVolume" xml:space="preserve">
+    <value>Specific Volume</value>
+  </data>
+  <data name="SteamTable" xml:space="preserve">
+    <value>Steam Table</value>
+  </data>
+  <data name="SuperHeatedVaporGivenTempPressure" xml:space="preserve">
+    <value>Super-Heated Vapor Given Temperature and Pressure</value>
+  </data>
+  <data name="Temperature" xml:space="preserve">
+    <value>Temperature</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
 </root>

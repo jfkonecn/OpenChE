@@ -25,7 +25,7 @@ namespace EngineeringMath.Calculations.Fluids
             )
         {
 
-
+            this.Title = LibraryResources.PitotTube;
 #if DEBUG
             CorrectionCoefficient = 1;
             DeltaH = 1;

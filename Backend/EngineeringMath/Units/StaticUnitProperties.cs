@@ -23,7 +23,11 @@ namespace EngineeringMath.Units
             { typeof(Time) , Time.StringToUnit },
             { typeof(Unitless) , Unitless.StringToUnit },
             { typeof(Volume) , Volume.StringToUnit },
-            { typeof(Area), Area.StringToUnit }
+            { typeof(Area), Area.StringToUnit },
+            { typeof(SpecificVolume), SpecificVolume.StringToUnit },
+            { typeof(Energy), Energy.StringToUnit },
+            { typeof(Enthalpy), Enthalpy.StringToUnit },
+            { typeof(Entropy), Entropy.StringToUnit }
         };
     }
 }

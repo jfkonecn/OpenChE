@@ -170,6 +170,33 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Energy.
+        /// </summary>
+        public static string Energy {
+            get {
+                return ResourceManager.GetString("Energy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enthalpy.
+        /// </summary>
+        public static string Enthalpy {
+            get {
+                return ResourceManager.GetString("Enthalpy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entropy.
+        /// </summary>
+        public static string Entropy {
+            get {
+                return ResourceManager.GetString("Entropy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ERROR!.
         /// </summary>
         public static string ErrorMessageTitle {
@@ -292,6 +319,24 @@ namespace EngineeringMath.Resources {
         public static string ManoDensity {
             get {
                 return ResourceManager.GetString("ManoDensity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mass.
+        /// </summary>
+        public static string Mass {
+            get {
+                return ResourceManager.GetString("Mass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mass Flow Rate.
+        /// </summary>
+        public static string MassFlowRate {
+            get {
+                return ResourceManager.GetString("MassFlowRate", resourceCulture);
             }
         }
         
@@ -431,6 +476,33 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saturated Liquid Given Pressure.
+        /// </summary>
+        public static string SatLiquidGivenPressure {
+            get {
+                return ResourceManager.GetString("SatLiquidGivenPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturated Temperature.
+        /// </summary>
+        public static string SatTemperature {
+            get {
+                return ResourceManager.GetString("SatTemperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturated Vapor Given Pressure.
+        /// </summary>
+        public static string SatVaporGivenPressure {
+            get {
+                return ResourceManager.GetString("SatVaporGivenPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Solve For.
         /// </summary>
         public static string SolveFor {
@@ -440,11 +512,47 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specific Volume.
+        /// </summary>
+        public static string SpecificVolume {
+            get {
+                return ResourceManager.GetString("SpecificVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steam Table.
+        /// </summary>
+        public static string SteamTable {
+            get {
+                return ResourceManager.GetString("SteamTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Calculate Value Using Substitute Function.
         /// </summary>
         public static string SubFunction {
             get {
                 return ResourceManager.GetString("SubFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Super-Heated Vapor Given Temperature and Pressure.
+        /// </summary>
+        public static string SuperHeatedVaporGivenTempPressure {
+            get {
+                return ResourceManager.GetString("SuperHeatedVaporGivenTempPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature.
+        /// </summary>
+        public static string Temperature {
+            get {
+                return ResourceManager.GetString("Temperature", resourceCulture);
             }
         }
         
@@ -517,6 +625,15 @@ namespace EngineeringMath.Resources {
         public static string ValueBelowLowerLimit {
             get {
                 return ResourceManager.GetString("ValueBelowLowerLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume.
+        /// </summary>
+        public static string Volume {
+            get {
+                return ResourceManager.GetString("Volume", resourceCulture);
             }
         }
         

@@ -13,7 +13,7 @@ namespace EngineeringMath.Calculations.UnitConverter
     {
         public UnitConverterFunctionSubber() : base(AllUnitFunctionData)
         {
-           
+            this.Title = LibraryResources.UnitConverter;
         }
 
 
@@ -21,8 +21,13 @@ namespace EngineeringMath.Calculations.UnitConverter
             new Dictionary<string, FunctionFactory.SolveForFactoryData>
             {
                         { LibraryResources.Pressure, new FunctionFactory.SolveForFactoryData(typeof(PressureFun)) },
-                        { LibraryResources.VolumetricFlowRate, new FunctionFactory.SolveForFactoryData(typeof(VolumetricFlowFun)) }
-            };
+                        { LibraryResources.VolumetricFlowRate, new FunctionFactory.SolveForFactoryData(typeof(VolumetricFlowFun)) },
+                        { LibraryResources.Temperature, new FunctionFactory.SolveForFactoryData(typeof(TemperatureFun)) },
+                        { LibraryResources.MassFlowRate, new FunctionFactory.SolveForFactoryData(typeof(MassFlowFun)) },
+                        { LibraryResources.Mass, new FunctionFactory.SolveForFactoryData(typeof(MassFun)) },
+                        { LibraryResources.Volume, new FunctionFactory.SolveForFactoryData(typeof(VolumeFun)) },
+                        { LibraryResources.Energy, new FunctionFactory.SolveForFactoryData(typeof(EnergyFun)) }
+            }.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
 
         public class PressureFun : AbstractConverter
         {
@@ -38,6 +43,31 @@ namespace EngineeringMath.Calculations.UnitConverter
             {
 
             }
+        }
+
+        public class TemperatureFun : AbstractConverter
+        {
+            public TemperatureFun() : base(new AbstractUnit[] { Temperature.C }) { }
+        }
+
+        public class MassFlowFun : AbstractConverter
+        {
+            public MassFlowFun() : base(new AbstractUnit[] { Mass.g }) { }
+        }
+
+        public class MassFun : AbstractConverter
+        {
+            public MassFun() : base(new AbstractUnit[] { Mass.g }) { }
+        }
+
+        public class VolumeFun : AbstractConverter
+        {
+            public VolumeFun() : base(new AbstractUnit[] { Volume.m3 }) { }
+        }
+
+        public class EnergyFun : AbstractConverter
+        {
+            public EnergyFun() : base(new AbstractUnit[] { Energy.kJ }) { }
         }
     }
 }

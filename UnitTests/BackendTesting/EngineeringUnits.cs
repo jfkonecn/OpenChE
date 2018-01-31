@@ -82,6 +82,17 @@ namespace BackendTesting
             Assert.AreEqual(1, actual, delta);
             actual = Volume.Convert(curValue, volumeUnit, Volume.USGallon);
             Assert.AreEqual(264.172052, actual, delta);
+
+            // Energy test
+            Energy energyUnit = Energy.kJ;
+            actual = Energy.Convert(curValue, energyUnit, Energy.Therm);
+            Assert.AreEqual(9.48043428, actual, delta);
+            actual = Energy.Convert(curValue, energyUnit, Energy.kCal);
+            Assert.AreEqual(239006, actual, delta);
+            actual = Energy.Convert(curValue, energyUnit, Energy.J);
+            Assert.AreEqual(1e9, actual, delta);
+            actual = Energy.Convert(curValue, energyUnit, Energy.BTU);
+            Assert.AreEqual(947817, actual, delta);
         }
     }
 }
