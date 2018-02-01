@@ -115,11 +115,11 @@ namespace EngineeringMath.Calculations.Components
         /// This is the function which is currently replacing this parameter
         /// It is null when no function is replacing it.
         /// </summary>
-        public SolveForFunction SubFunction
+        public SimpleFunction SubFunction
         {
             get
             {
-                return (SolveForFunction)SubFunctionSelection.SubFunction;
+                return SubFunctionSelection.SubFunction;
             }
         }
 
@@ -128,9 +128,14 @@ namespace EngineeringMath.Calculations.Components
         /// </summary>
         private void SyncSubFunctionWithParameter()
         {
-            // double check that that the parameter is the type of unit as the desired output of the subfunction
+            
             SimpleParameter outputPara = SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID);
-
+            // make sure that the output parameter can be an output
+            if (typeof(SimpleParameter).Equals(SubFunction.CastAs()) && outputPara.isInput)
+            {
+                throw new Exception("The subfunction must use the desired parameter as an output!");
+            }
+            // double check that that the parameter is the type of unit as the desired output of the subfunction
             for (int i = 0; i < outputPara.UnitSelection.Length; i++)
             {
                 if (this.UnitSelection[i].GetType() != outputPara.UnitSelection[i].GetType())
@@ -150,9 +155,14 @@ namespace EngineeringMath.Calculations.Components
             SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).ValueStr = this.ValueStr;
             SubFunction.Title = this.Title;
 
-            // dont allow user to be able to change the output function
-            SubFunction.OutputSelection.SelectedObject = outputPara;
-            SubFunction.OutputSelection.IsEnabled = false;
+
+            if (typeof(SolveForFunction).Equals(SubFunction.CastAs()))
+            {
+                // dont allow user to be able to change the output function
+                ((SolveForFunction)SubFunction).OutputSelection.SelectedObject = outputPara;
+                ((SolveForFunction)SubFunction).OutputSelection.IsEnabled = false;
+            }
+
 
             SubFunction.OnSolve += delegate ()
             {

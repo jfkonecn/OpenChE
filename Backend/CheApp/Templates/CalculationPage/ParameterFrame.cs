@@ -192,11 +192,11 @@ namespace CheApp.Templates.CalculationPage
             // Create input/output cells
             Entry inputEntry = new Entry
             {
-                Keyboard = Keyboard.Numeric,
-                Placeholder = string.Format(LibraryResources.ParameterValidRange, para.LowerLimit, para.UpperLimit)
+                Keyboard = Keyboard.Numeric
             };
             inputEntry.SetBinding(Entry.TextProperty, new Binding("ValueStr"));
             inputEntry.SetBinding(Entry.IsEnabledProperty, new Binding("AllowUserInput"));
+            inputEntry.SetBinding(Entry.PlaceholderProperty, new Binding("Placeholder"));
             inputEntry.BindingContext = para;
             inputGrid.Children.Add(inputEntry, 1, 2);
 

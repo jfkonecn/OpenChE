@@ -166,6 +166,49 @@ namespace EngineeringMath.Resources.LookupTables
                 });
         }
 
+        /// <summary>
+        /// Returns the smallest temperature stored (K)
+        /// </summary>
+        public double MinTableTemperature
+        {
+            get
+            {
+                return TableElements.Min(x => x.MinTemperature);
+            }
+        }
+
+        /// <summary>
+        /// Returns the largest temperature stored (K)
+        /// </summary>
+        public double MaxTableTemperature
+        {
+            get
+            {
+                return TableElements.Max(x => x.MaxTemperature);
+            }
+        }
+
+        /// <summary>
+        /// Returns the smallest pressure stored (Pa)
+        /// </summary>
+        public double MinTablePressure
+        {
+            get
+            {
+                return TableElements.Min(x => x.Pressure);
+            }
+        }
+
+        /// <summary>
+        /// Returns the largest pressure stored (Pa)
+        /// </summary>
+        public double MaxTablePressure
+        {
+            get
+            {
+                return TableElements.Max(x => x.Pressure);
+            }
+        }
 
         private List<ThermoConstPressureTable> TableElements = new List<ThermoConstPressureTable>();
     }

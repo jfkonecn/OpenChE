@@ -13,6 +13,11 @@ namespace EngineeringMath.Units
         /// </summary>
         public static readonly Enthalpy kJkg = new Enthalpy($"{Energy.kJ}/{Mass.kg}", Energy.kJ.ConversionFactor / Mass.kg.ConversionFactor);
 
+        /// <summary>
+        /// BTU / lbsm
+        /// </summary>
+        public static readonly Enthalpy BTUlbs = new Enthalpy($"{Energy.BTU}/{Mass.lbsm}", Energy.BTU.ConversionFactor / Mass.lbsm.ConversionFactor);
+
 
         /// <summary>
         /// Relates all units to a string representation
@@ -20,6 +25,7 @@ namespace EngineeringMath.Units
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { kJkg.ToString(), kJkg },
+            { BTUlbs.ToString(), BTUlbs }
         };
 
         /// <summary>

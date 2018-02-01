@@ -16,7 +16,7 @@ namespace EngineeringMath.Units
         /// <summary>
         /// pounds mass
         /// </summary>
-        public static readonly Mass lbsm = new Mass("lbs\x208m", 0.00220462);
+        public static readonly Mass lbsm = new Mass("lbs\u2098", 0.00220462);
         /// <summary>
         /// kilograms
         /// </summary>

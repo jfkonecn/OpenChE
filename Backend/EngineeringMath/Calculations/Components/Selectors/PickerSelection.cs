@@ -55,17 +55,27 @@ namespace EngineeringMath.Calculations.Components.Selectors
                 // -1 means nothing is selected
                 if (value < _ObjectLookup.Count && value >= 0)
                 {
+                    _PreviouslySelectedIndex = _SelectedIndex;
                     _SelectedIndex = value;
                 }
                 else
                 {
                     Debug.WriteLine($"{TAG} SelectedIndex value is out of range!");
                 }
-                if (OnSelectedIndexChanged != null)
-                {
-                    OnSelectedIndexChanged();
-                }
+                OnSelectedIndexChanged?.Invoke();
                 OnPropertyChanged("SelectedIndex");
+            }
+        }
+
+        private int _PreviouslySelectedIndex = -1;
+        /// <summary>
+        /// The index selected before the currently selected index
+        /// </summary>
+        public int PreviouslySelectedIndex
+        {
+            get
+            {
+                return _PreviouslySelectedIndex;
             }
         }
 
@@ -109,6 +119,22 @@ namespace EngineeringMath.Calculations.Components.Selectors
                 }
                 OnPropertyChanged("SelectedObject");
                 Debug.WriteLine($"{TAG} Couldn't find the object you were looking for");
+            }
+        }
+
+
+        /// <summary>
+        /// The index selected before the currently selected index
+        /// </summary>
+        public T PreviouslySelectedObject
+        {
+            get
+            {
+                if (PreviouslySelectedIndex == -1)
+                {
+                    return default(T);
+                }
+                return ObjectLookup.Values.ToList()[PreviouslySelectedIndex];
             }
         }
 

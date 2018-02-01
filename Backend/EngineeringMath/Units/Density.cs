@@ -18,11 +18,18 @@ namespace EngineeringMath.Units
 
 
         /// <summary>
+        /// lbsm / ft3
+        /// </summary>
+        public static readonly Density lbsft3 = new Density($"{Mass.lbsm}/{Volume.ft3}", Mass.lbsm.ConversionFactor / Volume.ft3.ConversionFactor);
+
+
+        /// <summary>
         /// Relates all units to a string representation
         /// </summary>
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { kgm3.ToString(), kgm3 },
+            { lbsft3.ToString(), lbsft3 }
         };
 
         /// <summary>

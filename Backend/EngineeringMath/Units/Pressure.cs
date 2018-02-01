@@ -21,7 +21,7 @@ namespace EngineeringMath.Units
         /// <summary>
         /// pounds per square inch
         /// </summary>
-        public static readonly Pressure psi = new Pressure("psi", 0.000145038);
+        public static readonly Pressure psia = new Pressure("psi\u2090", 0.000145038);
         /// <summary>
         /// atmospheres
         /// </summary>
@@ -39,7 +39,7 @@ namespace EngineeringMath.Units
         {
             { kPa.ToString(), kPa },
             { Pa.ToString(), Pa },
-            { psi.ToString(), psi },
+            { psia.ToString(), psia },
             { atm.ToString(), atm },
             { bar.ToString(), bar }
         };

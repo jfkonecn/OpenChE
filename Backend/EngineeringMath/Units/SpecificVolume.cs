@@ -13,6 +13,10 @@ namespace EngineeringMath.Units
         /// </summary>
         public static readonly SpecificVolume m3kg = new SpecificVolume($"{Volume.m3}/{Mass.kg}", Volume.m3.ConversionFactor / Mass.kg.ConversionFactor);
 
+        /// <summary>
+        /// ft3 / lbs
+        /// </summary>
+        public static readonly SpecificVolume ft3lbs = new SpecificVolume($"{Volume.ft3}/{Mass.lbsm}", Volume.ft3.ConversionFactor / Mass.lbsm.ConversionFactor);
 
         /// <summary>
         /// Relates all units to a string representation
@@ -20,6 +24,7 @@ namespace EngineeringMath.Units
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { m3kg.ToString(), m3kg },
+            { ft3lbs.ToString(), ft3lbs }
         };
 
         /// <summary>

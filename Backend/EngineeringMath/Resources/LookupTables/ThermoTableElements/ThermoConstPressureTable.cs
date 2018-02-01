@@ -81,5 +81,27 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
         /// </summary>
         internal readonly double SatTemp;
 
+        /// <summary>
+        /// Returns the smallest temperature in this object
+        /// </summary>
+        internal double MinTemperature
+        {
+            get
+            {
+                return AllEntries.Min(x => x.Temperature);
+            }
+        }
+
+        /// <summary>
+        /// Returns the largest temperature in this object
+        /// </summary>
+        internal double MaxTemperature
+        {
+            get
+            {
+                return AllEntries.Max(x => x.Temperature);
+            }
+        }
+
     }
 }

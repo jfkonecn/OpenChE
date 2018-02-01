@@ -1,5 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EngineeringMath.Units;
+using System;
+
 namespace BackendTesting
 {
     [TestClass]
@@ -22,8 +24,29 @@ namespace BackendTesting
 
             // Density test
             Density densityUnit = Density.kgm3;
-            actual = Density.Convert(curValue, densityUnit, Density.kgm3);
-            Assert.AreEqual(1e6, actual, delta);
+            actual = Density.Convert(curValue, densityUnit, Density.lbsft3);
+            Assert.AreEqual(1e6 * (1 / Math.Pow(3.28084,3)) * 2.20462, actual, delta);
+
+            // Energy test
+            Energy energyUnit = Energy.kJ;
+            actual = Energy.Convert(curValue, energyUnit, Energy.Therm);
+            Assert.AreEqual(9.48043428, actual, delta);
+            actual = Energy.Convert(curValue, energyUnit, Energy.kCal);
+            Assert.AreEqual(239006, actual, delta);
+            actual = Energy.Convert(curValue, energyUnit, Energy.J);
+            Assert.AreEqual(1e9, actual, delta);
+            actual = Energy.Convert(curValue, energyUnit, Energy.BTU);
+            Assert.AreEqual(947817, actual, delta);
+
+            // Enthalpy test
+            Enthalpy enthalpyUnit = Enthalpy.kJkg;
+            actual = Enthalpy.Convert(curValue, enthalpyUnit, Enthalpy.BTUlbs);
+            Assert.AreEqual(1e6 * (0.947817) * (1 / 2.20462), actual, delta);
+
+            // Entropy test
+            Entropy entropyUnit = Entropy.kJkgK;
+            actual = Entropy.Convert(curValue, entropyUnit, Entropy.BTUlbsR);
+            Assert.AreEqual(1e6 * (0.947817) * (1 / 2.20462) * (5.0 / 9.0), actual, delta);
 
             // Length test
             Length lengthUnit = Length.m;
@@ -51,8 +74,13 @@ namespace BackendTesting
             Assert.AreEqual(10, actual, delta);
             actual = Pressure.Convert(curValue, pressureUnit, Pressure.kPa);
             Assert.AreEqual(1000, actual, delta);
-            actual = Pressure.Convert(curValue, pressureUnit, Pressure.psi);
+            actual = Pressure.Convert(curValue, pressureUnit, Pressure.psia);
             Assert.AreEqual(145.037738, actual, delta);
+
+            // Specific Volume test
+            SpecificVolume specificVolumeUnit = SpecificVolume.m3kg;
+            actual = SpecificVolume.Convert(curValue, specificVolumeUnit, SpecificVolume.ft3lbs);
+            Assert.AreEqual(1e6 * (Math.Pow(3.28084, 3)) * (1 / 2.20462), actual, delta);
 
             // Temperature test
             Temperature temperatureUnit = Temperature.C;
@@ -83,16 +111,9 @@ namespace BackendTesting
             actual = Volume.Convert(curValue, volumeUnit, Volume.USGallon);
             Assert.AreEqual(264.172052, actual, delta);
 
-            // Energy test
-            Energy energyUnit = Energy.kJ;
-            actual = Energy.Convert(curValue, energyUnit, Energy.Therm);
-            Assert.AreEqual(9.48043428, actual, delta);
-            actual = Energy.Convert(curValue, energyUnit, Energy.kCal);
-            Assert.AreEqual(239006, actual, delta);
-            actual = Energy.Convert(curValue, energyUnit, Energy.J);
-            Assert.AreEqual(1e9, actual, delta);
-            actual = Energy.Convert(curValue, energyUnit, Energy.BTU);
-            Assert.AreEqual(947817, actual, delta);
+
+
+
         }
     }
 }

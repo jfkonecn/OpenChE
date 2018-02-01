@@ -47,10 +47,15 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             protected override void Calculation()
             {
                 ThermoEntry entry = Table.GetThermoEntrySatLiquidAtPressure(Pressure);
+                if(entry == null)
+                {
+                    // bad inputs
+                    return;
+                }
                 Temperature = entry.Temperature;
                 SpecificVolume = entry.V;
-                Entropy = entry.H;
-                Enthalpy = entry.S;
+                Enthalpy = entry.H;
+                Entropy = entry.S;                
             }
 
             /// <summary>
@@ -148,10 +153,15 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             protected override void Calculation()
             {
                 ThermoEntry entry = Table.GetThermoEntrySatVaporAtPressure(Pressure);
+                if (entry == null)
+                {
+                    // bad inputs
+                    return;
+                }
                 Temperature = entry.Temperature;
                 SpecificVolume = entry.V;
-                Entropy = entry.H;
-                Enthalpy = entry.S;
+                Enthalpy = entry.H;
+                Entropy = entry.S;
             }
 
             /// <summary>
@@ -250,9 +260,14 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             protected override void Calculation()
             {
                 ThermoEntry entry = Table.GetThermoEntryAtTemperatureAndPressure(Temperature, Pressure);
+                if (entry == null)
+                {
+                    // bad inputs
+                    return;
+                }
                 SpecificVolume = entry.V;
-                Entropy = entry.H;
-                Enthalpy = entry.S;
+                Enthalpy = entry.H;
+                Entropy = entry.S;
             }
 
             /// <summary>
@@ -337,7 +352,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
         /// <returns></returns>
         private static SimpleParameter CreatePressureParameter()
         {
-            return new SimpleParameter((int)Field.pressure, LibraryResources.Pressure, new AbstractUnit[] { Pressure.Pa }, true, 0);
+            return new SimpleParameter((int)Field.pressure, LibraryResources.Pressure, new AbstractUnit[] { Pressure.Pa }, true, Table.MinTablePressure, Table.MaxTablePressure);
         }
 
         /// <summary>
@@ -346,7 +361,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
         /// <returns></returns>
         private static SimpleParameter CreateInputTemperatureParameter()
         {
-            return new SimpleParameter((int)Field.temp, LibraryResources.Temperature, new AbstractUnit[] { Temperature.C }, true, 0);
+            return new SimpleParameter((int)Field.temp, LibraryResources.Temperature, new AbstractUnit[] { Temperature.C }, true, Table.MinTableTemperature, Table.MaxTableTemperature);
         }
 
         /// <summary>
@@ -355,7 +370,8 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
         /// <returns></returns>
         private static SimpleParameter CreateSaturatedTemperatureParameter()
         {
-            return new SimpleParameter((int)Field.temp, LibraryResources.SatTemperature, new AbstractUnit[] { Temperature.C }, false, 0);
+            // will always be an output so don't care about the temperature range
+            return new SimpleParameter((int)Field.temp, LibraryResources.SatTemperature, new AbstractUnit[] { Temperature.C }, false);
         }
 
         /// <summary>
@@ -364,7 +380,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
         /// <returns></returns>
         private static SimpleParameter CreateSpecificVolumeParameter()
         {
-            return new SimpleParameter((int)Field.v, LibraryResources.SpecificVolume, new AbstractUnit[] { SpecificVolume.m3kg }, false, 0);
+            return new SimpleParameter((int)Field.v, LibraryResources.SpecificVolume, new AbstractUnit[] { SpecificVolume.m3kg }, false);
         }
 
         /// <summary>
@@ -373,7 +389,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
         /// <returns></returns>
         private static SimpleParameter CreateEnthalpyParameter()
         {
-            return new SimpleParameter((int)Field.h, LibraryResources.Enthalpy, new AbstractUnit[] { Enthalpy.kJkg }, false, 0);
+            return new SimpleParameter((int)Field.h, LibraryResources.Enthalpy, new AbstractUnit[] { Enthalpy.kJkg }, false);
         }
 
         /// <summary>
@@ -382,7 +398,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
         /// <returns></returns>
         private static SimpleParameter CreateEntropyParameter()
         {
-            return new SimpleParameter((int)Field.s, LibraryResources.Entropy, new AbstractUnit[] { Entropy.kJkgK }, false, 0);
+            return new SimpleParameter((int)Field.s, LibraryResources.Entropy, new AbstractUnit[] { Entropy.kJkgK }, false);
         }
 
         public enum Field

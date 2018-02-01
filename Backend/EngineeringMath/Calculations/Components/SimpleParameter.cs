@@ -84,26 +84,20 @@ namespace EngineeringMath.Calculations.Components
         /// </summary>
         private NumericField _Field;
 
-
-        bool _isInput;
         public bool isInput
         {
             get
             {
-                return _isInput;
+                return _Field.isInput;
             }
             set
             {
-                _isInput = value;
+                _Field.isInput = value;
 
                 if (!value)
                 {
                     OnMadeOuput?.Invoke(this.ID);
                 }
-
-                OnPropertyChanged("isInput");
-                OnPropertyChanged("isOutput");
-                OnPropertyChanged("AllowUserInput");
             }
         }
 
@@ -111,13 +105,29 @@ namespace EngineeringMath.Calculations.Components
         {
             get
             {
-                // should always be the opposite of isInput
-                return !this.isInput;
+                return _Field.isOutput;
             }
             set
             {
-                // property change event handled in the isInput parameter
-                this.isInput = !value;
+                _Field.isOutput = value;
+                if (value)
+                {
+                    OnMadeOuput?.Invoke(this.ID);
+                }
+
+            }
+        }
+
+
+        public string Placeholder
+        {
+            get
+            {
+                return _Field.Placeholder;
+            }
+            set
+            {
+                _Field.Placeholder = value;
             }
         }
 

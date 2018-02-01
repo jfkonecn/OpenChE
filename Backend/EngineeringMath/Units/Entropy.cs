@@ -13,6 +13,11 @@ namespace EngineeringMath.Units
         /// </summary>
         public static readonly Entropy kJkgK = new Entropy($"{Energy.kJ}/({Mass.kg}*{Temperature.K})", Energy.kJ.ConversionFactor / (Mass.kg.ConversionFactor * Temperature.K.ConversionFactor));
 
+        /// <summary>
+        /// (BTU/(lbsm*R))
+        /// </summary>
+        public static readonly Entropy BTUlbsR = new Entropy($"{Energy.BTU}/({Mass.lbsm}*{Temperature.R})", Energy.BTU.ConversionFactor / (Mass.lbsm.ConversionFactor * Temperature.R.ConversionFactor));
+
 
         /// <summary>
         /// Relates all units to a string representation
@@ -20,6 +25,7 @@ namespace EngineeringMath.Units
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
             { kJkgK.ToString(), kJkgK },
+            { BTUlbsR.ToString(), BTUlbsR }
         };
 
         /// <summary>
