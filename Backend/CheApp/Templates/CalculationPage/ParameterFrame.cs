@@ -5,7 +5,7 @@ using Xamarin.Forms;
 using EngineeringMath.Calculations;
 using EngineeringMath.Resources;
 using EngineeringMath.Units;
-using EngineeringMath.Calculations.Components;
+using EngineeringMath.Calculations.Components.Parameter;
 
 namespace CheApp.Templates.CalculationPage
 {
@@ -93,30 +93,30 @@ namespace CheApp.Templates.CalculationPage
             rowDefs.Add(new RowDefinition { Height = new GridLength(rowMargin, GridUnitType.Absolute) });
 
             // Title
-            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
             grid.Children.Add(CreateTitleLabel(para), 1, 1);
 
             int row = 2;
             if (para.GetType().Equals(typeof(SubFunctionParameter)))
             {
                 // SubFunction Grid
-                rowDefs.Add(new RowDefinition { Height = new GridLength(3, GridUnitType.Star) });
+                rowDefs.Add(new RowDefinition { Height = new GridLength(3, GridUnitType.Auto) });
                 grid.Children.Add(CreateSubFunctionGrid((SubFunctionParameter)para), 1, row);
                 row++;
             }
 
             // Input Value Grid Row
-            rowDefs.Add(new RowDefinition { Height = new GridLength(2, GridUnitType.Star) });
+            rowDefs.Add(new RowDefinition { Height = new GridLength(2, GridUnitType.Auto) });
             grid.Children.Add(CreateEntryGrid(para), 1, row);
             row++;
 
             // Unit Grid Row
-            rowDefs.Add(new RowDefinition { Height = new GridLength(2, GridUnitType.Star) });
+            rowDefs.Add(new RowDefinition { Height = new GridLength(2, GridUnitType.Auto) });
             grid.Children.Add(CreateUnitGrid(para), 1, row);
             row++;
 
             // Error Label
-            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
             grid.Children.Add(CreateErrorLabel(para), 1, row);
             row++;
 

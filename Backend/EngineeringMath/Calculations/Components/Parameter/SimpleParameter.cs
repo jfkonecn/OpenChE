@@ -7,7 +7,7 @@ using EngineeringMath.Units;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components.Selectors;
 
-namespace EngineeringMath.Calculations.Components
+namespace EngineeringMath.Calculations.Components.Parameter
 {
     public class SimpleParameter : AbstractComponent
     {
@@ -134,7 +134,7 @@ namespace EngineeringMath.Calculations.Components
         /// <summary>
         /// Stores data related to the units the user picker for this parameter (Intented to binded with a picker)
         /// </summary>
-        public PickerSelection<AbstractUnit>[] UnitSelection
+        public SimplePicker<AbstractUnit>[] UnitSelection
         {
             get
             {

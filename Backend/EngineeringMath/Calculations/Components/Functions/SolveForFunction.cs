@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components.Selectors;
+using EngineeringMath.Calculations.Components.Parameter;
 
 namespace EngineeringMath.Calculations.Components.Functions
 {
@@ -22,7 +23,7 @@ namespace EngineeringMath.Calculations.Components.Functions
                 obj.OnMadeOuput += UpdateAllParametersInputOutput;
             }
 
-            OutputSelection = new PickerSelection<SimpleParameter>(
+            OutputSelection = new SimplePicker<SimpleParameter>(
                 ParameterCollection().ToDictionary(x => x.Title, x => x)
                 );
             OutputSelection.OnSelectedIndexChanged += OutputSelection_OnSelectedIndexChanged;
@@ -47,7 +48,7 @@ namespace EngineeringMath.Calculations.Components.Functions
         /// <summary>
         /// Stores the output parameter the user selected (intended to be binded with a picker)
         /// </summary>
-        public PickerSelection<SimpleParameter> OutputSelection;
+        public SimplePicker<SimpleParameter> OutputSelection;
 
         /// <summary>
         /// Makes every parameter an input except for the parameter with the current outputID 

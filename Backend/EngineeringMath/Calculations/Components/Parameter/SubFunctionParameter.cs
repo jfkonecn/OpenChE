@@ -9,7 +9,7 @@ using System.Diagnostics;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations.Components.Selectors;
 
-namespace EngineeringMath.Calculations.Components
+namespace EngineeringMath.Calculations.Components.Parameter
 {
     /// <summary>
     /// Allows for a link to a function which can calculate this parameter
@@ -32,16 +32,7 @@ namespace EngineeringMath.Calculations.Components
             double lowerLimit = double.MinValue,
             double upperLimit = double.MaxValue) :
             this(ID, title, new NumericField(title, desiredUnits, isInput, lowerLimit, upperLimit), subFunctions, isInput)
-        {
-
-
-
-
-
-        }
-
-
-
+        {        }
 
         /// <summary>
         /// 
@@ -59,19 +50,33 @@ namespace EngineeringMath.Calculations.Components
         {
             // Build SubFunctionSelection
             // add a default selection
-            Dictionary<string, FunctionFactory.SolveForFactoryData> temp = new Dictionary<string, FunctionFactory.SolveForFactoryData>
+            Dictionary<string, Type> temp = new Dictionary<string, Type>
                 {
                     { LibraryResources.DirectInput, null }
                 };
 
             foreach (KeyValuePair<string, FunctionFactory.SolveForFactoryData> ele in subFunctions)
-                temp.Add(ele.Key, ele.Value);
+                temp.Add(ele.Key, ele.Value.FunType);
 
-            this.SubFunctionSelection = new FunctionPickerSelection(temp);
+            FunTypeToOutputID = subFunctions.ToDictionary(x => x.Value.FunType, x => x.Value.OuputID);
+
+            this.SubFunctionSelection = new FunctionPicker(temp);
             this.SubFunctionSelection.OnFunctionCreatedEvent += SyncSubFunctionWithParameter;
             this.SubFunctionSelection.PropertyChanged += SubFunctionSelection_PropertyChanged;
+            this.SubFunctionSelection.OnSelectedIndexChanged += SubFunctionSelection_OnSelectedIndexChanged;
             this.SubFunctionSelection.SelectedObject = null;
         }
+
+        private void SubFunctionSelection_OnSelectedIndexChanged()
+        {
+            OnPropertyChanged("AllowUserInput");
+            OnPropertyChanged("AllowSubFunctionClick");
+        }
+
+        /// <summary>
+        /// Relates function types to output ID's
+        /// </summary>
+        private Dictionary<Type, int> FunTypeToOutputID;
 
         /// <summary>
         /// Called when a property is changed in the the field
@@ -108,7 +113,7 @@ namespace EngineeringMath.Calculations.Components
         /// <summary>
         /// Contains all of the functions which will be allowed to substituted out all the fields within the function (intended to binded with a picker
         /// </summary>
-        public FunctionPickerSelection SubFunctionSelection;
+        public FunctionPicker SubFunctionSelection;
 
 
         /// <summary>
@@ -128,8 +133,9 @@ namespace EngineeringMath.Calculations.Components
         /// </summary>
         private void SyncSubFunctionWithParameter()
         {
-            
-            SimpleParameter outputPara = SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID);
+
+            int outputID = FunTypeToOutputID[SubFunctionSelection.SelectedObject];
+            SimpleParameter outputPara = SubFunction.GetParameter(outputID);
             // make sure that the output parameter can be an output
             if (typeof(SimpleParameter).Equals(SubFunction.CastAs()) && outputPara.isInput)
             {
@@ -145,14 +151,14 @@ namespace EngineeringMath.Calculations.Components
             }
 
 
-            for (int i = 0; i < SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection.Length; i++)
+            for (int i = 0; i < SubFunction.GetParameter(outputID).UnitSelection.Length; i++)
             {
 
-                SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection[i].SelectedObject =
+                SubFunction.GetParameter(outputID).UnitSelection[i].SelectedObject =
                     this.UnitSelection[i].SelectedObject;
             }
 
-            SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).ValueStr = this.ValueStr;
+            SubFunction.GetParameter(outputID).ValueStr = this.ValueStr;
             SubFunction.Title = this.Title;
 
 
@@ -166,13 +172,13 @@ namespace EngineeringMath.Calculations.Components
 
             SubFunction.OnSolve += delegate ()
             {
-                for (int i = 0; i < SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection.Length; i++)
+                for (int i = 0; i < SubFunction.GetParameter(outputID).UnitSelection.Length; i++)
                 {
                     this.UnitSelection[i].SelectedObject =
-                    SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).UnitSelection[i].SelectedObject;
+                    SubFunction.GetParameter(outputID).UnitSelection[i].SelectedObject;
                 }
 
-                this.ValueStr = SubFunction.GetParameter(SubFunctionSelection.SelectedObject.OuputID).ValueStr;
+                this.ValueStr = SubFunction.GetParameter(outputID).ValueStr;
             };
         }
     }

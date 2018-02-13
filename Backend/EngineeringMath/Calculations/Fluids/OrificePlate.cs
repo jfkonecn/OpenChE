@@ -7,7 +7,7 @@ using EngineeringMath.Units;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential;
 using EngineeringMath.Calculations.Components.Functions;
-using EngineeringMath.Calculations.Components;
+using EngineeringMath.Calculations.Components.Parameter;
 
 namespace EngineeringMath.Calculations.Fluids
 {

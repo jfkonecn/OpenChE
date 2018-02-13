@@ -20,10 +20,7 @@ namespace EngineeringMath.Calculations.Components.Group
         }
 
 
-        /// <summary>
-        /// Stores the function the user selected (intended to be binded with a picker)
-        /// </summary>
-        public AbstractComponent[] AllComponents;
+        protected AbstractComponent[] AllComponents;
 
 
 

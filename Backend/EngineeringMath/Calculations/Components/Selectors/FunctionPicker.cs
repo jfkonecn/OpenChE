@@ -11,17 +11,9 @@ namespace EngineeringMath.Calculations.Components.Selectors
     /// <summary>
     /// Creates a PickerSelection object to handle FunctionData
     /// </summary>
-    public class FunctionPickerSelection : PickerSelection<FunctionFactory.SolveForFactoryData>
+    public class FunctionPicker : SimplePicker<Type>
     {
-
-        internal FunctionPickerSelection(Dictionary<string, Type> funTypes) : 
-            this(funTypes.ToDictionary(x => x.Key, x => new FunctionFactory.SolveForFactoryData(x.Value)))
-        {
-
-        }
-
-
-        internal FunctionPickerSelection(Dictionary<string, FunctionFactory.SolveForFactoryData> funData) : base(funData)
+        internal FunctionPicker(Dictionary<string, Type> funData) : base(funData)
         {
             this.OnSelectedIndexChanged += SubFunctionSelection_OnSelectedIndexChanged;
         }
@@ -37,13 +29,11 @@ namespace EngineeringMath.Calculations.Components.Selectors
         {
             // free the memory being used
             _SubFunction = null;
-            OnPropertyChanged("AllowUserInput");
-            OnPropertyChanged("AllowSubFunctionClick");
         }
 
         public override Type CastAs()
         {
-            return typeof(FunctionPickerSelection);
+            return typeof(FunctionPicker);
         }
 
         private SimpleFunction _SubFunction;
@@ -62,10 +52,10 @@ namespace EngineeringMath.Calculations.Components.Selectors
                 else
                 {
                     // Do not rebuild if right function is already in place
-                    if (_SubFunction == null || !this.SelectedObject.FunType.Equals(_SubFunction.GetType()))
+                    if (_SubFunction == null || !this.SelectedObject.Equals(_SubFunction.GetType()))
                     {
                         Debug.WriteLine($"{TAG} Building a new SubFunction");
-                        _SubFunction = FunctionFactory.BuildFunction(this.SelectedObject.FunType);
+                        _SubFunction = FunctionFactory.BuildFunction(this.SelectedObject);
                         OnFunctionCreated();
                     }
                     else

@@ -38,10 +38,10 @@ namespace EngineeringMath.Calculations.Components
             // prevent pointer sharing
             this.DesiredUnits = desiredUnits.ToArray();
 
-            UnitSelection = new PickerSelection<AbstractUnit>[desiredUnits.Length];
+            UnitSelection = new SimplePicker<AbstractUnit>[desiredUnits.Length];
             for (int i = 0; i < desiredUnits.Length; i++)
             {
-                UnitSelection[i] = new PickerSelection<AbstractUnit>(StaticUnitProperties.AllUnits[desiredUnits[i].GetType()]);
+                UnitSelection[i] = new SimplePicker<AbstractUnit>(StaticUnitProperties.AllUnits[desiredUnits[i].GetType()]);
                 UnitSelection[i].SelectedObject = desiredUnits[i];
                 UnitSelection[i].OnSelectedIndexChanged += UnitPicker_OnSelectedIndexChanged(i);
             }
@@ -55,7 +55,7 @@ namespace EngineeringMath.Calculations.Components
         /// </summary>
         /// <param name="idx">Index of UnitSelection</param>
         /// <returns></returns>
-        private PickerSelection<AbstractUnit>.SelectedIndexChangedHandler UnitPicker_OnSelectedIndexChanged(int idx)
+        private SimplePicker<AbstractUnit>.SelectedIndexChangedHandler UnitPicker_OnSelectedIndexChanged(int idx)
         {
             return delegate ()
             {
@@ -241,7 +241,7 @@ namespace EngineeringMath.Calculations.Components
         /// <summary>
         /// Stores data related to the units the user picker for this parameter (Intented to binded with a picker)
         /// </summary>
-        public PickerSelection<AbstractUnit>[] UnitSelection { get; set; }
+        public SimplePicker<AbstractUnit>[] UnitSelection { get; set; }
 
 
 

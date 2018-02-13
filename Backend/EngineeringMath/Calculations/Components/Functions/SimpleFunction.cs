@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EngineeringMath.Calculations.Components.Parameter;
 
 namespace EngineeringMath.Calculations.Components.Functions
 {
@@ -22,7 +23,7 @@ namespace EngineeringMath.Calculations.Components.Functions
             AllParameters = allParameters.ToDictionary(x => x.ID);
         }
 
-        private Dictionary<int, SimpleParameter> AllParameters;
+        private readonly Dictionary<int, SimpleParameter> AllParameters;
 
         public virtual IEnumerator GetEnumerator()
         {

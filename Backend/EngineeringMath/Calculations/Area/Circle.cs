@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components.Functions;
-using EngineeringMath.Calculations.Components;
+using EngineeringMath.Calculations.Components.Parameter;
 
 namespace EngineeringMath.Calculations.Area
 {

@@ -17,16 +17,16 @@ namespace EngineeringMath.Calculations.UnitConverter
         }
 
 
-        internal static readonly Dictionary<string, FunctionFactory.SolveForFactoryData> AllUnitFunctionData =
-            new Dictionary<string, FunctionFactory.SolveForFactoryData>
+        internal static readonly Dictionary<string, Type> AllUnitFunctionData =
+            new Dictionary<string, Type>
             {
-                        { LibraryResources.Pressure, new FunctionFactory.SolveForFactoryData(typeof(PressureFun)) },
-                        { LibraryResources.VolumetricFlowRate, new FunctionFactory.SolveForFactoryData(typeof(VolumetricFlowFun)) },
-                        { LibraryResources.Temperature, new FunctionFactory.SolveForFactoryData(typeof(TemperatureFun)) },
-                        { LibraryResources.MassFlowRate, new FunctionFactory.SolveForFactoryData(typeof(MassFlowFun)) },
-                        { LibraryResources.Mass, new FunctionFactory.SolveForFactoryData(typeof(MassFun)) },
-                        { LibraryResources.Volume, new FunctionFactory.SolveForFactoryData(typeof(VolumeFun)) },
-                        { LibraryResources.Energy, new FunctionFactory.SolveForFactoryData(typeof(EnergyFun)) }
+                        { LibraryResources.Pressure, typeof(PressureFun) },
+                        { LibraryResources.VolumetricFlowRate, typeof(VolumetricFlowFun) },
+                        { LibraryResources.Temperature, typeof(TemperatureFun) },
+                        { LibraryResources.MassFlowRate, typeof(MassFlowFun) },
+                        { LibraryResources.Mass, typeof(MassFun) },
+                        { LibraryResources.Volume, typeof(VolumeFun) },
+                        { LibraryResources.Energy, typeof(EnergyFun) }
             }.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
 
         public class PressureFun : AbstractConverter

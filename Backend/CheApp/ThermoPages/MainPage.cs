@@ -21,7 +21,8 @@ namespace CheApp.ThermoPages
             LibraryResources.Thermo,
             "thermodynamics.png",
             new CheApp.Templates.MainMenu.ButtonData[] {
-                    new CheApp.Templates.MainMenu.ButtonData(LibraryResources.SteamTable, typeof(EngineeringMath.Calculations.Thermo.ThermoLookupTables.SteamTable))
+                    new CheApp.Templates.MainMenu.ButtonData(LibraryResources.SteamTable, typeof(EngineeringMath.Calculations.Thermo.ThermoLookupTables.SteamTable)),
+                    new CheApp.Templates.MainMenu.ButtonData(LibraryResources.RankineCycle, typeof(EngineeringMath.Calculations.Thermo.RankineCycle))
             });
 
 

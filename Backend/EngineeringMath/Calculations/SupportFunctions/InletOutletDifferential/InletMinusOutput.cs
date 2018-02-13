@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using EngineeringMath.Units;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components.Functions;
-using EngineeringMath.Calculations.Components;
+using EngineeringMath.Calculations.Components.Parameter;
 
 namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
 {

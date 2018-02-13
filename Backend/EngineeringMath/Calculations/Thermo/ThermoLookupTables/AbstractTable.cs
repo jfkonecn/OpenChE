@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Resources;
 using EngineeringMath.Resources.LookupTables.ThermoTableElements;
-using EngineeringMath.Calculations.Components;
+using EngineeringMath.Calculations.Components.Parameter;
 using EngineeringMath.Units;
 
 namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
@@ -20,12 +20,12 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
 
         private static Resources.LookupTables.ThermoTable Table;
 
-        internal static readonly Dictionary<string, FunctionFactory.SolveForFactoryData> AllSteamTableFuns =
-            new Dictionary<string, FunctionFactory.SolveForFactoryData>
+        internal static readonly Dictionary<string, Type> AllSteamTableFuns =
+            new Dictionary<string, Type>
             {
-                { LibraryResources.SatLiquidGivenPressure, new FunctionFactory.SolveForFactoryData(typeof(SatLiquidGivenPressure)) },
-                { LibraryResources.SatVaporGivenPressure, new FunctionFactory.SolveForFactoryData(typeof(SatVaporGivenPressure)) },
-                { LibraryResources.SuperHeatedVaporGivenTempPressure, new FunctionFactory.SolveForFactoryData(typeof(SuperHeatedVaporGivenTempPressure)) }
+                { LibraryResources.SatLiquidGivenPressure, typeof(SatLiquidGivenPressure) },
+                { LibraryResources.SatVaporGivenPressure, typeof(SatVaporGivenPressure) },
+                { LibraryResources.SuperHeatedVaporGivenTempPressure, typeof(SuperHeatedVaporGivenTempPressure) }
             };
 
         public class SatLiquidGivenPressure : SimpleFunction

@@ -14,7 +14,7 @@ namespace EngineeringMath.Calculations.Components.Selectors
     /// <para>Note that the object.equals function is use</para>
     /// </summary>
     /// <typeparam name="T">The object which will represent the user's selection</typeparam>
-    public class PickerSelection<T> : AbstractComponent
+    public class SimplePicker<T> : AbstractComponent
     {
         private static readonly string TAG = "PickerSelection:";
         /// <summary>
@@ -22,7 +22,7 @@ namespace EngineeringMath.Calculations.Components.Selectors
         /// </summary>
         /// <param name="objectLookup">The string key is the string which is intened to be place in the picker to represent object T</param>
         /// <param name="title">Title of the picker</param>
-        internal PickerSelection(Dictionary<string, T> objectLookup, string title = null)
+        internal SimplePicker(Dictionary<string, T> objectLookup, string title = null)
         {
             _ObjectLookup = objectLookup;
             this.IsEnabled = true;

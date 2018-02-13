@@ -9,6 +9,7 @@ using EngineeringMath.Calculations;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components;
+using EngineeringMath.Calculations.Components.Parameter;
 using EngineeringMath.Calculations.Components.Selectors;
 
 namespace CheApp.Templates.CalculationPage
@@ -60,7 +61,7 @@ namespace CheApp.Templates.CalculationPage
                 };
                 return new ParameterFrame((SimpleParameter)component);
             }
-            else if (typeof(PickerSelection<SimpleParameter>).Equals(myType) || typeof(FunctionPickerSelection).Equals(myType))
+            else if (typeof(SimplePicker<SimpleParameter>).Equals(myType) || typeof(FunctionPicker).Equals(myType))
             {
                 return PickerSelectionFrame(component);
             }
@@ -99,18 +100,18 @@ namespace CheApp.Templates.CalculationPage
             foreach (AbstractComponent component in fun)
             {
                 grid.Children.Add(CreateView(component), 1, i + 1);
-                rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
                 i++;
             }
 
             // Calculate button row
             grid.Children.Add(CreateCalculateFrame(fun), 1, i + 1);
-            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
             i++;
 
             // Done Button row
             grid.Children.Add(CreateDoneFrame(), 1, i + 1);
-            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            rowDefs.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
             i++;
 
             // create row margin
@@ -199,8 +200,8 @@ namespace CheApp.Templates.CalculationPage
                 RowDefinitions = new RowDefinitionCollection
                 {
                     new RowDefinition { Height = new GridLength(0, GridUnitType.Absolute) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(6, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                     new RowDefinition { Height = new GridLength(0, GridUnitType.Absolute) }
                 },
                 ColumnDefinitions = new ColumnDefinitionCollection

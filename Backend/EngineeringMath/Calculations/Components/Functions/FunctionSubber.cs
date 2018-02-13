@@ -12,14 +12,14 @@ namespace EngineeringMath.Calculations.Components.Functions
     /// </summary>
     public abstract class FunctionSubber : AbstractComponent
     {
-        internal FunctionSubber(Dictionary<string, FunctionFactory.SolveForFactoryData> funData)
+        internal FunctionSubber(Dictionary<string, Type> funData)
         {
-            AllFunctions = new FunctionPickerSelection(funData);
+            AllFunctions = new FunctionPicker(funData);
             AllFunctions.PropertyChanged += _Field_PropertyChanged;
             AllFunctions.SelectedIndex = 0;
         }
 
-        public FunctionPickerSelection AllFunctions;
+        public FunctionPicker AllFunctions;
 
         public override Type CastAs()
         {

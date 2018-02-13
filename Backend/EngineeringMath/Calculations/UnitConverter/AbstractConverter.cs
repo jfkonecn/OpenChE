@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EngineeringMath.Calculations.Components.Functions;
-using EngineeringMath.Calculations.Components;
+using EngineeringMath.Calculations.Components.Parameter;
 using EngineeringMath.Resources;
 using EngineeringMath.Units;
 

@@ -320,4 +320,37 @@
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
   </data>
+  <data name="BoilerEfficiency" xml:space="preserve">
+    <value>Boiler Efficiency</value>
+  </data>
+  <data name="CondenserH" xml:space="preserve">
+    <value>Condenser Enthalpy</value>
+  </data>
+  <data name="CondenserPressure" xml:space="preserve">
+    <value>Condenser Pressure</value>
+  </data>
+  <data name="CondenserSQ" xml:space="preserve">
+    <value>Condenser Steam Quality Fraction</value>
+  </data>
+  <data name="IdealTurbineWork" xml:space="preserve">
+    <value>Ideal Turbine Work</value>
+  </data>
+  <data name="RankineCycle" xml:space="preserve">
+    <value>Rankine Cycle</value>
+  </data>
+  <data name="RealTurbineWork" xml:space="preserve">
+    <value>Real Turbine Work</value>
+  </data>
+  <data name="SteamPressure" xml:space="preserve">
+    <value>Steam Pressure</value>
+  </data>
+  <data name="SteamTemp" xml:space="preserve">
+    <value>Steam Temperature</value>
+  </data>
+  <data name="ThermalEfficiency" xml:space="preserve">
+    <value>Thermal Efficiency</value>
+  </data>
+  <data name="TurbineEfficiency" xml:space="preserve">
+    <value>Turbine Efficiency</value>
+  </data>
 </root>
