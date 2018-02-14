@@ -85,6 +85,7 @@
     <Compile Include="Units\HelperFunctions.cs" />
     <Compile Include="Units\Length.cs" />
     <Compile Include="Units\Mass.cs" />
+    <Compile Include="Units\Power.cs" />
     <Compile Include="Units\Pressure.cs" />
     <Compile Include="Units\SpecificVolume.cs" />
     <Compile Include="Units\StaticUnitProperties.cs" />

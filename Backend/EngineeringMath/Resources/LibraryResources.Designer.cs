@@ -98,6 +98,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boiler Heat Transfer Rate.
+        /// </summary>
+        public static string BoilerHeatTransRate {
+            get {
+                return ResourceManager.GetString("BoilerHeatTransRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boiler Work.
+        /// </summary>
+        public static string BoilerWork {
+            get {
+                return ResourceManager.GetString("BoilerWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Calculate.
         /// </summary>
         public static string Calculate {
@@ -116,11 +134,11 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Condenser Enthalpy.
+        ///   Looks up a localized string similar to Condenser Heat Transfer Rate.
         /// </summary>
-        public static string CondenserH {
+        public static string CondenserHeatTransRate {
             get {
-                return ResourceManager.GetString("CondenserH", resourceCulture);
+                return ResourceManager.GetString("CondenserHeatTransRate", resourceCulture);
             }
         }
         
@@ -139,6 +157,15 @@ namespace EngineeringMath.Resources {
         public static string CondenserSQ {
             get {
                 return ResourceManager.GetString("CondenserSQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Condenser Work.
+        /// </summary>
+        public static string CondenserWork {
+            get {
+                return ResourceManager.GetString("CondenserWork", resourceCulture);
             }
         }
         
@@ -269,15 +296,6 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ideal Turbine Work.
-        /// </summary>
-        public static string IdealTurbineWork {
-            get {
-                return ResourceManager.GetString("IdealTurbineWork", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Inlet.
         /// </summary>
         public static string Inlet {
@@ -382,6 +400,15 @@ namespace EngineeringMath.Resources {
         public static string MassFlowRate {
             get {
                 return ResourceManager.GetString("MassFlowRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Net Work.
+        /// </summary>
+        public static string NetWork {
+            get {
+                return ResourceManager.GetString("NetWork", resourceCulture);
             }
         }
         
@@ -512,6 +539,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Power Requirement.
+        /// </summary>
+        public static string PowerRequirement {
+            get {
+                return ResourceManager.GetString("PowerRequirement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pressure.
         /// </summary>
         public static string Pressure {
@@ -521,20 +557,29 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pump Efficiency.
+        /// </summary>
+        public static string PumpEfficiency {
+            get {
+                return ResourceManager.GetString("PumpEfficiency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pump Work.
+        /// </summary>
+        public static string PumpWork {
+            get {
+                return ResourceManager.GetString("PumpWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rankine Cycle.
         /// </summary>
         public static string RankineCycle {
             get {
                 return ResourceManager.GetString("RankineCycle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Real Turbine Work.
-        /// </summary>
-        public static string RealTurbineWork {
-            get {
-                return ResourceManager.GetString("RealTurbineWork", resourceCulture);
             }
         }
         
@@ -589,6 +634,15 @@ namespace EngineeringMath.Resources {
         public static string SteamPressure {
             get {
                 return ResourceManager.GetString("SteamPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steam Rate.
+        /// </summary>
+        public static string SteamRate {
+            get {
+                return ResourceManager.GetString("SteamRate", resourceCulture);
             }
         }
         
@@ -661,6 +715,15 @@ namespace EngineeringMath.Resources {
         public static string TurbineEfficiency {
             get {
                 return ResourceManager.GetString("TurbineEfficiency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turbine Work.
+        /// </summary>
+        public static string TurbineWork {
+            get {
+                return ResourceManager.GetString("TurbineWork", resourceCulture);
             }
         }
         

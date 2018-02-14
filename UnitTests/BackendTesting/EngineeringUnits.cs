@@ -66,6 +66,13 @@ namespace BackendTesting
             actual = Mass.Convert(curValue, massUnit, Mass.USTon);
             Assert.AreEqual(1.10231131, actual, delta);
 
+            // Power test
+            Power powerUnit = Power.kW;
+            actual = Power.Convert(curValue, powerUnit, Power.W);
+            Assert.AreEqual(curValue * 1e3, actual, delta);
+            actual = Power.Convert(curValue, powerUnit, Power.hp);
+            Assert.AreEqual(1341020, actual, delta);
+
             // Pressure test
             Pressure pressureUnit = Pressure.Pa;
             actual = Pressure.Convert(curValue, pressureUnit, Pressure.atm);
