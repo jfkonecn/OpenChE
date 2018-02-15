@@ -132,17 +132,7 @@ namespace EngineeringMath.Resources.LookupTables
         /// <returns></returns>
         public ThermoEntry GetThermoEntrySatLiquidAtPressure(double pressure)
         {
-            return ThermoEntry.Interpolation<ThermoConstPressureTable>.InterpolationThermoEntryFromList(
-                pressure,
-                TableElements,
-                delegate (ThermoConstPressureTable obj)
-                {
-                    return obj.Pressure;
-                },
-                delegate (ThermoConstPressureTable obj)
-                {
-                    return obj.SatLiquidEntry;
-                });
+            return GetThermoEntrySatTempAtPressure(pressure, false);
         }
 
 
@@ -153,6 +143,34 @@ namespace EngineeringMath.Resources.LookupTables
         /// <returns></returns>
         public ThermoEntry GetThermoEntrySatVaporAtPressure(double pressure)
         {
+            return GetThermoEntrySatTempAtPressure(pressure, true);
+        }
+
+
+        /// <summary>
+        /// Gets ThermoEntry for saturated liquid or vapor at passed pressure. Null when no entry found.
+        /// </summary>
+        /// <param name="pressure">Desired Pressure (Pa)</param>
+        /// <param name="isVapor">True if desired entry is for saturated vapor else returns data for saturated liquid</param>
+        /// <returns></returns>
+        private ThermoEntry GetThermoEntrySatTempAtPressure(double pressure, bool isVapor)
+        {
+            ThermoEntry.Interpolation<ThermoConstPressureTable>.ObjectToThermoEntry satFun;
+            if (isVapor)
+            {
+                satFun = delegate (ThermoConstPressureTable obj)
+                {
+                    return obj.SatVaporEntry;
+                };
+            }
+            else
+            {
+                satFun = delegate (ThermoConstPressureTable obj)
+                {
+                    return obj.SatLiquidEntry;
+                };
+            }
+
             return ThermoEntry.Interpolation<ThermoConstPressureTable>.InterpolationThermoEntryFromList(
                 pressure,
                 TableElements,
@@ -160,14 +178,95 @@ namespace EngineeringMath.Resources.LookupTables
                 {
                     return obj.Pressure;
                 },
-                delegate (ThermoConstPressureTable obj)
-                {
-                    return obj.SatVaporEntry;
-                });
+                satFun);
         }
 
         /// <summary>
-        /// Returns the smallest temperature stored (K)
+        /// Gets ThermoEntry and Pressure for saturated liquid at passed satTemp. Null when no entry found.
+        /// </summary>
+        /// <param name="satTemp">Desired saturation temperature</param>
+        /// <param name="pressure">Pressure at saturation temperature (Pa) NaN when no pressure found</param>
+        /// <returns></returns>
+        public ThermoEntry GetThermoEntrySatLiquidAtSatTemp(double satTemp, out double pressure)
+        {
+            return GetThermoEntryAtSatTemp(satTemp, false, out pressure);
+        }
+
+
+        /// <summary>
+        /// Gets ThermoEntry and Pressure for saturated vapor at passed satTemp. Null when no entry found.
+        /// </summary>
+        /// <param name="satTemp">Desired saturation temperature</param>
+        /// <param name="pressure">Pressure at saturation temperature (Pa) NaN when no pressure found</param>
+        /// <returns></returns>
+        public ThermoEntry GetThermoEntrySatVaporAtSatTemp(double satTemp, out double pressure)
+        {
+            return GetThermoEntryAtSatTemp(satTemp, true, out pressure);
+        }
+
+
+        /// <summary>
+        /// Gets ThermoEntry and Pressure for saturated liquid or vapor at passed satTemp. Null when no entry found.
+        /// </summary>
+        /// <param name="satTemp">Desired saturation temperature</param>
+        /// <param name="isVapor">True if desired entry is for saturated vapor else returns data for saturated liquid</param>
+        /// <param name="pressure">Pressure at saturation temperature (Pa) NaN when no pressure found</param>
+        /// <returns></returns>
+        private ThermoEntry GetThermoEntryAtSatTemp(double satTemp, bool isVapor, out double pressure)
+        {
+            pressure = double.NaN;
+            ThermoEntry entry = null;
+
+            if (satTemp == MinSatTableTemperature)
+            {
+                pressure = MinTablePressure;
+                entry = GetThermoEntrySatTempAtPressure(pressure, isVapor);
+            }
+            else if (satTemp == MaxSatTableTemperature)
+            {
+                pressure = MaxTablePressure;
+                entry = GetThermoEntrySatTempAtPressure(pressure, isVapor);
+            }
+            else if (satTemp > MinSatTableTemperature && satTemp < MaxSatTableTemperature)
+            {
+                    // max tries allowed
+                 int  maxTries = (int)1e6,
+                    // current amount of tries attempted
+                    curTries = 0;
+                // max difference allowed between desired satTemp and actual satTemp
+                double maxDelta = 0.0001,
+                    // The minimum pressure in the range being searched in
+                    minP = MinTablePressure,
+                    // The maximum pressure in the range being searched in
+                    maxP = MaxTablePressure;
+                // binary search to find pressure of sat temp        
+                while(curTries < maxTries)
+                {
+                    pressure = (maxP - minP) / 2 + minP;
+                    entry = GetThermoEntrySatTempAtPressure(pressure, isVapor);
+                    if(Math.Abs(entry.Temperature - satTemp) <= maxDelta)
+                    {
+                        break;
+                    }
+                    else if(entry.Temperature < satTemp)
+                    {
+                        minP = pressure;
+                    }
+                    else
+                    {
+                        maxP = pressure;
+                    }
+                    curTries++;
+                }
+            }
+            return entry;
+        }
+
+
+
+
+        /// <summary>
+        /// Returns the smallest temperature stored (C)
         /// </summary>
         public double MinTableTemperature
         {
@@ -178,13 +277,35 @@ namespace EngineeringMath.Resources.LookupTables
         }
 
         /// <summary>
-        /// Returns the largest temperature stored (K)
+        /// Returns the largest temperature stored (C)
         /// </summary>
         public double MaxTableTemperature
         {
             get
             {
                 return TableElements.Max(x => x.MaxTemperature);
+            }
+        }
+
+        /// <summary>
+        /// Returns the smallest saturation temperature stored (C)
+        /// </summary>
+        public double MinSatTableTemperature
+        {
+            get
+            {
+                return GetThermoEntrySatVaporAtPressure(MinTablePressure).Temperature;
+            }
+        }
+
+        /// <summary>
+        /// Returns the largest saturation temperature stored (C)
+        /// </summary>
+        public double MaxSatTableTemperature
+        {
+            get
+            {
+                return GetThermoEntrySatVaporAtPressure(MaxTablePressure).Temperature;
             }
         }
 
