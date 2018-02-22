@@ -13,20 +13,25 @@ using System.Collections;
 using EngineeringMath.Resources.LookupTables;
 using EngineeringMath.Resources.LookupTables.ThermoTableElements;
 
-namespace EngineeringMath.Calculations.Thermo
+namespace EngineeringMath.Calculations.Thermo.Cycles
 {
     public class RankineCycle : SimpleFunction
     {
+        public RankineCycle():this(SteamTable.Table)
+        {
+
+        }
+        
         /// <summary>
         /// Create orifice plate function
         /// <para>Note: The default output is volFlow</para>
         /// </summary>
-        public RankineCycle() : base(
+        public RankineCycle(ThermoTable table) : base(
                 new SimpleParameter[]
                 {
-                    new SimpleParameter((int)Field.steamP, LibraryResources.SteamPressure, new AbstractUnit[] { Pressure.Pa }, true, SteamTable.Table.MinTablePressure, SteamTable.Table.MaxTablePressure),
-                    new SimpleParameter((int)Field.steamTemp, LibraryResources.SteamTemp, new AbstractUnit[] { Temperature.C }, true, SteamTable.Table.MinTableTemperature, SteamTable.Table.MaxTableTemperature),
-                    new SimpleParameter((int)Field.condenserP, LibraryResources.CondenserPressure, new AbstractUnit[] { Pressure.Pa}, true, SteamTable.Table.MinTablePressure, SteamTable.Table.MaxTablePressure),
+                    new SimpleParameter((int)Field.steamP, LibraryResources.SteamPressure, new AbstractUnit[] { Pressure.Pa }, true, table.MinTablePressure, table.MaxTablePressure),
+                    new SimpleParameter((int)Field.steamTemp, LibraryResources.SteamTemp, new AbstractUnit[] { Temperature.C }, true, table.MinTableTemperature, table.MaxTableTemperature),
+                    new SimpleParameter((int)Field.condenserP, LibraryResources.CondenserPressure, new AbstractUnit[] { Pressure.Pa}, true, table.MinTablePressure, table.MaxTablePressure),
                     new SimpleParameter((int)Field.pumpEff, LibraryResources.PumpEfficiency, new AbstractUnit[] { Unitless.unitless}, true, 0, 1),
                     new SimpleParameter((int)Field.turbineEff, LibraryResources.TurbineEfficiency, new AbstractUnit[] { Unitless.unitless}, true, 0, 1),
                     new SimpleParameter((int)Field.powerReq, LibraryResources.PowerRequirement, new AbstractUnit[] { Power.kW }, true, 0),
@@ -44,7 +49,7 @@ namespace EngineeringMath.Calculations.Thermo
             )
         {
             this.Title = LibraryResources.RankineCycle;
-            
+            this.Table = table;
 
 #if DEBUG
             SteamPressure = 8600e3;
@@ -385,11 +390,19 @@ namespace EngineeringMath.Calculations.Thermo
             }
         }
 
+        /// <summary>
+        /// The thermo table being used in this function
+        /// </summary>
+        private ThermoTable Table
+        {
+            get; set;
+        }
+
         protected override void Calculation()
         {
-            ThermoEntry steamConditions = SteamTable.Table.GetThermoEntryAtTemperatureAndPressure(SteamTemperature, SteamPressure),
-                condenserLiquidConditions = SteamTable.Table.GetThermoEntrySatLiquidAtPressure(CondenserPressure),
-                condenserVaporConditions = SteamTable.Table.GetThermoEntrySatVaporAtPressure(CondenserPressure);
+            ThermoEntry steamConditions = Table.GetThermoEntryAtTemperatureAndPressure(SteamTemperature, SteamPressure),
+                condenserLiquidConditions = Table.GetThermoEntrySatLiquidAtPressure(CondenserPressure),
+                condenserVaporConditions = Table.GetThermoEntrySatVaporAtPressure(CondenserPressure);
 
             CondenserSteamQuality = (steamConditions.S - condenserLiquidConditions.S) 
                 / (condenserVaporConditions.S - condenserLiquidConditions.S);

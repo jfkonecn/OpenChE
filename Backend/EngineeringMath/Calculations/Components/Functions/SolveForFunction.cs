@@ -39,10 +39,7 @@ namespace EngineeringMath.Calculations.Components.Functions
         private void OutputSelection_OnSelectedIndexChanged()
         {
             OutputSelection.SelectedObject.isOutput = true;
-            foreach (SimpleParameter obj in ParameterCollection())
-            {
-                obj.OnReset();
-            }
+            OnReset();
         }
 
         /// <summary>

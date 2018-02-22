@@ -88,7 +88,13 @@ namespace EngineeringMath.Calculations.Components.Functions
             }
         }
 
-
+        internal override void OnReset()
+        {
+            foreach (AbstractComponent obj in this)
+            {
+                obj.OnReset();
+            }
+        }
 
         public override Type CastAs()
         {

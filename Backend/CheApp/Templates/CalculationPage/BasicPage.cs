@@ -24,7 +24,7 @@ namespace CheApp.Templates.CalculationPage
         /// <param name="componetType">The type of componet which the page will represent</param>
         public BasicPage(Type componetType) : this((AbstractComponent)Activator.CreateInstance(componetType))
         {
-
+            
         }
 
         public BasicPage(AbstractComponent component)
@@ -61,7 +61,9 @@ namespace CheApp.Templates.CalculationPage
                 };
                 return new ParameterFrame((SimpleParameter)component);
             }
-            else if (typeof(SimplePicker<SimpleParameter>).Equals(myType) || typeof(FunctionPicker).Equals(myType))
+            else if (typeof(SimplePicker<SimpleParameter>).Equals(myType) 
+                || typeof(SimplePicker<int>).Equals(myType) 
+                || typeof(FunctionPicker).Equals(myType))
             {
                 return PickerSelectionFrame(component);
             }
@@ -71,6 +73,7 @@ namespace CheApp.Templates.CalculationPage
             }
             else
             {
+                Debug.WriteLine("BasicPage: That type of abstract component is not handled in CreateView!");
                 throw new NotImplementedException();
             }
         }

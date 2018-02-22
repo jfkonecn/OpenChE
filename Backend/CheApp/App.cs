@@ -65,7 +65,8 @@ namespace CheApp
                 Setters =
                 {
                     new Setter { Property = Button.BackgroundColorProperty, Value = Color.Black },
-                    new Setter { Property = Button.TextColorProperty, Value = Color.White }
+                    new Setter { Property = Button.TextColorProperty, Value = Color.White },
+                    new Setter { Property = Button.FontSizeProperty, Value = Device.GetNamedSize(NamedSize.Small, typeof(Label))}
                 }
             };
             Resources.Add("buttonStyle", buttonStyle);
@@ -75,7 +76,7 @@ namespace CheApp
                 Setters =
                 {
                     new Setter { Property = Label.HorizontalTextAlignmentProperty, Value = TextAlignment.Center},
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.GetNamedSize(NamedSize.Medium, typeof(Label))}
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.GetNamedSize(NamedSize.Small, typeof(Label))}
                 }
             };
             Resources.Add("minorHeaderStyle", minorHeaderStyle);

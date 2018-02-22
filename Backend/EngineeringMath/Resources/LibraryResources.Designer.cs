@@ -296,6 +296,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Given.
+        /// </summary>
+        public static string Given {
+            get {
+                return ResourceManager.GetString("Given", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inlet.
         /// </summary>
         public static string Inlet {
@@ -368,6 +377,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Liquid.
+        /// </summary>
+        public static string Liquid {
+            get {
+                return ResourceManager.GetString("Liquid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manometer Height Differential.
         /// </summary>
         public static string ManoDeltaH {
@@ -409,6 +427,15 @@ namespace EngineeringMath.Resources {
         public static string NetWork {
             get {
                 return ResourceManager.GetString("NetWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Non-Saturated Species.
+        /// </summary>
+        public static string NonSaturatedSpecies {
+            get {
+                return ResourceManager.GetString("NonSaturatedSpecies", resourceCulture);
             }
         }
         
@@ -503,7 +530,7 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please enter a number between {0} and {1}.
+        ///   Looks up a localized string similar to Number between {0} and {1}.
         /// </summary>
         public static string ParameterValidRange {
             get {
@@ -512,7 +539,7 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Drop in Pressure (pIn - pOut) Across Orifice Plate.
+        ///   Looks up a localized string similar to Drop in Pressure (pIn - pOut).
         /// </summary>
         public static string PDAcrossOP {
             get {
@@ -526,6 +553,15 @@ namespace EngineeringMath.Resources {
         public static string Per {
             get {
                 return ResourceManager.GetString("Per", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phase.
+        /// </summary>
+        public static string Phase {
+            get {
+                return ResourceManager.GetString("Phase", resourceCulture);
             }
         }
         
@@ -584,11 +620,20 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saturated Liquid Given Pressure.
+        ///   Looks up a localized string similar to Regeneration Stages.
         /// </summary>
-        public static string SatLiquidGivenPressure {
+        public static string RegenerationStages {
             get {
-                return ResourceManager.GetString("SatLiquidGivenPressure", resourceCulture);
+                return ResourceManager.GetString("RegenerationStages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regenerative Cycle.
+        /// </summary>
+        public static string RegenerativeCycle {
+            get {
+                return ResourceManager.GetString("RegenerativeCycle", resourceCulture);
             }
         }
         
@@ -602,11 +647,11 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saturated Vapor Given Pressure.
+        ///   Looks up a localized string similar to Saturated Species.
         /// </summary>
-        public static string SatVaporGivenPressure {
+        public static string SaturatedSpecies {
             get {
-                return ResourceManager.GetString("SatVaporGivenPressure", resourceCulture);
+                return ResourceManager.GetString("SaturatedSpecies", resourceCulture);
             }
         }
         
@@ -665,20 +710,11 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Calculate Value Using Substitute Function.
+        ///   Looks up a localized string similar to Use Substitute Function.
         /// </summary>
         public static string SubFunction {
             get {
                 return ResourceManager.GetString("SubFunction", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Super-Heated Vapor Given Temperature and Pressure.
-        /// </summary>
-        public static string SuperHeatedVaporGivenTempPressure {
-            get {
-                return ResourceManager.GetString("SuperHeatedVaporGivenTempPressure", resourceCulture);
             }
         }
         
@@ -706,6 +742,15 @@ namespace EngineeringMath.Resources {
         public static string Thermo {
             get {
                 return ResourceManager.GetString("Thermo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thermodynamic Cycle.
+        /// </summary>
+        public static string ThermodynamicCycle {
+            get {
+                return ResourceManager.GetString("ThermodynamicCycle", resourceCulture);
             }
         }
         
@@ -787,6 +832,15 @@ namespace EngineeringMath.Resources {
         public static string ValueBelowLowerLimit {
             get {
                 return ResourceManager.GetString("ValueBelowLowerLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vapor.
+        /// </summary>
+        public static string Vapor {
+            get {
+                return ResourceManager.GetString("Vapor", resourceCulture);
             }
         }
         

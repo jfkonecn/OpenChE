@@ -45,6 +45,7 @@
     <Compile Include="Calculations\Components\Parameter\SimpleParameter.cs" />
     <Compile Include="Calculations\Components\NumericField.cs" />
     <Compile Include="Calculations\Components\Selectors\FunctionPickerParaLinks.cs" />
+    <Compile Include="Calculations\Components\Selectors\IntegerSpinner.cs" />
     <Compile Include="Calculations\Components\Selectors\SimplePicker.cs" />
     <Compile Include="Calculations\Components\Parameter\SubFunctionParameter.cs" />
     <Compile Include="Calculations\Fluids\BernoullisEquation.cs" />
@@ -56,7 +57,9 @@
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaP.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaVelocitySquared.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\InletMinusOutput.cs" />
-    <Compile Include="Calculations\Thermo\RankineCycle.cs" />
+    <Compile Include="Calculations\Thermo\Cycles\AllCycles.cs" />
+    <Compile Include="Calculations\Thermo\Cycles\RankineCycle.cs" />
+    <Compile Include="Calculations\Thermo\Cycles\RegenerativeCycle.cs" />
     <Compile Include="Calculations\Thermo\ThermoLookupTables\AbstractTable.cs" />
     <Compile Include="Calculations\Thermo\ThermoLookupTables\SteamTable.cs" />
     <Compile Include="Calculations\UnitConverter\AbstractConverter.cs" />

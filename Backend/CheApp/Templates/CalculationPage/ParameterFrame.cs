@@ -179,26 +179,19 @@ namespace CheApp.Templates.CalculationPage
         /// <returns></returns>
         private Grid CreateEntryGrid(SimpleParameter para)
         {
-            Grid inputGrid = BasicGrids.SimpleGrid(2, 1, 0, 0);
-
-
-            Label valueTitleLb = new Label
-            {
-                Text = LibraryResources.Value,
-                Style = (Style)Application.Current.Resources["minorHeaderStyle"]
-            };
-            inputGrid.Children.Add(valueTitleLb, 1, 1);
+            Grid inputGrid = BasicGrids.SimpleGrid(1, 1, 0, 0);
 
             // Create input/output cells
             Entry inputEntry = new Entry
             {
-                Keyboard = Keyboard.Numeric
+                Keyboard = Keyboard.Numeric,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label))
             };
             inputEntry.SetBinding(Entry.TextProperty, new Binding("ValueStr"));
             inputEntry.SetBinding(Entry.IsEnabledProperty, new Binding("AllowUserInput"));
             inputEntry.SetBinding(Entry.PlaceholderProperty, new Binding("Placeholder"));
             inputEntry.BindingContext = para;
-            inputGrid.Children.Add(inputEntry, 1, 2);
+            inputGrid.Children.Add(inputEntry, 1, 1);
 
             return inputGrid;
         }
@@ -236,20 +229,11 @@ namespace CheApp.Templates.CalculationPage
             }
 
 
-            Grid unitGrid = BasicGrids.SimpleGrid(2, totalColumns, 0, 0);
-
-            // add the unit label to grid
-            Label unitLb = new Label
-            {
-                Text = LibraryResources.Units,
-                Style = (Style)Application.Current.Resources["minorHeaderStyle"]
-            };
-            unitGrid.Children.Add(unitLb, 1, 1);
-            Grid.SetColumnSpan(unitLb, totalColumns);
+            Grid unitGrid = BasicGrids.SimpleGrid(1, totalColumns, 0, 0);
 
 
             // add pickers to grid
-            unitGrid.Children.Add(unitPickers[0], 1, 2);
+            unitGrid.Children.Add(unitPickers[0], 1, 1);
 
             if (unitPickers.Length == 2)
             {               
@@ -257,8 +241,8 @@ namespace CheApp.Templates.CalculationPage
                 {
                     Text = LibraryResources.Per,
                     HorizontalTextAlignment = TextAlignment.Center
-                }, 2, 2);
-                unitGrid.Children.Add(unitPickers[1], 3, 2);
+                }, 2, 1);
+                unitGrid.Children.Add(unitPickers[1], 3, 1);
             }
 
             return unitGrid;

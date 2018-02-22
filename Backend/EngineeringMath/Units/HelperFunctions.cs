@@ -34,6 +34,23 @@ namespace EngineeringMath.Units
                 throw new Exception("Array out of range");
             }
 
+            // check if the units are already the same
+            // if they are do not do any unit convertions (to avoid rounding errors)
+            bool allEqual = true;
+            for (int i = 0; i < curUnits.Length; i++)
+            {
+                if (!curUnits[i].Equals(desiredUnits[i]))
+                {
+                    allEqual = false;
+                    break;
+                }
+            }
+            if (allEqual)
+            {
+                return curValue;
+            }
+
+
             curValue = curUnits[0].ConvertTo(curValue, desiredUnits[0]);
 
             if (curUnits.Length == 2)

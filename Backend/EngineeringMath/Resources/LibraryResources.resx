@@ -161,11 +161,11 @@
     <value>Output could not be calculated!</value>
   </data>
   <data name="ParameterValidRange" xml:space="preserve">
-    <value>Please enter a number between {0} and {1}</value>
+    <value>Number between {0} and {1}</value>
     <comment>Lets user know the valid range for a Calculations.Parameter object</comment>
   </data>
   <data name="PDAcrossOP" xml:space="preserve">
-    <value>Drop in Pressure (pIn - pOut) Across Orifice Plate</value>
+    <value>Drop in Pressure (pIn - pOut)</value>
   </data>
   <data name="Per" xml:space="preserve">
     <value>Per</value>
@@ -175,7 +175,7 @@
     <value>Solve For</value>
   </data>
   <data name="SubFunction" xml:space="preserve">
-    <value>Calculate Value Using Substitute Function</value>
+    <value>Use Substitute Function</value>
   </data>
   <data name="Thermo" xml:space="preserve">
     <value>Thermo</value>
@@ -296,14 +296,11 @@
   <data name="MassFlowRate" xml:space="preserve">
     <value>Mass Flow Rate</value>
   </data>
-  <data name="SatLiquidGivenPressure" xml:space="preserve">
-    <value>Saturated Liquid Given Pressure</value>
-  </data>
   <data name="SatTemperature" xml:space="preserve">
     <value>Saturated Temperature</value>
   </data>
-  <data name="SatVaporGivenPressure" xml:space="preserve">
-    <value>Saturated Vapor Given Pressure</value>
+  <data name="SaturatedSpecies" xml:space="preserve">
+    <value>Saturated Species</value>
   </data>
   <data name="SpecificVolume" xml:space="preserve">
     <value>Specific Volume</value>
@@ -311,8 +308,8 @@
   <data name="SteamTable" xml:space="preserve">
     <value>Steam Table</value>
   </data>
-  <data name="SuperHeatedVaporGivenTempPressure" xml:space="preserve">
-    <value>Super-Heated Vapor Given Temperature and Pressure</value>
+  <data name="NonSaturatedSpecies" xml:space="preserve">
+    <value>Non-Saturated Species</value>
   </data>
   <data name="Temperature" xml:space="preserve">
     <value>Temperature</value>
@@ -373,5 +370,27 @@
   </data>
   <data name="SteamRate" xml:space="preserve">
     <value>Steam Rate</value>
+  </data>
+  <data name="Given" xml:space="preserve">
+    <value>Given</value>
+  </data>
+  <data name="Liquid" xml:space="preserve">
+    <value>Liquid</value>
+  </data>
+  <data name="Phase" xml:space="preserve">
+    <value>Phase</value>
+    <comment>As in liquid or vapor</comment>
+  </data>
+  <data name="Vapor" xml:space="preserve">
+    <value>Vapor</value>
+  </data>
+  <data name="ThermodynamicCycle" xml:space="preserve">
+    <value>Thermodynamic Cycle</value>
+  </data>
+  <data name="RegenerationStages" xml:space="preserve">
+    <value>Regeneration Stages</value>
+  </data>
+  <data name="RegenerativeCycle" xml:space="preserve">
+    <value>Regenerative Cycle</value>
   </data>
 </root>

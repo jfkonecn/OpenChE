@@ -61,13 +61,12 @@ namespace EngineeringMath.Calculations.Components
             {
                 OnReset();
                 double num;
-                if (this.isInput)
-                {
-                    Placeholder = string.Format(LibraryResources.ParameterValidRange, 
-                        EffectiveLowerLimitString, 
-                        EffectiveUpperLimitString);
-                }
-                else if (double.TryParse(ValueStr, out num))
+
+                Placeholder = string.Format(LibraryResources.ParameterValidRange,
+                    EffectiveLowerLimitString,
+                    EffectiveUpperLimitString);
+
+                if (this.isOutput && double.TryParse(ValueStr, out num))
                 {
                     // we don't use _Field.GetValue() because it will give us the value 
                     // in terms of the currently selected units
@@ -151,11 +150,11 @@ namespace EngineeringMath.Calculations.Components
                         value,
                         DesiredUnits,
                         UnitSelection.Select(x => x.SelectedObject).ToArray());
-            if (temp < LowerLimit)
+            if (value < LowerLimit)
             {
                 OnError(new Exception(string.Format(LibraryResources.ValueBelowLowerLimit, EffectiveLowerLimitString)));
             }
-            else if (temp > UpperLimit)
+            else if (value > UpperLimit)
             {
                 OnError(new Exception(string.Format(LibraryResources.ValueAboveUpperLimit, EffectiveUpperLimitString)));
             }
@@ -280,7 +279,7 @@ namespace EngineeringMath.Calculations.Components
                     // UnitSelection was null so just say zero for now
                     num = 0;
                 }
-                return string.Format("{0:G2}", num);
+                return string.Format("{0:G4}", num);
             }
         }
 
