@@ -332,11 +332,11 @@
   <data name="TurbineWork" xml:space="preserve">
     <value>Turbine Work</value>
   </data>
-  <data name="SteamPressure" xml:space="preserve">
-    <value>Steam Pressure</value>
+  <data name="BoilerPressure" xml:space="preserve">
+    <value>Boiler Pressure</value>
   </data>
-  <data name="SteamTemp" xml:space="preserve">
-    <value>Steam Temperature</value>
+  <data name="BoilerTemp" xml:space="preserve">
+    <value>Boiler Temperature</value>
   </data>
   <data name="ThermalEfficiency" xml:space="preserve">
     <value>Thermal Efficiency</value>
@@ -392,5 +392,17 @@
   </data>
   <data name="RegenerativeCycle" xml:space="preserve">
     <value>Regenerative Cycle</value>
+  </data>
+  <data name="HeatCapacityConstantPressure" xml:space="preserve">
+    <value>Heat Capacity Constant Pressure</value>
+  </data>
+  <data name="HeatCapacityConstantVolume" xml:space="preserve">
+    <value>Heat Capacity Constant Volume</value>
+  </data>
+  <data name="IsothermalCompressibility" xml:space="preserve">
+    <value>Isothermal Compressibility</value>
+  </data>
+  <data name="VolumeExpansivity" xml:space="preserve">
+    <value>Volume Expansivity</value>
   </data>
 </root>

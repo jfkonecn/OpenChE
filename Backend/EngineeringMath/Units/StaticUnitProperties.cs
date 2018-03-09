@@ -28,7 +28,9 @@ namespace EngineeringMath.Units
             { typeof(Energy), Energy.StringToUnit },
             { typeof(Enthalpy), Enthalpy.StringToUnit },
             { typeof(Entropy), Entropy.StringToUnit },
-            { typeof(Power), Power.StringToUnit }
+            { typeof(Power), Power.StringToUnit },
+            { typeof(IsothermalCompressibility), IsothermalCompressibility.StringToUnit },
+            { typeof(VolumeExpansivity), VolumeExpansivity.StringToUnit }
         };
     }
 }

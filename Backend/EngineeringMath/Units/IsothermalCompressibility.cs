@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace EngineeringMath.Units
 {
-    public class Enthalpy : AbstractUnit
+    public class IsothermalCompressibility : AbstractUnit
     {
         /// <summary>
-        /// kJ / kg
+        /// 1 / Pa
         /// </summary>
-        public static readonly Enthalpy kJkg = new Enthalpy($"{Energy.kJ}/{Mass.kg}", Energy.kJ.ConversionFactor / Mass.kg.ConversionFactor);
+        public static readonly IsothermalCompressibility PaInv = new IsothermalCompressibility($"1/{Pressure.Pa}", 1 / Pressure.Pa.ConversionFactor);
 
         /// <summary>
-        /// BTU / lbsm
+        /// 1 / psia
         /// </summary>
-        public static readonly Enthalpy BTUlbs = new Enthalpy($"{Energy.BTU}/{Mass.lbsm}", Energy.BTU.ConversionFactor / Mass.lbsm.ConversionFactor);
+        public static readonly IsothermalCompressibility PsiaInv = new IsothermalCompressibility($"1/{Pressure.psia}", 1 / Pressure.psia.ConversionFactor);
 
 
         /// <summary>
@@ -24,8 +24,8 @@ namespace EngineeringMath.Units
         /// </summary>
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
-            { kJkg.ToString(), kJkg },
-            { BTUlbs.ToString(), BTUlbs }
+            { PaInv.ToString(), PaInv },
+            { PsiaInv.ToString(), PsiaInv }
         };
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace EngineeringMath.Units
         /// </summary>
         /// <param name="name">string name of the unit</param>
         /// <param name="conversionFactor"></param>
-        protected Enthalpy(string name, double conversionFactor) : base(name, conversionFactor) { }
+        protected IsothermalCompressibility(string name, double conversionFactor) : base(name, conversionFactor) { }
 
 
 
@@ -45,18 +45,18 @@ namespace EngineeringMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, AbstractUnit desiredUnit)
         {
-            return Convert(curValue, this, (Enthalpy)desiredUnit);
+            return Convert(curValue, this, (IsothermalCompressibility)desiredUnit);
         }
 
 
         /// <summary>
-        /// Converts between two different Enthalpy units
+        /// Converts between two different Isothermal Compressibility units
         /// </summary>
         /// <param name="value">The value to be converted</param>
-        /// <param name="currentUnit">Current Enthalpy unit of "value"</param>
-        /// <param name="desiredUnit">Desired Enthalpy unit of "value"</param>
+        /// <param name="currentUnit">Current Isothermal Compressibility unit of "value"</param>
+        /// <param name="desiredUnit">Desired Isothermal Compressibility unit of "value"</param>
         /// <returns>The value in the "desired units"</returns>
-        public static double Convert(double value, Enthalpy currentUnit, Enthalpy desiredUnit)
+        public static double Convert(double value, IsothermalCompressibility currentUnit, IsothermalCompressibility desiredUnit)
         {
             return HelperFunctions.Converter(value, currentUnit.ConversionFactor, desiredUnit.ConversionFactor);
         }

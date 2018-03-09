@@ -11,6 +11,7 @@ using EngineeringMath.Units;
 using EngineeringMath.Calculations.Components;
 using EngineeringMath.Calculations.Components.Selectors;
 using System.Collections;
+using EngineeringMath.Resources.LookupTables;
 
 namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
 {
@@ -68,46 +69,25 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             protected override void Calculation()
             {
                 ThermoEntry entry = null;
-                double pressure = double.NaN;
+                bool tempIsInput = false;
                 if (ParameterBeingUsed.SelectedObject.Equals(GetParameter((int)Field.pressure)))
                 {
-                    if (CurrentPhase == Phase.Vapor)
-                    {
-                        entry = Table.GetThermoEntrySatVaporAtPressure(Pressure);
-                    }
-                    else if (CurrentPhase == Phase.Liquid)
-                    {
-                        entry = Table.GetThermoEntrySatLiquidAtPressure(Pressure);
-                    }
-                    else
-                    {
-                        throw new Exception("Something went wrong...");
-                    }                    
+                    entry = Table.GetThermoEntryAtSatPressure(Pressure, CurrentPhase);
                 }
                 else if (ParameterBeingUsed.SelectedObject.Equals(GetParameter((int)Field.temp)))
                 {
-                    if (CurrentPhase == Phase.Vapor)
-                    {
-                        entry = Table.GetThermoEntrySatVaporAtSatTemp(Temperature, out pressure);
-                    }
-                    else if (CurrentPhase == Phase.Liquid)
-                    {
-                        entry = Table.GetThermoEntrySatLiquidAtSatTemp(Temperature, out pressure);                    
-                    }
-                    else
-                    {
-                        throw new Exception("Something went wrong...");
-                    }
-                                      
+                    tempIsInput = true;
+                    entry = Table.GetThermoEntryAtSatTemp(Temperature, CurrentPhase);
+
                 }
                 else
                 {
                     throw new Exception("something went wrong...");
                 }
 
-                if (entry != null && !double.IsNaN(pressure))
+                if (entry != null && tempIsInput)
                 {
-                    Pressure = pressure;
+                    Pressure = entry.Pressure;
                 }
                 else if (entry != null)
                 {
@@ -152,11 +132,15 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                                 temperature,
                                 CreateSpecificVolumeParameter(),
                                 CreateEnthalpyParameter(),
-                                CreateEntropyParameter()
+                                CreateEntropyParameter(),
+                                CreateBetaParameter(),
+                                CreateKappaParameter(),
+                                CreateCpParameter(),
+                                CreateCvParameter()
                 }
             )
             {
-                CurrentPhase = Phase.Vapor;
+                CurrentPhase = ThermoEntry.Phase.vapor;
                 PhaseSelection.IsEnabled = false;
                 PhaseSelection.OnSelectedIndexChanged += PhaseSelection_OnSelectedIndexChanged;
             }
@@ -170,11 +154,11 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// The current phase of the themo properties
             /// </summary>
             /// <returns></returns>
-            protected Phase CurrentPhase
+            protected ThermoEntry.Phase CurrentPhase
             {
                 get
                 {
-                    return (Phase)PhaseSelection.SelectedObject;
+                    return (ThermoEntry.Phase)PhaseSelection.SelectedObject;
                 }
                 set
                 {
@@ -186,8 +170,8 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// The selection of what phase the thermo properties are in 
             /// </summary>
             public SimplePicker<int> PhaseSelection = new SimplePicker<int>(new Dictionary<string, int> {
-                { LibraryResources.Vapor, (int)Phase.Vapor },
-                { LibraryResources.Liquid, (int)Phase.Liquid }
+                { LibraryResources.Vapor, (int)ThermoEntry.Phase.vapor },
+                { LibraryResources.Liquid, (int)ThermoEntry.Phase.liquid }
             }, LibraryResources.Phase);
 
 
@@ -199,15 +183,15 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 if(entry != null)
                 {
                     // update phase of this species
-                    double satTemp = Table.GetThermoEntrySatLiquidAtPressure(Pressure).Temperature;
+                    double satTemp = Table.GetThermoEntryAtSatPressure(Pressure, ThermoEntry.Phase.liquid).Temperature;
 
                     if (satTemp > Temperature)
                     {
-                        CurrentPhase = Phase.Liquid;
+                        CurrentPhase = ThermoEntry.Phase.liquid;
                     }
                     else
                     {
-                        CurrentPhase = Phase.Vapor;
+                        CurrentPhase = ThermoEntry.Phase.vapor;
                     }
                 }
             }
@@ -227,6 +211,10 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 SpecificVolume = entry.V;
                 Enthalpy = entry.H;
                 Entropy = entry.S;
+                Beta = entry.Beta;
+                Kappa = entry.Kappa;
+                Cp = entry.Cp;
+                Cv = entry.Cv;
             }
 
 
@@ -305,6 +293,64 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 }
             }
 
+
+            /// <summary>
+            /// Volume Expansivity or Coefficient of thermal expansion  (1/K)
+            /// </summary>
+            public double Beta
+            {
+                get
+                {
+                    return GetParameter((int)Field.beta).Value;
+                }
+                set
+                {
+                    GetParameter((int)Field.beta).Value = value;
+                }
+            }
+            /// <summary>
+            /// Isothermal Compressibility (1/Pa)
+            /// </summary>
+            public double Kappa
+            {
+                get
+                {
+                    return GetParameter((int)Field.kappa).Value;
+                }
+                set
+                {
+                    GetParameter((int)Field.kappa).Value = value;
+                }
+            }
+            /// <summary>
+            /// Heat Capacity Constant Pressure (kJ/(kg * K))
+            /// </summary>
+            public double Cp
+            {
+                get
+                {
+                    return GetParameter((int)Field.cp).Value;
+                }
+                set
+                {
+                    GetParameter((int)Field.cp).Value = value;
+                }
+            }
+            /// <summary>
+            /// Heat Capacity Constant Volume (kJ/(kg * K))
+            /// </summary>
+            public double Cv
+            {
+                get
+                {
+                    return GetParameter((int)Field.cv).Value;
+                }
+                set
+                {
+                    GetParameter((int)Field.cv).Value = value;
+                }
+            }
+
             /// <summary>
             /// Creates a pressure parameter for all SimpleFunctions within this class
             /// </summary>
@@ -360,6 +406,47 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 return new SimpleParameter((int)Field.s, LibraryResources.Entropy, new AbstractUnit[] { Units.Entropy.kJkgK }, false);
             }
 
+
+
+            /// <summary>
+            /// Creates a beta parameter for all SimpleFunctions within this class
+            /// </summary>
+            /// <returns></returns>
+            private static SimpleParameter CreateBetaParameter()
+            {
+                return new SimpleParameter((int)Field.beta, LibraryResources.VolumeExpansivity, new AbstractUnit[] { Units.VolumeExpansivity.Kinv }, false);
+            }
+
+            /// <summary>
+            /// Creates a kappa parameter for all SimpleFunctions within this class
+            /// </summary>
+            /// <returns></returns>
+            private static SimpleParameter CreateKappaParameter()
+            {
+                return new SimpleParameter((int)Field.kappa, LibraryResources.IsothermalCompressibility, new AbstractUnit[] { Units.IsothermalCompressibility.PaInv }, false);
+            }
+
+            /// <summary>
+            /// Creates a Cp parameter for all SimpleFunctions within this class
+            /// </summary>
+            /// <returns></returns>
+            private static SimpleParameter CreateCpParameter()
+            {
+                // Entropy and Heat Capacity have the same units
+                return new SimpleParameter((int)Field.cp, LibraryResources.HeatCapacityConstantPressure, new AbstractUnit[] { Units.Entropy.kJkgK }, false);
+            }
+
+            /// <summary>
+            /// Creates a Cv parameter for all SimpleFunctions within this class
+            /// </summary>
+            /// <returns></returns>
+            private static SimpleParameter CreateCvParameter()
+            {
+                // Entropy and Heat Capacity have the same units
+                return new SimpleParameter((int)Field.cv, LibraryResources.HeatCapacityConstantVolume, new AbstractUnit[] { Units.Entropy.kJkgK }, false);
+            }
+
+
             public enum Field
             {
                 /// <summary>
@@ -381,15 +468,24 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 /// <summary>
                 /// Entropy (kJ/(kg*K))
                 /// </summary>
-                s
+                s,
+                /// <summary>
+                /// Volume Expansivity or Coefficient of thermal expansion (1/K)
+                /// </summary>
+                beta,
+                /// <summary>
+                /// Isothermal Compressibility (1/Pa)
+                /// </summary>
+                kappa,
+                /// <summary>
+                /// Heat Capacity Constant Pressure (kJ/(kg * K))
+                /// </summary>
+                cp,
+                /// <summary>
+                /// Heat Capacity Constant Volume (kJ/(kg * K))
+                /// </summary>
+                cv
             }
-
-            public enum Phase
-            {
-                Vapor,
-                Liquid
-            }
-
 
 
 

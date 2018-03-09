@@ -6,6 +6,7 @@ using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations;
 using EngineeringMath.Calculations.Components;
 using EngineeringMath.Calculations.Components.Parameter;
+using EngineeringMath.Calculations.Thermo.Cycles;
 
 namespace BackendTesting
 {
@@ -33,11 +34,11 @@ namespace BackendTesting
                 }                
             }
 
-            fun.GetParameter((int)RankineCycle.Field.steamP).UnitSelection[0].SelectedObject = Pressure.kPa;
-            fun.GetParameter((int)RankineCycle.Field.steamP).ValueStr = "8600";
+            fun.GetParameter((int)RankineCycle.Field.boilerP).UnitSelection[0].SelectedObject = Pressure.kPa;
+            fun.GetParameter((int)RankineCycle.Field.boilerP).ValueStr = "8600";
 
-            fun.GetParameter((int)RankineCycle.Field.steamTemp).UnitSelection[0].SelectedObject = Temperature.C;
-            fun.GetParameter((int)RankineCycle.Field.steamTemp).ValueStr = "500";
+            fun.GetParameter((int)RankineCycle.Field.boilerTemp).UnitSelection[0].SelectedObject = Temperature.C;
+            fun.GetParameter((int)RankineCycle.Field.boilerTemp).ValueStr = "500";
 
             fun.GetParameter((int)RankineCycle.Field.condenserP).UnitSelection[0].SelectedObject = Pressure.kPa;
             fun.GetParameter((int)RankineCycle.Field.condenserP).ValueStr = "10";

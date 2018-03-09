@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace EngineeringMath.Units
 {
-    public class Enthalpy : AbstractUnit
+    class VolumeExpansivity : AbstractUnit
     {
         /// <summary>
-        /// kJ / kg
+        /// 1 / K
         /// </summary>
-        public static readonly Enthalpy kJkg = new Enthalpy($"{Energy.kJ}/{Mass.kg}", Energy.kJ.ConversionFactor / Mass.kg.ConversionFactor);
+        public static readonly VolumeExpansivity Kinv = new VolumeExpansivity($"1/{Temperature.K}", 1 / Temperature.K.ConversionFactor);
 
         /// <summary>
-        /// BTU / lbsm
+        /// 1 / R
         /// </summary>
-        public static readonly Enthalpy BTUlbs = new Enthalpy($"{Energy.BTU}/{Mass.lbsm}", Energy.BTU.ConversionFactor / Mass.lbsm.ConversionFactor);
+        public static readonly VolumeExpansivity Rinv = new VolumeExpansivity($"1/{Temperature.R}", 1 / Temperature.R.ConversionFactor);
 
 
         /// <summary>
@@ -24,8 +24,8 @@ namespace EngineeringMath.Units
         /// </summary>
         public static readonly Dictionary<string, AbstractUnit> StringToUnit = new Dictionary<string, AbstractUnit>
         {
-            { kJkg.ToString(), kJkg },
-            { BTUlbs.ToString(), BTUlbs }
+            { Kinv.ToString(), Kinv },
+            { Rinv.ToString(), Rinv }
         };
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace EngineeringMath.Units
         /// </summary>
         /// <param name="name">string name of the unit</param>
         /// <param name="conversionFactor"></param>
-        protected Enthalpy(string name, double conversionFactor) : base(name, conversionFactor) { }
+        protected VolumeExpansivity(string name, double conversionFactor) : base(name, conversionFactor) { }
 
 
 
@@ -45,18 +45,18 @@ namespace EngineeringMath.Units
         /// <returns>The curValue in the desired units</returns>
         public override double ConvertTo(double curValue, AbstractUnit desiredUnit)
         {
-            return Convert(curValue, this, (Enthalpy)desiredUnit);
+            return Convert(curValue, this, (VolumeExpansivity)desiredUnit);
         }
 
 
         /// <summary>
-        /// Converts between two different Enthalpy units
+        /// Converts between two different Volume Expansivity units
         /// </summary>
         /// <param name="value">The value to be converted</param>
-        /// <param name="currentUnit">Current Enthalpy unit of "value"</param>
-        /// <param name="desiredUnit">Desired Enthalpy unit of "value"</param>
+        /// <param name="currentUnit">Current Volume Expansivity unit of "value"</param>
+        /// <param name="desiredUnit">Desired Volume Expansivity unit of "value"</param>
         /// <returns>The value in the "desired units"</returns>
-        public static double Convert(double value, Enthalpy currentUnit, Enthalpy desiredUnit)
+        public static double Convert(double value, VolumeExpansivity currentUnit, VolumeExpansivity desiredUnit)
         {
             return HelperFunctions.Converter(value, currentUnit.ConversionFactor, desiredUnit.ConversionFactor);
         }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.IO;
 using EngineeringMath.Resources.LookupTables.ThermoTableElements;
+using System.Collections;
+using EngineeringMath.NumericalMethods.FiniteDifferenceFormulas;
+using System.Diagnostics;
 
 namespace EngineeringMath.Resources.LookupTables
 {
@@ -25,7 +28,6 @@ namespace EngineeringMath.Resources.LookupTables
             {
                 using (StreamReader reader = new StreamReader(stream))
                 {
-
                     string[] firstLine = reader.ReadLine().Split(',');
                     // skip next line
                     reader.ReadLine().Split(',');
@@ -40,13 +42,278 @@ namespace EngineeringMath.Resources.LookupTables
                         while (i < TableElements.Count)
                         {
                             j = 6 * i;
-                            TableElements[i].AddThermoEntry(CreateEntry(line, j));
+                            TableElements[i].AddThermoEntry(CreateEntry(line, j, TableElements[i]));
                             i++;
                         }
                     }
                 }
-            }            
+            }
+            FinishUp();
         }
+
+        /// <summary>
+        /// Derivative ids used in the finishup function
+        /// </summary>
+        enum derivatives
+        {
+            dVdTp,
+            dVdPt,
+            dHdTp
+        }
+
+
+        /// <summary>
+        /// finds beta, kappa, cp and cv for each thermo entry
+        /// </summary>
+        private void FinishUp()
+        {
+            // find beta, kappa, cp and cv for each thermo entry
+            for (int i = 0; i < TableElements.Count; i++)
+            {
+                for (int j = 0; j < TableElements[i].Count; j++)
+                {
+                    ThermoEntry curPoint = TableElements[i][j];
+                    Dictionary<UInt16, double> allDerivatives = new Dictionary<UInt16, double>();
+
+                    // handle constant temperature
+                    allDerivatives = allDerivatives.Concat(FindDerivative(i,
+                        delegate (int idx) { return TableElements[idx][j]; },
+                        TableElements.Count,
+                        WithRespectToProperty.Pressure,
+                        new Dictionary<ushort, GetProperty> {
+                            { (UInt16)derivatives.dVdPt, delegate(ThermoEntry entry){ return entry.V; } }
+                        })).ToDictionary(x => x.Key, x => x.Value);
+
+                    // handle constant pressure
+                    allDerivatives = allDerivatives.Concat(FindDerivative(j,
+                        delegate (int idx) { return TableElements[i][idx]; },
+                        TableElements[i].Count,
+                        WithRespectToProperty.Temperature,
+                        new Dictionary<ushort, GetProperty> {
+                            { (UInt16)derivatives.dHdTp, delegate(ThermoEntry entry){ return entry.H; } },
+                            { (UInt16)derivatives.dVdTp, delegate(ThermoEntry entry){ return entry.V; } }
+                        })).ToDictionary(x => x.Key, x => x.Value);
+
+
+                    TableElements[i][j].FinishUp(
+                        allDerivatives[(UInt16)derivatives.dVdTp], 
+                        allDerivatives[(UInt16)derivatives.dVdPt], 
+                        allDerivatives[(UInt16)derivatives.dHdTp]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets ThermoEntry given an index
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        private delegate ThermoEntry GetEntryAt(int idx);
+
+        /// <summary>
+        /// Gets the desired property a ThermEntry and returns it
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        private delegate double GetProperty(ThermoEntry entry);
+
+        /// <summary>
+        /// Gets a thermodynamic entry at a saturation point
+        /// </summary>
+        /// <param name="num">either temperature or pressure</param>
+        /// <param name="phase"></param>
+        /// <returns></returns>
+        private delegate ThermoEntry SatPointFun(ThermoEntry entry, ThermoEntry.Phase phase);
+
+        /// <summary>
+        /// Gets a thermodynamic entry at a non-saturation point
+        /// </summary>
+        /// <param name="entry">Reference Entry point</param>
+        /// <param name="step">step away from the entry for a paraticular property(determined within the delegate)</param>
+        /// <returns></returns>
+        private delegate ThermoEntry NonSatPointFun(ThermoEntry entry, double step);
+
+        /// <summary>
+        /// Calculates the derviative of a property of an ThermoEntry
+        /// </summary>
+        /// <param name="getProperty"></param>
+        /// <returns></returns>
+        private delegate double CalculateDerivative(GetProperty getProperty);
+
+        /// <summary>
+        /// Use when calculating 
+        /// </summary>
+        enum WithRespectToProperty
+        {
+            Pressure,
+            Temperature
+        }
+
+
+        private void GetRespectToFunctions(WithRespectToProperty withRespectTo, out GetProperty getProperty, 
+            out SatPointFun satPointFun, out NonSatPointFun nonSatPointFun)
+        {
+            switch (withRespectTo)
+            {
+                case WithRespectToProperty.Pressure:
+                    getProperty = delegate (ThermoEntry entry) { return entry.Pressure; };
+                    satPointFun = delegate (ThermoEntry entry, ThermoEntry.Phase phase) { return GetThermoEntryAtSatPressure(entry.Pressure, phase); };
+                    nonSatPointFun = 
+                        delegate (ThermoEntry entry, double step)
+                        {
+                            return GetThermoEntryAtTemperatureAndPressure(entry.Temperature, entry.Pressure + step);
+                        };
+                    break;
+                case WithRespectToProperty.Temperature:
+                    getProperty = delegate (ThermoEntry entry) { return entry.Temperature; };
+                    satPointFun = delegate (ThermoEntry entry, ThermoEntry.Phase phase) { return GetThermoEntryAtSatTemp(entry.Temperature, phase); };
+                    nonSatPointFun =
+                        delegate (ThermoEntry entry, double step)
+                        {
+                            return GetThermoEntryAtTemperatureAndPressure(entry.Temperature + step, entry.Pressure);
+                        };
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+
+        /// <summary>
+        /// Finds the derivative for a thermo entry
+        /// </summary>
+        /// <param name="curIdx">Index of collection being used to calculate derivative</param>
+        /// <param name="getEntryAt">function which gets the entry at the passed index of the collection being used</param>
+        /// <param name="totalElements">total number of elements in the collection being used</param>
+        /// <param name="withRespectTo">Is pressure or temperature being changed?</param>
+        /// <param name="propFuns">Gets the property being used in the derivative 
+        /// (ie this function would return entry.V for change in V with respect to pressure)</param>
+        /// <returns></returns>
+        private Dictionary<UInt16, double> FindDerivative(int curIdx, GetEntryAt getEntryAt, 
+            int totalElements, WithRespectToProperty withRespectTo, Dictionary<UInt16, GetProperty> propFuns)
+        {
+            ThermoEntry curPoint = getEntryAt(curIdx);
+            // stores the derivatives
+            Dictionary<UInt16, double> allDerivatives = new Dictionary<UInt16, double>();
+
+            GetRespectToFunctions(withRespectTo, out GetProperty getStepProperty, out SatPointFun satPointFun, out NonSatPointFun nonSatPointFun);
+
+            CalculateDerivative calculateDerivative = null;
+
+            if ((curIdx == totalElements - 1 && curPoint.EntryPhase != getEntryAt(curIdx - 1).EntryPhase) ||
+                (curIdx == 0 && curPoint.EntryPhase != getEntryAt(curIdx + 1).EntryPhase))
+            {
+                // we don't have enough data to estimate a derivative
+                calculateDerivative = delegate(GetProperty getProperty) { return 0; };
+            }
+            else if (totalElements - 1 == curIdx || (curPoint.EntryPhase != getEntryAt(curIdx + 1).EntryPhase))
+            {
+                ThermoEntry curPointMinus2, curPointMinus1;
+                if (curIdx == 1)
+                {
+                    curPointMinus2 = getEntryAt(curIdx - 1);
+                }
+                else
+                {
+                    curPointMinus2 = getEntryAt(curIdx - 2);
+                }
+
+
+                if (curPointMinus2.EntryPhase != curPoint.EntryPhase)
+                {
+                    // there was a phase change
+                    curPointMinus2 = satPointFun(curPoint, curPoint.EntryPhase);
+                }
+
+                // get next point at the midpoint
+                double step = (getStepProperty(curPoint) - getStepProperty(curPointMinus2)) / 2;
+                curPointMinus1 = nonSatPointFun(curPoint, -step);
+
+                calculateDerivative = 
+                    delegate (GetProperty getProperty) 
+                    {
+                        if (step == 0)
+                            return 0;
+                        return FirstDerivative.ThreePointBackward(getProperty(curPointMinus2), getProperty(curPointMinus1), getProperty(curPoint), step);
+                    };
+
+            }
+            else if (curIdx == 0 || (curPoint.EntryPhase != getEntryAt(curIdx - 1).EntryPhase))
+            {
+
+                ThermoEntry curPointPlus1, curPointPlus2;
+                if (curIdx == totalElements - 2)
+                {
+                    curPointPlus2 = getEntryAt(curIdx + 1);
+                }
+                else
+                {
+                    curPointPlus2 = getEntryAt(curIdx + 2);
+                }
+
+                if (curPointPlus2.EntryPhase != curPoint.EntryPhase)
+                {
+                    // there was a phase change
+                    curPointPlus2 = satPointFun(curPoint, curPoint.EntryPhase);
+                }
+
+                // get next point at the midpoint
+                double step = (getStepProperty(curPointPlus2) - getStepProperty(curPoint)) / 2;
+                curPointPlus1 = nonSatPointFun(curPoint, step);
+
+                calculateDerivative =
+                    delegate (GetProperty getProperty)
+                    {
+                        if (step == 0)
+                            return 0;
+                        return FirstDerivative.ThreePointForward(getProperty(curPoint), getProperty(curPointPlus1), getProperty(curPointPlus2), step);
+                    };
+            }
+            else
+            {
+                ThermoEntry curPointMinus1 = getEntryAt(curIdx - 1), curPointPlus1 = getEntryAt(curIdx + 1);
+
+                if (curPointMinus1.EntryPhase != curPoint.EntryPhase)
+                {
+                    curPointMinus1 = satPointFun(curPoint, curPoint.EntryPhase);
+                }
+
+                if (curPointPlus1.EntryPhase != curPoint.EntryPhase)
+                {
+                    curPointPlus1 = satPointFun(curPoint, curPoint.EntryPhase);
+                }
+
+                double step = (getStepProperty(curPointPlus1) - getStepProperty(curPoint));
+
+                if (step > (getStepProperty(curPoint) - getStepProperty(curPointMinus1)))
+                {
+                    step = getStepProperty(curPoint) - getStepProperty(curPointMinus1);
+                    curPointPlus1 = nonSatPointFun(curPoint, step);
+                }
+                else
+                {
+                    curPointMinus1 = nonSatPointFun(curPoint, -step);
+                }
+
+                calculateDerivative =
+                    delegate (GetProperty getProperty)
+                    {
+                        if (step == 0)
+                            return 0;
+                        return FirstDerivative.TwoPointCentral(getProperty(curPointMinus1), getProperty(curPointPlus1), step);
+                    };
+            }
+
+            // calculate derivatives
+            foreach (KeyValuePair<UInt16, GetProperty> dicEntry in propFuns)
+            {
+                allDerivatives.Add(dicEntry.Key, calculateDerivative(dicEntry.Value));
+            }
+
+            return allDerivatives;
+
+        }
+
 
         /// <summary>
         /// Creates all elements in this table
@@ -65,9 +332,8 @@ namespace EngineeringMath.Resources.LookupTables
                 double pressure = double.Parse(firstLine[i + 1]) * 1e6,                
                     // assume temperature is in units of C
                     satTemp = double.Parse(firstLine[i + 3]);
-
-                ThermoEntry satLiq = CreateEntry(thirdLine, i, satTemp),
-                    satVap = CreateEntry(fourthLine, i, satTemp);
+                ThermoEntry satLiq = CreateEntry(thirdLine, i, satTemp, pressure, ThermoEntry.Phase.liquid, true),
+                    satVap = CreateEntry(fourthLine, i, satTemp, pressure, ThermoEntry.Phase.vapor, true);
 
                 TableElements.Add(new ThermoConstPressureTable(pressure, satTemp, satLiq, satVap));
                 i += 6;
@@ -80,27 +346,47 @@ namespace EngineeringMath.Resources.LookupTables
         /// <param name="line"></param>
         /// <param name="i"></param>
         /// <param name="temperature">in C</param>
+        /// <param name="pressure">in Pa</param>
+        /// <param name="phase">The phase of the entry about to be created</param>
+        /// <param name="isSaturated">True if saturated</param>
         /// <returns></returns>
-        private ThermoEntry CreateEntry(string[] line, int i, double temperature)
+        private ThermoEntry CreateEntry(string[] line, int i, double temperature, double pressure, ThermoEntry.Phase phase, bool isSaturated)
         {
-            return new ThermoEntry(temperature,
-                    // Specific Volume Assume m3/kg
-                    double.Parse(line[i + 1]),
+            return new ThermoEntry(temperature, pressure,
+                    // Specific Volume Assume m3/Mg
+                    double.Parse(line[i + 1]) * 1e-3,
                     // Enthalpy Assume kJ/kg 
                     double.Parse(line[i + 3]),
                     // Entropy Assume kJ/(kg * K)
-                    double.Parse(line[i + 4]));
+                    double.Parse(line[i + 4]), phase, isSaturated);
         }
 
         /// <summary>
         /// Creates a thermo entry based on a passed line of the csv file the current index being examined
+        /// Intended for non-satruation point entries
         /// </summary>
         /// <param name="line"></param>
         /// <param name="i"></param>
         /// <returns></returns>
-        private ThermoEntry CreateEntry(string[] line, int i)
+        private ThermoEntry CreateEntry(string[] line, int i, ThermoConstPressureTable ele)
         {
-            return CreateEntry(line, i, double.Parse(line[i]));
+            ThermoEntry.Phase phase;
+            double temperature = double.Parse(line[i]);
+            //TODO: we could have more than one saturation point
+            if (ele.SatVaporEntry.Temperature < temperature)
+            {
+                phase = ThermoEntry.Phase.vapor;
+            }
+            else if(ele.SatLiquidEntry.Temperature > temperature)
+            {
+                phase = ThermoEntry.Phase.liquid;
+            }
+            else
+            {
+                throw new Exception("Is this entry at a saturation point?");
+            }
+
+            return CreateEntry(line, i, temperature, ele.Pressure, phase, false);
         }
 
         /// <summary>
@@ -114,118 +400,81 @@ namespace EngineeringMath.Resources.LookupTables
             return ThermoEntry.Interpolation<ThermoConstPressureTable>.InterpolationThermoEntryFromList(
                 pressure,
                 TableElements,
-                delegate (ThermoConstPressureTable obj)
+                delegate (ThermoEntry entry)
                 {
-                    return obj.Pressure;
+                    return entry.Pressure;
                 },
                 delegate (ThermoConstPressureTable obj)
                 {
                     return obj.GetThermoEntryAtTemperature(temperature);
+                },
+                delegate (ThermoEntry entry, ThermoEntry.Phase phase) 
+                {
+                    return GetThermoEntryAtSatTemp(entry.Temperature, phase);
                 });
         }
-
-
-        /// <summary>
-        /// Gets ThermoEntry for saturated liquid at passed pressure. Null when no entry found.
-        /// </summary>
-        /// <param name="pressure">Desired Pressure (Pa)</param>
-        /// <returns></returns>
-        public ThermoEntry GetThermoEntrySatLiquidAtPressure(double pressure)
-        {
-            return GetThermoEntrySatTempAtPressure(pressure, false);
-        }
-
-
-        /// <summary>
-        /// Gets ThermoEntry for saturated vapor at passed pressure. Null when no entry found.
-        /// </summary>
-        /// <param name="pressure">Desired Pressure (Pa)</param>
-        /// <returns></returns>
-        public ThermoEntry GetThermoEntrySatVaporAtPressure(double pressure)
-        {
-            return GetThermoEntrySatTempAtPressure(pressure, true);
-        }
-
 
         /// <summary>
         /// Gets ThermoEntry for saturated liquid or vapor at passed pressure. Null when no entry found.
         /// </summary>
         /// <param name="pressure">Desired Pressure (Pa)</param>
-        /// <param name="isVapor">True if desired entry is for saturated vapor else returns data for saturated liquid</param>
         /// <returns></returns>
-        private ThermoEntry GetThermoEntrySatTempAtPressure(double pressure, bool isVapor)
+        public ThermoEntry GetThermoEntryAtSatPressure(double pressure, ThermoEntry.Phase phase)
         {
             ThermoEntry.Interpolation<ThermoConstPressureTable>.ObjectToThermoEntry satFun;
-            if (isVapor)
+            if (phase == ThermoEntry.Phase.vapor)
             {
                 satFun = delegate (ThermoConstPressureTable obj)
                 {
                     return obj.SatVaporEntry;
                 };
             }
-            else
+            else if (phase == ThermoEntry.Phase.liquid)
             {
                 satFun = delegate (ThermoConstPressureTable obj)
                 {
                     return obj.SatLiquidEntry;
                 };
             }
+            else
+            {
+                throw new NotImplementedException("Solid phase hasn't been coded yet");
+            }
 
             return ThermoEntry.Interpolation<ThermoConstPressureTable>.InterpolationThermoEntryFromList(
                 pressure,
                 TableElements,
-                delegate (ThermoConstPressureTable obj)
+                delegate (ThermoEntry obj)
                 {
                     return obj.Pressure;
                 },
-                satFun);
+                satFun,
+                delegate (ThermoEntry entry, ThermoEntry.Phase myPhase)
+                {
+                    return GetThermoEntryAtSatPressure(entry.Pressure, myPhase);
+                });
         }
-
-        /// <summary>
-        /// Gets ThermoEntry and Pressure for saturated liquid at passed satTemp. Null when no entry found.
-        /// </summary>
-        /// <param name="satTemp">Desired saturation temperature</param>
-        /// <param name="pressure">Pressure at saturation temperature (Pa) NaN when no pressure found</param>
-        /// <returns></returns>
-        public ThermoEntry GetThermoEntrySatLiquidAtSatTemp(double satTemp, out double pressure)
-        {
-            return GetThermoEntryAtSatTemp(satTemp, false, out pressure);
-        }
-
-
-        /// <summary>
-        /// Gets ThermoEntry and Pressure for saturated vapor at passed satTemp. Null when no entry found.
-        /// </summary>
-        /// <param name="satTemp">Desired saturation temperature</param>
-        /// <param name="pressure">Pressure at saturation temperature (Pa) NaN when no pressure found</param>
-        /// <returns></returns>
-        public ThermoEntry GetThermoEntrySatVaporAtSatTemp(double satTemp, out double pressure)
-        {
-            return GetThermoEntryAtSatTemp(satTemp, true, out pressure);
-        }
-
 
         /// <summary>
         /// Gets ThermoEntry and Pressure for saturated liquid or vapor at passed satTemp. Null when no entry found.
         /// </summary>
         /// <param name="satTemp">Desired saturation temperature</param>
         /// <param name="isVapor">True if desired entry is for saturated vapor else returns data for saturated liquid</param>
-        /// <param name="pressure">Pressure at saturation temperature (Pa) NaN when no pressure found</param>
         /// <returns></returns>
-        private ThermoEntry GetThermoEntryAtSatTemp(double satTemp, bool isVapor, out double pressure)
+        public ThermoEntry GetThermoEntryAtSatTemp(double satTemp, ThermoEntry.Phase phase)
         {
-            pressure = double.NaN;
+            double pressure = double.NaN;
             ThermoEntry entry = null;
 
             if (satTemp == MinSatTableTemperature)
             {
                 pressure = MinTablePressure;
-                entry = GetThermoEntrySatTempAtPressure(pressure, isVapor);
+                entry = GetThermoEntryAtSatPressure(pressure, phase);
             }
             else if (satTemp == MaxSatTableTemperature)
             {
                 pressure = MaxTablePressure;
-                entry = GetThermoEntrySatTempAtPressure(pressure, isVapor);
+                entry = GetThermoEntryAtSatPressure(pressure, phase);
             }
             else if (satTemp > MinSatTableTemperature && satTemp < MaxSatTableTemperature)
             {
@@ -243,7 +492,7 @@ namespace EngineeringMath.Resources.LookupTables
                 while(curTries < maxTries)
                 {
                     pressure = (maxP - minP) / 2 + minP;
-                    entry = GetThermoEntrySatTempAtPressure(pressure, isVapor);
+                    entry = GetThermoEntryAtSatPressure(pressure, phase);
                     if(Math.Abs(entry.Temperature - satTemp) <= maxDelta)
                     {
                         break;
@@ -294,7 +543,7 @@ namespace EngineeringMath.Resources.LookupTables
         {
             get
             {
-                return GetThermoEntrySatVaporAtPressure(MinTablePressure).Temperature;
+                return GetThermoEntryAtSatPressure(MinTablePressure, ThermoEntry.Phase.vapor).Temperature;
             }
         }
 
@@ -305,7 +554,7 @@ namespace EngineeringMath.Resources.LookupTables
         {
             get
             {
-                return GetThermoEntrySatVaporAtPressure(MaxTablePressure).Temperature;
+                return GetThermoEntryAtSatPressure(MaxTablePressure, ThermoEntry.Phase.vapor).Temperature;
             }
         }
 

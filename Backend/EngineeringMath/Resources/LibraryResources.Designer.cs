@@ -107,6 +107,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boiler Pressure.
+        /// </summary>
+        public static string BoilerPressure {
+            get {
+                return ResourceManager.GetString("BoilerPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boiler Temperature.
+        /// </summary>
+        public static string BoilerTemp {
+            get {
+                return ResourceManager.GetString("BoilerTemp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boiler Work.
         /// </summary>
         public static string BoilerWork {
@@ -305,6 +323,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Heat Capacity Constant Pressure.
+        /// </summary>
+        public static string HeatCapacityConstantPressure {
+            get {
+                return ResourceManager.GetString("HeatCapacityConstantPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heat Capacity Constant Volume.
+        /// </summary>
+        public static string HeatCapacityConstantVolume {
+            get {
+                return ResourceManager.GetString("HeatCapacityConstantVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inlet.
         /// </summary>
         public static string Inlet {
@@ -373,6 +409,15 @@ namespace EngineeringMath.Resources {
         public static string Input {
             get {
                 return ResourceManager.GetString("Input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Isothermal Compressibility.
+        /// </summary>
+        public static string IsothermalCompressibility {
+            get {
+                return ResourceManager.GetString("IsothermalCompressibility", resourceCulture);
             }
         }
         
@@ -674,15 +719,6 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Steam Pressure.
-        /// </summary>
-        public static string SteamPressure {
-            get {
-                return ResourceManager.GetString("SteamPressure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Steam Rate.
         /// </summary>
         public static string SteamRate {
@@ -697,15 +733,6 @@ namespace EngineeringMath.Resources {
         public static string SteamTable {
             get {
                 return ResourceManager.GetString("SteamTable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Steam Temperature.
-        /// </summary>
-        public static string SteamTemp {
-            get {
-                return ResourceManager.GetString("SteamTemp", resourceCulture);
             }
         }
         
@@ -850,6 +877,15 @@ namespace EngineeringMath.Resources {
         public static string Volume {
             get {
                 return ResourceManager.GetString("Volume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume Expansivity.
+        /// </summary>
+        public static string VolumeExpansivity {
+            get {
+                return ResourceManager.GetString("VolumeExpansivity", resourceCulture);
             }
         }
         

@@ -29,8 +29,8 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         public RankineCycle(ThermoTable table) : base(
                 new SimpleParameter[]
                 {
-                    new SimpleParameter((int)Field.steamP, LibraryResources.SteamPressure, new AbstractUnit[] { Pressure.Pa }, true, table.MinTablePressure, table.MaxTablePressure),
-                    new SimpleParameter((int)Field.steamTemp, LibraryResources.SteamTemp, new AbstractUnit[] { Temperature.C }, true, table.MinTableTemperature, table.MaxTableTemperature),
+                    new SimpleParameter((int)Field.boilerP, LibraryResources.BoilerPressure, new AbstractUnit[] { Pressure.Pa }, true, table.MinTablePressure, table.MaxTablePressure),
+                    new SimpleParameter((int)Field.boilerTemp, LibraryResources.BoilerTemp, new AbstractUnit[] { Temperature.C }, true, table.MinTableTemperature, table.MaxTableTemperature),
                     new SimpleParameter((int)Field.condenserP, LibraryResources.CondenserPressure, new AbstractUnit[] { Pressure.Pa}, true, table.MinTablePressure, table.MaxTablePressure),
                     new SimpleParameter((int)Field.pumpEff, LibraryResources.PumpEfficiency, new AbstractUnit[] { Unitless.unitless}, true, 0, 1),
                     new SimpleParameter((int)Field.turbineEff, LibraryResources.TurbineEfficiency, new AbstractUnit[] { Unitless.unitless}, true, 0, 1),
@@ -53,7 +53,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
 
 #if DEBUG
             SteamPressure = 8600e3;
-            SteamTemperature = 500;
+            BoilerTemperature = 500;
             CondenserPressure = 10e3;
             PumpEfficiency = 0.75;
             TurbineEfficiency = 0.75;
@@ -67,11 +67,11 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             /// <summary>
             /// Steam Pressure (Pa)
             /// </summary>
-            steamP,
+            boilerP,
             /// <summary>
             /// Steam Temperature (C)
             /// </summary>
-            steamTemp,
+            boilerTemp,
             /// <summary>
             /// Mass Flow Rate of steam in the cycle (kg/s)
             /// </summary>
@@ -155,28 +155,28 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         {
             get
             {
-                return GetParameter((int)Field.steamP).Value;
+                return GetParameter((int)Field.boilerP).Value;
             }
 
             set
             {
-                GetParameter((int)Field.steamP).Value = value;
+                GetParameter((int)Field.boilerP).Value = value;
             }
         }
 
         /// <summary>
-        /// Steam Temperature (C)
+        /// Boiler Temperature (C)
         /// </summary>
-        public double SteamTemperature
+        public double BoilerTemperature
         {
             get
             {
-                return GetParameter((int)Field.steamTemp).Value;
+                return GetParameter((int)Field.boilerTemp).Value;
             }
 
             set
             {
-                GetParameter((int)Field.steamTemp).Value = value;
+                GetParameter((int)Field.boilerTemp).Value = value;
             }
         }
 
@@ -393,18 +393,18 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         /// <summary>
         /// The thermo table being used in this function
         /// </summary>
-        private ThermoTable Table
+        protected ThermoTable Table
         {
             get; set;
         }
 
         protected override void Calculation()
         {
-            ThermoEntry steamConditions = Table.GetThermoEntryAtTemperatureAndPressure(SteamTemperature, SteamPressure),
-                condenserLiquidConditions = Table.GetThermoEntrySatLiquidAtPressure(CondenserPressure),
-                condenserVaporConditions = Table.GetThermoEntrySatVaporAtPressure(CondenserPressure);
+            ThermoEntry boilerConditions = Table.GetThermoEntryAtTemperatureAndPressure(BoilerTemperature, SteamPressure),
+                condenserLiquidConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure, ThermoEntry.Phase.liquid),
+                condenserVaporConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure, ThermoEntry.Phase.vapor);
 
-            CondenserSteamQuality = (steamConditions.S - condenserLiquidConditions.S) 
+            CondenserSteamQuality = (boilerConditions.S - condenserLiquidConditions.S) 
                 / (condenserVaporConditions.S - condenserLiquidConditions.S);
 
             // in kj / kg
@@ -415,11 +415,11 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             // in kj / kg
             double boilerEnthalpy = condenserLiquidConditions.H + PumpWork;
 
-            BoilerWork = steamConditions.H - boilerEnthalpy;
+            BoilerWork = boilerConditions.H - boilerEnthalpy;
 
-            TurbineWork = -(condenserEnthalpy - steamConditions.H) * TurbineEfficiency;
+            TurbineWork = -(condenserEnthalpy - boilerConditions.H) * TurbineEfficiency;
 
-            CondenserWork = -(condenserLiquidConditions.H - (steamConditions.H - TurbineWork));
+            CondenserWork = -(condenserLiquidConditions.H - (boilerConditions.H - TurbineWork));
 
             NetWork =  TurbineWork - PumpWork;
 

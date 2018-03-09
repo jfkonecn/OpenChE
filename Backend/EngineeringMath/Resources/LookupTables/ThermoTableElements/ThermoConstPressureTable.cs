@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +23,10 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
         /// /// <param name="satVaporEntry">Saturation Vapor Thermo Entry</param>
         internal ThermoConstPressureTable(double pressure, double satTemp, ThermoEntry satLiquidEntry, ThermoEntry satVaporEntry)
         {
+            if(satTemp != satLiquidEntry.Temperature || satTemp != satVaporEntry.Temperature)
+            {
+                throw new Exception("ThermoConstPressureTable: Something went wrong");
+            }
             Pressure = pressure;
             SatTemp = satTemp;
             SatLiquidEntry = satLiquidEntry;
@@ -35,6 +41,7 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
         internal void AddThermoEntry(ThermoEntry entry)
         {
             AllEntries.Add(entry);
+            AllEntries.OrderBy(x => x.Temperature);
         }
 
         /// <summary>
@@ -48,16 +55,34 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
             return ThermoEntry.Interpolation<ThermoEntry>.InterpolationThermoEntryFromList(
                 temperature,
                 AllEntries,
-                delegate(ThermoEntry obj) 
+                delegate(ThermoEntry entry) 
                 {
-                    return obj.Temperature;
+                    return entry.Temperature;
                 },
                 delegate (ThermoEntry obj)
                 {
                     return obj;
+                },
+                delegate (ThermoEntry entry, ThermoEntry.Phase phase)
+                {
+                    if (phase.Equals(ThermoEntry.Phase.liquid))
+                    {
+                        return SatLiquidEntry;
+                    }
+                    else if (phase.Equals(ThermoEntry.Phase.vapor))
+                    {
+                        return SatVaporEntry;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
                 });
         }
 
+        /// <summary>
+        /// Where the key is the temperature of the entry
+        /// </summary>
         private List<ThermoEntry> AllEntries = new List<ThermoEntry>();
 
         /// <summary>
@@ -100,6 +125,56 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
             get
             {
                 return AllEntries.Max(x => x.Temperature);
+            }
+        }
+
+        internal ThermoEntry this[int i]
+        {
+            get
+            {
+                if(i < 0 || i >= Count)
+                {
+                    throw new Exception("i cannot be less than zero or greater than or equal to the count!");
+                }
+
+                if (AllEntries[0].Temperature > SatTemp || AllEntries[AllEntries.Count - 1].Temperature < SatTemp)      
+                {
+                    throw new Exception("There SatTemp must have entries above and below it!");
+                }
+                else if (i < AllEntries.Count)
+                {
+                    if(AllEntries[i].Temperature > SatTemp)
+                    {
+                        if (AllEntries[i - 1].Temperature < SatTemp)
+                        {
+                            return SatLiquidEntry;
+                        }
+                        else if (AllEntries[i - 2].Temperature < SatTemp)
+                        {
+                            return SatVaporEntry;
+                        }
+                        else
+                        {
+                            i -= 2;
+                        }
+                    }
+                }
+                else
+                {
+                    i -= 2;
+                }
+
+
+                return AllEntries[i];
+            }
+        }
+
+        internal int Count
+        {
+            get
+            {
+                // add 2 to account for sat liquid and sat vapor
+                return AllEntries.Count + 2;
             }
         }
 
