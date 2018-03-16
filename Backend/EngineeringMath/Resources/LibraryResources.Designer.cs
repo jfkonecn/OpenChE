@@ -107,6 +107,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current boiler conditions are not at a vapor state.
+        /// </summary>
+        public static string BoilerNotVapor {
+            get {
+                return ResourceManager.GetString("BoilerNotVapor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boiler Pressure.
         /// </summary>
         public static string BoilerPressure {

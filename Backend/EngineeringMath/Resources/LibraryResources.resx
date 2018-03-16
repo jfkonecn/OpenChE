@@ -405,4 +405,7 @@
   <data name="VolumeExpansivity" xml:space="preserve">
     <value>Volume Expansivity</value>
   </data>
+  <data name="BoilerNotVapor" xml:space="preserve">
+    <value>Current boiler conditions are not at a vapor state</value>
+  </data>
 </root>

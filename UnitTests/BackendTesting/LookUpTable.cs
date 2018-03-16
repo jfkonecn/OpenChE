@@ -113,6 +113,20 @@ namespace BackendTesting
             Assert.AreEqual(entry.Temperature, 324.675, 0.01, "Temp Saturated Vapor. Given SatTemp.");
             Assert.AreEqual(entry.Pressure, 12e6, 10, "Pressure Saturated Vapor. Given SatTemp.");
 
+            entry = SteamTable.Table.GetThermoEntryAtEnthapyAndPressure(3150.15, 2900e3);
+            Assert.AreEqual(entry.H, 3150.15, 0.01, "H Given enthapy and pressure.");
+            Assert.AreEqual(entry.S, 6.8150, 0.01, "S Given enthapy and pressure.");
+            Assert.AreEqual(entry.V, 96.94e-3, 0.01, "V Given enthapy and pressure.");
+            Assert.AreEqual(entry.Temperature, 363.70, 0.01, "Temp Given enthapy and pressure.");
+            Assert.AreEqual(entry.Pressure, 2900e3, 10, "Pressure Given enthapy and pressure.");
+
+            entry = SteamTable.Table.GetThermoEntryAtEntropyAndPressure(6.8150, 2900e3);
+            Assert.AreEqual(entry.H, 3150.15, 0.01, "H Given entropy and pressure.");
+            Assert.AreEqual(entry.S, 6.8150, 0.01, "S Given entropy and pressure.");
+            Assert.AreEqual(entry.V, 96.94e-3, 0.01, "V Given entropy and pressure.");
+            Assert.AreEqual(entry.Temperature, 363.70, 0.01, "Temp Given entropy and pressure.");
+            Assert.AreEqual(entry.Pressure, 2900e3, 10, "Pressure Given entropy and pressure.");
+
             entry = SteamTable.Table.GetThermoEntryAtSatTemp(500, ThermoEntry.Phase.liquid);
             Assert.IsNull(entry, "Out of range sat temperature");
 
@@ -124,6 +138,12 @@ namespace BackendTesting
 
             entry = SteamTable.Table.GetThermoEntryAtSatTemp(-100, ThermoEntry.Phase.vapor);
             Assert.IsNull(entry, "Out of range sat temperature");
+
+            entry = SteamTable.Table.GetThermoEntryAtEnthapyAndPressure(-1, -1);
+            Assert.IsNull(entry, "Out of range get at enthapy and pressure Entry");
+
+            entry = SteamTable.Table.GetThermoEntryAtEntropyAndPressure(-1, -1);
+            Assert.IsNull(entry, "Out of range get at entropy and pressure Entry");
         }
     }
 }

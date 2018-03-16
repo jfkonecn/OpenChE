@@ -511,8 +511,84 @@ namespace EngineeringMath.Resources.LookupTables
             return entry;
         }
 
+        /// <summary>
+        /// Gets the ThermoEntry which matches the entropy and pressure passed
+        /// </summary>
+        /// <param name="entropy">kJ/(kg*K)</param>
+        /// <param name="pressure">Pa</param>
+        /// <returns></returns>
+        public ThermoEntry GetThermoEntryAtEntropyAndPressure(double entropy, double pressure)
+        {
+            return GetThermoEntryAtPropertyAndPressure(
+                delegate (ThermoEntry entry) { return entry.S; }, entropy, pressure);
+        }
 
 
+        /// <summary>
+        /// Gets the ThermoEntry which matches the entropy and pressure passed
+        /// </summary>
+        /// <param name="entropy">kJ/(kg*K)</param>
+        /// <param name="pressure">Pa</param>
+        /// <returns></returns>
+        public ThermoEntry GetThermoEntryAtEnthapyAndPressure(double enthalpy, double pressure)
+        {
+            return GetThermoEntryAtPropertyAndPressure(
+                delegate(ThermoEntry entry) { return entry.H; }, enthalpy, pressure);
+        }
+
+
+        delegate double GetEntryProperty(ThermoEntry entry);
+        /// <summary>
+        /// Gets the ThermoEntry which matches the property and pressure passed
+        /// </summary>
+        /// <param name="fun">function used to extracted the desired match property</param>
+        /// <param name="matchNum">The value the property needs to match</param>
+        /// <param name="pressure">Pa</param>
+        /// <returns></returns>
+        private ThermoEntry GetThermoEntryAtPropertyAndPressure(GetEntryProperty fun, double matchNum, double pressure)
+        {
+            ThermoEntry entry = null,
+            minEntry = GetThermoEntryAtTemperatureAndPressure(MinTableTemperature, pressure),
+            maxEntry = GetThermoEntryAtTemperatureAndPressure(MaxTableTemperature, pressure);
+
+            if (minEntry == null || maxEntry == null)
+            {
+                return entry;
+            }
+
+            // max tries allowed
+            int maxTries = (int)1e3,
+               // current amount of tries attempted
+               curTries = 0;
+            // max difference allowed between desired satTemp and actual satTemp
+            double maxDelta = 0.0001;
+            // binary search to find pressure of sat temp        
+            while (curTries < maxTries)
+            {
+                entry = GetThermoEntryAtTemperatureAndPressure(
+                (maxEntry.Temperature + minEntry.Temperature) / 2,
+                pressure);
+                if (entry == null)
+                {
+                    break;
+                }
+                else if (Math.Abs(matchNum - fun(entry)) <= maxDelta)
+                {
+                    break;
+                }
+                else if (fun(entry) < matchNum)
+                {
+                    minEntry = entry;
+                }
+                else
+                {
+                    maxEntry = entry;
+                }
+                curTries++;
+            }
+
+            return entry;
+        }
 
         /// <summary>
         /// Returns the smallest temperature stored (C)
@@ -577,6 +653,51 @@ namespace EngineeringMath.Resources.LookupTables
             get
             {
                 return TableElements.Max(x => x.Pressure);
+            }
+        }
+
+
+        /// <summary>
+        /// Returns the smallest Enthalpy stored (kj/kg)
+        /// </summary>
+        public double MinTableEnthalpy
+        {
+            get
+            {
+                return GetThermoEntryAtTemperatureAndPressure(MinTableTemperature, MinTablePressure).H;
+            }
+        }
+
+        /// <summary>
+        /// Returns the largest Enthalpy stored (kj/kg)
+        /// </summary>
+        public double MaxTableEnthalpy
+        {
+            get
+            {
+                return GetThermoEntryAtTemperatureAndPressure(MaxTableTemperature, MaxTablePressure).H;
+            }
+        }
+
+        /// <summary>
+        /// Returns the smallest Entropy stored (kj/kg)
+        /// </summary>
+        public double MinTableEntropy
+        {
+            get
+            {
+                return GetThermoEntryAtTemperatureAndPressure(MinTableTemperature, MinTablePressure).S;
+            }
+        }
+
+        /// <summary>
+        /// Returns the largest Entropy stored (kj/kg)
+        /// </summary>
+        public double MaxTableEntropy
+        {
+            get
+            {
+                return GetThermoEntryAtTemperatureAndPressure(MaxTableTemperature, MaxTablePressure).S;
             }
         }
 

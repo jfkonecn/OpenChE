@@ -52,7 +52,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             this.Table = table;
 
 #if DEBUG
-            SteamPressure = 8600e3;
+            BoilerPressure = 8600e3;
             BoilerTemperature = 500;
             CondenserPressure = 10e3;
             PumpEfficiency = 0.75;
@@ -149,9 +149,9 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
 
 
         /// <summary>
-        /// Steam Pressure (Pa)
+        /// Boiler Pressure (Pa)
         /// </summary>
-        public double SteamPressure
+        public double BoilerPressure
         {
             get
             {
@@ -400,7 +400,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
 
         protected override void Calculation()
         {
-            ThermoEntry boilerConditions = Table.GetThermoEntryAtTemperatureAndPressure(BoilerTemperature, SteamPressure),
+            ThermoEntry boilerConditions = Table.GetThermoEntryAtTemperatureAndPressure(BoilerTemperature, BoilerPressure),
                 condenserLiquidConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure, ThermoEntry.Phase.liquid),
                 condenserVaporConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure, ThermoEntry.Phase.vapor);
 
@@ -410,7 +410,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             // in kj / kg
             double condenserEnthalpy = condenserLiquidConditions.H + CondenserSteamQuality * (condenserVaporConditions.H - condenserLiquidConditions.H);            
 
-            PumpWork = ((condenserLiquidConditions.V * (SteamPressure - CondenserPressure)) * 1e-6) / PumpEfficiency;
+            PumpWork = ((condenserLiquidConditions.V * (BoilerPressure - CondenserPressure)) * 1e-3) / PumpEfficiency;
 
             // in kj / kg
             double boilerEnthalpy = condenserLiquidConditions.H + PumpWork;
