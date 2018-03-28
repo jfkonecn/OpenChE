@@ -127,7 +127,7 @@ namespace EngineeringMath.Calculations
         {
             // Function to be returned
             SimpleFunction myFun = (SimpleFunction)Activator.CreateInstance(funType);
-
+            myFun.FinishUp();
             return myFun;
         }
 

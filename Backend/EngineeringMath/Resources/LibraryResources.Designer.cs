@@ -359,6 +359,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inlet Boiler Temperature.
+        /// </summary>
+        public static string InletBoilerTemperature {
+            get {
+                return ResourceManager.GetString("InletBoilerTemperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inlet Height.
         /// </summary>
         public static string InletHeight {

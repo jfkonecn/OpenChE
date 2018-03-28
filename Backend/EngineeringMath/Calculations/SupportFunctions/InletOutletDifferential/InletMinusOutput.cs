@@ -20,14 +20,11 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
         /// </summary>
         /// <param name="defaultUnit"></param>
         /// <param name="fun">Calculation function is taken from one of the static functions in this class</param>
-        public InletMinusOutput(AbstractUnit[] defaultUnit, CalcualtionFunction fun) : base(
-            new SimpleParameter[]
-                {
-                    new SimpleParameter((int)Field.inlet, LibraryResources.Inlet, defaultUnit, true),
-                    new SimpleParameter((int)Field.outlet, LibraryResources.Outlet, defaultUnit, true),
-                    new SimpleParameter((int)Field.delta, LibraryResources.InletMinusOutlet, defaultUnit, false)
-                })
+        public InletMinusOutput(AbstractUnit[] defaultUnit, CalcualtionFunction fun)
         {
+            Inlet = new SimpleParameter((int)Field.inlet, LibraryResources.Inlet, defaultUnit, true);
+            Outlet = new SimpleParameter((int)Field.outlet, LibraryResources.Outlet, defaultUnit, true);
+            Delta = new SimpleParameter((int)Field.delta, LibraryResources.InletMinusOutlet, defaultUnit, false);
             this.Title = LibraryResources.InletMinusOutlet;
             myCalculationFunction = fun;
         }
@@ -51,50 +48,17 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
         /// <summary>
         /// Inlet in units of T
         /// </summary>
-        public double Inlet
-        {
-            get
-            {
-                return GetParameter((int)Field.inlet).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.inlet).Value = value;
-            }
-        }
+        public readonly SimpleParameter Inlet;
 
         /// <summary>
         /// Outlet in units of T
         /// </summary>
-        public double Outlet
-        {
-            get
-            {
-                return GetParameter((int)Field.outlet).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.outlet).Value = value;
-            }
-        }
+        public readonly SimpleParameter Outlet;
 
         /// <summary>
         /// Inlet - Outlet
         /// </summary>
-        public double Delta
-        {
-            get
-            {
-                return GetParameter((int)Field.delta).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.delta).Value = value;
-            }
-        }
+        public readonly SimpleParameter Delta;
 
         /// <summary>
         /// Function to be used to perform calculations
@@ -116,9 +80,9 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
         protected override void Calculation()
         {
             myCalculationFunction(OutputSelection.SelectedObject.ID, 
-                Inlet, 
-                Outlet, 
-                Delta);
+                Inlet.Value, 
+                Outlet.Value, 
+                Delta.Value);
         }
 
         /// <summary>
@@ -165,6 +129,28 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        public override SimpleParameter GetParameter(int ID)
+        {
+            switch ((Field)ID)
+            {
+                case Field.inlet:
+                    return Inlet;
+                case Field.outlet:
+                    return Outlet;
+                case Field.delta:
+                    return Delta;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        internal override IEnumerable<SimpleParameter> ParameterCollection()
+        {
+            yield return Inlet;
+            yield return Outlet;
+            yield return Delta;
         }
     }
 }

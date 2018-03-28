@@ -17,15 +17,10 @@ namespace EngineeringMath.Calculations.Area
         /// <summary>
         /// 
         /// </summary>
-        public Circle() : base(
-                new SimpleParameter[]
-                {
-                    new SimpleParameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, false, 0),
-                    new SimpleParameter((int)Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, false, 0)
-                }
-            )
+        public Circle()
         {
-
+            CircleDiameter = new SimpleParameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, false, 0);
+            CircleArea = new SimpleParameter((int)Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, false, 0);
         }
 
         public enum Field
@@ -40,43 +35,22 @@ namespace EngineeringMath.Calculations.Area
             cirArea
         };
 
+
         /// <summary>
         /// Ciricle diameter (m)
         /// </summary>
-        public double CircleDiameter
-        {
-            get
-            {
-                return GetParameter((int)Field.cirDia).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.cirDia).Value = value;
-            }
-        }
+        public readonly SimpleParameter CircleDiameter;
 
         /// <summary>
         /// Ciricle area (m2)
         /// </summary>
-        public double CircleArea
-        {
-            get
-            {
-                return GetParameter((int)Field.cirArea).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.cirArea).Value = value;
-            }
-        }
+        public readonly SimpleParameter CircleArea;
 
 
 
         protected override SimpleParameter GetDefaultOutput()
         {
-           return GetParameter((int)Field.cirArea);
+           return CircleArea;
         }
 
         protected override void Calculation()
@@ -85,14 +59,33 @@ namespace EngineeringMath.Calculations.Area
             switch ((Field)OutputSelection.SelectedObject.ID)
             {
                 case Field.cirDia:
-                    CircleDiameter = Math.Sqrt((4d * CircleArea) / Math.PI);
+                    CircleDiameter.Value = Math.Sqrt((4d * CircleArea.Value) / Math.PI);
                     break;
                 case Field.cirArea:
-                    CircleArea = Math.PI / 4 * Math.Pow(CircleDiameter, 2);
+                    CircleArea.Value = Math.PI / 4 * Math.Pow(CircleDiameter.Value, 2);
                     break;
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        public override SimpleParameter GetParameter(int ID)
+        {
+            switch ((Field)ID)
+            {
+                case Field.cirDia:
+                    return CircleDiameter;
+                case Field.cirArea:
+                    return CircleArea;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        internal override IEnumerable<SimpleParameter> ParameterCollection()
+        {
+            yield return CircleDiameter;
+            yield return CircleArea;
         }
     }
 }

@@ -13,25 +13,20 @@ namespace EngineeringMath.Calculations.Fluids
     public class PitotTube : SolveForFunction
     {
 
-        public PitotTube() : base(
-                new SimpleParameter[]
-                {
-                    new SimpleParameter((int)Field.correctionCo, LibraryResources.CorrectionCo, new AbstractUnit[] { Unitless.unitless }, true, 0, 1),
-                    new SimpleParameter((int)Field.deltaH, LibraryResources.ManoDeltaH, new AbstractUnit[] { Length.m }, true, 0),
-                    new SimpleParameter((int)Field.manoDensity, LibraryResources.ManoDensity, new AbstractUnit[] { Density.kgm3 }, true, 0) ,
-                    new SimpleParameter((int)Field.fluidDensity, LibraryResources.FluidDensity, new AbstractUnit[] { Density.kgm3 }, true, 0) ,
-                    new SimpleParameter((int)Field.velo, LibraryResources.FluidVelocity, new AbstractUnit[] { Length.m, Time.sec }, false, 0) 
-                }
-            )
+        public PitotTube()
         {
-
+            CorrectionCoefficient = new SimpleParameter((int)Field.correctionCo, LibraryResources.CorrectionCo, new AbstractUnit[] { Unitless.unitless }, true, 0, 1);
+            DeltaH = new SimpleParameter((int)Field.deltaH, LibraryResources.ManoDeltaH, new AbstractUnit[] { Length.m }, true, 0);
+            ManometerDensity = new SimpleParameter((int)Field.manoDensity, LibraryResources.ManoDensity, new AbstractUnit[] { Density.kgm3 }, true, 0);
+            FluidDensity = new SimpleParameter((int)Field.fluidDensity, LibraryResources.FluidDensity, new AbstractUnit[] { Density.kgm3 }, true, 0);
+            Velocity = new SimpleParameter((int)Field.velo, LibraryResources.FluidVelocity, new AbstractUnit[] { Length.m, Time.sec }, false, 0);
             this.Title = LibraryResources.PitotTube;
 #if DEBUG
-            CorrectionCoefficient = 1;
-            DeltaH = 1;
-            ManometerDensity = 10;
-            FluidDensity = 8;
-            Velocity = 10;
+            CorrectionCoefficient.Value = 1;
+            DeltaH.Value = 1;
+            ManometerDensity.Value = 10;
+            FluidDensity.Value = 8;
+            Velocity.Value = 10;
 #endif
         }
         /// <summary>
@@ -66,82 +61,28 @@ namespace EngineeringMath.Calculations.Fluids
         /// <summary>
         /// Velocity (m/s)
         /// </summary>
-        public double Velocity
-        {
-            get
-            {
-                return GetParameter((int)Field.velo).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.velo).Value = value;
-            }
-        }
+        public readonly SimpleParameter Velocity;
 
         /// <summary>
         /// Correction Coefficient (unitless)
         /// </summary>
-        public double CorrectionCoefficient
-        {
-            get
-            {
-                return GetParameter((int)Field.correctionCo).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.correctionCo).Value = value;
-            }
-        }
+        public readonly SimpleParameter CorrectionCoefficient;
 
         /// <summary>
         /// Change in height (m)
         /// </summary>
-        public double DeltaH
-        {
-            get
-            {
-                return GetParameter((int)Field.deltaH).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.deltaH).Value = value;
-            }
-        }
+        public readonly SimpleParameter DeltaH;
 
 
         /// <summary>
         /// Density of manometer fluid (kg/m3)
         /// </summary>
-        public double ManometerDensity
-        {
-            get
-            {
-                return GetParameter((int)Field.manoDensity).Value;
-            }
+        public readonly SimpleParameter ManometerDensity;
 
-            set
-            {
-                GetParameter((int)Field.manoDensity).Value = value;
-            }
-        }
         /// <summary>
         /// Density of fluid (kg/m3)
         /// </summary>
-        public double FluidDensity
-        {
-            get
-            {
-                return GetParameter((int)Field.fluidDensity).Value;
-            }
-
-            set
-            {
-                GetParameter((int)Field.fluidDensity).Value = value;
-            }
-        }
+        public readonly SimpleParameter FluidDensity;
 
         protected override SimpleParameter GetDefaultOutput()
         {
@@ -156,23 +97,51 @@ namespace EngineeringMath.Calculations.Fluids
             switch ((Field)OutputSelection.SelectedObject.ID)
             {
                 case Field.correctionCo:
-                    CorrectionCoefficient = Velocity / Math.Sqrt((2 * GRAVITY * DeltaH * (ManometerDensity - FluidDensity)) / FluidDensity);
+                    CorrectionCoefficient.Value = Velocity.Value / Math.Sqrt((2 * GRAVITY * DeltaH.Value * (ManometerDensity.Value - FluidDensity.Value)) / FluidDensity.Value);
                     break;
                 case Field.deltaH:
-                    DeltaH = Math.Pow(Velocity / CorrectionCoefficient, 2) * ((FluidDensity) / (2 * GRAVITY * (ManometerDensity - FluidDensity)));
+                    DeltaH.Value = Math.Pow(Velocity.Value / CorrectionCoefficient.Value, 2) * ((FluidDensity.Value) / (2 * GRAVITY * (ManometerDensity.Value - FluidDensity.Value)));
                     break;
                 case Field.fluidDensity:
-                    FluidDensity = ManometerDensity / (Math.Pow(Velocity / CorrectionCoefficient, 2) * (1 / (2 * GRAVITY * DeltaH)) + 1);
+                    FluidDensity.Value = ManometerDensity.Value / (Math.Pow(Velocity.Value / CorrectionCoefficient.Value, 2) * (1 / (2 * GRAVITY * DeltaH.Value)) + 1);
                     break;
                 case Field.manoDensity:
-                    ManometerDensity = FluidDensity * (Math.Pow(Velocity / CorrectionCoefficient, 2) * (1 / (2 * GRAVITY * DeltaH)) + 1);
+                    ManometerDensity.Value = FluidDensity.Value * (Math.Pow(Velocity.Value / CorrectionCoefficient.Value, 2) * (1 / (2 * GRAVITY * DeltaH.Value)) + 1);
                     break;
                 case Field.velo:
-                    Velocity = CorrectionCoefficient * Math.Sqrt((2 * GRAVITY * DeltaH * (ManometerDensity - FluidDensity)) / FluidDensity);
+                    Velocity.Value = CorrectionCoefficient.Value * Math.Sqrt((2 * GRAVITY * DeltaH.Value * (ManometerDensity.Value - FluidDensity.Value)) / FluidDensity.Value);
                     break;
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        public override SimpleParameter GetParameter(int ID)
+        {
+            switch ((Field)ID)
+            {
+                case Field.correctionCo:
+                    return CorrectionCoefficient;
+                case Field.deltaH:
+                    return DeltaH;
+                case Field.fluidDensity:
+                    return FluidDensity;
+                case Field.manoDensity:
+                    return ManometerDensity;
+                case Field.velo:
+                    return Velocity;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        internal override IEnumerable<SimpleParameter> ParameterCollection()
+        {
+            yield return CorrectionCoefficient;
+            yield return DeltaH;
+            yield return FluidDensity;
+            yield return ManometerDensity;
+            yield return Velocity;
         }
     }
 }

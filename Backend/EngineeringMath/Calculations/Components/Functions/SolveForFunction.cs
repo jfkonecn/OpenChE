@@ -15,20 +15,10 @@ namespace EngineeringMath.Calculations.Components.Functions
     /// </summary>
     public abstract class SolveForFunction : SimpleFunction
     {
-        internal SolveForFunction(SimpleParameter[] allParameters) : base(allParameters)
+        internal SolveForFunction()
         {
 
-            foreach (SimpleParameter obj in ParameterCollection())
-            {
-                obj.OnMadeOuput += UpdateAllParametersInputOutput;
-            }
 
-            OutputSelection = new SimplePicker<SimpleParameter>(
-                ParameterCollection().ToDictionary(x => x.Title, x => x)
-                );
-            OutputSelection.OnSelectedIndexChanged += OutputSelection_OnSelectedIndexChanged;
-            OutputSelection.Title = LibraryResources.SolveFor;
-            OutputSelection.SelectedObject = GetDefaultOutput();
         }
 
         /// <summary>
@@ -60,6 +50,22 @@ namespace EngineeringMath.Calculations.Components.Functions
                     obj.isInput = true;
                 }
             }
+        }
+
+        internal override void FinishUp()
+        {
+            base.FinishUp();
+            foreach (SimpleParameter obj in ParameterCollection())
+            {
+                obj.OnMadeOuput += UpdateAllParametersInputOutput;
+            }
+
+            OutputSelection = new SimplePicker<SimpleParameter>(
+                ParameterCollection().ToDictionary(x => x.Title, x => x)
+                );
+            OutputSelection.OnSelectedIndexChanged += OutputSelection_OnSelectedIndexChanged;
+            OutputSelection.Title = LibraryResources.SolveFor;
+            OutputSelection.SelectedObject = GetDefaultOutput();
         }
 
         public override Type CastAs()

@@ -12,29 +12,26 @@ namespace EngineeringMath.Calculations.Fluids
 {
     public class BernoullisEquation : SolveForFunction
     {
-        public BernoullisEquation() : base(
-                new SimpleParameter[]
-                {
-                    new SimpleParameter((int)Field.inletVelo, LibraryResources.InletVelo, new AbstractUnit[] { Length.m, Time.sec }, true, 0) ,
-                    new SimpleParameter((int)Field.outletVelo, LibraryResources.OutletVelo, new AbstractUnit[] { Length.m, Time.sec }, true, 0),
-                    new SimpleParameter((int)Field.inletHeight, LibraryResources.InletHeight, new AbstractUnit[] { Length.m }, true, 0),
-                    new SimpleParameter((int)Field.outletHeight, LibraryResources.OutletHeight, new AbstractUnit[] { Length.m }, true, 0),
-                    new SimpleParameter((int)Field.inletP, LibraryResources.InletP, new AbstractUnit[] { Pressure.Pa }, true, 0),
-                    new SimpleParameter((int)Field.outletP, LibraryResources.OutletP, new AbstractUnit[] { Pressure.Pa }, true, 0),
-                    new SimpleParameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Units.Density.kgm3 }, false, 0)
-                }
-            )
+        public BernoullisEquation()
         {
             this.Title = LibraryResources.BernoullisEquation;
+            InletVelocity = new SimpleParameter((int)Field.inletVelo, LibraryResources.InletVelo, new AbstractUnit[] { Length.m, Time.sec }, true, 0);
+            OutletVelocity = new SimpleParameter((int)Field.outletVelo, LibraryResources.OutletVelo, new AbstractUnit[] { Length.m, Time.sec }, true, 0);
+            InletHeight = new SimpleParameter((int)Field.inletHeight, LibraryResources.InletHeight, new AbstractUnit[] { Length.m }, true, 0);
+            OutletHeight = new SimpleParameter((int)Field.outletHeight, LibraryResources.OutletHeight, new AbstractUnit[] { Length.m }, true, 0);
+            InletPressure= new SimpleParameter((int)Field.inletP, LibraryResources.InletP, new AbstractUnit[] { Pressure.Pa }, true, 0);
+            OutletPressure = new SimpleParameter((int)Field.outletP, LibraryResources.OutletP, new AbstractUnit[] { Pressure.Pa }, true, 0);
+            Density = new SimpleParameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Units.Density.kgm3 }, false, 0);
 
 #if DEBUG
-            InletVelocity = 1;
-            OutletVelocity = 2;
-            InletHeight = 10;
-            OutletVelocity = 5;
-            InletPressure = 500;
-            OutletPressure = 100;
-            Density = 1000;
+            InletVelocity.Value = 1;
+            OutletVelocity.Value = 2;
+            InletHeight.Value = 10;
+            OutletHeight.Value = 10;
+            OutletVelocity.Value = 5;
+            InletPressure.Value = 500;
+            OutletPressure.Value = 100;
+            Density.Value = 1000;
 #endif
         }
 
@@ -78,107 +75,37 @@ namespace EngineeringMath.Calculations.Fluids
         /// <summary>
         /// Inlet Velocity (m/s)
         /// </summary>
-        public double InletVelocity
-        {
-            get
-            {
-                return GetParameter((int)Field.inletVelo).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.inletVelo).Value = value;
-            }
-        }
+        public readonly SimpleParameter InletVelocity;
 
         /// <summary>
         /// Outlet Velocity (m/s)
         /// </summary>
-        public double OutletVelocity
-        {
-            get
-            {
-                return GetParameter((int)Field.outletVelo).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.outletVelo).Value = value;
-            }
-        }
+        public readonly SimpleParameter OutletVelocity;
 
         /// <summary>
         /// Inlet Height (m)
         /// </summary>
-        public double InletHeight
-        {
-            get
-            {
-                return GetParameter((int)Field.inletHeight).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.inletHeight).Value = value;
-            }
-        }
+        public readonly SimpleParameter InletHeight;
 
         /// <summary>
         /// Outlet Height (m)
         /// </summary>
-        public double OutletHeight
-        {
-            get
-            {
-                return GetParameter((int)Field.outletHeight).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.outletHeight).Value = value;
-            }
-        }
+        public readonly SimpleParameter OutletHeight;
 
         /// <summary>
         /// Inlet Pressure (Pa)
         /// </summary>
-        public double InletPressure
-        {
-            get
-            {
-                return GetParameter((int)Field.inletP).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.inletP).Value = value;
-            }
-        }
+        public readonly SimpleParameter InletPressure;
 
         /// <summary>
         /// Outlet Pressure (Pa)
         /// </summary>
-        public double OutletPressure
-        {
-            get
-            {
-                return GetParameter((int)Field.outletP).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.outletP).Value = value;
-            }
-        }
+        public readonly SimpleParameter OutletPressure;
 
         /// <summary>
         /// Density of fluid (kg/m3)
         /// </summary>
-        public double Density
-        {
-            get
-            {
-                return GetParameter((int)Field.density).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.density).Value = value;
-            }
-        }
+        public readonly SimpleParameter Density;
 
 
         protected override SimpleParameter GetDefaultOutput()
@@ -191,47 +118,81 @@ namespace EngineeringMath.Calculations.Fluids
         /// </summary>
         protected override void Calculation()
         {
-            double inletVeloSqu = Math.Pow(InletVelocity, 2),
-                outletVeloSqu = Math.Pow(OutletVelocity, 2);
+            double inletVeloSqu = Math.Pow(InletVelocity.Value, 2),
+                outletVeloSqu = Math.Pow(OutletVelocity.Value, 2);
 
             switch ((Field)OutputSelection.SelectedObject.ID)
             {
                 case Field.inletVelo:
-                    InletVelocity = Math.Sqrt(
-                        2 * ((outletVeloSqu / 2 + GRAVITY * OutletHeight + OutletPressure / Density) -
-                        (GRAVITY * InletHeight + InletPressure / Density))
+                    InletVelocity.Value = Math.Sqrt(
+                        2 * ((outletVeloSqu / 2 + GRAVITY * OutletHeight.Value + OutletPressure.Value / Density.Value) -
+                        (GRAVITY * InletHeight.Value + InletPressure.Value / Density.Value))
                         );
                     break;
                 case Field.outletVelo:
-                    OutletVelocity = Math.Sqrt(
-                        2 * ((inletVeloSqu / 2 + GRAVITY * InletHeight + InletPressure / Density) -
-                        (GRAVITY * OutletHeight + OutletPressure / Density))
+                    OutletVelocity.Value = Math.Sqrt(
+                        2 * ((inletVeloSqu / 2 + GRAVITY * InletHeight.Value + InletPressure.Value / Density.Value) -
+                        (GRAVITY * OutletHeight.Value + OutletPressure.Value / Density.Value))
                         );
                     break;
                 case Field.inletHeight:
-                    InletHeight = (1 / GRAVITY) * ((outletVeloSqu / 2 + GRAVITY * OutletHeight + OutletPressure / Density) -
-                        (inletVeloSqu / 2 + InletPressure / Density));
+                    InletHeight.Value = (1 / GRAVITY) * ((outletVeloSqu / 2 + GRAVITY * OutletHeight.Value + OutletPressure.Value / Density.Value) -
+                        (inletVeloSqu / 2 + InletPressure.Value / Density.Value));
                     break;
                 case Field.outletHeight:
-                    OutletHeight = (1 / GRAVITY) * ((inletVeloSqu / 2 + GRAVITY * InletHeight + InletPressure / Density) -
-                        (outletVeloSqu / 2 + OutletPressure / Density));
+                    OutletHeight.Value = (1 / GRAVITY) * ((inletVeloSqu / 2 + GRAVITY * InletHeight.Value + InletPressure.Value / Density.Value) -
+                        (outletVeloSqu / 2 + OutletPressure.Value / Density.Value));
                     break;
                 case Field.inletP:
-                    InletPressure = Density * ((outletVeloSqu / 2 + GRAVITY * OutletHeight + OutletPressure / Density) -
-                        (inletVeloSqu / 2 + GRAVITY * InletHeight));
+                    InletPressure.Value = Density.Value * ((outletVeloSqu / 2 + GRAVITY * OutletHeight.Value + OutletPressure.Value / Density.Value) -
+                        (inletVeloSqu / 2 + GRAVITY * InletHeight.Value));
                     break;
                 case Field.outletP:
-                    OutletPressure = Density * ((inletVeloSqu / 2 + GRAVITY * InletHeight + InletPressure / Density) -
-                        (outletVeloSqu / 2 + GRAVITY * OutletHeight));
+                    OutletPressure.Value = Density.Value * ((inletVeloSqu / 2 + GRAVITY * InletHeight.Value + InletPressure.Value / Density.Value) -
+                        (outletVeloSqu / 2 + GRAVITY * OutletHeight.Value));
                     break;
                 case Field.density:
-                    Density = (OutletPressure - InletPressure) /
-                        ((inletVeloSqu / 2 + GRAVITY * InletHeight) -
-                        (outletVeloSqu / 2 + GRAVITY * OutletHeight));
+                    Density.Value = (OutletPressure.Value - InletPressure.Value) /
+                        ((inletVeloSqu / 2 + GRAVITY * InletHeight.Value) -
+                        (outletVeloSqu / 2 + GRAVITY * OutletHeight.Value));
                     break;
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        public override SimpleParameter GetParameter(int ID)
+        {
+            switch ((Field)ID)
+            {
+                case Field.inletVelo:
+                    return InletVelocity;
+                case Field.outletVelo:
+                    return OutletVelocity;
+                case Field.inletHeight:
+                    return InletHeight;
+                case Field.outletHeight:
+                    return OutletHeight;
+                case Field.inletP:
+                    return InletPressure;
+                case Field.outletP:
+                    return OutletPressure;
+                case Field.density:
+                    return Density;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        internal override IEnumerable<SimpleParameter> ParameterCollection()
+        {
+            yield return InletVelocity;
+            yield return OutletVelocity;
+            yield return InletHeight;
+            yield return OutletHeight;
+            yield return InletPressure;
+            yield return OutletPressure;
+            yield return Density;
         }
     }
 }

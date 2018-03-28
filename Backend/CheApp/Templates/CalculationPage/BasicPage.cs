@@ -22,12 +22,25 @@ namespace CheApp.Templates.CalculationPage
         /// <para>Solve for data defaults to having last element in the solve for picker being selected</para>
         /// </summary>
         /// <param name="componetType">The type of componet which the page will represent</param>
-        public BasicPage(Type componetType) : this((AbstractComponent)Activator.CreateInstance(componetType))
+        public BasicPage(Type componetType)
         {
-            
+            AbstractComponent component = (AbstractComponent)Activator.CreateInstance(componetType);
+            Type type = component.CastAs();
+
+            if(type.Equals(typeof(SimpleFunction)) || type.Equals(typeof(SolveForFunction)))
+            {
+                component = FunctionFactory.BuildFunction(componetType);
+            }
+
+            BuildPage(component);
         }
 
         public BasicPage(AbstractComponent component)
+        {
+            BuildPage(component);
+        }
+
+        private void BuildPage(AbstractComponent component)
         {
             this.Title = component.Title;
             this.Content = new ScrollView

@@ -14,17 +14,6 @@ namespace EngineeringMath.Calculations.Components.Functions
     public abstract class SimpleFunction : AbstractComponent, IEnumerable
     {
 
-        /// <summary>
-        /// Creates a collection of abstract components which 
-        /// </summary>
-        /// <param name="allParameters"></param>
-        internal SimpleFunction(SimpleParameter[] allParameters)
-        {
-            AllParameters = allParameters.ToDictionary(x => x.ID);
-        }
-
-        private readonly Dictionary<int, SimpleParameter> AllParameters;
-
         public virtual IEnumerator GetEnumerator()
         {
             foreach (AbstractComponent obj in ParameterCollection())
@@ -59,10 +48,7 @@ namespace EngineeringMath.Calculations.Components.Functions
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public SimpleParameter GetParameter(int ID)
-        {
-            return AllParameters[ID];
-        }
+        public abstract SimpleParameter GetParameter(int ID);
 
         /// <summary>
         /// Solves function based on what the current output parameter is
@@ -73,6 +59,13 @@ namespace EngineeringMath.Calculations.Components.Functions
             OnSolve?.Invoke();
         }
 
+        /// <summary>
+        /// Called right after this object is built is built
+        /// </summary>
+        internal virtual void FinishUp()
+        {
+            // left empty just in case we need to add something
+        }
 
 
 
@@ -80,13 +73,7 @@ namespace EngineeringMath.Calculations.Components.Functions
         /// Yields all parameters in this object
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SimpleParameter> ParameterCollection()
-        {
-            foreach (SimpleParameter para in AllParameters.Values)
-            {
-                yield return para;
-            }
-        }
+        internal abstract IEnumerable<SimpleParameter> ParameterCollection();
 
         internal override void OnReset()
         {

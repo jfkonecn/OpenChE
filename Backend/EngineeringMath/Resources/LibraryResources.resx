@@ -408,4 +408,7 @@
   <data name="BoilerNotVapor" xml:space="preserve">
     <value>Current boiler conditions are not at a vapor state</value>
   </data>
+  <data name="InletBoilerTemperature" xml:space="preserve">
+    <value>Inlet Boiler Temperature</value>
+  </data>
 </root>

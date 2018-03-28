@@ -15,20 +15,35 @@ namespace EngineeringMath.Calculations.UnitConverter
     /// </summary>
     public class AbstractConverter : SimpleFunction
     {
-        internal AbstractConverter(AbstractUnit[] units) : base(
-                            new SimpleParameter[]
-                {
-                    new SimpleParameter((int)Field.input, LibraryResources.Input, units.ToArray(), true) ,
-                    new SimpleParameter((int)Field.output, LibraryResources.Output, units.ToArray(), false)
-                }
-            )
+        internal AbstractConverter(AbstractUnit[] units)
         {
-
+            Input = new SimpleParameter((int)Field.input, LibraryResources.Input, units.ToArray(), true);
+            Output = new SimpleParameter((int)Field.output, LibraryResources.Output, units.ToArray(), false);
         }
 
         protected override void Calculation()
         {
-            Ouput = Input;
+            Output.Value = Input.Value;
+        }
+
+        public override SimpleParameter GetParameter(int ID)
+        {
+            switch ((Field)ID)
+            {
+                case Field.input:
+                    return Input;
+                case Field.output:
+                    return Output;
+                default:
+                    throw new NotImplementedException();
+
+            }
+        }
+
+        internal override IEnumerable<SimpleParameter> ParameterCollection()
+        {
+            yield return Input;
+            yield return Output;
         }
 
         public enum Field
@@ -46,31 +61,17 @@ namespace EngineeringMath.Calculations.UnitConverter
         /// <summary>
         /// Input
         /// </summary>
-        public double Input
+        public SimpleParameter Input
         {
-            get
-            {
-                return GetParameter((int)Field.input).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.input).Value = value;
-            }
+            get; private set;
         }
 
         /// <summary>
         /// Output
         /// </summary>
-        public double Ouput
+        public SimpleParameter Output
         {
-            get
-            {
-                return GetParameter((int)Field.output).Value;
-            }
-            set
-            {
-                GetParameter((int)Field.output).Value = value;
-            }
+            get; private set;
         }
     }
 }

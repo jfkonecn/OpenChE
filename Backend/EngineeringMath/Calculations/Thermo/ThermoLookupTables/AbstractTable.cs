@@ -72,12 +72,12 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 bool tempIsInput = false;
                 if (ParameterBeingUsed.SelectedObject.Equals(GetParameter((int)Field.pressure)))
                 {
-                    entry = Table.GetThermoEntryAtSatPressure(Pressure, CurrentPhase);
+                    entry = Table.GetThermoEntryAtSatPressure(Pressure.Value, CurrentPhase);
                 }
                 else if (ParameterBeingUsed.SelectedObject.Equals(GetParameter((int)Field.temp)))
                 {
                     tempIsInput = true;
-                    entry = Table.GetThermoEntryAtSatTemp(Temperature, CurrentPhase);
+                    entry = Table.GetThermoEntryAtSatTemp(Temperature.Value, CurrentPhase);
 
                 }
                 else
@@ -87,11 +87,11 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
 
                 if (entry != null && tempIsInput)
                 {
-                    Pressure = entry.Pressure;
+                    Pressure.Value = entry.Pressure;
                 }
                 else if (entry != null)
                 {
-                    Temperature = entry.Temperature;
+                    Temperature.Value = entry.Temperature;
                 }
 
                 FinishCalculation(entry);
@@ -125,21 +125,18 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             }
 
 
-            protected PropertyGivenTempPressure(SimpleParameter temperature) : base(
-                new SimpleParameter[]
-                {
-                                CreatePressureParameter(),
-                                temperature,
-                                CreateSpecificVolumeParameter(),
-                                CreateEnthalpyParameter(),
-                                CreateEntropyParameter(),
-                                CreateBetaParameter(),
-                                CreateKappaParameter(),
-                                CreateCpParameter(),
-                                CreateCvParameter()
-                }
-            )
+            protected PropertyGivenTempPressure(SimpleParameter temperature)
             {
+                Pressure = CreatePressureParameter();
+                Temperature = temperature;
+                SpecificVolume = CreateSpecificVolumeParameter();
+                Enthalpy = CreateEnthalpyParameter();
+                Entropy = CreateEntropyParameter();
+                Beta = CreateBetaParameter();
+                Kappa = CreateKappaParameter();
+                Cp = CreateCpParameter();
+                Cv = CreateCvParameter();
+
                 CurrentPhase = ThermoEntry.Phase.vapor;
                 PhaseSelection.IsEnabled = false;
                 PhaseSelection.OnSelectedIndexChanged += PhaseSelection_OnSelectedIndexChanged;
@@ -177,15 +174,15 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
 
             protected override void Calculation()
             {
-                ThermoEntry entry = Table.GetThermoEntryAtTemperatureAndPressure(Temperature, Pressure);
+                ThermoEntry entry = Table.GetThermoEntryAtTemperatureAndPressure(Temperature.Value, Pressure.Value);
                 FinishCalculation(entry);
 
                 if(entry != null)
                 {
                     // update phase of this species
-                    double satTemp = Table.GetThermoEntryAtSatPressure(Pressure, ThermoEntry.Phase.liquid).Temperature;
+                    double satTemp = Table.GetThermoEntryAtSatPressure(Pressure.Value, ThermoEntry.Phase.liquid).Temperature;
 
-                    if (satTemp > Temperature)
+                    if (satTemp > Temperature.Value)
                     {
                         CurrentPhase = ThermoEntry.Phase.liquid;
                     }
@@ -208,148 +205,61 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                     // bad inputs
                     return;
                 }
-                SpecificVolume = entry.V;
-                Enthalpy = entry.H;
-                Entropy = entry.S;
-                Beta = entry.Beta;
-                Kappa = entry.Kappa;
-                Cp = entry.Cp;
-                Cv = entry.Cv;
+                SpecificVolume.Value = entry.V;
+                Enthalpy.Value = entry.H;
+                Entropy.Value = entry.S;
+                Beta.Value = entry.Beta;
+                Kappa.Value = entry.Kappa;
+                Cp.Value = entry.Cp;
+                Cv.Value = entry.Cv;
             }
 
 
             /// <summary>
             /// Pressure (Pa)
             /// </summary>
-            public double Pressure
-            {
-                get
-                {
-                    return GetParameter((int)Field.pressure).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.pressure).Value = value;
-                }
-            }
+            public readonly SimpleParameter Pressure;
 
             /// <summary>
             /// Temperature (C)
             /// </summary>
-            public double Temperature
-            {
-                get
-                {
-                    return GetParameter((int)Field.temp).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.temp).Value = value;
-                }
-            }
+            public readonly SimpleParameter Temperature;
 
             /// <summary>
             /// Specific Volume (m3/kg)
             /// </summary>
-            public double SpecificVolume
-            {
-                get
-                {
-                    return GetParameter((int)Field.v).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.v).Value = value;
-                }
-            }
+            public readonly SimpleParameter SpecificVolume;
 
             /// <summary>
             /// Enthalpy (kJ/kg)
             /// </summary>
-            public double Enthalpy
-            {
-                get
-                {
-                    return GetParameter((int)Field.h).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.h).Value = value;
-                }
-            }
+            public readonly SimpleParameter Enthalpy;
 
             /// <summary>
             /// Entropy (kJ/(kg*K))
             /// </summary>
-            public double Entropy
-            {
-                get
-                {
-                    return GetParameter((int)Field.s).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.s).Value = value;
-                }
-            }
+            public readonly SimpleParameter Entropy;
 
 
             /// <summary>
             /// Volume Expansivity or Coefficient of thermal expansion  (1/K)
             /// </summary>
-            public double Beta
-            {
-                get
-                {
-                    return GetParameter((int)Field.beta).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.beta).Value = value;
-                }
-            }
+            public readonly SimpleParameter Beta;
+
             /// <summary>
             /// Isothermal Compressibility (1/Pa)
             /// </summary>
-            public double Kappa
-            {
-                get
-                {
-                    return GetParameter((int)Field.kappa).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.kappa).Value = value;
-                }
-            }
+            public readonly SimpleParameter Kappa;
+
             /// <summary>
             /// Heat Capacity Constant Pressure (kJ/(kg * K))
             /// </summary>
-            public double Cp
-            {
-                get
-                {
-                    return GetParameter((int)Field.cp).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.cp).Value = value;
-                }
-            }
+            public readonly SimpleParameter Cp;
+
             /// <summary>
             /// Heat Capacity Constant Volume (kJ/(kg * K))
             /// </summary>
-            public double Cv
-            {
-                get
-                {
-                    return GetParameter((int)Field.cv).Value;
-                }
-                set
-                {
-                    GetParameter((int)Field.cv).Value = value;
-                }
-            }
+            public readonly SimpleParameter Cv;
 
             /// <summary>
             /// Creates a pressure parameter for all SimpleFunctions within this class
@@ -498,6 +408,47 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 {
                     yield return obj;
                 }
+            }
+
+            public override SimpleParameter GetParameter(int ID)
+            {
+                switch ((Field)ID)
+                {
+                    case Field.pressure:
+                        return Pressure;
+                    case Field.temp:
+                        return Temperature;
+                    case Field.v:
+                        return SpecificVolume;
+                    case Field.h:
+                        return Enthalpy;
+                    case Field.s:
+                        return Entropy;
+                    case Field.beta:
+                        return Beta;
+                    case Field.kappa:
+                        return Kappa;
+                    case Field.cp:
+                        return Cp;
+                    case Field.cv:
+                        return Cv;
+                    default:
+                        throw new NotImplementedException();
+                }
+                
+            }
+
+            internal override IEnumerable<SimpleParameter> ParameterCollection()
+            {
+                yield return Pressure;
+                yield return Temperature;
+                yield return SpecificVolume;
+                yield return Enthalpy;
+                yield return Entropy;
+                yield return Beta;
+                yield return Kappa;
+                yield return Cp;
+                yield return Cv;
             }
         }
 
