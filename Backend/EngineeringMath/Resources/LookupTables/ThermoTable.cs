@@ -591,6 +591,33 @@ namespace EngineeringMath.Resources.LookupTables
         }
 
         /// <summary>
+        /// returns a thermoEntry which results after isentropic expansion
+        /// </summary>
+        /// <param name="inletVaporTemperature">temperature of the vapor entering the turbine</param>
+        /// <param name="inletVaporPressure">pressure of vapor entering the turbine</param>
+        /// <param name="outletPressure">pressure of vapor leaving the turbine</param>
+        /// <param name="vaporQuality">fraction of vapor in the stream</param>
+        /// <returns></returns>
+        internal ThermoEntry IsentropicExpansion(double inletVaporTemperature, double inletVaporPressure, double outletPressure, out double vaporQuality)
+        {
+            ThermoEntry inletVaporConditions = GetThermoEntryAtTemperatureAndPressure(inletVaporTemperature, inletVaporPressure),
+                testEntry = GetThermoEntryAtEntropyAndPressure(inletVaporConditions.S, outletPressure),
+                satVapor = GetThermoEntryAtSatPressure(outletPressure, ThermoEntry.Phase.vapor),
+                satLiquid = GetThermoEntryAtSatPressure(outletPressure, ThermoEntry.Phase.liquid);
+
+            if(testEntry.S >= satVapor.S)
+            {
+                vaporQuality = 1;
+                return testEntry;
+            }
+
+            vaporQuality = (inletVaporConditions.S - satLiquid.S)
+                 / (satVapor.S - satLiquid.S);
+            return ThermoEntry.WetVapor(satVapor, satLiquid, vaporQuality);
+        }
+
+
+        /// <summary>
         /// Returns the smallest temperature stored (C)
         /// </summary>
         public double MinTableTemperature

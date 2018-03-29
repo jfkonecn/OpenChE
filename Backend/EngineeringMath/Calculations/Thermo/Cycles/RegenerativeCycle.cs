@@ -21,7 +21,6 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             RegenerationStagesSelector.OnSelectedIndexChanged += RegenerationStagesSelector_OnSelectedIndexChanged;
             RegenerationStagesSelector.SelectedIndex = 0;
             InletBoilerTemperature = new SimpleParameter((int)Field.inletBoilerTemp, LibraryResources.InletBoilerTemperature, new AbstractUnit[] { Temperature.C }, true);
-            SteamRate.isInput = true;
         }
 
 
@@ -117,8 +116,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         {
             ThermoEntry boilerConditions = Table.GetThermoEntryAtTemperatureAndPressure(BoilerTemperature.Value, BoilerPressure.Value),
                 condenserLiquidConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure.Value, ThermoEntry.Phase.liquid),
-                condenserVaporConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure.Value, ThermoEntry.Phase.vapor),
-                inletBoilerConditions = Table.GetThermoEntryAtSatTemp(InletBoilerTemperature.Value, ThermoEntry.Phase.liquid);
+                condenserVaporConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure.Value, ThermoEntry.Phase.vapor);
 
             if(boilerConditions.EntryPhase != ThermoEntry.Phase.vapor)
             {
@@ -135,22 +133,32 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
                 - (pumpConditions.V * (1 - pumpConditions.Beta * (pumpConditions.Temperature + 273.15)))) 
                 / pumpConditions.Cp + pumpConditions.Temperature;
 
-            double stageTempStep = (inletBoilerConditions.Temperature - outletPumpTemperature) / (StageStates.Length - 1),
-                curInletTemp = inletBoilerConditions.Temperature - stageTempStep,
+            double stageTempStep = (InletBoilerTemperature.Value - outletPumpTemperature) / (StageStates.Length - 1),
+                curInletTemp = InletBoilerTemperature.Value - stageTempStep,
                 // the smallest different in temperature between the saturated steam and the cooling liquid
-                heatExchangerTempBuffer = 5;
+                heatExchangerTempBuffer = 5,
+                totalPowerCreated = 0;
 
-            StageStates[0] = new RegenerativeStage(
-                SteamRate.Value, boilerConditions,
-                SteamRate.Value, Table.GetThermoEntryAtTemperatureAndPressure(
-                    inletBoilerConditions.Temperature - heatExchangerTempBuffer, inletBoilerConditions.Pressure),
-                stageTempStep, TurbineEfficiency.Value, Table, heatExchangerTempBuffer
-                );
-
-            for (int i = 1; i < StageStates.Length; i++)
+            for (int i = 0; i < StageStates.Length; i++)
             {
-                StageStates[i] = new RegenerativeStage(StageStates[i - 1], Table);
-                curInletTemp -= stageTempStep;
+                if(i == 0)
+                {
+                    StageStates[i] = new RegenerativeStage(
+                        boilerConditions,
+                        Table.GetThermoEntryAtTemperatureAndPressure(
+                            InletBoilerTemperature.Value - stageTempStep, boilerConditions.Pressure),
+                        stageTempStep, TurbineEfficiency.Value, Table, heatExchangerTempBuffer
+                        );
+                }
+                else if(i == StageStates.Length - 1)
+                {
+                    StageStates[i] = new RegenerativeStage(StageStates[i - 1], Table, condenserLiquidConditions.Temperature);
+                }
+                else
+                {
+                    StageStates[i] = new RegenerativeStage(StageStates[i - 1], Table);
+                }
+                totalPowerCreated += StageStates[i].WorkProduced;
             }
 
             CondenserSteamQuality.Value = (boilerConditions.S - condenserLiquidConditions.S)
@@ -253,7 +261,6 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             yield return PumpEfficiency;
             yield return TurbineEfficiency;
             yield return PowerRequirement;
-            yield return SteamRate;
             yield return InletBoilerTemperature;
             yield return CondenserSteamQuality;
             yield return PumpWork;
@@ -261,7 +268,8 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             yield return CondenserWork;
             yield return TurbineWork;
             yield return ThermalEfficiency;
-            yield return NetWork;            
+            yield return NetWork;
+            yield return SteamRate;
             yield return BoilerHeatTransRate;
             yield return CondenserHeatTransRate;
         }
@@ -270,7 +278,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         protected class RegenerativeStage
         {
             /// <summary>
-            /// Uses previous stage to construct this stage
+            /// Uses previous stage to construct this stage (feedwater heater)
             /// </summary>
             /// <param name="previousStage"></param>
             /// <param name="table">thermo table reference table to be used</param>
@@ -291,7 +299,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             }
 
             /// <summary>
-            /// First Stage constructor
+            /// First Stage constructor (feedwater heater)
             /// </summary>
             /// <param name="inletVaporFlowRate">The mass flow rate of vapor entering the stage (kg/s)</param>
             /// <param name="inletVaporConditions">The conditions of the vapor entering the stage</param>
@@ -302,19 +310,18 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             /// <param name="table">thermo table reference table to be used</param>
             /// <param name="heatExchangerTempBuffer">Smallest allowed difference in temperature between cooling water and condensate leaving stage in C</param>
             internal RegenerativeStage(
-                double inletVaporFlowRate,
                 ThermoEntry inletVaporConditions,
-                double inletCoolingLiquidFlowRate,
                 ThermoEntry inletCoolingLiquidConditions,
                 double deltaTCoolingLiquid,
                 double turbineEff,
                 Resources.LookupTables.ThermoTable table,
                 double heatExchangerTempBuffer
                 ) : this(
-                 inletVaporFlowRate,
+                 FLOW_RATE_BASIS,
                  inletVaporConditions,
-                 inletCoolingLiquidFlowRate,
+                 FLOW_RATE_BASIS,
                  inletCoolingLiquidConditions,
+                 // no condensate
                  0,
                  null,
                  deltaTCoolingLiquid,
@@ -323,14 +330,47 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
                  heatExchangerTempBuffer
                     )
             {
-  
+                
+            }
+
+            /// <summary>
+            /// Last stage (condenser)
+            /// </summary>
+            /// <param name="previousStage"></param>
+            /// <param name="table">thermo table reference table to be used</param>
+            /// <param name="condenserExitTemperature"></param>
+            internal RegenerativeStage(RegenerativeStage previousStage,
+                Resources.LookupTables.ThermoTable table, double condenserExitTemperature)
+            {
+                // we only care about how much heat we need removed since this water is not in the recycle system
+                CoolingLiquidFlowRate = 0;
+                HeatExchangerTempBuffer = 0;
+                DeltaTCoolingLiquid = 0;
+                ExitCoolingLiquidConditions = null;
+
+                TurbineEfficiency = previousStage.TurbineEfficiency;
+                ExitCondensateConditions = table.GetThermoEntryAtSatTemp(condenserExitTemperature, ThermoEntry.Phase.liquid);
+
+                WorkProduced = (
+                    table.IsentropicExpansion(
+                        previousStage.ExitVaporConditions.Temperature, 
+                    previousStage.ExitVaporConditions.Pressure, ExitCondensateConditions.Pressure, out double temp).H
+                    - previousStage.ExitVaporConditions.H) * TurbineEfficiency;
+                VaporQuality = temp;
+
+                // everything was condensed
+                ExitVaporConditions = null;
+                ExitVaporFlowRate = 0;
+                // this stream will be sent back to the feedwater heaters
+                ExitCondensateFlowRate = previousStage.CoolingLiquidFlowRate;
             }
 
 
-
+            // we assume a 1 kg / s steam basis for the purpose of internal calculations  
+            private static readonly double FLOW_RATE_BASIS = 1;
 
             /// <summary>
-            /// 
+            /// Feedwater heater stage
             /// </summary>
             /// <param name="inletVaporFlowRate">The mass flow rate of vapor entering the stage (kg/s)</param>
             /// <param name="inletVaporConditions">The conditions of the vapor entering the stage</param>
@@ -355,34 +395,43 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
                 double heatExchangerTempBuffer
                 )
             {
-                if(heatExchangerTempBuffer <= 0)
+                if (heatExchangerTempBuffer <= 0)
                 {
                     throw new Exception("Buffer cannot be less than or equal to zero!");
                 }
-                else if(deltaTCoolingLiquid <= 0)
+                else if (deltaTCoolingLiquid <= 0)
                 {
                     throw new Exception("The detaT cannot be less than or equal to zero!");
                 }
-                else if(inletCondensateConditions == null && inletCondensateFlowRate != 0)
+                else if (inletCondensateConditions == null && inletCondensateFlowRate != 0)
+                {
+
+                    throw new Exception("must have condensate conditions cannot be null if the flow rate is not 0");
+                }
+                else if (inletCondensateFlowRate < 0)
                 {
                     // if this is negative you need to rethink your life
-                    throw new Exception("must have condensate conditions cannot be null if the flow rate is not 0");
+                    throw new Exception("do you really have a negative condensate flow rate???");
                 }
 
                 CoolingLiquidFlowRate = inletCoolingLiquidFlowRate;
                 TurbineEfficiency = turbineEfficiency;
                 HeatExchangerTempBuffer = heatExchangerTempBuffer;
+                DeltaTCoolingLiquid = deltaTCoolingLiquid;
 
                 ExitCoolingLiquidConditions = table.GetThermoEntryAtTemperatureAndPressure(
-                    inletCoolingLiquidConditions.Temperature + deltaTCoolingLiquid, 
+                    inletCoolingLiquidConditions.Temperature + deltaTCoolingLiquid,
                     inletCoolingLiquidConditions.Pressure);
 
                 ExitCondensateConditions = table.GetThermoEntryAtSatTemp(
                     ExitCoolingLiquidConditions.Temperature + heatExchangerTempBuffer, ThermoEntry.Phase.liquid);
 
-                WorkProduced = (table.GetThermoEntryAtEntropyAndPressure(
-                            inletVaporConditions.S, ExitCondensateConditions.Pressure).H
-                            - inletVaporConditions.H) * turbineEfficiency;
+                WorkProduced = (
+                    table.IsentropicExpansion(
+                        inletVaporConditions.Temperature,
+                    inletVaporConditions.Pressure, ExitCondensateConditions.Pressure, out double temp).H
+                    - inletVaporConditions.H) * TurbineEfficiency;
+                VaporQuality = temp;
 
                 ExitVaporConditions =
                     table.GetThermoEntryAtEnthapyAndPressure(
@@ -392,16 +441,16 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
                 double condensateCreated;
                 if (inletCondensateConditions == null)
                 {
-                    condensateCreated = 
-                        (CoolingLiquidFlowRate * (ExitCoolingLiquidConditions.H - inletCoolingLiquidConditions.H)) 
+                    condensateCreated =
+                        (CoolingLiquidFlowRate * (ExitCoolingLiquidConditions.H - inletCoolingLiquidConditions.H))
                         /
                         (ExitVaporConditions.H - ExitCondensateConditions.H);
                 }
                 else
                 {
-                    condensateCreated = 
-                        (inletCondensateFlowRate * (inletCondensateConditions.H - ExitCondensateConditions.H) 
-                            - CoolingLiquidFlowRate * (ExitCoolingLiquidConditions.H - inletCoolingLiquidConditions.H)) 
+                    condensateCreated =
+                        (inletCondensateFlowRate * (inletCondensateConditions.H - ExitCondensateConditions.H)
+                            - CoolingLiquidFlowRate * (ExitCoolingLiquidConditions.H - inletCoolingLiquidConditions.H))
                             / (ExitCondensateConditions.H - inletVaporConditions.H);
                 }
 
@@ -412,31 +461,36 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             /// <summary>
             /// Cooling Liquid Conditions leaving stage
             /// </summary>
-            protected ThermoEntry ExitCoolingLiquidConditions { get; private set; }
+            internal ThermoEntry ExitCoolingLiquidConditions { get; private set; }
 
             /// <summary>
             /// Vapor leaving the stage
             /// </summary>
-            protected ThermoEntry ExitVaporConditions { get; private set; }
+            internal ThermoEntry ExitVaporConditions { get; private set; }
 
             /// <summary>
             /// kg/s of steam extracted from the stage
             /// </summary>
-            protected double ExitVaporFlowRate { get; private set; }
+            private double ExitVaporFlowRate { get; set; }
             /// <summary>
             /// Condensate leaving the stage
             /// </summary>
-            protected ThermoEntry ExitCondensateConditions { get; private set; }
+            internal ThermoEntry ExitCondensateConditions { get; private set; }
+
+            /// <summary>
+            /// fraction of vapor in the stream
+            /// </summary>
+            internal double VaporQuality { get; private set; }
             /// <summary>
             /// kg/s of condensate extracted
             /// </summary>
-            protected double ExitCondensateFlowRate { get; private set; }
+            private double ExitCondensateFlowRate { get; set; }
 
             /// <summary>
             /// The total worked per mass flow rate of vapor produced by the the stage in kj/kg
             /// <para>Note that a positive number means energy was produced</para>
             /// </summary>
-            protected double WorkProduced { get; private set; }
+            internal double WorkProduced { get; private set; }
             /// <summary>
             /// The mass flow rate of cooling liquid entering the stage (kg/s)
             /// </summary>

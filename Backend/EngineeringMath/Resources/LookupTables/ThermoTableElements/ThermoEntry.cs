@@ -107,6 +107,44 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
             
         }
 
+        /// <summary>
+        /// Creates a wet vapor entry
+        /// </summary>
+        /// <param name="satVapor">saturation conditions for vapor phase</param>
+        /// <param name="satLiquid">saturation conditions for liquid phase</param>
+        /// <param name="vaporQuality">fraction of vapor in the stream</param>
+        /// <returns></returns>
+        internal static ThermoEntry WetVapor(ThermoEntry satVapor, ThermoEntry satLiquid, double vaporQuality)
+        {
+            if(satVapor.Pressure != satLiquid.Pressure ||
+                satVapor.Temperature != satLiquid.Temperature ||
+                !satVapor.IsSaturated || !satLiquid.IsSaturated)
+            {
+                throw new Exception("must be at the same entry point!");
+            }
+            else if(vaporQuality > 1 || vaporQuality < 0)
+            {
+                throw new Exception("Vapor must be between 0 and 1!");
+            }
+
+            double liquidQuality = 1 - vaporQuality;
+
+            double temperature = satVapor.Temperature * vaporQuality + satLiquid.Temperature * liquidQuality;
+
+            return new ThermoEntry(
+                satVapor.Temperature * vaporQuality + satLiquid.Temperature * liquidQuality,
+                satVapor.Pressure * vaporQuality + satLiquid.Pressure * liquidQuality,
+                satVapor.V * vaporQuality + satLiquid.V * liquidQuality,
+                satVapor.H * vaporQuality + satLiquid.H * liquidQuality,
+                satVapor.S * vaporQuality + satLiquid.S * liquidQuality, 
+                Phase.vapor, 
+                true,
+                satVapor.Beta * vaporQuality + satLiquid.Beta * liquidQuality,
+                satVapor.Kappa * vaporQuality + satLiquid.Kappa * liquidQuality,
+                satVapor.Cp * vaporQuality + satLiquid.Cp * liquidQuality,
+                satVapor.Cv * vaporQuality + satLiquid.Cv * liquidQuality);
+        }
+
 
         /// <summary>
         /// Pressure (Pa)
@@ -311,7 +349,8 @@ namespace EngineeringMath.Resources.LookupTables.ThermoTableElements
                         highValue, highValueThermoEntry.Cv);
 
                     // assume not saturated
-                    return new ThermoEntry(interT, interP, interV, interH, interS, lowValueThermoEntry.EntryPhase, false,
+                    return new ThermoEntry(interT, interP, interV, interH, interS, lowValueThermoEntry.EntryPhase,
+                        lowValueThermoEntry.IsSaturated && highValueThermoEntry.IsSaturated,
                         interBeta, interKappa, interCp, interCv);
                 }
                 else
