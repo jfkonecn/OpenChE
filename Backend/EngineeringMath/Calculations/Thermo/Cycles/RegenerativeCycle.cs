@@ -21,6 +21,9 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             RegenerationStagesSelector.OnSelectedIndexChanged += RegenerationStagesSelector_OnSelectedIndexChanged;
             RegenerationStagesSelector.SelectedIndex = 0;
             InletBoilerTemperature = new SimpleParameter((int)Field.inletBoilerTemp, LibraryResources.InletBoilerTemperature, new AbstractUnit[] { Temperature.C }, true);
+#if DEBUG
+            InletBoilerTemperature.Value = 226;
+#endif
         }
 
 
@@ -103,7 +106,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
 
         private RegenerativeStage[] StageStates;
 
-        private static readonly UInt16 MIN_STAGES = 1;
+        private static readonly UInt16 MIN_STAGES = 2;
         private static readonly UInt16 MAX_STAGES = 10;
 
         /// <summary>
@@ -115,8 +118,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         protected override void Calculation()
         {
             ThermoEntry boilerConditions = Table.GetThermoEntryAtTemperatureAndPressure(BoilerTemperature.Value, BoilerPressure.Value),
-                condenserLiquidConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure.Value, ThermoEntry.Phase.liquid),
-                condenserVaporConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure.Value, ThermoEntry.Phase.vapor);
+                condenserLiquidConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure.Value, ThermoEntry.Phase.liquid);
 
             if(boilerConditions.EntryPhase != ThermoEntry.Phase.vapor)
             {
@@ -137,8 +139,9 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
                 curInletTemp = InletBoilerTemperature.Value - stageTempStep,
                 // the smallest different in temperature between the saturated steam and the cooling liquid
                 heatExchangerTempBuffer = 5,
-                totalPowerCreated = 0;
+                workProduced = 0;
 
+            
             for (int i = 0; i < StageStates.Length; i++)
             {
                 if(i == 0)
@@ -153,30 +156,23 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
                 else if(i == StageStates.Length - 1)
                 {
                     StageStates[i] = new RegenerativeStage(StageStates[i - 1], Table, condenserLiquidConditions.Temperature);
+                    CondenserSteamQuality.Value = StageStates[i].VaporQuality;
                 }
                 else
                 {
                     StageStates[i] = new RegenerativeStage(StageStates[i - 1], Table);
                 }
-                totalPowerCreated += StageStates[i].WorkProduced;
+                // the value is negative since work produced is leaving the system, 
+                // but the user should see work leaving the system as positive
+                workProduced -= StageStates[i].WorkProduced;
             }
+            // update workProduced instead because we only want to update the UI once
+            TurbineWork.Value = workProduced;
+            PumpWork.Value = ((condenserLiquidConditions.V * (BoilerPressure.Value - CondenserPressure.Value)) * 1e-3) / PumpEfficiency.Value;
 
-            CondenserSteamQuality.Value = (boilerConditions.S - condenserLiquidConditions.S)
-                / (condenserVaporConditions.S - condenserLiquidConditions.S);
+            BoilerWork.Value = boilerConditions.H - StageStates[0].ExitCoolingLiquidConditions.H;
 
-            // in kj / kg
-            double condenserEnthalpy = condenserLiquidConditions.H + CondenserSteamQuality.Value * (condenserVaporConditions.H - condenserLiquidConditions.H);
-
-            PumpWork.Value = ((condenserLiquidConditions.V * (BoilerPressure.Value - CondenserPressure.Value)) * 1e-6) / PumpEfficiency.Value;
-
-            // in kj / kg
-            double boilerEnthalpy = condenserLiquidConditions.H + PumpWork.Value;
-
-            BoilerWork.Value = boilerConditions.H - boilerEnthalpy;
-
-            TurbineWork.Value = -(condenserEnthalpy - boilerConditions.H) * TurbineEfficiency.Value;
-
-            CondenserWork.Value = -(condenserLiquidConditions.H - (boilerConditions.H - TurbineWork.Value));
+            CondenserWork.Value = BoilerWork.Value - TurbineWork.Value;
 
             NetWork.Value = TurbineWork.Value - PumpWork.Value;
 
@@ -351,10 +347,10 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
                 TurbineEfficiency = previousStage.TurbineEfficiency;
                 ExitCondensateConditions = table.GetThermoEntryAtSatTemp(condenserExitTemperature, ThermoEntry.Phase.liquid);
 
-                WorkProduced = (
-                    table.IsentropicExpansion(
-                        previousStage.ExitVaporConditions.Temperature, 
-                    previousStage.ExitVaporConditions.Pressure, ExitCondensateConditions.Pressure, out double temp).H
+                PreCondensedVaporConditions = table.IsentropicExpansion(
+                            previousStage.ExitVaporConditions.Temperature,
+                            previousStage.ExitVaporConditions.Pressure, ExitCondensateConditions.Pressure, out double temp);
+                WorkProduced = (PreCondensedVaporConditions.H
                     - previousStage.ExitVaporConditions.H) * TurbineEfficiency;
                 VaporQuality = temp;
 
@@ -426,10 +422,10 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
                 ExitCondensateConditions = table.GetThermoEntryAtSatTemp(
                     ExitCoolingLiquidConditions.Temperature + heatExchangerTempBuffer, ThermoEntry.Phase.liquid);
 
-                WorkProduced = (
-                    table.IsentropicExpansion(
+                PreCondensedVaporConditions = table.IsentropicExpansion(
                         inletVaporConditions.Temperature,
-                    inletVaporConditions.Pressure, ExitCondensateConditions.Pressure, out double temp).H
+                    inletVaporConditions.Pressure, ExitCondensateConditions.Pressure, out double temp);
+                WorkProduced = (PreCondensedVaporConditions.H
                     - inletVaporConditions.H) * TurbineEfficiency;
                 VaporQuality = temp;
 
@@ -481,6 +477,11 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             /// fraction of vapor in the stream
             /// </summary>
             internal double VaporQuality { get; private set; }
+
+            /// <summary>
+            /// Conditions of the vapor just as it leaves the turbine
+            /// </summary>
+            internal ThermoEntry PreCondensedVaporConditions { get; private set; }
             /// <summary>
             /// kg/s of condensate extracted
             /// </summary>

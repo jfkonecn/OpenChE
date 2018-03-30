@@ -42,8 +42,8 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             ThermalEfficiency = new SimpleParameter((int)Field.thermoEff, LibraryResources.ThermalEfficiency, new AbstractUnit[] { Unitless.unitless }, false);
             NetWork = new SimpleParameter((int)Field.netQ, LibraryResources.NetWork, new AbstractUnit[] { Enthalpy.kJkg }, false);
             SteamRate = new SimpleParameter((int)Field.steamRate, LibraryResources.SteamRate, new AbstractUnit[] { Mass.kg, Time.sec }, false);
-            BoilerHeatTransRate = new SimpleParameter((int)Field.boilerHeatTrans, LibraryResources.BoilerHeatTransRate, new AbstractUnit[] { Enthalpy.kJkg }, false);
-            CondenserHeatTransRate = new SimpleParameter((int)Field.condenserHeatTrans, LibraryResources.CondenserHeatTransRate, new AbstractUnit[] { Enthalpy.kJkg }, false);
+            BoilerHeatTransRate = new SimpleParameter((int)Field.boilerHeatTrans, LibraryResources.BoilerHeatTransRate, new AbstractUnit[] { Energy.kJ, Time.sec }, false);
+            CondenserHeatTransRate = new SimpleParameter((int)Field.condenserHeatTrans, LibraryResources.CondenserHeatTransRate, new AbstractUnit[] { Energy.kJ, Time.sec }, false);
 
 
 
@@ -222,13 +222,9 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         {
             ThermoEntry boilerConditions = Table.GetThermoEntryAtTemperatureAndPressure(BoilerTemperature.Value, BoilerPressure.Value),
                 condenserLiquidConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure.Value, ThermoEntry.Phase.liquid),
-                condenserVaporConditions = Table.GetThermoEntryAtSatPressure(CondenserPressure.Value, ThermoEntry.Phase.vapor);
+                condenserConditions = Table.IsentropicExpansion(BoilerTemperature.Value, BoilerPressure.Value, CondenserPressure.Value, out double temp);
 
-            CondenserSteamQuality.Value = (boilerConditions.S - condenserLiquidConditions.S) 
-                / (condenserVaporConditions.S - condenserLiquidConditions.S);
-
-            // in kj / kg
-            double condenserEnthalpy = condenserLiquidConditions.H + CondenserSteamQuality.Value * (condenserVaporConditions.H - condenserLiquidConditions.H);            
+            CondenserSteamQuality.Value = temp;           
 
             PumpWork.Value = ((condenserLiquidConditions.V * (BoilerPressure.Value - CondenserPressure.Value)) * 1e-3) / PumpEfficiency.Value;
 
@@ -237,7 +233,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
 
             BoilerWork.Value = boilerConditions.H - boilerEnthalpy;
 
-            TurbineWork.Value = -(condenserEnthalpy - boilerConditions.H) * TurbineEfficiency.Value;
+            TurbineWork.Value = -(condenserConditions.H - boilerConditions.H) * TurbineEfficiency.Value;
 
             CondenserWork.Value = -(condenserLiquidConditions.H - (boilerConditions.H - TurbineWork.Value));
 

@@ -58,13 +58,13 @@ namespace BackendTesting
             Assert.AreEqual(0.8051, fun.CondenserSteamQuality.Value, delta, "Steam Quality");
             Assert.AreEqual(11.6, fun.PumpWork.Value, delta, "Pump Work");
             Assert.AreEqual(3189, fun.BoilerWork.Value, delta, "Boiler Work");
-            Assert.AreEqual(2245, fun.CondenserWork.Value, delta, "Condenser Work");
-            Assert.AreEqual(955.9, fun.TurbineWork.Value, delta, "Turbine Work");
+            Assert.AreEqual(2244, fun.CondenserWork.Value, delta, "Condenser Work");
+            Assert.AreEqual(956, fun.TurbineWork.Value, delta, "Turbine Work");
             Assert.AreEqual(0.2961, fun.ThermalEfficiency.Value, delta, "Thermal Efficiency");
-            Assert.AreEqual(944.3, fun.NetWork.Value, delta, "Net Work");
+            Assert.AreEqual(944.4, fun.NetWork.Value, delta, "Net Work");
             Assert.AreEqual(84.75, fun.SteamRate.Value, delta, "Steam Rate");
-            Assert.AreEqual(270.2e3, fun.BoilerHeatTransRate.Value, delta, "Boiler Heat Transfer Rate");
-            Assert.AreEqual(190.2e3, fun.CondenserHeatTransRate.Value, delta, "Condenser Heat Transfer Rate");
+            Assert.AreEqual(270.1e3, fun.BoilerHeatTransRate.Value, delta, "Boiler Heat Transfer Rate");
+            Assert.AreEqual(190.1e3, fun.CondenserHeatTransRate.Value, delta, "Condenser Heat Transfer Rate");
         }
 
 
@@ -116,14 +116,14 @@ namespace BackendTesting
 
             Assert.AreEqual(0.8051, fun.CondenserSteamQuality.Value, delta, "Steam Quality");
             Assert.AreEqual(11.6, fun.PumpWork.Value, delta, "Pump Work");
-            Assert.AreEqual(3189, fun.BoilerWork.Value, delta, "Boiler Work");
-            Assert.AreEqual(2245, fun.CondenserWork.Value, delta, "Condenser Work");
-            Assert.AreEqual(955.9, fun.TurbineWork.Value, delta, "Turbine Work");
-            Assert.AreEqual(0.2961, fun.ThermalEfficiency.Value, delta, "Thermal Efficiency");
-            Assert.AreEqual(944.3, fun.NetWork.Value, delta, "Net Work");
-            Assert.AreEqual(84.75, fun.SteamRate.Value, delta, "Steam Rate");
-            Assert.AreEqual(270.2e3, fun.BoilerHeatTransRate.Value, delta, "Boiler Heat Transfer Rate");
-            Assert.AreEqual(190.2e3, fun.CondenserHeatTransRate.Value, delta, "Condenser Heat Transfer Rate");
+            Assert.AreEqual(2419, fun.BoilerWork.Value, delta, "Boiler Work");
+            Assert.AreEqual(1404, fun.CondenserWork.Value, delta, "Condenser Work");
+            Assert.AreEqual(1015, fun.TurbineWork.Value, delta, "Turbine Work");
+            Assert.AreEqual(0.3283, fun.ThermalEfficiency.Value, delta, "Thermal Efficiency");
+            Assert.AreEqual(1003, fun.NetWork.Value, delta, "Net Work");
+            Assert.AreEqual(79.76, fun.SteamRate.Value, delta, "Steam Rate");
+            Assert.AreEqual(192.9e3, fun.BoilerHeatTransRate.Value, delta, "Boiler Heat Transfer Rate");
+            Assert.AreEqual(112e3, fun.CondenserHeatTransRate.Value, delta, "Condenser Heat Transfer Rate");
         }
     }
 }
