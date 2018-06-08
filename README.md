@@ -1,4 +1,4 @@
-# OpenChE
+# Open Chemical Engineer App
 Multi-Platform Open Source Chemical Engineering App
 
 OpenChE is an app which is intended to be a calculator which contains all routine Chemical Engineering calculations. 
