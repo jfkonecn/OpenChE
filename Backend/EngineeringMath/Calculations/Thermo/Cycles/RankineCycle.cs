@@ -12,6 +12,7 @@ using EngineeringMath.Calculations.Components.Functions;
 using System.Collections;
 using EngineeringMath.Resources.LookupTables;
 using EngineeringMath.Resources.LookupTables.ThermoTableElements;
+using System.Collections.ObjectModel;
 
 namespace EngineeringMath.Calculations.Thermo.Cycles
 {
@@ -26,24 +27,9 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         /// Create orifice plate function
         /// <para>Note: The default output is volFlow</para>
         /// </summary>
-        public RankineCycle(ThermoTable table)
+        public RankineCycle(ThermoTable table) : base()
         {
-            BoilerPressure = new SimpleParameter((int)Field.boilerP, LibraryResources.BoilerPressure, new AbstractUnit[] { Pressure.Pa }, true, table.MinTablePressure, table.MaxTablePressure);
-            BoilerTemperature = new SimpleParameter((int)Field.boilerTemp, LibraryResources.BoilerTemp, new AbstractUnit[] { Temperature.C }, true, table.MinTableTemperature, table.MaxTableTemperature);
-            CondenserPressure = new SimpleParameter((int)Field.condenserP, LibraryResources.CondenserPressure, new AbstractUnit[] { Pressure.Pa }, true, table.MinTablePressure, table.MaxTablePressure);
-            PumpEfficiency = new SimpleParameter((int)Field.pumpEff, LibraryResources.PumpEfficiency, new AbstractUnit[] { Unitless.unitless }, true, 0, 1);
-            TurbineEfficiency = new SimpleParameter((int)Field.turbineEff, LibraryResources.TurbineEfficiency, new AbstractUnit[] { Unitless.unitless }, true, 0, 1);
-            PowerRequirement = new SimpleParameter((int)Field.powerReq, LibraryResources.PowerRequirement, new AbstractUnit[] { Power.kW }, true, 0);
-            CondenserSteamQuality = new SimpleParameter((int)Field.condenserSQ, LibraryResources.CondenserSQ, new AbstractUnit[] { Unitless.unitless }, false, 0, 1);
-            PumpWork = new SimpleParameter((int)Field.pumpQ, LibraryResources.PumpWork, new AbstractUnit[] { Enthalpy.kJkg }, false);
-            BoilerWork = new SimpleParameter((int)Field.boilerQ, LibraryResources.BoilerWork, new AbstractUnit[] { Enthalpy.kJkg }, false);
-            CondenserWork = new SimpleParameter((int)Field.condenserQ, LibraryResources.CondenserWork, new AbstractUnit[] { Enthalpy.kJkg }, false);
-            TurbineWork = new SimpleParameter((int)Field.turbineQ, LibraryResources.TurbineWork, new AbstractUnit[] { Enthalpy.kJkg }, false);
-            ThermalEfficiency = new SimpleParameter((int)Field.thermoEff, LibraryResources.ThermalEfficiency, new AbstractUnit[] { Unitless.unitless }, false);
-            NetWork = new SimpleParameter((int)Field.netQ, LibraryResources.NetWork, new AbstractUnit[] { Enthalpy.kJkg }, false);
-            SteamRate = new SimpleParameter((int)Field.steamRate, LibraryResources.SteamRate, new AbstractUnit[] { Mass.kg, Time.sec }, false);
-            BoilerHeatTransRate = new SimpleParameter((int)Field.boilerHeatTrans, LibraryResources.BoilerHeatTransRate, new AbstractUnit[] { Energy.kJ, Time.sec }, false);
-            CondenserHeatTransRate = new SimpleParameter((int)Field.condenserHeatTrans, LibraryResources.CondenserHeatTransRate, new AbstractUnit[] { Energy.kJ, Time.sec }, false);
+
 
 
 
@@ -133,85 +119,181 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         /// <summary>
         /// Power Requirement for the cycle (kW)
         /// </summary>
-        public readonly SimpleParameter PowerRequirement;
+        public SimpleParameter PowerRequirement
+        {
+            get
+            {
+                return GetParameter((int)Field.powerReq);
+            }
+        }
 
 
         /// <summary>
         /// Boiler Pressure (Pa)
         /// </summary>
-        public readonly SimpleParameter BoilerPressure;
+        public SimpleParameter BoilerPressure
+        {
+            get
+            {
+                return GetParameter((int)Field.boilerP);
+            }
+        }
 
         /// <summary>
         /// Boiler Temperature (C)
         /// </summary>
-        public readonly SimpleParameter BoilerTemperature;
+        public SimpleParameter BoilerTemperature
+        {
+            get
+            {
+                return GetParameter((int)Field.boilerTemp);
+            }
+        }
 
         /// <summary>
         /// Steam Mass Flow Rate in the system (kg/s)
         /// </summary>
-        public readonly SimpleParameter SteamRate;
+        public SimpleParameter SteamRate
+        {
+            get
+            {
+                return GetParameter((int)Field.steamRate);
+            }
+        }
 
         /// <summary>
         /// Condenser Pressure (Pa)
         /// </summary>
-        public readonly SimpleParameter CondenserPressure;
+        public SimpleParameter CondenserPressure
+        {
+            get
+            {
+                return GetParameter((int)Field.condenserP);
+            }
+        }
 
         /// <summary>
         /// Condenser Steam Quality (Unitless)
         /// </summary>
-        public readonly SimpleParameter CondenserSteamQuality;
+        public SimpleParameter CondenserSteamQuality
+        {
+            get
+            {
+                return GetParameter((int)Field.condenserSQ);
+            }
+        }
 
         /// <summary>
         /// Condenser Work (kJ/kg)
         /// </summary>
-        public readonly SimpleParameter CondenserWork;
+        public SimpleParameter CondenserWork
+        {
+            get
+            {
+                return GetParameter((int)Field.condenserQ);
+            }
+        }
 
         /// <summary>
         /// Condenser Heat Transfer Rate (kJ/s)
         /// </summary>
-        public readonly SimpleParameter CondenserHeatTransRate;
+        public SimpleParameter CondenserHeatTransRate
+        {
+            get
+            {
+                return GetParameter((int)Field.condenserHeatTrans);
+            }
+        }
 
         /// <summary>
         /// Turbine Work (kJ/kg)
         /// Negative number means turbine is consuming energy
         /// </summary>
-        public readonly SimpleParameter TurbineWork;
+        public SimpleParameter TurbineWork
+        {
+            get
+            {
+                return GetParameter((int)Field.turbineQ);
+            }
+        }
 
         /// <summary>
         /// Pump Work (kJ/kg)
         /// </summary>
-        public readonly SimpleParameter PumpWork;
+        public SimpleParameter PumpWork
+        {
+            get
+            {
+                return GetParameter((int)Field.pumpQ);
+            }
+        }
 
         /// <summary>
         /// Boiler Work (kJ/kg)
         /// </summary>
-        public readonly SimpleParameter BoilerWork;
+        public SimpleParameter BoilerWork
+        {
+            get
+            {
+                return GetParameter((int)Field.boilerQ);
+            }
+        }
 
 
         /// <summary>
         /// Boiler Heat Transfer Rate (kJ/s)
         /// </summary>
-        public readonly SimpleParameter BoilerHeatTransRate;
+        public SimpleParameter BoilerHeatTransRate
+        {
+            get
+            {
+                return GetParameter((int)Field.boilerHeatTrans);
+            }
+        }
 
         /// <summary>
         /// Net Work (kJ/kg)
         /// </summary>
-        public readonly SimpleParameter NetWork;
+        public SimpleParameter NetWork
+        {
+            get
+            {
+                return GetParameter((int)Field.netQ);
+            }
+        }
 
         /// <summary>
         /// Turbine Efficiency (Unitless)
         /// </summary>
-        public readonly SimpleParameter TurbineEfficiency;
+        public SimpleParameter TurbineEfficiency
+        {
+            get
+            {
+                return GetParameter((int)Field.turbineEff);
+            }
+        }
 
         /// <summary>
         /// Pump Efficiency (Unitless)
         /// </summary>
-        public readonly SimpleParameter PumpEfficiency;
+        public SimpleParameter PumpEfficiency
+        {
+            get
+            {
+                return GetParameter((int)Field.pumpEff);
+            }
+        }
 
         /// <summary>
         /// Thermal Efficiency (Unitless)
         /// </summary>
-        public readonly SimpleParameter ThermalEfficiency;
+        public SimpleParameter ThermalEfficiency
+        {
+            get
+            {
+                return GetParameter((int)Field.thermoEff);
+            }
+        }
 
         /// <summary>
         /// The thermo table being used in this function
@@ -248,65 +330,29 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             CondenserHeatTransRate.Value = SteamRate.Value * CondenserWork.Value;
         }
 
-        public override SimpleParameter GetParameter(int ID)
-        {
-            switch ((Field)ID)
-            {
-                case Field.boilerP:
-                    return BoilerPressure;
-                case Field.boilerTemp:
-                    return BoilerTemperature;
-                case Field.steamRate:
-                    return SteamRate;
-                case Field.condenserP:
-                    return CondenserPressure;
-                case Field.condenserSQ:
-                    return CondenserSteamQuality;
-                case Field.condenserQ:
-                    return CondenserWork;
-                case Field.condenserHeatTrans:
-                    return CondenserHeatTransRate;
-                case Field.turbineQ:
-                    return TurbineWork;
-                case Field.turbineEff:
-                    return TurbineEfficiency;
-                case Field.powerReq:
-                    return PowerRequirement;
-                case Field.pumpEff:
-                    return PumpEfficiency;
-                case Field.pumpQ:
-                    return PumpWork;
-                case Field.boilerQ:
-                    return BoilerWork;
-                case Field.boilerHeatTrans:
-                    return BoilerHeatTransRate;
-                case Field.netQ:
-                    return NetWork;
-                case Field.thermoEff:
-                    return ThermalEfficiency;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
+    
 
-        internal override IEnumerable<SimpleParameter> ParameterCollection()
+        protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
         {
-            yield return BoilerPressure;
-            yield return BoilerTemperature;
-            yield return CondenserPressure;
-            yield return PumpEfficiency;
-            yield return TurbineEfficiency;
-            yield return PowerRequirement;
-            yield return CondenserSteamQuality;
-            yield return PumpWork;
-            yield return BoilerWork;
-            yield return CondenserWork;
-            yield return TurbineWork;
-            yield return ThermalEfficiency;
-            yield return NetWork;
-            yield return SteamRate;
-            yield return BoilerHeatTransRate;
-            yield return CondenserHeatTransRate;
+            return new ObservableCollection<AbstractComponent>
+            {
+                new SimpleParameter((int)Field.boilerP, LibraryResources.BoilerPressure, new AbstractUnit[] { Pressure.Pa }, true, Table.MinTablePressure, Table.MaxTablePressure),
+                new SimpleParameter((int)Field.boilerTemp, LibraryResources.BoilerTemp, new AbstractUnit[] { Temperature.C }, true, Table.MinTableTemperature, Table.MaxTableTemperature),
+                new SimpleParameter((int)Field.condenserP, LibraryResources.CondenserPressure, new AbstractUnit[] { Pressure.Pa }, true, Table.MinTablePressure, Table.MaxTablePressure),
+                new SimpleParameter((int)Field.pumpEff, LibraryResources.PumpEfficiency, new AbstractUnit[] { Unitless.unitless }, true, 0, 1),
+                new SimpleParameter((int)Field.turbineEff, LibraryResources.TurbineEfficiency, new AbstractUnit[] { Unitless.unitless }, true, 0, 1),
+                new SimpleParameter((int)Field.powerReq, LibraryResources.PowerRequirement, new AbstractUnit[] { Power.kW }, true, 0),
+                new SimpleParameter((int)Field.condenserSQ, LibraryResources.CondenserSQ, new AbstractUnit[] { Unitless.unitless }, false, 0, 1),
+                new SimpleParameter((int)Field.pumpQ, LibraryResources.PumpWork, new AbstractUnit[] { Enthalpy.kJkg }, false),
+                new SimpleParameter((int)Field.boilerQ, LibraryResources.BoilerWork, new AbstractUnit[] { Enthalpy.kJkg }, false),
+                new SimpleParameter((int)Field.condenserQ, LibraryResources.CondenserWork, new AbstractUnit[] { Enthalpy.kJkg }, false),
+                new SimpleParameter((int)Field.turbineQ, LibraryResources.TurbineWork, new AbstractUnit[] { Enthalpy.kJkg }, false),
+                new SimpleParameter((int)Field.thermoEff, LibraryResources.ThermalEfficiency, new AbstractUnit[] { Unitless.unitless }, false),
+                new SimpleParameter((int)Field.netQ, LibraryResources.NetWork, new AbstractUnit[] { Enthalpy.kJkg }, false),
+                new SimpleParameter((int)Field.steamRate, LibraryResources.SteamRate, new AbstractUnit[] { Mass.kg, Time.sec }, false),
+                new SimpleParameter((int)Field.boilerHeatTrans, LibraryResources.BoilerHeatTransRate, new AbstractUnit[] { Energy.kJ, Time.sec }, false),
+                new SimpleParameter((int)Field.condenserHeatTrans, LibraryResources.CondenserHeatTransRate, new AbstractUnit[] { Energy.kJ, Time.sec }, false),
+            };
         }
     }
 }

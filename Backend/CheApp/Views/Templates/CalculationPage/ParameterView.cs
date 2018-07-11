@@ -7,23 +7,24 @@ using EngineeringMath.Resources;
 using EngineeringMath.Units;
 using EngineeringMath.Calculations.Components.Parameter;
 
-namespace CheApp.Templates.CalculationPage
+namespace CheApp.Views.Templates.CalculationPage
 {
     /// <summary>
-    /// A grid representation of a parameter this grid is binded to
+    /// A view representation of a parameter
     /// </summary>
-    public class ParameterFrame : Frame
+    public class ParameterView : Frame
     {
 
-
+        /*
         /// <summary>
         /// Section intended to be placed in a grid
         /// </summary>
         /// <param name="para">The parameter this frame will bind to</param>
-        public ParameterFrame(SimpleParameter para)
+        public ParameterView(SimpleParameter para)
         {
             Grid grid = CreateParameterGrid(para);
             FinishUp(para, grid);
+            
         }
 
         private void FinishUp(SimpleParameter para, Grid grid)
@@ -34,7 +35,7 @@ namespace CheApp.Templates.CalculationPage
             this.SetBinding(Frame.StyleProperty, new Binding("Style"));
             this.BindingContext = paraStyle;
 
-
+            
             para.OnResetEvent += delegate ()
             {
                 paraStyle.Style = (Style)Application.Current.Resources["neutralParameterStyle"];
@@ -281,6 +282,6 @@ namespace CheApp.Templates.CalculationPage
             btn.BindingContext = para;
 
             return btn;
-        }
+        }*/
     }
 }

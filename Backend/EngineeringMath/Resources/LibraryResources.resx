@@ -411,4 +411,10 @@
   <data name="InletBoilerTemperature" xml:space="preserve">
     <value>Inlet Boiler Temperature</value>
   </data>
+  <data name="Menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="Thermodynamics" xml:space="preserve">
+    <value>Thermodynamics</value>
+  </data>
 </root>

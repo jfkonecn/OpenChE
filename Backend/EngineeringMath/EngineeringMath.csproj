@@ -36,14 +36,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Calculations\Area\Circle.cs" />
+    <Compile Include="Calculations\ComponentFactory.cs" />
     <Compile Include="Calculations\Components\AbstractComponent.cs" />
+    <Compile Include="Calculations\Components\Commands\ButtonComponent.cs" />
     <Compile Include="Calculations\Components\Functions\FunctionSubber.cs" />
+    <Compile Include="Calculations\Components\Group\AbstractGroupOfComponents.cs" />
+    <Compile Include="Calculations\Components\OnResetEventArgs.cs" />
+    <Compile Include="Calculations\Components\OnSuccessEventArgs.cs" />
     <Compile Include="Calculations\Components\Selectors\FunctionPicker.cs" />
     <Compile Include="Calculations\Components\Functions\SimpleFunction.cs" />
     <Compile Include="Calculations\Components\Functions\SolveForFunction.cs" />
-    <Compile Include="Calculations\Components\Group\GroupOfComponents.cs" />
     <Compile Include="Calculations\Components\Parameter\SimpleParameter.cs" />
-    <Compile Include="Calculations\Components\NumericField.cs" />
     <Compile Include="Calculations\Components\Selectors\FunctionPickerParaLinks.cs" />
     <Compile Include="Calculations\Components\Selectors\IntegerSpinner.cs" />
     <Compile Include="Calculations\Components\Selectors\SimplePicker.cs" />
@@ -52,7 +55,6 @@
     <Compile Include="Calculations\Fluids\OrificePlate.cs" />
     <Compile Include="Calculations\Fluids\PitotTube.cs" />
     <Compile Include="Calculations\Solver.cs" />
-    <Compile Include="Calculations\FunctionFactory.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaLength.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaP.cs" />
     <Compile Include="Calculations\SupportFunctions\InletOutletDifferential\DeltaVelocitySquared.cs" />
@@ -62,7 +64,7 @@
     <Compile Include="Calculations\Thermo\Cycles\RegenerativeCycle.cs" />
     <Compile Include="Calculations\Thermo\ThermoLookupTables\AbstractTable.cs" />
     <Compile Include="Calculations\Thermo\ThermoLookupTables\SteamTable.cs" />
-    <Compile Include="Calculations\UnitConverter\AbstractConverter.cs" />
+    <Compile Include="Calculations\UnitConverter\UnitConverter.cs" />
     <Compile Include="Calculations\UnitConverter\UnitConverterFunctionSubber.cs" />
     <Compile Include="DataStructures\CompositeGraph.cs" />
     <Compile Include="DataStructures\CompositeGraphNode.cs" />

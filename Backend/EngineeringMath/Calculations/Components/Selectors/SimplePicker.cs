@@ -55,17 +55,19 @@ namespace EngineeringMath.Calculations.Components.Selectors
                 // -1 means nothing is selected
                 if (value < _ObjectLookup.Count && value >= 0)
                 {
-                    _PreviouslySelectedIndex = _SelectedIndex;
+                    PreviouslySelectedIndex = _SelectedIndex;
                     _SelectedIndex = value;
                 }
                 else
                 {
                     Debug.WriteLine($"{TAG} SelectedIndex value is out of range!");
                 }
-                OnSelectedIndexChanged?.Invoke();
-                OnPropertyChanged("SelectedIndex");
+                OnSelectedIndexChanged?.Invoke(this, new EventArgs());
+                OnPropertyChanged("SelectedObject");
+                OnPropertyChanged();
             }
         }
+
 
         private int _PreviouslySelectedIndex = -1;
         /// <summary>
@@ -77,12 +79,17 @@ namespace EngineeringMath.Calculations.Components.Selectors
             {
                 return _PreviouslySelectedIndex;
             }
+            private set
+            {
+                _PreviouslySelectedIndex = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public delegate void SelectedIndexChangedHandler();
+        public delegate void SelectedIndexChangedHandler(AbstractComponent sender, EventArgs e);
 
         /// <summary>
         /// Called when this parameter is made to be an output
@@ -117,7 +124,8 @@ namespace EngineeringMath.Calculations.Components.Selectors
                     }
                     temp++;
                 }
-                OnPropertyChanged("SelectedObject");
+                OnPropertyChanged();
+                OnPropertyChanged("SelectedIndex");
                 Debug.WriteLine($"{TAG} Couldn't find the object you were looking for");
             }
         }
@@ -166,7 +174,7 @@ namespace EngineeringMath.Calculations.Components.Selectors
             set
             {
                 _IsEnabled = value;
-                OnPropertyChanged("IsEnabled");
+                OnPropertyChanged();
             }
         }
 

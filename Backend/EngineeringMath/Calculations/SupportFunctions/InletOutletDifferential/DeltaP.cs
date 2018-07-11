@@ -13,9 +13,17 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
     /// </summary>
     public class DeltaP : InletMinusOutput
     {
-        public DeltaP() : base(new AbstractUnit[] { Pressure.Pa }, InletMinusOutput.InletMinusOutlet)
+        public DeltaP() : base(InletMinusOutput.InletMinusOutlet)
         {
         }
 
+        private readonly AbstractUnit[] _DefaultUnit = new AbstractUnit[] { Pressure.Pa };
+        protected override AbstractUnit[] DefaultUnit
+        {
+            get
+            {
+                return _DefaultUnit;
+            }
+        }
     }
 }

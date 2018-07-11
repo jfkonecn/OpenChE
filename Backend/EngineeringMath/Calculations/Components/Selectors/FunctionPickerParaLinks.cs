@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static EngineeringMath.Calculations.FunctionFactory;
+using static EngineeringMath.Calculations.ComponentFactory;
 
 namespace EngineeringMath.Calculations.Components.Selectors
 {

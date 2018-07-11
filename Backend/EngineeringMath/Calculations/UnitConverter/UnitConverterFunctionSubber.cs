@@ -17,7 +17,7 @@ namespace EngineeringMath.Calculations.UnitConverter
         }
 
 
-        internal static readonly Dictionary<string, Type> AllUnitFunctionData =
+        private static readonly Dictionary<string, Type> AllUnitFunctionData =
             new Dictionary<string, Type>
             {
                         { LibraryResources.Pressure, typeof(PressureFun) },
@@ -29,45 +29,109 @@ namespace EngineeringMath.Calculations.UnitConverter
                         { LibraryResources.Energy, typeof(EnergyFun) }
             }.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
 
-        public class PressureFun : AbstractConverter
+        public class PressureFun : UnitConverter
         {
-            public PressureFun() : base(new AbstractUnit[] { Pressure.Pa })
+            public PressureFun() : base()
             {
 
             }
-        }
 
-        public class VolumetricFlowFun : AbstractConverter
-        {
-            public VolumetricFlowFun() : base(new AbstractUnit[] { Volume.m3, Time.sec })
+
+            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Pressure.Pa };
+            protected override AbstractUnit[] Units
             {
-
+                get
+                {
+                    return _Units;
+                }
             }
         }
 
-        public class TemperatureFun : AbstractConverter
+        public class VolumetricFlowFun : UnitConverter
         {
-            public TemperatureFun() : base(new AbstractUnit[] { Temperature.C }) { }
+            public VolumetricFlowFun() : base()
+            {
+
+            }
+
+            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Volume.m3, Time.sec };
+            protected override AbstractUnit[] Units
+            {
+                get
+                {
+                    return _Units;
+                }
+            }
         }
 
-        public class MassFlowFun : AbstractConverter
+        public class TemperatureFun : UnitConverter
         {
-            public MassFlowFun() : base(new AbstractUnit[] { Mass.g }) { }
+            public TemperatureFun() : base() { }
+
+            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Temperature.C };
+            protected override AbstractUnit[] Units
+            {
+                get
+                {
+                    return _Units;
+                }
+            }
         }
 
-        public class MassFun : AbstractConverter
+        public class MassFlowFun : UnitConverter
         {
-            public MassFun() : base(new AbstractUnit[] { Mass.g }) { }
+            public MassFlowFun() : base() { }
+
+            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Mass.g };
+            protected override AbstractUnit[] Units
+            {
+                get
+                {
+                    return _Units;
+                }
+            }
         }
 
-        public class VolumeFun : AbstractConverter
+        public class MassFun : UnitConverter
         {
-            public VolumeFun() : base(new AbstractUnit[] { Volume.m3 }) { }
+            public MassFun() : base() { }
+
+            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Mass.g };
+            protected override AbstractUnit[] Units
+            {
+                get
+                {
+                    return _Units;
+                }
+            }
         }
 
-        public class EnergyFun : AbstractConverter
+        public class VolumeFun : UnitConverter
         {
-            public EnergyFun() : base(new AbstractUnit[] { Energy.kJ }) { }
+            public VolumeFun() : base() { }
+
+            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Volume.m3 };
+            protected override AbstractUnit[] Units
+            {
+                get
+                {
+                    return _Units;
+                }
+            }
+        }
+
+        public class EnergyFun : UnitConverter
+        {
+            public EnergyFun() : base() { }
+
+            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Energy.kJ };
+            protected override AbstractUnit[] Units
+            {
+                get
+                {
+                    return _Units;
+                }
+            }
         }
     }
 }

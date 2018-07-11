@@ -12,9 +12,18 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
     /// </summary>
     class DeltaVelocitySquared : InletMinusOutput
     {
-        DeltaVelocitySquared() : base(new AbstractUnit[] { Length.m, Time.sec }, InletMinusOutput.InletSqMinusOutletSq)
+        DeltaVelocitySquared() : base(InletMinusOutput.InletSqMinusOutletSq)
         {
 
+        }
+
+        private readonly AbstractUnit[] _DefaultUnit = new AbstractUnit[] { Length.m, Time.sec };
+        protected override AbstractUnit[] DefaultUnit
+        {
+            get
+            {
+                return _DefaultUnit;
+            }
         }
     }
 }

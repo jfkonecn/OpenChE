@@ -485,6 +485,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Menu.
+        /// </summary>
+        public static string Menu {
+            get {
+                return ResourceManager.GetString("Menu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Net Work.
         /// </summary>
         public static string NetWork {
@@ -796,6 +805,15 @@ namespace EngineeringMath.Resources {
         public static string ThermodynamicCycle {
             get {
                 return ResourceManager.GetString("ThermodynamicCycle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thermodynamics.
+        /// </summary>
+        public static string Thermodynamics {
+            get {
+                return ResourceManager.GetString("Thermodynamics", resourceCulture);
             }
         }
         

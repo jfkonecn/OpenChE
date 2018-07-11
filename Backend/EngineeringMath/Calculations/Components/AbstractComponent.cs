@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace EngineeringMath.Calculations.Components
 {
@@ -12,7 +13,7 @@ namespace EngineeringMath.Calculations.Components
 
         public int ID { get; protected set; }
 
-        private string _ErrorMessage;
+        private string _ErrorMessage = string.Empty;
         /// <summary>
         /// String intended to be shown to the user when a bad input is given
         /// <para>A null ErrorMessage value implies that there is no error</para>
@@ -26,14 +27,30 @@ namespace EngineeringMath.Calculations.Components
             internal set
             {
                 _ErrorMessage = value;
-                OnPropertyChanged("ErrorMessage");
+                OnPropertyChanged();
             }
         }
+
+        private bool IsEventHandlerRegistered(Delegate eventHandler, Delegate prospectiveHandler)
+        {
+            if (eventHandler != null)
+            {
+                foreach (Delegate existingHandler in eventHandler.GetInvocationList())
+                {
+                    if (existingHandler == prospectiveHandler)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// On success handler
         /// </summary>
-        public delegate void OnSuccessEventHandler();
+        public delegate void OnSuccessEventHandler(AbstractComponent sender, OnSuccessEventArgs e);
 
         /// <summary>
         /// Called when operation is successful within this component
@@ -43,10 +60,21 @@ namespace EngineeringMath.Calculations.Components
         /// <summary>
         /// Call on success event handler
         /// </summary>
-        internal virtual void OnSuccess()
+        internal virtual void OnSuccess(AbstractComponent sender, OnSuccessEventArgs e = null)
         {
-            ErrorMessage = null;
-            OnSuccessEvent?.Invoke();
+            ErrorMessage = string.Empty;
+            OnSuccessEvent?.Invoke(sender, e);
+            CurrentComponentState = ComponentState.Success;
+        }
+
+        internal void OnSuccess(OnSuccessEventArgs e = null)
+        {
+            OnSuccessEvent?.Invoke(this, e);
+        }
+
+        public bool IsSuccessEventHandlerRegistered(OnSuccessEventHandler prospectiveHandler)
+        {
+            return IsEventHandlerRegistered(OnSuccessEvent, prospectiveHandler);
         }
 
         string _Title;
@@ -62,26 +90,15 @@ namespace EngineeringMath.Calculations.Components
             set
             {
                 _Title = value;
-                OnPropertyChanged("Title");
+                OnPropertyChanged();
             }
 
         }
 
         /// <summary>
-        /// Called when a property is changed in the the field
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void _Field_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            this.OnPropertyChanged(e.PropertyName);
-        }
-
-
-        /// <summary>
         /// On error handler
         /// </summary>
-        public delegate void OnErrorEventHandler(Exception e);
+        public delegate void OnErrorEventHandler(AbstractComponent sender, Exception e);
 
         /// <summary>
         /// Called when error occurs within this component
@@ -91,17 +108,27 @@ namespace EngineeringMath.Calculations.Components
         /// <summary>
         /// Call on error event handler
         /// </summary>
-        internal virtual void OnError(Exception e)
+        internal virtual void OnError(AbstractComponent sender, Exception e)
         {
-            ErrorMessage = e.Message;
-            OnErrorEvent?.Invoke(e);
+            ErrorMessage = $"{this.Title}:{e.Message}";
+            OnErrorEvent?.Invoke(sender, e);
+            CurrentComponentState = ComponentState.Error;
         }
 
+        internal virtual void OnError(Exception e)
+        {
+            OnError(this, e);
+        }
+
+        public bool IsErrorEventHandlerRegistered(OnErrorEventHandler prospectiveHandler)
+        {
+            return IsEventHandlerRegistered(OnErrorEvent, prospectiveHandler);
+        }
 
         /// <summary>
         /// On rest handler
         /// </summary>
-        public delegate void OnRestEventHandler();
+        public delegate void OnRestEventHandler(AbstractComponent sender, OnResetEventArgs e);
 
         /// <summary>
         /// Called when a rest occurs within this component
@@ -111,27 +138,50 @@ namespace EngineeringMath.Calculations.Components
         /// <summary>
         /// Call on rest event handler
         /// </summary>
-        internal virtual void OnReset()
+        internal virtual void OnReset(AbstractComponent sender, OnResetEventArgs e)
         {
-            ErrorMessage = null;
-            OnResetEvent?.Invoke();
+            ErrorMessage = string.Empty;
+            OnResetEvent?.Invoke(sender, e);
+            CurrentComponentState = ComponentState.Reset;
+        }
+
+        internal void OnReset(OnResetEventArgs e = null)
+        {
+            OnReset(this, e);
+        }
+
+        public bool IsResetEventHandlerRegistered(OnRestEventHandler prospectiveHandler)
+        {
+            return IsEventHandlerRegistered(OnResetEvent, prospectiveHandler);
         }
 
         /// <summary>
-        /// Returns the type of object this object should be cast as
-        /// for the purposes of building the UI
+        /// States the component can be in
         /// </summary>
-        /// <returns></returns>
-        public virtual Type CastAs()
+        public enum ComponentState
         {
-            return this.GetType();
+            Success,
+            Reset,
+            Error
+        }
+        private ComponentState _CurrentComponentState = ComponentState.Reset;
+        public ComponentState CurrentComponentState
+        {
+            get
+            {
+                return _CurrentComponentState;
+            }
+            private set
+            {
+                _CurrentComponentState = value;
+                OnPropertyChanged();
+            }
         }
 
 
-        protected virtual void OnPropertyChanged(string property)
+        protected virtual void OnPropertyChanged([CallerMemberName]string property = null)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
         #region INotifyPropertyChanged Members

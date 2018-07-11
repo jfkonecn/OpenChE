@@ -7,19 +7,17 @@ using EngineeringMath.Resources;
 using EngineeringMath.Units;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations.Components.Parameter;
+using System.Collections.ObjectModel;
+using EngineeringMath.Calculations.Components;
 
 namespace EngineeringMath.Calculations.Fluids
 {
     public class PitotTube : SolveForFunction
     {
 
-        public PitotTube()
+        public PitotTube() : base()
         {
-            CorrectionCoefficient = new SimpleParameter((int)Field.correctionCo, LibraryResources.CorrectionCo, new AbstractUnit[] { Unitless.unitless }, true, 0, 1);
-            DeltaH = new SimpleParameter((int)Field.deltaH, LibraryResources.ManoDeltaH, new AbstractUnit[] { Length.m }, true, 0);
-            ManometerDensity = new SimpleParameter((int)Field.manoDensity, LibraryResources.ManoDensity, new AbstractUnit[] { Density.kgm3 }, true, 0);
-            FluidDensity = new SimpleParameter((int)Field.fluidDensity, LibraryResources.FluidDensity, new AbstractUnit[] { Density.kgm3 }, true, 0);
-            Velocity = new SimpleParameter((int)Field.velo, LibraryResources.FluidVelocity, new AbstractUnit[] { Length.m, Time.sec }, false, 0);
+
             this.Title = LibraryResources.PitotTube;
 #if DEBUG
             CorrectionCoefficient.Value = 1;
@@ -61,32 +59,61 @@ namespace EngineeringMath.Calculations.Fluids
         /// <summary>
         /// Velocity (m/s)
         /// </summary>
-        public readonly SimpleParameter Velocity;
+        public SimpleParameter Velocity
+        {
+            get
+            {
+                return GetParameter((int)Field.velo);
+            }
+        }
 
         /// <summary>
         /// Correction Coefficient (unitless)
         /// </summary>
-        public readonly SimpleParameter CorrectionCoefficient;
+        public SimpleParameter CorrectionCoefficient
+        {
+            get
+            {
+                return GetParameter((int)Field.correctionCo);
+            }
+        }
 
         /// <summary>
         /// Change in height (m)
         /// </summary>
-        public readonly SimpleParameter DeltaH;
-
+        public SimpleParameter DeltaH
+        {
+            get
+            {
+                return GetParameter((int)Field.deltaH);
+            }
+        }
 
         /// <summary>
         /// Density of manometer fluid (kg/m3)
         /// </summary>
-        public readonly SimpleParameter ManometerDensity;
+        public SimpleParameter ManometerDensity
+        {
+            get
+            {
+                return GetParameter((int)Field.manoDensity);
+            }
+        }
 
         /// <summary>
         /// Density of fluid (kg/m3)
         /// </summary>
-        public readonly SimpleParameter FluidDensity;
+        public SimpleParameter FluidDensity
+        {
+            get
+            {
+                return GetParameter((int)Field.fluidDensity);
+            }
+        }
 
         protected override SimpleParameter GetDefaultOutput()
         {
-            return GetParameter((int)Field.velo);
+            return Velocity;
         }
 
         /// <summary>
@@ -116,32 +143,16 @@ namespace EngineeringMath.Calculations.Fluids
             }
         }
 
-        public override SimpleParameter GetParameter(int ID)
+        protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
         {
-            switch ((Field)ID)
+            return new ObservableCollection<AbstractComponent>
             {
-                case Field.correctionCo:
-                    return CorrectionCoefficient;
-                case Field.deltaH:
-                    return DeltaH;
-                case Field.fluidDensity:
-                    return FluidDensity;
-                case Field.manoDensity:
-                    return ManometerDensity;
-                case Field.velo:
-                    return Velocity;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        internal override IEnumerable<SimpleParameter> ParameterCollection()
-        {
-            yield return CorrectionCoefficient;
-            yield return DeltaH;
-            yield return FluidDensity;
-            yield return ManometerDensity;
-            yield return Velocity;
+                new SimpleParameter((int)Field.correctionCo, LibraryResources.CorrectionCo, new AbstractUnit[] { Unitless.unitless }, true, 0, 1),
+                new SimpleParameter((int)Field.deltaH, LibraryResources.ManoDeltaH, new AbstractUnit[] { Length.m }, true, 0),
+                new SimpleParameter((int)Field.manoDensity, LibraryResources.ManoDensity, new AbstractUnit[] { Density.kgm3 }, true, 0),
+                new SimpleParameter((int)Field.fluidDensity, LibraryResources.FluidDensity, new AbstractUnit[] { Density.kgm3 }, true, 0),
+                new SimpleParameter((int)Field.velo, LibraryResources.FluidVelocity, new AbstractUnit[] { Length.m, Time.sec }, false, 0)
+        };
         }
     }
 }

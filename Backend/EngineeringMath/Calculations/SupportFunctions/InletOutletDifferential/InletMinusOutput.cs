@@ -7,6 +7,8 @@ using EngineeringMath.Units;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations.Components.Parameter;
+using System.Collections.ObjectModel;
+using EngineeringMath.Calculations.Components;
 
 namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
 {
@@ -20,14 +22,13 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
         /// </summary>
         /// <param name="defaultUnit"></param>
         /// <param name="fun">Calculation function is taken from one of the static functions in this class</param>
-        public InletMinusOutput(AbstractUnit[] defaultUnit, CalcualtionFunction fun)
+        public InletMinusOutput(CalcualtionFunction fun) : base()
         {
-            Inlet = new SimpleParameter((int)Field.inlet, LibraryResources.Inlet, defaultUnit, true);
-            Outlet = new SimpleParameter((int)Field.outlet, LibraryResources.Outlet, defaultUnit, true);
-            Delta = new SimpleParameter((int)Field.delta, LibraryResources.InletMinusOutlet, defaultUnit, false);
             this.Title = LibraryResources.InletMinusOutlet;
-            myCalculationFunction = fun;
+            MyCalculationFunction = fun;
         }
+
+        protected abstract AbstractUnit[] DefaultUnit { get; }
 
         internal enum Field
         {
@@ -48,17 +49,35 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
         /// <summary>
         /// Inlet in units of T
         /// </summary>
-        public readonly SimpleParameter Inlet;
+        public SimpleParameter Inlet
+        {
+            get
+            {
+                return GetParameter((int)Field.inlet);
+            }
+        }
 
         /// <summary>
         /// Outlet in units of T
         /// </summary>
-        public readonly SimpleParameter Outlet;
+        public SimpleParameter Outlet
+        {
+            get
+            {
+                return GetParameter((int)Field.outlet);
+            }
+        }
 
         /// <summary>
         /// Inlet - Outlet
         /// </summary>
-        public readonly SimpleParameter Delta;
+        public SimpleParameter Delta
+        {
+            get
+            {
+                return GetParameter((int)Field.delta);
+            }
+        }
 
         /// <summary>
         /// Function to be used to perform calculations
@@ -67,19 +86,20 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
         /// <returns></returns>
         public delegate double CalcualtionFunction(int outputID, double inlet, double outlet, double delta);
 
-        private CalcualtionFunction myCalculationFunction
+        private CalcualtionFunction MyCalculationFunction
         {
             get; set;
         }
 
         protected override SimpleParameter GetDefaultOutput()
         {
-            return GetParameter((int)Field.delta);
+            return Delta;
         }
 
         protected override void Calculation()
         {
-            myCalculationFunction(OutputSelection.SelectedObject.ID, 
+            GetParameter(OutputSelection.SelectedObject.ID).Value = 
+                MyCalculationFunction(OutputSelection.SelectedObject.ID, 
                 Inlet.Value, 
                 Outlet.Value, 
                 Delta.Value);
@@ -131,26 +151,14 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
             }
         }
 
-        public override SimpleParameter GetParameter(int ID)
+        protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
         {
-            switch ((Field)ID)
+            return new ObservableCollection<AbstractComponent>
             {
-                case Field.inlet:
-                    return Inlet;
-                case Field.outlet:
-                    return Outlet;
-                case Field.delta:
-                    return Delta;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        internal override IEnumerable<SimpleParameter> ParameterCollection()
-        {
-            yield return Inlet;
-            yield return Outlet;
-            yield return Delta;
+                new SimpleParameter((int)Field.inlet, LibraryResources.Inlet, DefaultUnit, true),
+                new SimpleParameter((int)Field.outlet, LibraryResources.Outlet, DefaultUnit, true),
+                new SimpleParameter((int)Field.delta, LibraryResources.InletMinusOutlet, DefaultUnit, false)
+            };
         }
     }
 }

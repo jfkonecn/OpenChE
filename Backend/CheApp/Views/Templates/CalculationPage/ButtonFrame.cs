@@ -4,7 +4,7 @@ using System.Text;
 using Xamarin.Forms;
 using EngineeringMath.Resources;
 
-namespace CheApp.Templates.CalculationPage
+namespace CheApp.Views.Templates.CalculationPage
 {
     public class ButtonFrame : Frame
     {

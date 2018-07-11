@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CheApp.Views;
 
 using Xamarin.Forms;
 
@@ -14,8 +15,11 @@ namespace CheApp
     {
         public App()
         {
-            Resources = new ResourceDictionary();
-
+            Resources = new ResourceDictionary()
+            {
+                //MergedWith = typeof(Xamarin.Forms.Themes.LightThemeResources)
+            };
+            
             // Style for grids with no parent grids
             Style backgroundStyle = new Style(typeof(Style))
             {
@@ -80,15 +84,15 @@ namespace CheApp
                 }
             };
             Resources.Add("minorHeaderStyle", minorHeaderStyle);
-
+            
             // used for grid margins
             int standardRowMargin = 5;
             Resources.Add("standardRowMargin", standardRowMargin);
             int standardColumnMargin = 5;
             Resources.Add("standardColumnMargin", standardColumnMargin);
+            
 
-
-            MainPage = new NavigationPage(new CheApp.MainMenu());
+            MainPage = new MainMenu();
         }
 
         protected override void OnStart()

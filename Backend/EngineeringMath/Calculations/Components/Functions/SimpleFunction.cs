@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EngineeringMath.Calculations.Components.Commands;
+using EngineeringMath.Calculations.Components.Group;
 using EngineeringMath.Calculations.Components.Parameter;
+using EngineeringMath.Resources;
 
 namespace EngineeringMath.Calculations.Components.Functions
 {
     /// <summary>
     /// A collection of abstract components which are intended to be used to perform a calculation
     /// </summary>
-    public abstract class SimpleFunction : AbstractComponent, IEnumerable
+    public abstract class SimpleFunction : AbstractGroupOfComponents
     {
 
-        public virtual IEnumerator GetEnumerator()
+        internal SimpleFunction() : base()
         {
-            foreach (AbstractComponent obj in ParameterCollection())
-            {
-                yield return obj;
-            }
+
         }
-
-
 
         /// <summary>
         /// Performs the calculation this function object represents using the current state of the parameter objects
@@ -48,44 +47,71 @@ namespace EngineeringMath.Calculations.Components.Functions
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public abstract SimpleParameter GetParameter(int ID);
+        public SimpleParameter GetParameter(int ID)
+        {
+            return ComponentCollection.Single((x) => x.ID == ID && x as SimpleParameter != null) as SimpleParameter;
+        }
+
+        public ObservableCollection<SimpleParameter> AllParameters
+        {
+            get
+            {
+                ObservableCollection<SimpleParameter> temp = new ObservableCollection<SimpleParameter>();
+                foreach (AbstractComponent comp in ComponentCollection)
+                {
+                    SimpleParameter para = comp as SimpleParameter;
+                    if(para != null)
+                    {
+                        temp.Add(para);
+                    }
+                }
+                return temp;
+            }
+        }
+
+
+        public ButtonComponent SolveButton { get; private set; }
+
 
         /// <summary>
         /// Solves function based on what the current output parameter is
         /// </summary>
-        public void Solve()
+        public void Solve(object parameter)
         {
             Calculation();
             OnSolve?.Invoke();
         }
 
-        /// <summary>
-        /// Called right after this object is built is built
-        /// </summary>
-        internal virtual void FinishUp()
+        public bool CanSolve(object parameter)
         {
-            // left empty just in case we need to add something
+            return true;
         }
 
 
 
-        /// <summary>
-        /// Yields all parameters in this object
-        /// </summary>
-        /// <returns></returns>
-        internal abstract IEnumerable<SimpleParameter> ParameterCollection();
-
-        internal override void OnReset()
+        internal override void OnReset(AbstractComponent sender, OnResetEventArgs e)
         {
-            foreach (AbstractComponent obj in this)
+            foreach (AbstractComponent obj in ComponentCollection)
             {
                 obj.OnReset();
             }
         }
 
-        public override Type CastAs()
+        /// <summary>
+        /// Returns the default collection of abstract object not including the OutputSelection picker
+        /// </summary>
+        /// <returns></returns>
+        protected abstract ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection();
+
+        protected override ObservableCollection<AbstractComponent> CreateDefaultComponentCollection()
         {
-            return typeof(SimpleFunction);
+            SolveButton = new ButtonComponent(Solve, CanSolve)
+            {
+                Title = LibraryResources.Calculate
+            };
+            ObservableCollection<AbstractComponent> temp = CreateRemainingDefaultComponentCollection();
+            temp.Add(SolveButton);
+            return temp;
         }
     }
 }

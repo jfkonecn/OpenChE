@@ -8,6 +8,7 @@ using EngineeringMath.Resources;
 using System.Diagnostics;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations.Components.Selectors;
+using EngineeringMath.Calculations.Components.Commands;
 
 namespace EngineeringMath.Calculations.Components.Parameter
 {
@@ -20,33 +21,18 @@ namespace EngineeringMath.Calculations.Components.Parameter
         /// <param name="title">Title of the field</param>
         /// <param name="ID">Id of the parameter</param>
         /// <param name="subFunctions">The functions which this parameter may be replaced by the string key is the title which is intended to be stored in a picker
-        /// <para>EX: An area parameter can replaced by a function which calculates the area of a circle</para>
+        /// <param>EX: An area parameter can replaced by a function which calculates the area of a circle</param>
         /// </param>
         /// <param name="lowerLimit">The lowest number the parameter is allowed to be</param>
         /// <param name="upperLimit">The highest number the paramter is allowed to be</param>
         /// <param name="desiredUnits">Used to create a conversion factor</param>
         /// <param name="isInput">If this parameter(else it's an output)</param>
         internal SubFunctionParameter(int ID, string title, AbstractUnit[] desiredUnits,
-            Dictionary<string, FunctionFactory.SolveForFactoryData> subFunctions,
+            Dictionary<string, ComponentFactory.SolveForFactoryData> subFunctions,
             bool isInput = true,
             double lowerLimit = double.MinValue,
             double upperLimit = double.MaxValue) :
-            this(ID, title, new NumericField(title, desiredUnits, isInput, lowerLimit, upperLimit), subFunctions, isInput)
-        {        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <param name="title"></param>
-        /// <param name="field">The field attached to this object</param>
-        /// <param name="subFunctions">The functions which this parameter may be replaced by the string key is the title which is intended to be stored in a picker
-        /// <para>EX: An area parameter can replaced by a function which calculates the area of a circle</para>
-        /// </param>
-        /// <param name="isInput"></param>
-        internal SubFunctionParameter(int ID, string title, NumericField field, 
-            Dictionary<string, FunctionFactory.SolveForFactoryData> subFunctions, bool isInput = true) : 
-            base(ID, title, field, isInput)
+            base(ID, title, desiredUnits, isInput, lowerLimit, upperLimit)
         {
             // Build SubFunctionSelection
             // add a default selection
@@ -55,19 +41,25 @@ namespace EngineeringMath.Calculations.Components.Parameter
                     { LibraryResources.DirectInput, null }
                 };
 
-            foreach (KeyValuePair<string, FunctionFactory.SolveForFactoryData> ele in subFunctions)
+            foreach (KeyValuePair<string, ComponentFactory.SolveForFactoryData> ele in subFunctions)
                 temp.Add(ele.Key, ele.Value.FunType);
 
             FunTypeToOutputID = subFunctions.ToDictionary(x => x.Value.FunType, x => x.Value.OuputID);
 
             this.SubFunctionSelection = new FunctionPicker(temp);
             this.SubFunctionSelection.OnFunctionCreatedEvent += SyncSubFunctionWithParameter;
-            this.SubFunctionSelection.PropertyChanged += SubFunctionSelection_PropertyChanged;
             this.SubFunctionSelection.OnSelectedIndexChanged += SubFunctionSelection_OnSelectedIndexChanged;
             this.SubFunctionSelection.SelectedObject = null;
+
+            SubFunctionButton = new ButtonComponent(
+            (object parameter) => { return; },
+            (object parameter) => { return true; })
+            {
+                Title = LibraryResources.SubFunction
+            };
         }
 
-        private void SubFunctionSelection_OnSelectedIndexChanged()
+        private void SubFunctionSelection_OnSelectedIndexChanged(object sender, EventArgs args)
         {
             OnPropertyChanged("AllowUserInput");
             OnPropertyChanged("AllowSubFunctionClick");
@@ -76,17 +68,22 @@ namespace EngineeringMath.Calculations.Components.Parameter
         /// <summary>
         /// Relates function types to output ID's
         /// </summary>
-        private Dictionary<Type, int> FunTypeToOutputID;
+        private readonly Dictionary<Type, int> FunTypeToOutputID;
 
-        /// <summary>
-        /// Called when a property is changed in the the field
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SubFunctionSelection_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private ButtonComponent _SubFunctionButton = null;
+        public ButtonComponent SubFunctionButton
         {
-            this.OnPropertyChanged(e.PropertyName);
+            get
+            {
+                return _SubFunctionButton;
+            }
+            set
+            {
+                _SubFunctionButton = value;
+                OnPropertyChanged();
+            }
         }
+
 
         /// <summary>
         /// True when user input is allowed
@@ -95,7 +92,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
         {
             get
             {
-                return isInput && SubFunctionSelection.SelectedObject == null;
+                return IsInput && SubFunctionSelection.SelectedObject == null;
             }
         }
 
@@ -106,14 +103,27 @@ namespace EngineeringMath.Calculations.Components.Parameter
         {
             get
             {
-                return SubFunctionSelection.SelectedObject != null && isInput;
+                return SubFunctionSelection.SelectedObject != null && IsInput;
             }
         }
 
+
+        private FunctionPicker _SubFunctionSelection = null;
         /// <summary>
         /// Contains all of the functions which will be allowed to substituted out all the fields within the function (intended to binded with a picker
         /// </summary>
-        public FunctionPicker SubFunctionSelection;
+        public FunctionPicker SubFunctionSelection
+        {
+            get
+            {
+                return _SubFunctionSelection;
+            }
+            set
+            {
+                _SubFunctionSelection = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         /// <summary>
@@ -131,18 +141,18 @@ namespace EngineeringMath.Calculations.Components.Parameter
         /// <summary>
         /// Syncs the subfunction with its parameter
         /// </summary>
-        private void SyncSubFunctionWithParameter()
+        private void SyncSubFunctionWithParameter(object sender, EventArgs args)
         {
 
             int outputID = FunTypeToOutputID[SubFunctionSelection.SelectedObject];
             SimpleParameter outputPara = SubFunction.GetParameter(outputID);
             // make sure that the output parameter can be an output
-            if (typeof(SimpleParameter).Equals(SubFunction.CastAs()) && outputPara.isInput)
+            if (SubFunction as SimpleFunction != null && outputPara.IsInput)
             {
                 throw new Exception("The subfunction must use the desired parameter as an output!");
             }
             // double check that that the parameter is the type of unit as the desired output of the subfunction
-            for (int i = 0; i < outputPara.UnitSelection.Length; i++)
+            for (int i = 0; i < outputPara.UnitSelection.Count; i++)
             {
                 if (this.UnitSelection[i].GetType() != outputPara.UnitSelection[i].GetType())
                 {
@@ -151,7 +161,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
             }
 
 
-            for (int i = 0; i < SubFunction.GetParameter(outputID).UnitSelection.Length; i++)
+            for (int i = 0; i < SubFunction.GetParameter(outputID).UnitSelection.Count; i++)
             {
 
                 SubFunction.GetParameter(outputID).UnitSelection[i].SelectedObject =
@@ -162,7 +172,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
             SubFunction.Title = this.Title;
 
 
-            if (typeof(SolveForFunction).Equals(SubFunction.CastAs()))
+            if (SubFunction as SolveForFunction != null)
             {
                 // dont allow user to be able to change the output function
                 ((SolveForFunction)SubFunction).OutputSelection.SelectedObject = outputPara;
@@ -172,7 +182,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
 
             SubFunction.OnSolve += delegate ()
             {
-                for (int i = 0; i < SubFunction.GetParameter(outputID).UnitSelection.Length; i++)
+                for (int i = 0; i < SubFunction.GetParameter(outputID).UnitSelection.Count; i++)
                 {
                     this.UnitSelection[i].SelectedObject =
                     SubFunction.GetParameter(outputID).UnitSelection[i].SelectedObject;
