@@ -12,15 +12,6 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
     /// </summary>
     public class DeltaLength : InletMinusOutput
     {
-        public DeltaLength() : base(InletMinusOutlet) { }
-
-        private readonly AbstractUnit[] _DefaultUnit = new AbstractUnit[] { Length.m };
-        protected override AbstractUnit[] DefaultUnit
-        {
-            get
-            {
-                return _DefaultUnit;
-            }
-        }
+        public DeltaLength() : base(new AbstractUnit[] { Length.m }, InletMinusOutlet) { }
     }
 }

@@ -22,13 +22,15 @@ namespace EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential
         /// </summary>
         /// <param name="defaultUnit"></param>
         /// <param name="fun">Calculation function is taken from one of the static functions in this class</param>
-        public InletMinusOutput(CalcualtionFunction fun) : base()
+        public InletMinusOutput(AbstractUnit[] defaultUnit, CalcualtionFunction fun) : base()
         {
+            DefaultUnit = defaultUnit;
+            BuildComponentCollection();
             this.Title = LibraryResources.InletMinusOutlet;
             MyCalculationFunction = fun;
         }
 
-        protected abstract AbstractUnit[] DefaultUnit { get; }
+        private readonly AbstractUnit[] DefaultUnit;
 
         internal enum Field
         {

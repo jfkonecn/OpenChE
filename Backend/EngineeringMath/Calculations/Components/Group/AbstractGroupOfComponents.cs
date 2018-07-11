@@ -17,13 +17,14 @@ namespace EngineeringMath.Calculations.Components.Group
     {
         internal AbstractGroupOfComponents()
         {
-            BuildComponentCollection();
+            
         }
 
         /// <summary>
         /// Builds the Parameter collection
+        /// MUST BE CALLED BY CHILDREN!!!
         /// </summary>
-        private void BuildComponentCollection()
+        protected void BuildComponentCollection()
         {
             // TODO: Add loading user settings
             ComponentCollection = CreateDefaultComponentCollection();

@@ -35,7 +35,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
 
             this.Title = LibraryResources.RankineCycle;
             this.Table = table;
-
+            BuildComponentCollection();
 #if DEBUG
             BoilerPressure.Value = 8600e3;
             BoilerTemperature.Value = 500;

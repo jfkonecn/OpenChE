@@ -18,7 +18,7 @@ namespace EngineeringMath.Calculations.Area
 
         public Circle() : base()
         {
-
+            BuildComponentCollection();
         }
 
         public enum Field

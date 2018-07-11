@@ -17,9 +17,10 @@ namespace EngineeringMath.Calculations.UnitConverter
     /// </summary>
     public abstract class UnitConverter : SimpleFunction
     {
-        internal UnitConverter() : base()
+        internal UnitConverter(AbstractUnit[] units) : base()
         {
-
+            Units = units;
+            BuildComponentCollection();
         }
 
         protected override void Calculation()
@@ -27,7 +28,7 @@ namespace EngineeringMath.Calculations.UnitConverter
             Output.Value = Input.Value;
         }
 
-        protected abstract AbstractUnit[] Units { get; }
+        private readonly AbstractUnit[] Units;
 
         protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
         {

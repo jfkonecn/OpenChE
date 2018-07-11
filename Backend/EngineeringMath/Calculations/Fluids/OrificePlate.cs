@@ -29,6 +29,7 @@ namespace EngineeringMath.Calculations.Fluids
 
 
             this.Title = LibraryResources.OrificePlate;
+            BuildComponentCollection();
 
 #if DEBUG
             DischargeCoefficient.Value = 1;

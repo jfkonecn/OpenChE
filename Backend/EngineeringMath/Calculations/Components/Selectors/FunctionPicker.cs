@@ -47,7 +47,7 @@ namespace EngineeringMath.Calculations.Components.Selectors
                 if (SubFunction == null || !this.SelectedObject.Equals(SubFunction.GetType()))
                 {
                     Debug.WriteLine($"{TAG} Building a new SubFunction");
-                    SubFunction = ComponentFactory.BuildComponent(this.SelectedObject) as SimpleFunction;
+                    SubFunction = FunctionConstructor();
                     OnFunctionCreated();
                 }
                 else
@@ -55,6 +55,11 @@ namespace EngineeringMath.Calculations.Components.Selectors
                     Debug.WriteLine($"{TAG} Kept old SubFunction");
                 }
             }
+        }
+
+        protected virtual SimpleFunction FunctionConstructor()
+        {
+            return ComponentFactory.BuildComponent(this.SelectedObject) as SimpleFunction;
         }
 
         private SimpleFunction _SubFunction;

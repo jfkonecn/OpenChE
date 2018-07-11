@@ -17,7 +17,7 @@ namespace EngineeringMath.Calculations.Fluids
         public BernoullisEquation()
         {
             this.Title = LibraryResources.BernoullisEquation;
-
+            BuildComponentCollection();
 
 #if DEBUG
             InletVelocity.Value = 1;

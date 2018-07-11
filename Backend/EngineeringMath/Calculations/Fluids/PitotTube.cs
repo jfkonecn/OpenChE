@@ -19,6 +19,7 @@ namespace EngineeringMath.Calculations.Fluids
         {
 
             this.Title = LibraryResources.PitotTube;
+            BuildComponentCollection();
 #if DEBUG
             CorrectionCoefficient.Value = 1;
             DeltaH.Value = 1;

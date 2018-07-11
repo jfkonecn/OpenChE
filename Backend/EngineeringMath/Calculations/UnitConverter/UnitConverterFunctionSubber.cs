@@ -17,7 +17,7 @@ namespace EngineeringMath.Calculations.UnitConverter
         }
 
 
-        private static readonly Dictionary<string, Type> AllUnitFunctionData =
+        internal static readonly Dictionary<string, Type> AllUnitFunctionData =
             new Dictionary<string, Type>
             {
                         { LibraryResources.Pressure, typeof(PressureFun) },
@@ -31,107 +31,43 @@ namespace EngineeringMath.Calculations.UnitConverter
 
         public class PressureFun : UnitConverter
         {
-            public PressureFun() : base()
+            public PressureFun() : base(new AbstractUnit[] { Pressure.Pa })
             {
 
-            }
-
-
-            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Pressure.Pa };
-            protected override AbstractUnit[] Units
-            {
-                get
-                {
-                    return _Units;
-                }
             }
         }
 
         public class VolumetricFlowFun : UnitConverter
         {
-            public VolumetricFlowFun() : base()
+            public VolumetricFlowFun() : base(new AbstractUnit[] { Volume.m3, Time.sec })
             {
 
-            }
-
-            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Volume.m3, Time.sec };
-            protected override AbstractUnit[] Units
-            {
-                get
-                {
-                    return _Units;
-                }
             }
         }
 
         public class TemperatureFun : UnitConverter
         {
-            public TemperatureFun() : base() { }
-
-            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Temperature.C };
-            protected override AbstractUnit[] Units
-            {
-                get
-                {
-                    return _Units;
-                }
-            }
+            public TemperatureFun() : base(new AbstractUnit[] { Temperature.C }) { }
         }
 
         public class MassFlowFun : UnitConverter
         {
-            public MassFlowFun() : base() { }
-
-            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Mass.g };
-            protected override AbstractUnit[] Units
-            {
-                get
-                {
-                    return _Units;
-                }
-            }
+            public MassFlowFun() : base(new AbstractUnit[] { Mass.g }) { }
         }
 
         public class MassFun : UnitConverter
         {
-            public MassFun() : base() { }
-
-            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Mass.g };
-            protected override AbstractUnit[] Units
-            {
-                get
-                {
-                    return _Units;
-                }
-            }
+            public MassFun() : base(new AbstractUnit[] { Mass.g }) { }
         }
 
         public class VolumeFun : UnitConverter
         {
-            public VolumeFun() : base() { }
-
-            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Volume.m3 };
-            protected override AbstractUnit[] Units
-            {
-                get
-                {
-                    return _Units;
-                }
-            }
+            public VolumeFun() : base(new AbstractUnit[] { Volume.m3 }) { }
         }
 
         public class EnergyFun : UnitConverter
         {
-            public EnergyFun() : base() { }
-
-            private readonly AbstractUnit[] _Units = new AbstractUnit[] { Energy.kJ };
-            protected override AbstractUnit[] Units
-            {
-                get
-                {
-                    return _Units;
-                }
-            }
+            public EnergyFun() : base(new AbstractUnit[] { Energy.kJ }) { }
         }
     }
 }

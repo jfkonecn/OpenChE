@@ -47,7 +47,6 @@
     <Compile Include="Calculations\Components\Functions\SimpleFunction.cs" />
     <Compile Include="Calculations\Components\Functions\SolveForFunction.cs" />
     <Compile Include="Calculations\Components\Parameter\SimpleParameter.cs" />
-    <Compile Include="Calculations\Components\Selectors\FunctionPickerParaLinks.cs" />
     <Compile Include="Calculations\Components\Selectors\IntegerSpinner.cs" />
     <Compile Include="Calculations\Components\Selectors\SimplePicker.cs" />
     <Compile Include="Calculations\Components\Parameter\SubFunctionParameter.cs" />

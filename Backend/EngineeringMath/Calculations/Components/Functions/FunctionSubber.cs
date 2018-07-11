@@ -14,15 +14,19 @@ namespace EngineeringMath.Calculations.Components.Functions
     /// </summary>
     public abstract class FunctionSubber : AbstractComponent
     {
-        internal FunctionSubber(Dictionary<string, Type> funData)
+        internal FunctionSubber(FunctionPicker allFunctions)
         {
-            
+            AllFunctions = allFunctions;
+            AllFunctions.OnFunctionCreatedEvent += AllFunctions_OnFunctionCreatedEvent;
+        }
 
-            AllFunctions = new FunctionPicker(funData)
+        internal FunctionSubber(Dictionary<string, Type> funData) : this(
+            new FunctionPicker(funData)
             {
                 SelectedIndex = 0
-            };
-            AllFunctions.OnFunctionCreatedEvent += AllFunctions_OnFunctionCreatedEvent;
+            })
+        {
+                        
         }
 
         private void AllFunctions_OnFunctionCreatedEvent(object sender, EventArgs e)
