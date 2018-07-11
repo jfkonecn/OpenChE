@@ -198,27 +198,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         }
         protected override ObservableCollection<AbstractComponent> CreateDefaultComponentCollection()
         {
-            return new ObservableCollection<AbstractComponent>
-            {
-                RegenerationStagesSelector,
-                BoilerPressure,
-                BoilerTemperature,
-                CondenserPressure,
-                PumpEfficiency,
-                TurbineEfficiency,
-                PowerRequirement,
-                InletBoilerTemperature,
-                CondenserSteamQuality,
-                PumpWork,
-                BoilerWork,
-                CondenserWork,
-                TurbineWork,
-                ThermalEfficiency,
-                NetWork,
-                SteamRate,
-                BoilerHeatTransRate,
-                CondenserHeatTransRate
-            };
+            return base.CreateDefaultComponentCollection();
         }
 
 
