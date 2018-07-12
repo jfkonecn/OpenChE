@@ -22,7 +22,7 @@ namespace CheApp.Views.Templates.MainMenu
         {
             this.Title = item.Title;
             this.Icon = item.Icon;
-            this.Style = (Style)Application.Current.Resources["neutralParameterStyle"];
+            //this.Style = (Style)Application.Current.Resources["neutralParameterStyle"];
 
 
             ListView view = new ListView()

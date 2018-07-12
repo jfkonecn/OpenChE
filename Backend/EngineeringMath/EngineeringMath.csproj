@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\LookupTables\SteamTable.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LookupTables\SteamTable.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Resources\LibraryResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

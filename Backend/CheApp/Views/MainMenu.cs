@@ -19,7 +19,7 @@ namespace CheApp.Views
         public MainMenu()
         {
             this.Title = LibraryResources.AppTitle;
-            this.Style = (Style)Application.Current.Resources["backgroundStyle"];
+            
 
             switch (Device.RuntimePlatform)
             {

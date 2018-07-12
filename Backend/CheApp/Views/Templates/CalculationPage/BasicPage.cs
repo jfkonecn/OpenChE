@@ -31,15 +31,16 @@ namespace CheApp.Views.Templates.CalculationPage
         public BasicPage(AbstractComponent component)
         {
             this.Title = component.Title;
-            this.Content = new ListView()
+            View content = Template.SelectTemplate(component, null).CreateContent() as View;
+            content.BindingContext = component;
+            this.Content = new ScrollView()
             {
-                ItemsSource = new List<AbstractComponent> { component },
-                ItemTemplate = new AbstractComponentTemplateSelector()
+                Content = content
             };
 
         }
 
-
+        private readonly AbstractComponentTemplateSelector Template = new AbstractComponentTemplateSelector();
 
         /// <summary>
         /// Creates a view out of an abstract component
@@ -101,6 +102,9 @@ namespace CheApp.Views.Templates.CalculationPage
             */
             // Calculate button row
             layout.Children.Add(CreateCalculateFrame(fun));
+
+
+            
 
             return new ScrollView()
             {

@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converter\IsNullToBoolean.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MasterPageItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Theming.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\FluidsMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\AbstractComponentTemplateSelector.cs" />

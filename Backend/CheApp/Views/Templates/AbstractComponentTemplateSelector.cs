@@ -14,6 +14,7 @@ using CheApp.Converter.Component;
 using EngineeringMath.Calculations.Components;
 using EngineeringMath.Resources;
 using System.Collections.ObjectModel;
+using CheApp.CustomUI;
 
 namespace CheApp.Views.Templates
 {
@@ -115,7 +116,7 @@ namespace CheApp.Views.Templates
         /// </para>
         /// </param>
         /// <returns></returns>
-        private ScrollView AbstractGroupOfComponentsViewWithBindings(string pathToComponent = null)
+        private ListView AbstractGroupOfComponentsViewWithBindings(string pathToComponent = null)
         {
             ListView view = new ListView()
             {
@@ -126,10 +127,7 @@ namespace CheApp.Views.Templates
             
 
 
-            return new ScrollView()
-            {
-                Content = view
-            }; 
+            return view; 
                 
                 
         }
@@ -172,7 +170,7 @@ namespace CheApp.Views.Templates
         {
             Button btn = new Button()
             {
-
+                
             };
             
             btn.SetBinding(Button.CommandProperty, CreateBindingPathToProperty(pathToComponent, "Command"));
@@ -181,7 +179,7 @@ namespace CheApp.Views.Templates
         }
 
         /// <summary>
-        /// Creates a stacklayout which is binding with a SimpleParameter's unit selectors for a type of button component, but will have no data context
+        /// Creates a stacklayout which is binding with a SimpleParameter for a type of button component, but will have no data context
         /// </summary>
         /// <param name="pathToComponent">
         /// If the data context will not be a SimpleParameter then add a path from the context to the component else leave this blank.
@@ -193,39 +191,58 @@ namespace CheApp.Views.Templates
         /// <returns></returns>
         private StackLayout CreateUnitPickersWithBindings(string pathToComponent = null)
         {
-            ScrollView view = new ScrollView()
-            {
-                
-            };
-            Label label = new Label()
-            {
-                
-            };
-            //DesiredUnits.Length
-            label.SetBinding(Label.TextProperty, CreateBindingPathToProperty(pathToComponent, "DesiredUnits.Count"));
-
-            Trigger trigger = new Trigger(typeof(StackLayout));
+            Picker[] unitPicker = new Picker[] { CreatePickerWithBindings(), CreatePickerWithBindings() };
+            unitPicker[0].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[0]"));
             
-            return new StackLayout()
+            Picker secondPicker = CreatePickerWithBindings();
+            unitPicker[1].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[1]"));
+            unitPicker[1].Style = new Style(typeof(Picker))
             {
+                Triggers =
+                {
+                    new Trigger(typeof(Picker))
+                    {
+                        Property = Picker.BindingContextProperty,
+                        Value = null,
+                        Setters =
+                        {
+                            new Setter
+                            {
+                                Property = Picker.BindingContextProperty,
+                                Value = new Binding()
+                            },
+                            new Setter
+                            {
+                                Property = Picker.IsVisibleProperty,
+                                Value = false
+                            }
+                        }
+                    }
+                }
+            };
+
+            StackLayout stackLayout = new StackLayout()
+            {
+                FlowDirection = FlowDirection.LeftToRight,
                 Children =
                 {
-                    label
+                    unitPicker[0],
+                    unitPicker[1]
                 }
-                
-            };
+            };       
+            return stackLayout;
         }
 
 
 
         /// <summary>
-        /// Sets the FunctionDataTemplate property
+        /// Sets the GroupOfComponentsDataTemplate property
         /// </summary>
         private void BuildGroupOfComponentsDataTemplate()
         {
             GroupOfComponentsDataTemplate = new DataTemplate(() => 
             {
-                return new ViewCell { View = AbstractGroupOfComponentsViewWithBindings() };
+                return AbstractGroupOfComponentsViewWithBindings();
             });
         }
 
@@ -294,7 +311,6 @@ namespace CheApp.Views.Templates
             ListView unitView = new ListView()
             {
                 ItemTemplate = this,
-                HeightRequest = 60
             };
             unitView.SetBinding(ListView.ItemsSourceProperty, "UnitSelection");
 
@@ -319,8 +335,8 @@ namespace CheApp.Views.Templates
                 stack.Children.Add(subFunBtn);
             }
             stack.Children.Add(inputEntry);
-            stack.Children.Add(unitView);
-            //stack.Children.Add(CreateUnitPickersWithBindings());
+            //stack.Children.Add(unitView);
+            stack.Children.Add(CreateUnitPickersWithBindings());
             stack.Children.Add(errorLb);
             return new ViewCell
             {
@@ -375,16 +391,13 @@ namespace CheApp.Views.Templates
                     ItemTemplate = this
                 };
                 listView.SetBinding(ListView.ItemsSourceProperty, "AllFunctions.SubFunction");
-                return new ViewCell()
+                return new StackLayout
                 {
-                    View = new StackLayout
-                    {
-                        Children =
+                    Children =
                         {
                             picker,
                             listView
                         }
-                    }
                 };
             });
         }
