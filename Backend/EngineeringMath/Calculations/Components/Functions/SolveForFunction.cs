@@ -29,7 +29,7 @@ namespace EngineeringMath.Calculations.Components.Functions
 
         private void OutputSelection_OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            OutputSelection.SelectedObject.IsOutput = true;
+            OutputSelection.SelectedObject.IsInput = false;
             OnReset();
         }
 

@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AbstractComponentNavigationButtonBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\BoolToNotBool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\Component\ComponentStateToTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\DoubleToString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\IsNullToBoolean.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleListView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleViewCell.cs" />

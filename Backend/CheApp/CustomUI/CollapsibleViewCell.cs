@@ -35,7 +35,7 @@ namespace CheApp.CustomUI
                 VerticalOptions = LayoutOptions.Center,
                 TextColor = Color.Black
             };
-
+            
             this.Tapped += CollapsibleViewCell_Tapped;
 
             placeHolderLabel.SetBinding(Label.TextProperty, "Header");
@@ -55,6 +55,7 @@ namespace CheApp.CustomUI
         private void CollapsibleViewCell_Tapped(object sender, EventArgs e)
         {
             IsCollapsed = !IsCollapsed;
+            
         }
 
 

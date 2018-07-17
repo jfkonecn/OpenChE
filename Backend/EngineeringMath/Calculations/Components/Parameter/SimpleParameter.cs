@@ -118,10 +118,8 @@ namespace EngineeringMath.Calculations.Components.Parameter
                     EffectiveLowerLimitString,
                     EffectiveUpperLimitString);
 
-                if (this.IsOutput && double.TryParse(ValueStr, out double num))
+                if (!this.IsInput && double.TryParse(ValueStr, out double num))
                 {
-                    // we don't use _Field.GetValue() because it will give us the value 
-                    // in terms of the currently selected units
 
                     // get the old units
                     AbstractUnit[] oldUnits = UnitSelection.Select(x => x.SelectedObject).ToArray();
@@ -231,8 +229,8 @@ namespace EngineeringMath.Calculations.Components.Parameter
             }
         }
 
-        bool _IsInput;
-        public bool IsInput
+        private bool _IsInput;
+        public virtual bool IsInput
         {
             get
             {
@@ -246,23 +244,8 @@ namespace EngineeringMath.Calculations.Components.Parameter
                     OnMadeOuput?.Invoke(this.ID);
                 }
                 OnPropertyChanged();
-                OnPropertyChanged("IsOutput");
                 OnPropertyChanged("AllowUserInput");
                 OnPropertyChanged("Placeholder");
-            }
-        }
-
-        public bool IsOutput
-        {
-            get
-            {
-                // should always be the opposite of isInput
-                return !this.IsInput;
-            }
-            set
-            {
-                // property change event handled in the isInput parameter
-                this.IsInput = !value;
             }
         }
 
@@ -271,7 +254,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
         {
             get
             {
-                if (IsOutput)
+                if (!IsInput)
                 {
                     return null;
                 }

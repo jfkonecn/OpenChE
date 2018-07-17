@@ -53,7 +53,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
 
             SubFunctionButton = new ButtonComponent(
             (object parameter) => { return; },
-            (object parameter) => { return true; })
+            (object parameter) => { return AllowSubFunctionClick; })
             {
                 Title = LibraryResources.SubFunction
             };
@@ -93,6 +93,17 @@ namespace EngineeringMath.Calculations.Components.Parameter
             get
             {
                 return IsInput && SubFunctionSelection.SelectedObject == null;
+            }
+        }
+
+        public override bool IsInput {
+            get => base.IsInput;
+            set
+            {
+                base.IsInput = value;
+                OnPropertyChanged("AllowSubFunctionClick");
+                if(SubFunctionSelection != null)
+                    SubFunctionSelection.IsEnabled = IsInput;
             }
         }
 

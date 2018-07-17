@@ -74,9 +74,15 @@ namespace EngineeringMath.Calculations.Components.Commands
 
             public event EventHandler CanExecuteChanged;
 
+
             public bool CanExecute(object parameter)
             {
                 return CanRunCommand(parameter);
+            }
+
+            private void OnCanExecuteChanged()
+            {
+                CanExecuteChanged?.Invoke(this, new EventArgs());
             }
 
             public void Execute(object parameter)

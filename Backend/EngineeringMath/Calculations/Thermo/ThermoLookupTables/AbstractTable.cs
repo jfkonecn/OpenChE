@@ -81,11 +81,11 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 if (ParameterBeingUsed.SelectedObject.Equals(GetParameter((int)Field.pressure)))
                 {
                     GetParameter((int)Field.pressure).IsInput = true;
-                    GetParameter((int)Field.temp).IsOutput = true;
+                    GetParameter((int)Field.temp).IsInput = false;
                 }
                 else if (ParameterBeingUsed.SelectedObject.Equals(GetParameter((int)Field.temp)))
                 {
-                    GetParameter((int)Field.pressure).IsOutput = true;
+                    GetParameter((int)Field.pressure).IsInput = false;
                     GetParameter((int)Field.temp).IsInput = true;
                 }
                 else
