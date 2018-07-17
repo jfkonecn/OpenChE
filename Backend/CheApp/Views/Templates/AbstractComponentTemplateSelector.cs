@@ -121,6 +121,7 @@ namespace CheApp.Views.Templates
             ListView view = new ListView()
             {
                 SeparatorVisibility = SeparatorVisibility.Default,
+                HasUnevenRows = true,
                 ItemTemplate = this
             };
             view.SetBinding(ListView.ItemsSourceProperty, CreateBindingPathToProperty(pathToComponent, "ComponentCollection"));
@@ -195,35 +196,12 @@ namespace CheApp.Views.Templates
             unitPicker[0].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[0]"));
             
             Picker secondPicker = CreatePickerWithBindings();
-            unitPicker[1].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[1]"));
-            unitPicker[1].Style = new Style(typeof(Picker))
-            {
-                Triggers =
-                {
-                    new Trigger(typeof(Picker))
-                    {
-                        Property = Picker.BindingContextProperty,
-                        Value = null,
-                        Setters =
-                        {
-                            new Setter
-                            {
-                                Property = Picker.BindingContextProperty,
-                                Value = new Binding()
-                            },
-                            new Setter
-                            {
-                                Property = Picker.IsVisibleProperty,
-                                Value = false
-                            }
-                        }
-                    }
-                }
-            };
+            unitPicker[1].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[0]"));
+
 
             StackLayout stackLayout = new StackLayout()
             {
-                FlowDirection = FlowDirection.LeftToRight,
+                Orientation = StackOrientation.Horizontal,
                 Children =
                 {
                     unitPicker[0],
@@ -324,8 +302,9 @@ namespace CheApp.Views.Templates
 
             StackLayout stack = new StackLayout()
             {
-                VerticalOptions = new LayoutOptions(LayoutAlignment.Center, false),
-                
+                //VerticalOptions = new LayoutOptions(LayoutAlignment.Center, false),
+                //HeightRequest = 200
+                Orientation = StackOrientation.Vertical
             };
 
             stack.Children.Add(titleLb);
@@ -335,7 +314,6 @@ namespace CheApp.Views.Templates
                 stack.Children.Add(subFunBtn);
             }
             stack.Children.Add(inputEntry);
-            //stack.Children.Add(unitView);
             stack.Children.Add(CreateUnitPickersWithBindings());
             stack.Children.Add(errorLb);
             return new ViewCell
