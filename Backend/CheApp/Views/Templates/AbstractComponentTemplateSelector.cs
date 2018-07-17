@@ -24,8 +24,7 @@ namespace CheApp.Views.Templates
         {
             BuildGroupOfComponentsDataTemplate();
             BuildButtonDataTemplate();
-            BuildSimpleParameterDataTemplate();
-            BuildSubFunctionParameterDataTemplate();
+            BuildParameterDataTemplates();
             BuildSimplePickerDataTemplate();
             BuildFunctionSubberDataTemplate();
         }
@@ -54,11 +53,12 @@ namespace CheApp.Views.Templates
             }
             else if (item as SimpleParameter != null)
             {
-                if(item as SubFunctionParameter != null)
+                int unitCount = ((SimpleParameter)item).UnitSelection.Count;
+                if (item as SubFunctionParameter != null)
                 {
-                    return SubFunctionParameterDataTemplate;
+                    return ParameterDataTemplates[ParameterType.SubFunctionParameter][unitCount];
                 }
-                return SimpleParameterDataTemplate;
+                return ParameterDataTemplates[ParameterType.SimpleParameter][unitCount];
             }
             else if (item as SimplePicker<SimpleParameter> != null
                 || item as SimplePicker<int> != null
@@ -190,24 +190,38 @@ namespace CheApp.Views.Templates
         /// </para>
         /// </param>
         /// <returns></returns>
-        private StackLayout CreateUnitPickersWithBindings(string pathToComponent = null)
+        private StackLayout CreateUnitPickersWithBindings(int unitCount, string pathToComponent = null)
         {
-            Picker[] unitPicker = new Picker[] { CreatePickerWithBindings(), CreatePickerWithBindings() };
-            unitPicker[0].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[0]"));
-            
-            Picker secondPicker = CreatePickerWithBindings();
-            unitPicker[1].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[0]"));
+
 
 
             StackLayout stackLayout = new StackLayout()
             {
-                Orientation = StackOrientation.Horizontal,
-                Children =
+                Orientation = StackOrientation.Horizontal
+            };
+            
+            if(unitCount == 1)
+            {
+                Picker unitPicker = CreatePickerWithBindings();
+                unitPicker.SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[0]"));
+                stackLayout.Children.Add(unitPicker);
+            }
+            else if(unitCount == 2)
+            {
+                Picker[] unitPicker = new Picker[] { CreatePickerWithBindings(), CreatePickerWithBindings() };
+                unitPicker[0].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[0]"));
+                Label perLbl = new Label
                 {
-                    unitPicker[0],
-                    unitPicker[1]
-                }
-            };       
+                    Text = LibraryResources.Per,
+                    HorizontalTextAlignment = TextAlignment.Center
+                };
+                unitPicker[1].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[1]"));
+
+                stackLayout.Children.Add(unitPicker[0]);
+                stackLayout.Children.Add(perLbl);
+                stackLayout.Children.Add(unitPicker[1]);
+            }
+
             return stackLayout;
         }
 
@@ -243,7 +257,7 @@ namespace CheApp.Views.Templates
 
 
 
-        enum ParameterType
+        public enum ParameterType
         {
             SimpleParameter,
             SubFunctionParameter
@@ -254,7 +268,7 @@ namespace CheApp.Views.Templates
         /// </summary>
         /// <param name="paraType"></param>
         /// <returns></returns>
-        private ViewCell CreateParameterStack(ParameterType paraType)
+        private ViewCell CreateParameterStack(ParameterType paraType, int unitCount)
         {
             // title
             Label titleLb = new Label()
@@ -314,7 +328,7 @@ namespace CheApp.Views.Templates
                 stack.Children.Add(subFunBtn);
             }
             stack.Children.Add(inputEntry);
-            stack.Children.Add(CreateUnitPickersWithBindings());
+            stack.Children.Add(CreateUnitPickersWithBindings(unitCount));
             stack.Children.Add(errorLb);
             return new ViewCell
             {
@@ -324,30 +338,37 @@ namespace CheApp.Views.Templates
 
 
         /// <summary>
-        /// Sets the SimpleParameterDataTemplate property
+        /// Sets the ParameterDataTemplates property
         /// </summary>
         /// <param name="paraType"></param>
-        private void BuildSimpleParameterDataTemplate()
+        private void BuildParameterDataTemplates()
         {
-            SimpleParameterDataTemplate = new DataTemplate(() => 
-            {
-                return CreateParameterStack(ParameterType.SimpleParameter);
-            });
-        }
-        public DataTemplate SimpleParameterDataTemplate { get; private set; }
 
-        /// <summary>
-        /// Sets the SimpleParameterDataTemplate property
-        /// </summary>
-        /// <param name="paraType"></param>
-        private void BuildSubFunctionParameterDataTemplate()
-        {
-            SubFunctionParameterDataTemplate = new DataTemplate(() =>
+            ParameterDataTemplates = new Dictionary<ParameterType, Dictionary<int, DataTemplate>>
             {
-                return CreateParameterStack(ParameterType.SubFunctionParameter);
-            });
+                { ParameterType.SimpleParameter, new Dictionary<int, DataTemplate>() },
+                { ParameterType.SubFunctionParameter, new Dictionary<int, DataTemplate>() }
+            };
+
+            for(int i = 1; i < 3; i++)
+            {
+                // avoid pointer sharing
+                int temp = i;
+                ParameterDataTemplates[ParameterType.SimpleParameter][temp] = new DataTemplate(() =>
+                {
+                    return CreateParameterStack(ParameterType.SimpleParameter, temp);
+                });
+                ParameterDataTemplates[ParameterType.SubFunctionParameter][temp] = new DataTemplate(() =>
+                {
+                    return CreateParameterStack(ParameterType.SubFunctionParameter, temp);
+                });
+
+            }
+
         }
-        public DataTemplate SubFunctionParameterDataTemplate { get; private set; }
+
+
+        public Dictionary<ParameterType, Dictionary<int, DataTemplate>> ParameterDataTemplates { get; private set; }
 
         private void BuildSimplePickerDataTemplate()
         {
