@@ -15,6 +15,7 @@ using EngineeringMath.Calculations.Components;
 using EngineeringMath.Resources;
 using System.Collections.ObjectModel;
 using CheApp.CustomUI;
+using CheApp.Converter;
 
 namespace CheApp.Views.Templates
 {
@@ -285,6 +286,7 @@ namespace CheApp.Views.Templates
             Button subFunBtn = new Button() { };
             subFunBtn.SetBinding(Button.TextProperty, "SubFunctionButton.Title");
             subFunBtn.SetBinding(Button.CommandProperty, "SubFunctionButton.Command");
+            subFunBtn.SetBinding(Button.IsEnabledProperty, "AllowSubFunctionClick");
             AbstractComponentNavigationButtonBehavior subFunBtnBehavior = new AbstractComponentNavigationButtonBehavior();
             subFunBtnBehavior.SetBinding(AbstractComponentNavigationButtonBehavior.ComponentProperty, "SubFunctionSelection.SubFunction");
             subFunBtn.Behaviors.Add(subFunBtnBehavior);
@@ -314,26 +316,20 @@ namespace CheApp.Views.Templates
             errorLb.SetBinding(Label.TextProperty, "ErrorMessage");
 
 
-            StackLayout stack = new StackLayout()
-            {
-                //VerticalOptions = new LayoutOptions(LayoutAlignment.Center, false),
-                //HeightRequest = 200
-                Orientation = StackOrientation.Vertical
-            };
-
-            stack.Children.Add(titleLb);
+            CollapsibleViewCell cell = new CollapsibleViewCell();
+            cell.SetBinding(CollapsibleViewCell.HeaderProperty, "Title");
+            cell.SetBinding(CollapsibleViewCell.IsCollapsedProperty, "AllowUserInput");
+            cell.ExpandedView.Children.Add(titleLb);
             if (paraType == ParameterType.SubFunctionParameter)
             {
-                stack.Children.Add(subFunPicker);
-                stack.Children.Add(subFunBtn);
+                cell.ExpandedView.Children.Add(subFunPicker);
+                cell.ExpandedView.Children.Add(subFunBtn);
             }
-            stack.Children.Add(inputEntry);
-            stack.Children.Add(CreateUnitPickersWithBindings(unitCount));
-            stack.Children.Add(errorLb);
-            return new ViewCell
-            {
-                View = stack
-            };
+            cell.ExpandedView.Children.Add(inputEntry);
+            cell.ExpandedView.Children.Add(CreateUnitPickersWithBindings(unitCount));
+            cell.ExpandedView.Children.Add(errorLb);
+            cell.ExpandedView.SetBinding(StackLayout.BindingContextProperty, "BindingContext");
+            return cell;
         }
 
 

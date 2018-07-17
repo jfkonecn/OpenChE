@@ -1,5 +1,8 @@
-﻿using System;
+﻿using CheApp.Converter;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using Xamarin.Forms;
 
@@ -10,99 +13,102 @@ namespace CheApp.CustomUI
     /// When collapsed the the cell becomes just a label with specified placeholder text
     /// The collapsed state is toggled by tapping the cell
     /// </summary>
-    public class CollapsibleViewCell : ViewCell
+    public class CollapsibleViewCell : ViewCell, INotifyPropertyChanged
     {
 
-        public CollapsibleViewCell(View expandedView) : base()
+
+        public CollapsibleViewCell() : base()
         {
-            ExpandedView = expandedView;
-            CollapsedView = CreateCollapsedView();
-            ViewContainer = new Grid()
+            ExpandedView = new StackLayout()
             {
-                RowDefinitions = new RowDefinitionCollection
-                {
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }
-                },
-                ColumnDefinitions = new ColumnDefinitionCollection
-                {
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }
-                }
+                Orientation = StackOrientation.Vertical
             };
-            this.View = ViewContainer;
-            // TODO: make this collapsible!!!
-            UpdateView();
-        }
-
-        protected override void OnTapped()
-        {
-            //base.OnTapped();
-            IsCollapsed = !IsCollapsed;
-        }
-
-        private View CreateCollapsedView()
-        {
+            StackLayout localStackLayout = new StackLayout()
+            {
+                Children = { ExpandedView },
+                IsVisible = false,
+                BindingContext = this
+            };
             Label placeHolderLabel = new Label()
             {
                 FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
                 VerticalOptions = LayoutOptions.Center,
                 TextColor = Color.Black
             };
-            placeHolderLabel.SetBinding(Label.TextProperty, "PlaceHolder");
-            return new StackLayout()
+
+            this.Tapped += CollapsibleViewCell_Tapped;
+
+            placeHolderLabel.SetBinding(Label.TextProperty, "Header");
+            localStackLayout.SetBinding(StackLayout.IsVisibleProperty, "IsCollapsed");
+            this.Tapped += (object sender, EventArgs e) => { Debug.WriteLine($"IsVisible:{localStackLayout.IsVisible.ToString()}"); };
+            this.View = new StackLayout()
             {
-                BindingContext = this,
-                Orientation = StackOrientation.Horizontal,
+                Orientation = StackOrientation.Vertical,
                 Children =
                 {
-                    placeHolderLabel
+                    placeHolderLabel,
+                    localStackLayout
                 }
             };
         }
+
+        private void CollapsibleViewCell_Tapped(object sender, EventArgs e)
+        {
+            IsCollapsed = !IsCollapsed;
+        }
+
+
+
+
 
         /// <summary>
         /// Updates the current cell view
         /// </summary>
         private void UpdateView()
         {
-            while (ViewContainer.Children.Count > 0)
+            /*Animation dropAnimation = new Animation(d =>
             {
-                ViewContainer.Children.RemoveAt(0);
+                
             }
-
-            this.ViewContainer.Children.Add(IsCollapsed ? CollapsedView : ExpandedView, 0, 0);
+            , this.Height
+            , 0
+            , Easing.Linear);
+            dropAnimation.Commit(ExpandedView, "DropSize", 16, (uint)350, Easing.Linear);*/
+            
         }
 
-        /// <summary>
-        /// View when collapsed
-        /// </summary>
-        private View CollapsedView { get; set; }
+        public static readonly BindableProperty HeaderProperty =
+BindableProperty.Create(nameof(Header), typeof(string), typeof(CollapsibleViewCell), "");
 
+        public static readonly BindableProperty IsCollapsedProperty =
+BindableProperty.Create(nameof(IsCollapsed), typeof(bool), typeof(CollapsibleViewCell), true);
+
+        /// <summary>
+        /// The text displayed when the cell is both expanded and contracted
+        /// </summary>
+        public string Header
+        {
+            get { return (string)GetValue(HeaderProperty); }
+            set { SetValue(HeaderProperty, value); }
+        }
+
+
+        private StackLayout _ExpandedView;
         /// <summary>
         /// The view when this view cell is expanded
         /// </summary>
-        public View ExpandedView { get; private set; }
-
-        /// <summary>
-        /// Stores the collapsed or expanded view
-        /// </summary>
-        private Grid ViewContainer { get; set; }
-
-        private string _PlaceHolder = string.Empty;
-        /// <summary>
-        /// Text displayed with the cell is collapsed
-        /// </summary>
-        public string PlaceHolder
+        public StackLayout ExpandedView
         {
             get
             {
-                return _PlaceHolder;
+                return _ExpandedView;
             }
-            set
+            private set
             {
-                _PlaceHolder = value;
-                OnPropertyChanged("PlaceHolder");
+                _ExpandedView = value;
             }
         }
+
 
         private bool _IsCollapsed = true;
         /// <summary>
@@ -110,15 +116,12 @@ namespace CheApp.CustomUI
         /// </summary>
         public bool IsCollapsed
         {
-            get
-            {
-                return _IsCollapsed;
-            }
+            get { return _IsCollapsed; }
             set
             {
+                OnPropertyChanging("IsCollapsed");
                 _IsCollapsed = value;
-                OnPropertyChanged("IsCollapsed");
-                UpdateView();
+                OnPropertyChanged("IsCollapsed");                
             }
         }
     }
