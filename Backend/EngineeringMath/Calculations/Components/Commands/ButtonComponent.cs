@@ -14,9 +14,9 @@ namespace EngineeringMath.Calculations.Components.Commands
     {
 
 
-        public ButtonComponent(ExecuteDelegate execute, CanExecuteDelegate canExecute)
+        public ButtonComponent(SimpleCommand.ExecuteDelegate execute, SimpleCommand.CanExecuteDelegate canExecute)
         {
-            Command = new ButtonCommand(
+            Command = new SimpleCommand(
                 (object parameter) =>
                 {
                     try
@@ -34,20 +34,9 @@ namespace EngineeringMath.Calculations.Components.Commands
         }
 
 
-        /// <summary>
-        /// Executed when command event occurs
-        /// </summary>
-        public delegate void ExecuteDelegate(object parameter);
 
-        /// <summary>
-        /// True when command when can be run
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public delegate bool CanExecuteDelegate(object parameter);
-
-        private ButtonCommand _Command;
-        public ButtonCommand Command
+        private SimpleCommand _Command;
+        public SimpleCommand Command
         {
             get
             {
@@ -57,37 +46,6 @@ namespace EngineeringMath.Calculations.Components.Commands
             {
                 _Command = value;
                 OnPropertyChanged();
-            }
-        }
-
-        public class ButtonCommand : ICommand
-        {
-
-            internal ButtonCommand(ExecuteDelegate command, CanExecuteDelegate canRunCommand)
-            {
-                Command = command;
-                CanRunCommand = canRunCommand;
-            }
-
-            private ExecuteDelegate Command { get; set; }
-            private CanExecuteDelegate CanRunCommand { get; set; }
-
-            public event EventHandler CanExecuteChanged;
-
-
-            public bool CanExecute(object parameter)
-            {
-                return CanRunCommand(parameter);
-            }
-
-            private void OnCanExecuteChanged()
-            {
-                CanExecuteChanged?.Invoke(this, new EventArgs());
-            }
-
-            public void Execute(object parameter)
-            {
-                Command(parameter);
             }
         }
     }

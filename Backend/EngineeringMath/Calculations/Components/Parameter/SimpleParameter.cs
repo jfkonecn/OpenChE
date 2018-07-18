@@ -8,6 +8,7 @@ using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components.Selectors;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using EngineeringMath.Calculations.Components.Commands;
 
 namespace EngineeringMath.Calculations.Components.Parameter
 {
@@ -58,6 +59,14 @@ namespace EngineeringMath.Calculations.Components.Parameter
                 });
                 UnitSelection[i].OnSelectedIndexChanged += UnitPicker_OnSelectedIndexChanged(i);
             }
+
+            ToggleIsVisibleCommand = new SimpleCommand(
+                ToggleIsVisible,
+                (object sender) =>
+                {
+                    return true;
+                }
+            );
         }
 
         /// <summary>
@@ -246,6 +255,41 @@ namespace EngineeringMath.Calculations.Components.Parameter
                 OnPropertyChanged();
                 OnPropertyChanged("AllowUserInput");
                 OnPropertyChanged("Placeholder");
+            }
+        }
+
+
+        private void ToggleIsVisible(object sender)
+        {
+            IsVisible = !IsVisible;
+        }
+
+        private SimpleCommand _ToggleIsVisibleCommand;
+
+        public SimpleCommand ToggleIsVisibleCommand
+        {
+            get
+            {
+                return _ToggleIsVisibleCommand;
+            }
+            private set
+            {
+                _ToggleIsVisibleCommand = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _IsVisible;
+        public bool IsVisible
+        {
+            get
+            {
+                return _IsVisible;
+            }
+            set
+            {
+                _IsVisible = value;
+                OnPropertyChanged();
             }
         }
 
