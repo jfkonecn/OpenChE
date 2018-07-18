@@ -279,7 +279,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
             }
         }
 
-        private bool _IsVisible;
+        private bool _IsVisible = true;
         public bool IsVisible
         {
             get

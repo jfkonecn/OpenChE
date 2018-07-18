@@ -29,16 +29,12 @@ namespace CheApp.CustomUI
                 IsVisible = false,
                 BindingContext = this
             };
-            Label placeHolderLabel = new Label()
+            ToggleVisibilityButton = new Button()
             {
                 FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
                 VerticalOptions = LayoutOptions.Center,
                 TextColor = Color.Black
             };
-            
-            this.Tapped += CollapsibleViewCell_Tapped;
-
-            placeHolderLabel.SetBinding(Label.TextProperty, "Header");
             localStackLayout.SetBinding(StackLayout.IsVisibleProperty, "IsCollapsed");
             this.Tapped += (object sender, EventArgs e) => { Debug.WriteLine($"IsVisible:{localStackLayout.IsVisible.ToString()}"); };
             this.View = new StackLayout()
@@ -46,36 +42,10 @@ namespace CheApp.CustomUI
                 Orientation = StackOrientation.Vertical,
                 Children =
                 {
-                    placeHolderLabel,
+                    ToggleVisibilityButton,
                     localStackLayout
                 }
             };
-        }
-
-        private void CollapsibleViewCell_Tapped(object sender, EventArgs e)
-        {
-            IsCollapsed = !IsCollapsed;
-            
-        }
-
-
-
-
-
-        /// <summary>
-        /// Updates the current cell view
-        /// </summary>
-        private void UpdateView()
-        {
-            /*Animation dropAnimation = new Animation(d =>
-            {
-                
-            }
-            , this.Height
-            , 0
-            , Easing.Linear);
-            dropAnimation.Commit(ExpandedView, "DropSize", 16, (uint)350, Easing.Linear);*/
-            
         }
 
         public static readonly BindableProperty HeaderProperty =
@@ -93,37 +63,23 @@ BindableProperty.Create(nameof(IsCollapsed), typeof(bool), typeof(CollapsibleVie
             set { SetValue(HeaderProperty, value); }
         }
 
-
-        private StackLayout _ExpandedView;
         /// <summary>
         /// The view when this view cell is expanded
         /// </summary>
         public StackLayout ExpandedView
         {
-            get
-            {
-                return _ExpandedView;
-            }
-            private set
-            {
-                _ExpandedView = value;
-            }
+            get;
+            private set;
         }
 
-
-        private bool _IsCollapsed = true;
+        public Button ToggleVisibilityButton { get; private set; }
         /// <summary>
         /// true with the cell is collapsed
         /// </summary>
         public bool IsCollapsed
         {
-            get { return _IsCollapsed; }
-            set
-            {
-                OnPropertyChanging("IsCollapsed");
-                _IsCollapsed = value;
-                OnPropertyChanged("IsCollapsed");                
-            }
+            get { return (bool)GetValue(IsCollapsedProperty); }
+            set { SetValue(IsCollapsedProperty, value); }
         }
     }
 }

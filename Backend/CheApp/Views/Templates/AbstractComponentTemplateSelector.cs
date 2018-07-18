@@ -317,8 +317,9 @@ namespace CheApp.Views.Templates
 
 
             CollapsibleViewCell cell = new CollapsibleViewCell();
-            cell.SetBinding(CollapsibleViewCell.HeaderProperty, "Title");
-            cell.SetBinding(CollapsibleViewCell.IsCollapsedProperty, "AllowUserInput");
+            cell.ToggleVisibilityButton.SetBinding(Button.TextProperty, "Title");
+            cell.SetBinding(CollapsibleViewCell.IsCollapsedProperty, "IsVisible");
+            cell.ToggleVisibilityButton.SetBinding(Button.CommandProperty, "ToggleIsVisibleCommand");
             cell.ExpandedView.Children.Add(titleLb);
             if (paraType == ParameterType.SubFunctionParameter)
             {
