@@ -15,9 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converter\Component\ComponentStateToTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\DoubleToString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\IsNullToBoolean.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CustomUI\ClickableAbsoluteLayout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomUI\ClickableContentView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleListView.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleViewCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MasterPageItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Theming.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\FluidsMenu.cs" />

@@ -13,48 +13,64 @@ namespace CheApp.CustomUI
     /// When collapsed the the cell becomes just a label with specified placeholder text
     /// The collapsed state is toggled by tapping the cell
     /// </summary>
-    public class CollapsibleViewCell : ContentView
+    public class CollapsibleView : ContentView
     {
 
 
-        public CollapsibleViewCell() : base()
+        public CollapsibleView() : base()
         {
             ExpandedViewContainer = new ContentView()
             {
-                IsVisible = true
             };
-            ExpandedView = new StackLayout()
-            {
-                Orientation = StackOrientation.Vertical
-            };
+            ExpandedViewContainer.SetBinding(StackLayout.IsVisibleProperty, new Binding("IsCollapsed", source: this, converter: new BoolToNotBool()));
 
-            ToggleVisibilityButton = new Button()
+            Label headerLabel = new Label()
             {
-                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
-                VerticalOptions = LayoutOptions.Center,
-                TextColor = Color.Black
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand
             };
-            //ExpandedViewContainer.SetBinding(StackLayout.IsVisibleProperty, new Binding("IsCollapsed", source: this));
-            //this.Tapped += (object sender, EventArgs e) => { Debug.WriteLine($"IsVisible:{localStackLayout.IsVisible.ToString()}"); };
+            headerLabel.SetBinding(Label.TextProperty, new Binding("Header", source: this));
+            HeaderLayout = new ClickableContentViewt()
+            {
+                /*FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                VerticalOptions = LayoutOptions.Center,
+                TextColor = Color.Black*/
+                Content = new StackLayout()
+                {
+                    Children =
+                    {
+                        headerLabel
+                    }
+                }
+
+            };
+            
+            HeaderLayout.Clicked += ToggleVisibilityButton_Clicked;
             this.Content = new StackLayout()
             {
                 Orientation = StackOrientation.Vertical,
                 Children =
                 {
-                    ToggleVisibilityButton,
+                    HeaderLayout,
                     ExpandedViewContainer
                 }
             };
         }
 
+        private void ToggleVisibilityButton_Clicked(object sender, EventArgs e)
+        {
+            IsCollapsed = !IsCollapsed;
+            this.InvalidateLayout();
+        }
+
         public static readonly BindableProperty HeaderProperty =
-BindableProperty.Create(nameof(Header), typeof(string), typeof(CollapsibleViewCell), "");
+BindableProperty.Create(nameof(Header), typeof(string), typeof(CollapsibleView), "");
 
         public static readonly BindableProperty IsCollapsedProperty =
-BindableProperty.Create(nameof(IsCollapsed), typeof(bool), typeof(CollapsibleViewCell), false);
+BindableProperty.Create(nameof(IsCollapsed), typeof(bool), typeof(CollapsibleView), true);
 
         public static readonly BindableProperty ExpandedViewProperty =
-BindableProperty.Create(nameof(ExpandedView), typeof(View), typeof(CollapsibleViewCell), new StackLayout());
+BindableProperty.Create(nameof(ExpandedView), typeof(View), typeof(CollapsibleView), new StackLayout());
 
         /// <summary>
         /// The text displayed when the cell is both expanded and contracted
@@ -65,7 +81,7 @@ BindableProperty.Create(nameof(ExpandedView), typeof(View), typeof(CollapsibleVi
             set { SetValue(HeaderProperty, value); }
         }
 
-        public ContentView ExpandedViewContainer { get; set; }
+        private ContentView ExpandedViewContainer { get; set; }
         /// <summary>
         /// The view when this view cell is expanded
         /// </summary>
@@ -79,7 +95,7 @@ BindableProperty.Create(nameof(ExpandedView), typeof(View), typeof(CollapsibleVi
             }
         }
 
-        public Button ToggleVisibilityButton { get; private set; }
+        private ClickableContentViewt HeaderLayout { get; set; }
         /// <summary>
         /// true with the cell is collapsed
         /// </summary>

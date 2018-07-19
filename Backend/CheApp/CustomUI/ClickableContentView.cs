@@ -6,9 +6,9 @@ using Xamarin.Forms;
 
 namespace CheApp.CustomUI
 {
-    public class ClickableAbsoluteLayout : AbsoluteLayout
+    public class ClickableContentViewt : ContentView
     {
-        public ClickableAbsoluteLayout()
+        public ClickableContentViewt()
         {
             this.GestureRecognizers.Add(new TapGestureRecognizer
             {
@@ -29,7 +29,7 @@ namespace CheApp.CustomUI
         public event EventHandler Clicked;
 
         public static readonly BindableProperty CommandProperty = 
-            BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ClickableAbsoluteLayout), null);
+            BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ClickableContentViewt), null);
 
         public ICommand Command
         {
@@ -38,7 +38,7 @@ namespace CheApp.CustomUI
         }
 
         public static readonly BindableProperty CommandParameterProperty =
-            BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ClickableAbsoluteLayout), null);
+            BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ClickableContentViewt), null);
 
         public object CommandParameter
         {

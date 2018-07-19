@@ -316,13 +316,12 @@ namespace CheApp.Views.Templates
             errorLb.SetBinding(Label.TextProperty, "ErrorMessage");
 
 
-            CollapsibleViewCell cell = new CollapsibleViewCell();
+            
             StackLayout myLayout = new StackLayout()
             {
                 Orientation = StackOrientation.Vertical
             };
-            cell.ToggleVisibilityButton.SetBinding(Button.TextProperty, "Title");
-            cell.ToggleVisibilityButton.SetBinding(Button.CommandProperty, "ToggleIsVisibleCommand");
+            
             myLayout.Children.Add(titleLb);
             if (paraType == ParameterType.SubFunctionParameter)
             {
@@ -332,7 +331,11 @@ namespace CheApp.Views.Templates
             myLayout.Children.Add(inputEntry);
             myLayout.Children.Add(CreateUnitPickersWithBindings(unitCount));
             myLayout.Children.Add(errorLb);
-            cell.ExpandedView = myLayout;
+            CollapsibleView cell = new CollapsibleView()
+            {
+                ExpandedView = myLayout
+            };
+            cell.SetBinding(CollapsibleView.HeaderProperty, "Title");
             return new ViewCell() { View = cell };
         }
 
