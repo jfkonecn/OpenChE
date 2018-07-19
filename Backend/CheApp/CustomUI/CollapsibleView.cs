@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using Xamarin.Forms;
+using SkiaSharp;
+using SkiaSharp.Views.Forms;
 
 namespace CheApp.CustomUI
 {
@@ -26,23 +28,35 @@ namespace CheApp.CustomUI
 
             Label headerLabel = new Label()
             {
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                HorizontalOptions = LayoutOptions.FillAndExpand
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand                
             };
             headerLabel.SetBinding(Label.TextProperty, new Binding("Header", source: this));
-            HeaderLayout = new ClickableContentViewt()
+            headerLabel.SetBinding(Label.FontSizeProperty, new Binding("HeaderFontSize", source: this));
+            Canvas = new SKCanvasView()
+            {
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center,
+                Margin = new Thickness(0)                
+            };
+            Canvas.SetBinding(SKCanvasView.HeightProperty, new Binding("Height", source: headerLabel));
+            Canvas.PaintSurface += Canvas_PaintSurface;
+
+            HeaderLayout = new ClickableContentView()
             {
                 /*FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
                 VerticalOptions = LayoutOptions.Center,
                 TextColor = Color.Black*/
-                Content = new StackLayout()
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                Content = new StackLayout
                 {
+                    Orientation = StackOrientation.Horizontal,
                     Children =
                     {
-                        headerLabel
+                        headerLabel,
+                        Canvas
                     }
                 }
-
             };
             
             HeaderLayout.Clicked += ToggleVisibilityButton_Clicked;
@@ -57,14 +71,55 @@ namespace CheApp.CustomUI
             };
         }
 
+        private SKCanvasView Canvas;
+        private readonly float ArrowHorizontalScale = (float)0.75;
+        private readonly float ArrowVerticalScale = (float)0.5;
+
+        private void Canvas_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        {
+            // we get the current surface from the event args
+            SKSurface surface = e.Surface;
+            // then we get the canvas that we can draw on
+            SKCanvas canvas = surface.Canvas;
+            SKPaint circleFill = new SKPaint
+            {
+                IsAntialias = true,
+                Style = SKPaintStyle.Fill,
+                Color = Color.Gray.ToSKColor(),
+                StrokeWidth = 2
+            };
+            canvas.Clear();
+            SKPoint midpoint = new SKPoint((float)Canvas.Width / 2, (float)Canvas.Height / 2);
+            if (IsCollapsed)
+            {
+                SKPoint arrowHead = new SKPoint(midpoint.X, midpoint.Y + midpoint.Y * ArrowVerticalScale);
+                float yPoint = midpoint.Y - midpoint.Y * ArrowVerticalScale;
+                canvas.DrawLine(new SKPoint(midpoint.X - midpoint.X * ArrowHorizontalScale, yPoint), arrowHead, circleFill);
+                canvas.DrawLine(arrowHead, new SKPoint(midpoint.X + midpoint.X * ArrowHorizontalScale, yPoint), circleFill);
+            }
+            else
+            {
+                SKPoint arrowHead = new SKPoint(midpoint.X, midpoint.Y - midpoint.Y * ArrowVerticalScale);
+                float yPoint = midpoint.Y + midpoint.Y * ArrowVerticalScale;
+                canvas.DrawLine(new SKPoint(midpoint.X - midpoint.X * ArrowHorizontalScale, yPoint), arrowHead, circleFill);
+                canvas.DrawLine(arrowHead, new SKPoint(midpoint.X + midpoint.X * ArrowHorizontalScale, yPoint), circleFill);
+            }
+            
+
+        }
+
         private void ToggleVisibilityButton_Clicked(object sender, EventArgs e)
         {
             IsCollapsed = !IsCollapsed;
             this.InvalidateLayout();
+            Canvas.InvalidateSurface();
         }
 
         public static readonly BindableProperty HeaderProperty =
 BindableProperty.Create(nameof(Header), typeof(string), typeof(CollapsibleView), "");
+
+        public static readonly BindableProperty HeaderFontSizeProperty =
+BindableProperty.Create(nameof(HeaderFontSize), typeof(double), typeof(CollapsibleView), Device.GetNamedSize(NamedSize.Small, typeof(Label)));
 
         public static readonly BindableProperty IsCollapsedProperty =
 BindableProperty.Create(nameof(IsCollapsed), typeof(bool), typeof(CollapsibleView), true);
@@ -95,7 +150,7 @@ BindableProperty.Create(nameof(ExpandedView), typeof(View), typeof(CollapsibleVi
             }
         }
 
-        private ClickableContentViewt HeaderLayout { get; set; }
+        private ClickableContentView HeaderLayout { get; set; }
         /// <summary>
         /// true with the cell is collapsed
         /// </summary>
@@ -103,6 +158,12 @@ BindableProperty.Create(nameof(ExpandedView), typeof(View), typeof(CollapsibleVi
         {
             get { return (bool)GetValue(IsCollapsedProperty); }
             set { SetValue(IsCollapsedProperty, value); }
+        }
+
+        public double HeaderFontSize
+        {
+            get { return (double)GetValue(HeaderFontSizeProperty); }
+            set { SetValue(HeaderFontSizeProperty, value); }
         }
     }
 }

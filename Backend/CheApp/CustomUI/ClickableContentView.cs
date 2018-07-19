@@ -6,9 +6,9 @@ using Xamarin.Forms;
 
 namespace CheApp.CustomUI
 {
-    public class ClickableContentViewt : ContentView
+    public class ClickableContentView : ContentView
     {
-        public ClickableContentViewt()
+        public ClickableContentView()
         {
             this.GestureRecognizers.Add(new TapGestureRecognizer
             {
@@ -23,13 +23,13 @@ namespace CheApp.CustomUI
                             Command.Execute(CommandParameter);
                         }
                     }
-                })
+                })                
             });
         }
         public event EventHandler Clicked;
 
         public static readonly BindableProperty CommandProperty = 
-            BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ClickableContentViewt), null);
+            BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ClickableContentView), null);
 
         public ICommand Command
         {
@@ -38,7 +38,7 @@ namespace CheApp.CustomUI
         }
 
         public static readonly BindableProperty CommandParameterProperty =
-            BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ClickableContentViewt), null);
+            BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ClickableContentView), null);
 
         public object CommandParameter
         {

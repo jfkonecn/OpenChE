@@ -1,6 +1,8 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "6.1.5",
+    "SkiaSharp": "1.60.2",
+    "SkiaSharp.Views.Forms": "1.60.2",
     "Xamarin.Forms": "3.1.0.637273",
     "Xamarin.Forms.Theme.Base": "1.0.0.43-pre1",
     "Xamarin.Forms.Theme.Dark": "1.0.0.43-pre1",

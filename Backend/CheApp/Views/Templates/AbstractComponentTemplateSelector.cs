@@ -123,7 +123,9 @@ namespace CheApp.Views.Templates
             {
                 SeparatorVisibility = SeparatorVisibility.Default,
                 HasUnevenRows = true,
-                ItemTemplate = this
+                ItemTemplate = this,
+                SelectionMode = ListViewSelectionMode.None,
+                SeparatorColor = Color.Accent
             };
             view.SetBinding(ListView.ItemsSourceProperty, CreateBindingPathToProperty(pathToComponent, "ComponentCollection"));
             
@@ -194,11 +196,24 @@ namespace CheApp.Views.Templates
         private StackLayout CreateUnitPickersWithBindings(int unitCount, string pathToComponent = null)
         {
 
-
+            // Number Label
+            Entry inputEntry = new Entry
+            {
+                Keyboard = Keyboard.Numeric,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
+            inputEntry.SetBinding(Entry.TextProperty, new Binding("ValueStr"));
+            inputEntry.SetBinding(Entry.IsEnabledProperty, new Binding("AllowUserInput"));
+            inputEntry.SetBinding(Entry.PlaceholderProperty, new Binding("Placeholder"));
 
             StackLayout stackLayout = new StackLayout()
             {
-                Orientation = StackOrientation.Horizontal
+                Orientation = StackOrientation.Horizontal,
+                Children =
+                {
+                    inputEntry
+                }
             };
             
             if(unitCount == 1)
@@ -214,7 +229,8 @@ namespace CheApp.Views.Templates
                 Label perLbl = new Label
                 {
                     Text = LibraryResources.Per,
-                    HorizontalTextAlignment = TextAlignment.Center
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    VerticalTextAlignment = TextAlignment.Center
                 };
                 unitPicker[1].SetBinding(Picker.BindingContextProperty, new Binding("UnitSelection[1]"));
 
@@ -271,12 +287,6 @@ namespace CheApp.Views.Templates
         /// <returns></returns>
         private ViewCell CreateParameterStack(ParameterType paraType, int unitCount)
         {
-            // title
-            Label titleLb = new Label()
-            {
-                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label))
-            };
-            titleLb.SetBinding(Label.TextProperty, "Title");
 
             // subfunction picker
             Picker subFunPicker = CreatePickerWithBindings();
@@ -291,22 +301,8 @@ namespace CheApp.Views.Templates
             subFunBtnBehavior.SetBinding(AbstractComponentNavigationButtonBehavior.ComponentProperty, "SubFunctionSelection.SubFunction");
             subFunBtn.Behaviors.Add(subFunBtnBehavior);
 
-            // Number Label
-            Entry inputEntry = new Entry
-            {
-                Keyboard = Keyboard.Numeric,
-                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label))
-            };
-            inputEntry.SetBinding(Entry.TextProperty, new Binding("ValueStr"));
-            inputEntry.SetBinding(Entry.IsEnabledProperty, new Binding("AllowUserInput"));
-            inputEntry.SetBinding(Entry.PlaceholderProperty, new Binding("Placeholder"));
 
-            // Unit Pickers
-            ListView unitView = new ListView()
-            {
-                ItemTemplate = this,
-            };
-            unitView.SetBinding(ListView.ItemsSourceProperty, "UnitSelection");
+
 
             // Error Label
             Label errorLb = new Label()
@@ -322,18 +318,18 @@ namespace CheApp.Views.Templates
                 Orientation = StackOrientation.Vertical
             };
             
-            myLayout.Children.Add(titleLb);
             if (paraType == ParameterType.SubFunctionParameter)
             {
                 myLayout.Children.Add(subFunPicker);
                 myLayout.Children.Add(subFunBtn);
             }
-            myLayout.Children.Add(inputEntry);
+
             myLayout.Children.Add(CreateUnitPickersWithBindings(unitCount));
             myLayout.Children.Add(errorLb);
             CollapsibleView cell = new CollapsibleView()
             {
-                ExpandedView = myLayout
+                ExpandedView = myLayout,
+                HeaderFontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label))
             };
             cell.SetBinding(CollapsibleView.HeaderProperty, "Title");
             return new ViewCell() { View = cell };

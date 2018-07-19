@@ -32,6 +32,7 @@ namespace CheApp.Views.Templates.CalculationPage
         {
             this.Title = component.Title;
             View content = Template.SelectTemplate(component, null).CreateContent() as View;
+            content.Margin = new Thickness(15);
             content.BindingContext = component;
             this.Content = new ScrollView()
             {
