@@ -317,20 +317,23 @@ namespace CheApp.Views.Templates
 
 
             CollapsibleViewCell cell = new CollapsibleViewCell();
+            StackLayout myLayout = new StackLayout()
+            {
+                Orientation = StackOrientation.Vertical
+            };
             cell.ToggleVisibilityButton.SetBinding(Button.TextProperty, "Title");
-            cell.SetBinding(CollapsibleViewCell.IsCollapsedProperty, "IsVisible");
             cell.ToggleVisibilityButton.SetBinding(Button.CommandProperty, "ToggleIsVisibleCommand");
-            cell.ExpandedView.Children.Add(titleLb);
+            myLayout.Children.Add(titleLb);
             if (paraType == ParameterType.SubFunctionParameter)
             {
-                cell.ExpandedView.Children.Add(subFunPicker);
-                cell.ExpandedView.Children.Add(subFunBtn);
+                myLayout.Children.Add(subFunPicker);
+                myLayout.Children.Add(subFunBtn);
             }
-            cell.ExpandedView.Children.Add(inputEntry);
-            cell.ExpandedView.Children.Add(CreateUnitPickersWithBindings(unitCount));
-            cell.ExpandedView.Children.Add(errorLb);
-            cell.ExpandedView.SetBinding(StackLayout.BindingContextProperty, "BindingContext");
-            return cell;
+            myLayout.Children.Add(inputEntry);
+            myLayout.Children.Add(CreateUnitPickersWithBindings(unitCount));
+            myLayout.Children.Add(errorLb);
+            cell.ExpandedView = myLayout;
+            return new ViewCell() { View = cell };
         }
 
 

@@ -60,13 +60,6 @@ namespace EngineeringMath.Calculations.Components.Parameter
                 UnitSelection[i].OnSelectedIndexChanged += UnitPicker_OnSelectedIndexChanged(i);
             }
 
-            ToggleIsVisibleCommand = new SimpleCommand(
-                ToggleIsVisible,
-                (object sender) =>
-                {
-                    return true;
-                }
-            );
         }
 
         /// <summary>
@@ -258,40 +251,6 @@ namespace EngineeringMath.Calculations.Components.Parameter
             }
         }
 
-
-        private void ToggleIsVisible(object sender)
-        {
-            IsVisible = !IsVisible;
-        }
-
-        private SimpleCommand _ToggleIsVisibleCommand;
-
-        public SimpleCommand ToggleIsVisibleCommand
-        {
-            get
-            {
-                return _ToggleIsVisibleCommand;
-            }
-            private set
-            {
-                _ToggleIsVisibleCommand = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _IsVisible = true;
-        public bool IsVisible
-        {
-            get
-            {
-                return _IsVisible;
-            }
-            set
-            {
-                _IsVisible = value;
-                OnPropertyChanged();
-            }
-        }
 
         private string _Placeholder;
         public string Placeholder
