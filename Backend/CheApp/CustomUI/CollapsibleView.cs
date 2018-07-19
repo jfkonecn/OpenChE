@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
-using SkiaSharp;
-using SkiaSharp.Views.Forms;
 
 namespace CheApp.CustomUI
 {
@@ -25,7 +24,7 @@ namespace CheApp.CustomUI
             {
             };
             ExpandedViewContainer.SetBinding(StackLayout.IsVisibleProperty, new Binding("IsCollapsed", source: this, converter: new BoolToNotBool()));
-
+            
             Label headerLabel = new Label()
             {
                 VerticalOptions = LayoutOptions.CenterAndExpand,
@@ -33,20 +32,17 @@ namespace CheApp.CustomUI
             };
             headerLabel.SetBinding(Label.TextProperty, new Binding("Header", source: this));
             headerLabel.SetBinding(Label.FontSizeProperty, new Binding("HeaderFontSize", source: this));
-            Canvas = new SKCanvasView()
+
+            Label caretLabel = new Label()
             {
                 VerticalOptions = LayoutOptions.CenterAndExpand,
-                HorizontalOptions = LayoutOptions.Center,
-                Margin = new Thickness(0)                
+                HorizontalOptions = LayoutOptions.End
             };
-            Canvas.SetBinding(SKCanvasView.HeightProperty, new Binding("Height", source: headerLabel));
-            Canvas.PaintSurface += Canvas_PaintSurface;
-
+            caretLabel.SetBinding(Label.TextProperty, new Binding("CaretArrow", source: this));
+            caretLabel.SetBinding(Label.FontSizeProperty, new Binding("HeaderFontSize", source: this));
+            
             HeaderLayout = new ClickableContentView()
             {
-                /*FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
-                VerticalOptions = LayoutOptions.Center,
-                TextColor = Color.Black*/
                 VerticalOptions = LayoutOptions.CenterAndExpand,
                 Content = new StackLayout
                 {
@@ -54,7 +50,7 @@ namespace CheApp.CustomUI
                     Children =
                     {
                         headerLabel,
-                        Canvas
+                        caretLabel
                     }
                 }
             };
@@ -71,48 +67,21 @@ namespace CheApp.CustomUI
             };
         }
 
-        private SKCanvasView Canvas;
-        private readonly float ArrowHorizontalScale = (float)0.75;
-        private readonly float ArrowVerticalScale = (float)0.5;
 
-        private void Canvas_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
-        {
-            // we get the current surface from the event args
-            SKSurface surface = e.Surface;
-            // then we get the canvas that we can draw on
-            SKCanvas canvas = surface.Canvas;
-            SKPaint circleFill = new SKPaint
-            {
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-                Color = Color.Gray.ToSKColor(),
-                StrokeWidth = 2
-            };
-            canvas.Clear();
-            SKPoint midpoint = new SKPoint((float)Canvas.Width / 2, (float)Canvas.Height / 2);
-            if (IsCollapsed)
-            {
-                SKPoint arrowHead = new SKPoint(midpoint.X, midpoint.Y + midpoint.Y * ArrowVerticalScale);
-                float yPoint = midpoint.Y - midpoint.Y * ArrowVerticalScale;
-                canvas.DrawLine(new SKPoint(midpoint.X - midpoint.X * ArrowHorizontalScale, yPoint), arrowHead, circleFill);
-                canvas.DrawLine(arrowHead, new SKPoint(midpoint.X + midpoint.X * ArrowHorizontalScale, yPoint), circleFill);
-            }
-            else
-            {
-                SKPoint arrowHead = new SKPoint(midpoint.X, midpoint.Y - midpoint.Y * ArrowVerticalScale);
-                float yPoint = midpoint.Y + midpoint.Y * ArrowVerticalScale;
-                canvas.DrawLine(new SKPoint(midpoint.X - midpoint.X * ArrowHorizontalScale, yPoint), arrowHead, circleFill);
-                canvas.DrawLine(arrowHead, new SKPoint(midpoint.X + midpoint.X * ArrowHorizontalScale, yPoint), circleFill);
-            }
-            
-
-        }
 
         private void ToggleVisibilityButton_Clicked(object sender, EventArgs e)
         {
             IsCollapsed = !IsCollapsed;
             this.InvalidateLayout();
-            Canvas.InvalidateSurface();
+            Task.WhenAll(Collapse());
+
+        }
+
+        private async Task Collapse()
+        {
+
+            await Task.WhenAll(
+                ExpandedViewContainer.FadeTo(IsCollapsed ? 0 : 1, 1000, Easing.SinOut));
         }
 
         public static readonly BindableProperty HeaderProperty =
@@ -147,6 +116,7 @@ BindableProperty.Create(nameof(ExpandedView), typeof(View), typeof(CollapsibleVi
             {
                 SetValue(ExpandedViewProperty, value);
                 ExpandedViewContainer.Content = ExpandedView;
+                OnPropertyChanged(nameof(CaretArrow));
             }
         }
 
@@ -157,13 +127,32 @@ BindableProperty.Create(nameof(ExpandedView), typeof(View), typeof(CollapsibleVi
         public bool IsCollapsed
         {
             get { return (bool)GetValue(IsCollapsedProperty); }
-            set { SetValue(IsCollapsedProperty, value); }
+            set
+            {
+                SetValue(IsCollapsedProperty, value);
+                OnPropertyChanged("CaretArrow");
+            }
         }
 
         public double HeaderFontSize
         {
             get { return (double)GetValue(HeaderFontSizeProperty); }
             set { SetValue(HeaderFontSizeProperty, value); }
+        }
+
+        public string CaretArrow
+        {
+            get
+            {
+                if (IsCollapsed)
+                {
+                    return ("▼");
+                }
+                else
+                {
+                    return ("▲");
+                }
+            }
         }
     }
 }
