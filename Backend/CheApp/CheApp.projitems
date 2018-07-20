@@ -14,9 +14,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converter\BoolToNotBool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\Component\ComponentStateToTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\DoubleToString.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Converter\IsNullToBoolean.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\IsNotNullToBoolean.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\ObjectToObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\StringToIsNotEmptyBool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomUI\ClickableContentView.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleListView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MasterPageItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Theming.cs" />

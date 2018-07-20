@@ -110,7 +110,7 @@ namespace EngineeringMath.Calculations.Components
         /// </summary>
         internal virtual void OnError(AbstractComponent sender, Exception e)
         {
-            ErrorMessage = $"{this.Title}:{e.Message}";
+            ErrorMessage = $"{this.Title}: {e.Message}";
             OnErrorEvent?.Invoke(sender, e);
             CurrentComponentState = ComponentState.Error;
         }

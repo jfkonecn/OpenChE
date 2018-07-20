@@ -45,10 +45,5 @@ namespace CheApp.CustomUI
             get { return (object)GetValue(CommandParameterProperty); }
             set { SetValue(CommandParameterProperty, value); }
         }
-
-        public void HeightTo()
-        {
-
-        }
     }
 }

@@ -6,18 +6,11 @@ using Xamarin.Forms;
 
 namespace CheApp.Converter
 {
-    class IsNullToBoolean : IValueConverter
+    class IsNotNullToBoolean : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value == null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return value != null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

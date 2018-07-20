@@ -301,13 +301,10 @@ namespace CheApp.Views.Templates
             subFunBtnBehavior.SetBinding(AbstractComponentNavigationButtonBehavior.ComponentProperty, "SubFunctionSelection.SubFunction");
             subFunBtn.Behaviors.Add(subFunBtnBehavior);
 
-
-
-
             // Error Label
             Label errorLb = new Label()
             {
-                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label))
+                FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label))
             };
             errorLb.SetBinding(Label.TextProperty, "ErrorMessage");
 
@@ -384,19 +381,22 @@ namespace CheApp.Views.Templates
             {
                 Picker picker = CreatePickerWithBindings();
                 picker.SetBinding(Picker.BindingContextProperty, "AllFunctions");
-                ListView listView = new ListView()
-                {
-                    ItemTemplate = this
-                };
-                listView.SetBinding(ListView.ItemsSourceProperty, "AllFunctions.SubFunction");
-                return new StackLayout
+                View view = new ContentView();
+                StackLayout stackLayout = new StackLayout
                 {
                     Children =
                         {
-                            picker,
-                            listView
+                            picker
                         }
                 };
+                picker.SelectedIndexChanged += (object sender, EventArgs e) => 
+                {
+                    stackLayout.Children.Remove(view);
+                    view = this.SelectTemplate(((FunctionPicker)picker.BindingContext).SubFunction, null).CreateContent() as View;
+                    view.SetBinding(View.BindingContextProperty, "AllFunctions.SubFunction");
+                    stackLayout.Children.Add(view);
+                };
+                return stackLayout;
             });
         }
         public DataTemplate FunctionSubberDataTemplate { get; private set; }
