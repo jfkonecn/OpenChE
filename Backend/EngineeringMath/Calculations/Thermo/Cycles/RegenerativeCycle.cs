@@ -21,7 +21,6 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             this.Title = LibraryResources.RegenerativeCycle;
             RegenerationStagesSelector.OnSelectedIndexChanged += RegenerationStagesSelector_OnSelectedIndexChanged;
             RegenerationStagesSelector.SelectedIndex = 0;
-            InletBoilerTemperature = new SimpleParameter((int)Field.inletBoilerTemp, LibraryResources.InletBoilerTemperature, new AbstractUnit[] { Temperature.C }, true);
 #if DEBUG
             InletBoilerTemperature.Value = 226;
 #endif
@@ -186,7 +185,13 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             CondenserHeatTransRate.Value = SteamRate.Value * CondenserWork.Value;
         }
 
-        public readonly SimpleParameter InletBoilerTemperature;
+        public SimpleParameter InletBoilerTemperature
+        {
+            get
+            {
+                return GetParameter((int)Field.inletBoilerTemp);
+            }
+        }
 
         /// <summary>
         /// The total number of Regeneration Stages
@@ -198,7 +203,9 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         }
         protected override ObservableCollection<AbstractComponent> CreateDefaultComponentCollection()
         {
-            return base.CreateDefaultComponentCollection();
+            ObservableCollection<AbstractComponent> temp = base.CreateDefaultComponentCollection();
+            temp.Add(new SimpleParameter((int)Field.inletBoilerTemp, LibraryResources.InletBoilerTemperature, new AbstractUnit[] { Temperature.C }, true));
+            return temp;
         }
 
 

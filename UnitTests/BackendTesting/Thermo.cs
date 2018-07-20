@@ -22,16 +22,12 @@ namespace BackendTesting
         {
             RankineCycle fun =
                 (RankineCycle)
-                FunctionFactory.BuildFunction(typeof(RankineCycle));
+                ComponentFactory.BuildComponent(typeof(RankineCycle));
 
             // set all parameters to something completely wrong
-            foreach (AbstractComponent obj in fun)
+            foreach (AbstractComponent obj in fun.AllParameters)
             {
-                Type type = obj.CastAs();
-                if (type.Equals(typeof(SimpleParameter)) || type.Equals(typeof(SubFunctionParameter)))
-                {
-                    ((SimpleParameter)obj).Value = double.NaN;
-                }                
+                ((SimpleParameter)obj).Value = double.NaN;
             }
 
             fun.GetParameter((int)RankineCycle.Field.boilerP).UnitSelection[0].SelectedObject = Pressure.kPa;
@@ -52,7 +48,7 @@ namespace BackendTesting
             fun.GetParameter((int)RankineCycle.Field.powerReq).UnitSelection[0].SelectedObject = Power.kW;
             fun.GetParameter((int)RankineCycle.Field.powerReq).ValueStr = "80e3";
 
-            fun.Solve();
+            fun.SolveButton.Command.Execute(null);
             double delta = 0.1;
 
             Assert.AreEqual(0.8051, fun.CondenserSteamQuality.Value, delta, "Steam Quality");
@@ -76,16 +72,12 @@ namespace BackendTesting
         {
             RegenerativeCycle fun =
                 (RegenerativeCycle)
-                FunctionFactory.BuildFunction(typeof(RegenerativeCycle));
+               ComponentFactory.BuildComponent(typeof(RegenerativeCycle));
 
             // set all parameters to something completely wrong
-            foreach (AbstractComponent obj in fun)
+            foreach (AbstractComponent obj in fun.AllParameters)
             {
-                Type type = obj.CastAs();
-                if (type.Equals(typeof(SimpleParameter)) || type.Equals(typeof(SubFunctionParameter)))
-                {
-                    ((SimpleParameter)obj).Value = double.NaN;
-                }
+                ((SimpleParameter)obj).Value = double.NaN;
             }
 
             fun.GetParameter((int)RegenerativeCycle.Field.boilerP).UnitSelection[0].SelectedObject = Pressure.kPa;
@@ -111,7 +103,7 @@ namespace BackendTesting
 
             fun.TotalRegenerationStages = 5;
 
-            fun.Solve();
+            fun.SolveButton.Command.Execute(null);
             double delta = 0.1;
 
             Assert.AreEqual(0.8051, fun.CondenserSteamQuality.Value, delta, "Steam Quality");

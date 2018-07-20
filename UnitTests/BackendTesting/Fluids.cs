@@ -21,7 +21,7 @@ namespace BackendTesting
         {
             OrificePlate fun = 
                 (OrificePlate)
-                FunctionFactory.BuildFunction(typeof(OrificePlate));
+                ComponentFactory.BuildComponent(typeof(OrificePlate));
 
             OrificePlateSingleOutputTest(ref fun, (int)OrificePlate.Field.disCo, "Discharge Coefficient");
             OrificePlateSingleOutputTest(ref fun, (int)OrificePlate.Field.density, "Density");
@@ -86,7 +86,7 @@ namespace BackendTesting
         {
             BernoullisEquation fun =
                 (BernoullisEquation)
-                FunctionFactory.BuildFunction(typeof(BernoullisEquation));
+                ComponentFactory.BuildComponent(typeof(BernoullisEquation));
 
             BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.inletVelo, "Inlet Velocity");
             BernoullisEquationSingleOutputTest(ref fun, (int)BernoullisEquation.Field.outletVelo, "Outlet Velocity");
@@ -157,7 +157,7 @@ namespace BackendTesting
         {
             PitotTube fun =
                 (PitotTube)
-                FunctionFactory.BuildFunction(typeof(PitotTube));
+                ComponentFactory.BuildComponent(typeof(PitotTube));
 
             PitotTubeSingleOutputTest(ref fun, (int)PitotTube.Field.correctionCo, "Correction Coefficient");
             PitotTubeSingleOutputTest(ref fun, (int)PitotTube.Field.deltaH, "Change in Height");
@@ -214,7 +214,7 @@ namespace BackendTesting
             // set the output to something completely wrong
             fun.GetParameter(outputId).Value = double.NaN;
             fun.OutputSelection.SelectedObject = fun.GetParameter(outputId);
-            fun.Solve();
+            fun.SolveButton.Command.Execute(null);
             actual = fun.GetParameter(outputId).Value;
 
             //Valid Inputs
