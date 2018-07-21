@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CheApp.CustomUI;
 using CheApp.Views;
 
 using Xamarin.Forms;
@@ -20,16 +21,42 @@ namespace CheApp
             {
 
             };
+            
+            Resources.Add("Parameter.Success", new Style(typeof(CollapsibleView))
+            {
+                Setters =
+                {
+                    new Setter()
+                    {
+                        Property = CollapsibleView.BackgroundColorProperty,
+                        Value = Color.LightGreen
+                    }
+                }
+            });
+
+            Resources.Add("Parameter.Danger", new Style(typeof(CollapsibleView))
+            {
+                Setters =
+                {
+                    new Setter()
+                    {
+                        Property = CollapsibleView.BackgroundColorProperty,
+                        Value = Color.LightSalmon
+                    }
+                }
+            });
+
             switch (Device.RuntimePlatform)
             {
                 case Device.iOS:
                 case Device.Android:
-                    App.Current.Resources.MergedWith = typeof(Xamarin.Forms.Themes.LightThemeResources);
+                    Resources.MergedWith = typeof(Xamarin.Forms.Themes.LightThemeResources);
                     break;
                 case Device.UWP:
                     // must be set in the uwp app constructor because f*** you that's why
                     break;
             }
+            Resources.TryGetValue("Xamarin.Forms.StyleClass.Success", out object temp);
             MainPage = new MainMenu();
         }
 

@@ -10,7 +10,6 @@ using EngineeringMath.Calculations.Components.Selectors;
 using EngineeringMath.Calculations.Components.Group;
 using System.Diagnostics;
 using EngineeringMath.Units;
-using CheApp.Converter.Component;
 using EngineeringMath.Calculations.Components;
 using EngineeringMath.Resources;
 using System.Collections.ObjectModel;
@@ -323,13 +322,14 @@ namespace CheApp.Views.Templates
 
             myLayout.Children.Add(CreateUnitPickersWithBindings(unitCount));
             myLayout.Children.Add(errorLb);
-            CollapsibleView cell = new CollapsibleView()
+            CollapsibleView collapView = new CollapsibleView()
             {
                 ExpandedView = myLayout,
                 HeaderFontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label))
             };
-            cell.SetBinding(CollapsibleView.HeaderProperty, "Header");
-            return new ViewCell() { View = cell };
+            collapView.SetBinding(CollapsibleView.HeaderProperty, "Header");
+            collapView.SetBinding(CollapsibleView.StyleProperty, "CurrentComponentState", converter: new ComponentStateToTheme());
+            return new ViewCell() { View = collapView };
         }
 
 

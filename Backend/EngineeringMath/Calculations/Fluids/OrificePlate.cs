@@ -22,12 +22,6 @@ namespace EngineeringMath.Calculations.Fluids
         public OrificePlate() : base()
         {
 
-
-
-
-
-
-
             this.Title = LibraryResources.OrificePlate;
             BuildComponentCollection();
 

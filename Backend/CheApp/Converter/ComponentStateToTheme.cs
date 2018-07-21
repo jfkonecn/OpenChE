@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Text;
 using Xamarin.Forms;
 
-namespace CheApp.Converter.Component
+namespace CheApp.Converter
 {
     class ComponentStateToTheme : IValueConverter
     {
@@ -14,12 +14,12 @@ namespace CheApp.Converter.Component
             switch ((AbstractComponent.ComponentState)value)
             {
                 case AbstractComponent.ComponentState.Success:
-                    return (Style)Application.Current.Resources["Success"];
+                    return (Style)Application.Current.Resources["Parameter.Success"];
                 case AbstractComponent.ComponentState.Error:
-                    return (Style)Application.Current.Resources["Danger"];
+                    return (Style)Application.Current.Resources["Parameter.Danger"];
                 case AbstractComponent.ComponentState.Reset:
                 default:
-                    return (Style)Application.Current.Resources["Default"];
+                    return null;
             }
         }
 

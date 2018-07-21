@@ -43,6 +43,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             PumpEfficiency.Value = 0.75;
             TurbineEfficiency.Value = 0.75;
             PowerRequirement.Value = 80e3;
+            OnReset();
 #endif
 
         }

@@ -69,7 +69,7 @@ namespace EngineeringMath.Calculations.Components
 
         internal void OnSuccess(OnSuccessEventArgs e = null)
         {
-            OnSuccessEvent?.Invoke(this, e);
+            OnSuccess(this, e);
         }
 
         public bool IsSuccessEventHandlerRegistered(OnSuccessEventHandler prospectiveHandler)
@@ -110,7 +110,10 @@ namespace EngineeringMath.Calculations.Components
         /// </summary>
         internal virtual void OnError(AbstractComponent sender, Exception e)
         {
-            ErrorMessage = $"{this.Title}: {e.Message}";
+            string temp = $"{this.Title}: {e.Message}";
+            // don't send the same error
+            if (ErrorMessage.Equals(temp) && ComponentState.Error == CurrentComponentState) return;
+            ErrorMessage = temp;
             OnErrorEvent?.Invoke(sender, e);
             CurrentComponentState = ComponentState.Error;
         }

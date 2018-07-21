@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AbstractComponentNavigationButtonBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\BoolToNotBool.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Converter\Component\ComponentStateToTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\ComponentStateToTheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\DoubleToString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\IsNotNullToBoolean.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\ObjectToObservableCollection.cs" />
@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\AbstractComponentTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\CalculationPage\BasicPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\CalculationPage\ButtonFrame.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\CalculationPage\ParameterView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\MainMenu\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\MainMenu\MainMenuDetailPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\ThermoMenu.cs" />

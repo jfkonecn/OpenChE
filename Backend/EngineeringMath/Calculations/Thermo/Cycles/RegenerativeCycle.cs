@@ -23,6 +23,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             RegenerationStagesSelector.SelectedIndex = 0;
 #if DEBUG
             InletBoilerTemperature.Value = 226;
+            OnReset();
 #endif
         }
 
@@ -203,8 +204,12 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
         }
         protected override ObservableCollection<AbstractComponent> CreateDefaultComponentCollection()
         {
-            ObservableCollection<AbstractComponent> temp = base.CreateDefaultComponentCollection();
+            ObservableCollection<AbstractComponent> temp = new ObservableCollection<AbstractComponent>();
             temp.Add(new SimpleParameter((int)Field.inletBoilerTemp, LibraryResources.InletBoilerTemperature, new AbstractUnit[] { Temperature.C }, true));
+            foreach(AbstractComponent comp in base.CreateDefaultComponentCollection())
+            {
+                temp.Add(comp);
+            }
             return temp;
         }
 

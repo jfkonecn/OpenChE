@@ -114,7 +114,6 @@ namespace EngineeringMath.Calculations.Components.Parameter
         {
             return delegate (AbstractComponent sender, EventArgs e)
             {
-                OnReset();
                 OnPropertyChanged(nameof(Header));
                 Placeholder = string.Format(LibraryResources.ParameterValidRange,
                     EffectiveLowerLimitString,
@@ -141,7 +140,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
                             DesiredUnits.ToArray(),
                             oldUnits);
 
-                    SetValue(num);
+                    SetValue(num, false);
                 }
             };
 
@@ -155,7 +154,6 @@ namespace EngineeringMath.Calculations.Components.Parameter
         /// </summary>
         private double GetValue()
         {
-            OnReset();
             if (double.TryParse(ValueStr, out double temp))
             {
 
@@ -191,13 +189,21 @@ namespace EngineeringMath.Calculations.Components.Parameter
         /// <para>Current units are based on the state of SelectedStrings</para>
         /// </summary>
         /// <param name="value">The value in the current units</param>
-        private void SetValue(double value)
+        private void SetValue(double value, bool ChangeComponentState = true)
         {
-            OnReset();
+            
             double temp = HelperFunctions.ConvertTo(
                         value,
                         DesiredUnits.ToArray(),
                         UnitSelection.Select(x => x.SelectedObject).ToArray());
+
+            _Value = temp;
+            // we don't want to force a reset
+            _ValueStr = string.Format("{0:G4}", temp);
+            OnPropertyChanged(nameof(ValueStr));
+
+            if (!ChangeComponentState) return;
+            OnReset();
             if (value < LowerLimit)
             {
                 OnError(new Exception(string.Format(LibraryResources.ValueBelowLowerLimit, EffectiveLowerLimitString)));
@@ -210,9 +216,6 @@ namespace EngineeringMath.Calculations.Components.Parameter
             {
                 OnSuccess();
             }
-
-            _Value = temp;
-            ValueStr = string.Format("{0:G4}", temp);
         }
 
         private string _ValueStr = string.Empty;
