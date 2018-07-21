@@ -115,7 +115,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
             return delegate (AbstractComponent sender, EventArgs e)
             {
                 OnReset();
-
+                OnPropertyChanged(nameof(Header));
                 Placeholder = string.Format(LibraryResources.ParameterValidRange,
                     EffectiveLowerLimitString,
                     EffectiveUpperLimitString);
@@ -228,6 +228,7 @@ namespace EngineeringMath.Calculations.Components.Parameter
             {
                 _ValueStr = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Header));
             }
         }
 
@@ -269,6 +270,13 @@ namespace EngineeringMath.Calculations.Components.Parameter
             }
         }
 
+        public override string Title
+        {
+            get => base.Title;
+            set {
+                base.Title = value; OnPropertyChanged(nameof(Header));
+            }
+        }
 
         /// <summary>
         /// Stores data related to the units the user picker for this parameter (Intented to binded with a picker)
@@ -355,6 +363,15 @@ namespace EngineeringMath.Calculations.Components.Parameter
             }
         }
 
+        public string Header
+        {
+            get
+            {
+                string unitStr = UnitSelection.Count == 2 ? $"/{UnitSelection[1].SelectedObject.ToString()}" : string.Empty;
+                unitStr = $"{UnitSelection[0].SelectedObject.ToString()} {unitStr}";
+                return $"{Title}: {ValueStr} {unitStr}";
+            }
+        }
 
         /// <summary>
         /// The unit this parameter represents

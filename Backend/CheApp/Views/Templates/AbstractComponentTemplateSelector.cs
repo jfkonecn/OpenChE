@@ -328,7 +328,7 @@ namespace CheApp.Views.Templates
                 ExpandedView = myLayout,
                 HeaderFontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label))
             };
-            cell.SetBinding(CollapsibleView.HeaderProperty, "Title");
+            cell.SetBinding(CollapsibleView.HeaderProperty, "Header");
             return new ViewCell() { View = cell };
         }
 
