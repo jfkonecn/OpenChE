@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components.Selectors;
 using EngineeringMath.Calculations.Components.Parameter;
+using System.Collections.ObjectModel;
 
 namespace EngineeringMath.Calculations.Components.Functions
 {
@@ -15,7 +16,7 @@ namespace EngineeringMath.Calculations.Components.Functions
     /// </summary>
     public abstract class SolveForFunction : SimpleFunction
     {
-        internal SolveForFunction()
+        internal SolveForFunction() : base()
         {
 
 
@@ -26,9 +27,9 @@ namespace EngineeringMath.Calculations.Components.Functions
         /// </summary>
         protected abstract SimpleParameter GetDefaultOutput();
 
-        private void OutputSelection_OnSelectedIndexChanged()
+        private void OutputSelection_OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            OutputSelection.SelectedObject.isOutput = true;
+            OutputSelection.SelectedObject.IsInput = false;
             OnReset();
         }
 
@@ -43,47 +44,44 @@ namespace EngineeringMath.Calculations.Components.Functions
         /// <param name="outputID">ID of parameter which is the new output</param>
         private void UpdateAllParametersInputOutput(int outputID)
         {
-            foreach (SimpleParameter obj in ParameterCollection())
+            foreach (SimpleParameter obj in AllParameters)
             {
                 if (obj.ID != outputID)
                 {
-                    obj.isInput = true;
+                    obj.IsInput = true;
                 }
             }
         }
 
-        internal override void FinishUp()
+
+
+
+        protected override ObservableCollection<AbstractComponent> CreateDefaultComponentCollection()
         {
-            base.FinishUp();
-            foreach (SimpleParameter obj in ParameterCollection())
-            {
-                obj.OnMadeOuput += UpdateAllParametersInputOutput;
-            }
+            // ComponentCollection must be set in order to use AllParameters
+            ComponentCollection = base.CreateDefaultComponentCollection();
 
             OutputSelection = new SimplePicker<SimpleParameter>(
-                ParameterCollection().ToDictionary(x => x.Title, x => x)
-                );
+                AllParameters.ToDictionary(x => (x as SimpleParameter).Title, x => x));
             OutputSelection.OnSelectedIndexChanged += OutputSelection_OnSelectedIndexChanged;
             OutputSelection.Title = LibraryResources.SolveFor;
             OutputSelection.SelectedObject = GetDefaultOutput();
-        }
 
-        public override Type CastAs()
-        {
-            return typeof(SolveForFunction);
-        }
-
-        /// <summary>
-        /// Iterate through each abstract components in this collection in order
-        /// </summary>
-        /// <returns></returns>
-        public override IEnumerator GetEnumerator()
-        {
-            yield return OutputSelection;
-            foreach (AbstractComponent obj in ParameterCollection())
+            ObservableCollection<AbstractComponent> temp = new ObservableCollection<AbstractComponent>
             {
-                yield return obj;
+                OutputSelection
+            };
+
+            foreach (AbstractComponent obj in ComponentCollection)
+            {
+                temp.Add(obj);
+                if(obj as SimpleParameter != null)
+                {
+                    ((SimpleParameter)obj).OnMadeOuput += UpdateAllParametersInputOutput;
+                }                
             }
+
+            return temp;
         }
     }
 }

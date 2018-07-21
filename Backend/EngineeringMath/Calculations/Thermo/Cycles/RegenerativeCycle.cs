@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,9 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             this.Title = LibraryResources.RegenerativeCycle;
             RegenerationStagesSelector.OnSelectedIndexChanged += RegenerationStagesSelector_OnSelectedIndexChanged;
             RegenerationStagesSelector.SelectedIndex = 0;
-            InletBoilerTemperature = new SimpleParameter((int)Field.inletBoilerTemp, LibraryResources.InletBoilerTemperature, new AbstractUnit[] { Temperature.C }, true);
 #if DEBUG
             InletBoilerTemperature.Value = 226;
+            OnReset();
 #endif
         }
 
@@ -99,7 +100,7 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             inletBoilerTemp
         };
 
-        private void RegenerationStagesSelector_OnSelectedIndexChanged()
+        private void RegenerationStagesSelector_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             StageStates = new RegenerativeStage[RegenerationStagesSelector.SelectedObject];
         }
@@ -185,7 +186,13 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             CondenserHeatTransRate.Value = SteamRate.Value * CondenserWork.Value;
         }
 
-        public readonly SimpleParameter InletBoilerTemperature;
+        public SimpleParameter InletBoilerTemperature
+        {
+            get
+            {
+                return GetParameter((int)Field.inletBoilerTemp);
+            }
+        }
 
         /// <summary>
         /// The total number of Regeneration Stages
@@ -195,79 +202,15 @@ namespace EngineeringMath.Calculations.Thermo.Cycles
             get { return RegenerationStagesSelector.SelectedObject; }
             set { RegenerationStagesSelector.SelectedObject = value; }
         }
-
-
-        public override IEnumerator GetEnumerator()
+        protected override ObservableCollection<AbstractComponent> CreateDefaultComponentCollection()
         {
-            yield return RegenerationStagesSelector;
-            foreach (AbstractComponent obj in ParameterCollection())
+            ObservableCollection<AbstractComponent> temp = new ObservableCollection<AbstractComponent>();
+            temp.Add(new SimpleParameter((int)Field.inletBoilerTemp, LibraryResources.InletBoilerTemperature, new AbstractUnit[] { Temperature.C }, true));
+            foreach(AbstractComponent comp in base.CreateDefaultComponentCollection())
             {
-                yield return obj;
+                temp.Add(comp);
             }
-        }
-
-        public override SimpleParameter GetParameter(int ID)
-        {
-            switch ((Field)ID)
-            {
-                case Field.boilerP:
-                    return BoilerPressure;
-                case Field.boilerTemp:
-                    return BoilerTemperature;
-                case Field.steamRate:
-                    return SteamRate;
-                case Field.condenserP:
-                    return CondenserPressure;
-                case Field.condenserSQ:
-                    return CondenserSteamQuality;
-                case Field.condenserQ:
-                    return CondenserWork;
-                case Field.condenserHeatTrans:
-                    return CondenserHeatTransRate;
-                case Field.turbineQ:
-                    return TurbineWork;
-                case Field.turbineEff:
-                    return TurbineEfficiency;
-                case Field.powerReq:
-                    return PowerRequirement;
-                case Field.pumpEff:
-                    return PumpEfficiency;
-                case Field.pumpQ:
-                    return PumpWork;
-                case Field.boilerQ:
-                    return BoilerWork;
-                case Field.boilerHeatTrans:
-                    return BoilerHeatTransRate;
-                case Field.netQ:
-                    return NetWork;
-                case Field.thermoEff:
-                    return ThermalEfficiency;
-                case Field.inletBoilerTemp:
-                    return InletBoilerTemperature;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        internal override IEnumerable<SimpleParameter> ParameterCollection()
-        {
-            yield return BoilerPressure;
-            yield return BoilerTemperature;
-            yield return CondenserPressure;
-            yield return PumpEfficiency;
-            yield return TurbineEfficiency;
-            yield return PowerRequirement;
-            yield return InletBoilerTemperature;
-            yield return CondenserSteamQuality;
-            yield return PumpWork;
-            yield return BoilerWork;
-            yield return CondenserWork;
-            yield return TurbineWork;
-            yield return ThermalEfficiency;
-            yield return NetWork;
-            yield return SteamRate;
-            yield return BoilerHeatTransRate;
-            yield return CondenserHeatTransRate;
+            return temp;
         }
 
 

@@ -8,6 +8,8 @@ using EngineeringMath.Resources;
 using EngineeringMath.Calculations.SupportFunctions.InletOutletDifferential;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations.Components.Parameter;
+using System.Collections.ObjectModel;
+using EngineeringMath.Calculations.Components;
 
 namespace EngineeringMath.Calculations.Fluids
 {
@@ -17,34 +19,11 @@ namespace EngineeringMath.Calculations.Fluids
         /// Create orifice plate function
         /// <para>Note: The default output is volFlow</para>
         /// </summary>
-        public OrificePlate()
+        public OrificePlate() : base()
         {
 
-            DischargeCoefficient = new SimpleParameter((int)Field.disCo, LibraryResources.DischargeCoefficient, new AbstractUnit[] { Unitless.unitless }, true, 0, 1.0);
-            Density = new SimpleParameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Units.Density.kgm3 }, true, 0);
-            InletPipeArea = new SubFunctionParameter((int)Field.pArea, LibraryResources.CircularPipe, new AbstractUnit[] { Units.Area.m2 },
-                new Dictionary<string, FunctionFactory.SolveForFactoryData>
-                {
-                    { LibraryResources.CircularPipe, new FunctionFactory.SolveForFactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
-                }, true, 0);
-            OrificeArea = new SubFunctionParameter((int)Field.oArea, LibraryResources.OrificeArea, new AbstractUnit[] { Units.Area.m2 },
-                new Dictionary<string, FunctionFactory.SolveForFactoryData>
-                {
-                    { LibraryResources.CircularPipe, new FunctionFactory.SolveForFactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
-                }, true, 0);
-            PressureDrop = new SubFunctionParameter((int)Field.deltaP, LibraryResources.PDAcrossOP, new AbstractUnit[] { Pressure.Pa },
-                new Dictionary<string, FunctionFactory.SolveForFactoryData>
-                {
-                    { LibraryResources.DeltaP, new FunctionFactory.SolveForFactoryData(typeof(DeltaP), (int)DeltaP.Field.delta) }
-                }, true, 0.0);
-            VolumetricFlowRate = new SimpleParameter((int)Field.volFlow, LibraryResources.VolumetricFlowRate, new AbstractUnit[] { Volume.m3, Time.sec }, false, 0.0);
-
-
-
-
-
             this.Title = LibraryResources.OrificePlate;
-
+            BuildComponentCollection();
 
 #if DEBUG
             DischargeCoefficient.Value = 1;
@@ -54,8 +33,8 @@ namespace EngineeringMath.Calculations.Fluids
             PressureDrop.Value = 10;
             VolumetricFlowRate.Value = 0;
 #endif
-
         }
+
 
         public enum Field
         {
@@ -89,37 +68,73 @@ namespace EngineeringMath.Calculations.Fluids
         /// <summary>
         /// Discharge coefficient (unitless)
         /// </summary>
-        public readonly SimpleParameter DischargeCoefficient;
+        public SimpleParameter DischargeCoefficient
+        {
+            get
+            {
+                return GetParameter((int)Field.disCo);
+            }
+        }
 
         /// <summary>
         /// Density of fluid going through orifice plate (kg/m3)
         /// </summary>
-        public readonly SimpleParameter Density;
+        public SimpleParameter Density
+        {
+            get
+            {
+                return GetParameter((int)Field.density);
+            }
+        }
 
         /// <summary>
         /// Inlet pipe area (m2)
         /// </summary>
-        public readonly SimpleParameter InletPipeArea;
+        public SimpleParameter InletPipeArea
+        {
+            get
+            {
+                return GetParameter((int)Field.pArea);
+            }
+        }
 
         /// <summary>
         /// Orifice area (m2)
         /// </summary>
-        public readonly SimpleParameter OrificeArea;
+        public SimpleParameter OrificeArea
+        {
+            get
+            {
+                return GetParameter((int)Field.oArea);
+            }
+        }
 
         /// <summary>
         /// The DROP (p1 - p2) in pressure accross the orifice plate (Pa)
         /// </summary>
-        public readonly SimpleParameter PressureDrop;
+        public SimpleParameter PressureDrop
+        {
+            get
+            {
+                return GetParameter((int)Field.deltaP);
+            }
+        }
 
         /// <summary>
         /// Volumetric flow rate (m3/s)
         /// </summary>
-        public readonly SimpleParameter VolumetricFlowRate;
+        public SimpleParameter VolumetricFlowRate
+        {
+            get
+            {
+                return GetParameter((int)Field.volFlow);
+            }
+        }
 
 
         protected override SimpleParameter GetDefaultOutput()
         {
-            return GetParameter((int)Field.volFlow);
+            return VolumetricFlowRate;
         }
 
         /// <summary>
@@ -179,35 +194,29 @@ namespace EngineeringMath.Calculations.Fluids
             }
         }
 
-        public override SimpleParameter GetParameter(int ID)
+        protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
         {
-            switch ((Field)ID)
+            return new ObservableCollection<AbstractComponent>
             {
-                case Field.disCo:
-                    return DischargeCoefficient;
-                case Field.density:
-                    return Density;
-                case Field.pArea:
-                    return InletPipeArea;
-                case Field.oArea:
-                    return OrificeArea;
-                case Field.deltaP:
-                    return PressureDrop;
-                case Field.volFlow:
-                    return VolumetricFlowRate;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        internal override IEnumerable<SimpleParameter> ParameterCollection()
-        {
-            yield return DischargeCoefficient;
-            yield return Density;
-            yield return InletPipeArea;
-            yield return OrificeArea;
-            yield return PressureDrop;
-            yield return VolumetricFlowRate;
+                new SimpleParameter((int)Field.disCo, LibraryResources.DischargeCoefficient, new AbstractUnit[] { Unitless.unitless }, true, 0, 1.0),
+                new SimpleParameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Units.Density.kgm3 }, true, 0),
+                new SubFunctionParameter((int)Field.pArea, LibraryResources.InletPipeArea, new AbstractUnit[] { Units.Area.m2 },
+                new Dictionary<string, ComponentFactory.SolveForFactoryData>
+                {
+                    { LibraryResources.CircularPipe, new ComponentFactory.SolveForFactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
+                }, true, 0),
+                new SubFunctionParameter((int)Field.oArea, LibraryResources.OrificeArea, new AbstractUnit[] { Units.Area.m2 },
+                new Dictionary<string, ComponentFactory.SolveForFactoryData>
+                {
+                    { LibraryResources.CircularPipe, new ComponentFactory.SolveForFactoryData(typeof(Area.Circle), (int)Area.Circle.Field.cirArea) }
+                }, true, 0),
+                new SubFunctionParameter((int)Field.deltaP, LibraryResources.PDAcrossOP, new AbstractUnit[] { Pressure.Pa },
+                new Dictionary<string, ComponentFactory.SolveForFactoryData>
+                {
+                    { LibraryResources.DeltaP, new ComponentFactory.SolveForFactoryData(typeof(DeltaP), (int)DeltaP.Field.delta) }
+                }, true, 0.0),
+                new SimpleParameter((int)Field.volFlow, LibraryResources.VolumetricFlowRate, new AbstractUnit[] { Volume.m3, Time.sec }, false, 0.0)
+            };
         }
     }
 }

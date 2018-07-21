@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EngineeringMath.Calculations.Components.Group;
 using EngineeringMath.Calculations.Components.Selectors;
 
 namespace EngineeringMath.Calculations.Components.Functions
@@ -12,18 +14,27 @@ namespace EngineeringMath.Calculations.Components.Functions
     /// </summary>
     public abstract class FunctionSubber : AbstractComponent
     {
-        internal FunctionSubber(Dictionary<string, Type> funData)
+        internal FunctionSubber(FunctionPicker allFunctions)
         {
-            AllFunctions = new FunctionPicker(funData);
-            AllFunctions.PropertyChanged += _Field_PropertyChanged;
-            AllFunctions.SelectedIndex = 0;
+            AllFunctions = allFunctions;
+            AllFunctions.OnFunctionCreatedEvent += AllFunctions_OnFunctionCreatedEvent;
         }
 
-        public FunctionPicker AllFunctions;
-
-        public override Type CastAs()
+        internal FunctionSubber(Dictionary<string, Type> funData) : this(
+            new FunctionPicker(funData)
+            {
+                SelectedIndex = 0
+            })
         {
-            return typeof(FunctionSubber);
+                        
         }
+
+        private void AllFunctions_OnFunctionCreatedEvent(object sender, EventArgs e)
+        {
+            // leave in case we need it
+        }
+
+        public FunctionPicker AllFunctions { get; private set; }
+
     }
 }

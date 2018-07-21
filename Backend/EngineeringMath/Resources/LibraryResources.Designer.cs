@@ -10,7 +10,6 @@
 
 namespace EngineeringMath.Resources {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace EngineeringMath.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EngineeringMath.Resources.LibraryResources", typeof(LibraryResources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EngineeringMath.Resources.LibraryResources", typeof(LibraryResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -485,6 +484,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Menu.
+        /// </summary>
+        public static string Menu {
+            get {
+                return ResourceManager.GetString("Menu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Net Work.
         /// </summary>
         public static string NetWork {
@@ -796,6 +804,15 @@ namespace EngineeringMath.Resources {
         public static string ThermodynamicCycle {
             get {
                 return ResourceManager.GetString("ThermodynamicCycle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thermodynamics.
+        /// </summary>
+        public static string Thermodynamics {
+            get {
+                return ResourceManager.GetString("Thermodynamics", resourceCulture);
             }
         }
         

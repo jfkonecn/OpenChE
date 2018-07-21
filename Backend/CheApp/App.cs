@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CheApp.CustomUI;
+using CheApp.Views;
 
 using Xamarin.Forms;
 
@@ -14,81 +16,48 @@ namespace CheApp
     {
         public App()
         {
-            Resources = new ResourceDictionary();
 
-            // Style for grids with no parent grids
-            Style backgroundStyle = new Style(typeof(Style))
+            Resources = new ResourceDictionary()
+            {
+
+            };
+            
+            Resources.Add("Parameter.Success", new Style(typeof(CollapsibleView))
             {
                 Setters =
                 {
-                    new Setter { Property = Grid.BackgroundColorProperty,   Value = Color.LightGray }
+                    new Setter()
+                    {
+                        Property = CollapsibleView.BackgroundColorProperty,
+                        Value = Color.LightGreen
+                    }
                 }
-            };
-            Resources.Add("backgroundStyle", backgroundStyle);
+            });
 
-
-            // used before the user takes any actions
-            Style neutralParameterStyle = new Style(typeof(Frame))
+            Resources.Add("Parameter.Danger", new Style(typeof(CollapsibleView))
             {
                 Setters =
                 {
-                    new Setter { Property = Frame.OutlineColorProperty, Value = Color.Silver },
-                    new Setter { Property = Frame.BackgroundColorProperty, Value = Color.WhiteSmoke }
+                    new Setter()
+                    {
+                        Property = CollapsibleView.BackgroundColorProperty,
+                        Value = Color.LightSalmon
+                    }
                 }
-            };
-            Resources.Add("neutralParameterStyle", neutralParameterStyle);
+            });
 
-            // used when the user's parameter inputs are valid
-            Style goodParameterStyle = new Style(typeof(Frame))
+            switch (Device.RuntimePlatform)
             {
-                Setters =
-                {
-                    new Setter { Property = Frame.OutlineColorProperty, Value = Color.Green },
-                    new Setter { Property = Frame.BackgroundColorProperty, Value = Color.LightGreen }
-                }
-            };
-            Resources.Add("goodParameterStyle", goodParameterStyle);
-
-            // used when the user's parameter inputs are invalid
-            Style badParameterStyle = new Style(typeof(Frame))
-            {
-                Setters =
-                {
-                    new Setter { Property = Frame.OutlineColorProperty, Value = Color.Red },
-                    new Setter { Property = Frame.BackgroundColorProperty, Value = Color.PaleVioletRed }
-                }
-            };
-            Resources.Add("badParameterStyle", badParameterStyle);
-
-            Style buttonStyle = new Style(typeof(Button))
-            {
-                Setters =
-                {
-                    new Setter { Property = Button.BackgroundColorProperty, Value = Color.Black },
-                    new Setter { Property = Button.TextColorProperty, Value = Color.White },
-                    new Setter { Property = Button.FontSizeProperty, Value = Device.GetNamedSize(NamedSize.Small, typeof(Label))}
-                }
-            };
-            Resources.Add("buttonStyle", buttonStyle);
-
-            Style minorHeaderStyle = new Style(typeof(Label))
-            {
-                Setters =
-                {
-                    new Setter { Property = Label.HorizontalTextAlignmentProperty, Value = TextAlignment.Center},
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.GetNamedSize(NamedSize.Small, typeof(Label))}
-                }
-            };
-            Resources.Add("minorHeaderStyle", minorHeaderStyle);
-
-            // used for grid margins
-            int standardRowMargin = 5;
-            Resources.Add("standardRowMargin", standardRowMargin);
-            int standardColumnMargin = 5;
-            Resources.Add("standardColumnMargin", standardColumnMargin);
-
-
-            MainPage = new NavigationPage(new CheApp.MainMenu());
+                case Device.iOS:
+                case Device.Android:
+                    Resources.MergedWith = typeof(Xamarin.Forms.Themes.LightThemeResources);
+                    break;
+                case Device.UWP:
+                    // must be set in the uwp app constructor because f*** you that's why
+                    break;
+            }
+            Resources.TryGetValue("Xamarin.Forms.StyleClass.Success", out object temp);
+            MainPage = new MainMenu();
         }
 
         protected override void OnStart()

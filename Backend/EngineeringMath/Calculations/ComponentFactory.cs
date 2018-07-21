@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EngineeringMath.Calculations.Components;
 using EngineeringMath.Calculations.Components.Functions;
+using EngineeringMath.Calculations.Components.Group;
 
 namespace EngineeringMath.Calculations
 {
-    public class FunctionFactory
+    public class ComponentFactory
     {
         /// <summary>
         /// Data structure used to store all required data to build a function
@@ -60,12 +62,12 @@ namespace EngineeringMath.Calculations
             /// <summary>
             /// Gets the home id given the sub id
             /// </summary>
-            private Dictionary<int, int> SubIDtoHomeID;
+            private readonly Dictionary<int, int> SubIDtoHomeID;
 
             /// <summary>
             /// Gets the sub id given the home id
             /// </summary>
-            private Dictionary<int, int> HomeIDtoSubID;
+            private readonly Dictionary<int, int> HomeIDtoSubID;
             /// <summary>
             /// The type of function which will be created
             /// </summary>
@@ -118,17 +120,15 @@ namespace EngineeringMath.Calculations
 
 
         /// <summary>
-        /// Builds a function and then returns it to the user
+        /// Builds a component and then returns it to the user
         /// <para>Note: The default output will be used for the function</para>
         /// </summary>
-        /// <param name="funType">The desired function type (which inherits the SimpleFunction class)</param>
+        /// <param name="funType">The type of componet which the page will represen</param>
         /// <returns></returns>
-        public static SimpleFunction BuildFunction(Type funType)
+        public static AbstractComponent BuildComponent(Type componetType)
         {
-            // Function to be returned
-            SimpleFunction myFun = (SimpleFunction)Activator.CreateInstance(funType);
-            myFun.FinishUp();
-            return myFun;
+            AbstractComponent component = Activator.CreateInstance(componetType) as AbstractComponent;        
+            return component;
         }
 
 

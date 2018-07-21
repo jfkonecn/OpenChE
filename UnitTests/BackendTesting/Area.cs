@@ -17,7 +17,7 @@ namespace BackendTesting
         public void CircleTest()
         {
             Circle fun =
-    (Circle)FunctionFactory.BuildFunction(typeof(Circle));
+    (Circle)ComponentFactory.BuildComponent(typeof(Circle));
 
             CircleSingleOutputTest(ref fun, (int)Circle.Field.cirDia, "Diameter");
             CircleSingleOutputTest(ref fun, (int)Circle.Field.cirArea, "Area");
@@ -48,7 +48,7 @@ namespace BackendTesting
             // set the output to something completely wrong
             fun.GetParameter(outputId).Value = double.NaN;
             fun.OutputSelection.SelectedObject = fun.GetParameter(outputId);
-            fun.Solve();
+            fun.SolveButton.Command.Execute(null);
             actual = fun.GetParameter(outputId).Value;
 
             //Valid Inputs

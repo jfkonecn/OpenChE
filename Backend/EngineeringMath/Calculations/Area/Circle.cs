@@ -8,19 +8,17 @@ using System.Threading.Tasks;
 using EngineeringMath.Resources;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations.Components.Parameter;
+using System.Collections.ObjectModel;
+using EngineeringMath.Calculations.Components;
 
 namespace EngineeringMath.Calculations.Area
 {
     public class Circle : SolveForFunction
     {
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public Circle()
+        public Circle() : base()
         {
-            CircleDiameter = new SimpleParameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, false, 0);
-            CircleArea = new SimpleParameter((int)Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, false, 0);
+            BuildComponentCollection();
         }
 
         public enum Field
@@ -39,12 +37,25 @@ namespace EngineeringMath.Calculations.Area
         /// <summary>
         /// Ciricle diameter (m)
         /// </summary>
-        public readonly SimpleParameter CircleDiameter;
+        public SimpleParameter CircleDiameter
+        {
+            get
+            {
+                return GetParameter((int)Field.cirDia);
+            }
+        }
 
         /// <summary>
         /// Ciricle area (m2)
         /// </summary>
-        public readonly SimpleParameter CircleArea;
+        public SimpleParameter CircleArea
+        {
+            get
+            {
+                return GetParameter((int)Field.cirArea);
+            }
+        }
+        
 
 
 
@@ -69,23 +80,13 @@ namespace EngineeringMath.Calculations.Area
             }
         }
 
-        public override SimpleParameter GetParameter(int ID)
+        protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
         {
-            switch ((Field)ID)
+            return new ObservableCollection<AbstractComponent>
             {
-                case Field.cirDia:
-                    return CircleDiameter;
-                case Field.cirArea:
-                    return CircleArea;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        internal override IEnumerable<SimpleParameter> ParameterCollection()
-        {
-            yield return CircleDiameter;
-            yield return CircleArea;
+                new SimpleParameter((int)Field.cirDia, LibraryResources.Diameter, new AbstractUnit[] { Length.m }, false, 0),
+                new SimpleParameter((int) Field.cirArea, LibraryResources.Area, new AbstractUnit[] { Units.Area.m2 }, false, 0)
+            };
         }
     }
 }

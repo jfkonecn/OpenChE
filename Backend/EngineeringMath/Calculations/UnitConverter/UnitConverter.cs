@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EngineeringMath.Calculations.Components;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations.Components.Parameter;
 using EngineeringMath.Resources;
@@ -13,12 +15,12 @@ namespace EngineeringMath.Calculations.UnitConverter
     /// <summary>
     /// Create a type of unit converter function
     /// </summary>
-    public class AbstractConverter : SimpleFunction
+    public abstract class UnitConverter : SimpleFunction
     {
-        internal AbstractConverter(AbstractUnit[] units)
+        internal UnitConverter(AbstractUnit[] units) : base()
         {
-            Input = new SimpleParameter((int)Field.input, LibraryResources.Input, units.ToArray(), true);
-            Output = new SimpleParameter((int)Field.output, LibraryResources.Output, units.ToArray(), false);
+            Units = units;
+            BuildComponentCollection();
         }
 
         protected override void Calculation()
@@ -26,24 +28,15 @@ namespace EngineeringMath.Calculations.UnitConverter
             Output.Value = Input.Value;
         }
 
-        public override SimpleParameter GetParameter(int ID)
+        private readonly AbstractUnit[] Units;
+
+        protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
         {
-            switch ((Field)ID)
+            return new ObservableCollection<AbstractComponent>
             {
-                case Field.input:
-                    return Input;
-                case Field.output:
-                    return Output;
-                default:
-                    throw new NotImplementedException();
-
-            }
-        }
-
-        internal override IEnumerable<SimpleParameter> ParameterCollection()
-        {
-            yield return Input;
-            yield return Output;
+                new SimpleParameter((int)Field.input, LibraryResources.Input, Units.ToArray(), true),
+                new SimpleParameter((int)Field.output, LibraryResources.Output, Units.ToArray(), false)
+            };
         }
 
         public enum Field
@@ -63,7 +56,10 @@ namespace EngineeringMath.Calculations.UnitConverter
         /// </summary>
         public SimpleParameter Input
         {
-            get; private set;
+            get
+            {
+                return GetParameter((int)Field.input);
+            }
         }
 
         /// <summary>
@@ -71,7 +67,10 @@ namespace EngineeringMath.Calculations.UnitConverter
         /// </summary>
         public SimpleParameter Output
         {
-            get; private set;
+            get
+            {
+                return GetParameter((int)Field.output);
+            }
         }
     }
 }

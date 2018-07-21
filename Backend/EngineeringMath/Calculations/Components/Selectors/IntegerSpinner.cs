@@ -15,10 +15,5 @@ namespace EngineeringMath.Calculations.Components.Selectors
         {
             this.SelectedIndex = 0;
         }
-
-        public override Type CastAs()
-        {
-            return typeof(SimplePicker<int>);
-        }
     }
 }

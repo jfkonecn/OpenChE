@@ -12,17 +12,16 @@ using EngineeringMath.Calculations.Components;
 using EngineeringMath.Calculations.Components.Selectors;
 using System.Collections;
 using EngineeringMath.Resources.LookupTables;
+using System.Collections.ObjectModel;
 
 namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
 {
     public abstract class AbstractTable : FunctionSubber
     {
-        internal AbstractTable(Resources.LookupTables.ThermoTable table) : base(AllSteamTableFuns)
+        internal AbstractTable(ThermoTable table) : base(new TableFunctionPicker(table))
         {
-            Table = table;
+            
         }
-
-        private static Resources.LookupTables.ThermoTable Table;
 
         internal static readonly Dictionary<string, Type> AllSteamTableFuns =
             new Dictionary<string, Type>
@@ -31,34 +30,63 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 { LibraryResources.NonSaturatedSpecies, typeof(PropertyGivenTempPressure) }
             };
 
+
+        public class TableFunctionPicker : FunctionPicker
+        {
+            internal TableFunctionPicker(ThermoTable table) : base(new Dictionary<string, Type>
+            {
+                { LibraryResources.SaturatedSpecies, typeof(SatTemperature) },
+                { LibraryResources.NonSaturatedSpecies, typeof(PropertyGivenTempPressure) }
+            })
+            {
+                Table = table;
+                this.SelectedIndex = 0;
+            }
+
+            private readonly ThermoTable Table;
+
+            protected override SimpleFunction FunctionConstructor()
+            {
+                if (typeof(SatTemperature).Equals(SelectedObject))
+                {
+                    return new SatTemperature(Table);
+                }
+                else if (typeof(PropertyGivenTempPressure).Equals(SelectedObject))
+                {
+                    return new PropertyGivenTempPressure(Table);
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+
+
+
         public class SatTemperature : PropertyGivenTempPressure
         {
-            public SatTemperature() : base(
-                new SimpleParameter((int)Field.temp, LibraryResources.SatTemperature, new AbstractUnit[] { Units.Temperature.C }, true, Table.MinSatTableTemperature, Table.MaxSatTableTemperature))
+            internal SatTemperature(ThermoTable table) : base(table)
             {
-                ParameterBeingUsed = new SimplePicker<SimpleParameter>(new SimpleParameter[]
-                    {
-                       GetParameter((int)Field.pressure),
-                        GetParameter((int)Field.temp) 
-                    }.ToDictionary(x => x.Title, x => x)
-                    , LibraryResources.Given);
                 PhaseSelection.IsEnabled = true;
                 ParameterBeingUsed.OnSelectedIndexChanged += ParameterBeingUsed_OnSelectedIndexChanged;
                 ParameterBeingUsed.SelectedIndex = 0;
             }
 
-            private void ParameterBeingUsed_OnSelectedIndexChanged()
+            
+
+            private void ParameterBeingUsed_OnSelectedIndexChanged(object sender, EventArgs e)
             {
                 OnReset();
                 if (ParameterBeingUsed.SelectedObject.Equals(GetParameter((int)Field.pressure)))
                 {
-                    GetParameter((int)Field.pressure).isInput = true;
-                    GetParameter((int)Field.temp).isOutput = true;
+                    GetParameter((int)Field.pressure).IsInput = true;
+                    GetParameter((int)Field.temp).IsInput = false;
                 }
                 else if (ParameterBeingUsed.SelectedObject.Equals(GetParameter((int)Field.temp)))
                 {
-                    GetParameter((int)Field.pressure).isOutput = true;
-                    GetParameter((int)Field.temp).isInput = true;
+                    GetParameter((int)Field.pressure).IsInput = false;
+                    GetParameter((int)Field.temp).IsInput = true;
                 }
                 else
                 {
@@ -103,46 +131,50 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             public SimplePicker<SimpleParameter> ParameterBeingUsed;
 
 
-            public override IEnumerator GetEnumerator()
+            protected override SimpleParameter CreateInputTemperatureParameter()
             {
-                yield return ParameterBeingUsed;
-                yield return PhaseSelection;                
-                foreach (AbstractComponent obj in ParameterCollection())
+                return new SimpleParameter((int)Field.temp, LibraryResources.SatTemperature, new AbstractUnit[] { Units.Temperature.C }, true, Table.MinSatTableTemperature, Table.MaxSatTableTemperature);
+            }
+
+            protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
+            {
+
+                ObservableCollection<AbstractComponent> oldCollection = base.CreateRemainingDefaultComponentCollection();
+                SimpleParameter pressure = oldCollection.Single((x) => x.ID == (int)Field.pressure && x as SimpleParameter != null) as SimpleParameter;
+                SimpleParameter temperature = oldCollection.Single((x) => x.ID == (int)Field.temp && x as SimpleParameter != null) as SimpleParameter;
+
+                ParameterBeingUsed = new SimplePicker<SimpleParameter>(new SimpleParameter[]
                 {
-                    yield return obj;
-                }
+                                    pressure,
+                                    temperature
+                }.ToDictionary(x => x.Title, x => x)
+                , LibraryResources.Given);
+                ObservableCollection<AbstractComponent> temp = new ObservableCollection<AbstractComponent>
+                {
+                    ParameterBeingUsed
+                };
+                foreach (AbstractComponent comp in oldCollection)
+                {
+                    temp.Add(comp);
+                }                
+                return temp;
             }
         }
 
 
         public class PropertyGivenTempPressure : SimpleFunction
         {
-            public PropertyGivenTempPressure() : this(
-                    CreateInputTemperatureParameter()
-                )
+            internal PropertyGivenTempPressure(ThermoTable table)
             {
 
-            }
-
-
-            protected PropertyGivenTempPressure(SimpleParameter temperature)
-            {
-                Pressure = CreatePressureParameter();
-                Temperature = temperature;
-                SpecificVolume = CreateSpecificVolumeParameter();
-                Enthalpy = CreateEnthalpyParameter();
-                Entropy = CreateEntropyParameter();
-                Beta = CreateBetaParameter();
-                Kappa = CreateKappaParameter();
-                Cp = CreateCpParameter();
-                Cv = CreateCvParameter();
-
+                Table = table;
+                BuildComponentCollection();
                 CurrentPhase = ThermoEntry.Phase.vapor;
                 PhaseSelection.IsEnabled = false;
                 PhaseSelection.OnSelectedIndexChanged += PhaseSelection_OnSelectedIndexChanged;
             }
 
-            private void PhaseSelection_OnSelectedIndexChanged()
+            private void PhaseSelection_OnSelectedIndexChanged(object sender, EventArgs e)
             {
                 OnReset();
             }
@@ -214,58 +246,113 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
                 Cv.Value = entry.Cv;
             }
 
+            protected readonly ThermoTable Table;
 
             /// <summary>
             /// Pressure (Pa)
             /// </summary>
-            public readonly SimpleParameter Pressure;
+            public SimpleParameter Pressure
+            {
+                get
+                {
+                    return GetParameter((int)Field.pressure);
+                }
+            }
 
             /// <summary>
             /// Temperature (C)
             /// </summary>
-            public readonly SimpleParameter Temperature;
+            public SimpleParameter Temperature
+            {
+                get
+                {
+                    return GetParameter((int)Field.temp);
+                }
+            }
 
             /// <summary>
             /// Specific Volume (m3/kg)
             /// </summary>
-            public readonly SimpleParameter SpecificVolume;
+            public SimpleParameter SpecificVolume
+            {
+                get
+                {
+                    return GetParameter((int)Field.v);
+                }
+            }
 
             /// <summary>
             /// Enthalpy (kJ/kg)
             /// </summary>
-            public readonly SimpleParameter Enthalpy;
+            public SimpleParameter Enthalpy
+            {
+                get
+                {
+                    return GetParameter((int)Field.h);
+                }
+            }
 
             /// <summary>
             /// Entropy (kJ/(kg*K))
             /// </summary>
-            public readonly SimpleParameter Entropy;
+            public SimpleParameter Entropy
+            {
+                get
+                {
+                    return GetParameter((int)Field.s);
+                }
+            }
 
 
             /// <summary>
             /// Volume Expansivity or Coefficient of thermal expansion  (1/K)
             /// </summary>
-            public readonly SimpleParameter Beta;
+            public SimpleParameter Beta
+            {
+                get
+                {
+                    return GetParameter((int)Field.beta);
+                }
+            }
 
             /// <summary>
             /// Isothermal Compressibility (1/Pa)
             /// </summary>
-            public readonly SimpleParameter Kappa;
+            public SimpleParameter Kappa
+            {
+                get
+                {
+                    return GetParameter((int)Field.kappa);
+                }
+            }
 
             /// <summary>
             /// Heat Capacity Constant Pressure (kJ/(kg * K))
             /// </summary>
-            public readonly SimpleParameter Cp;
+            public SimpleParameter Cp
+            {
+                get
+                {
+                    return GetParameter((int)Field.cp);
+                }
+            }
 
             /// <summary>
             /// Heat Capacity Constant Volume (kJ/(kg * K))
             /// </summary>
-            public readonly SimpleParameter Cv;
+            public SimpleParameter Cv
+            {
+                get
+                {
+                    return GetParameter((int)Field.cv);
+                }
+            }
 
             /// <summary>
             /// Creates a pressure parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreatePressureParameter()
+            private SimpleParameter CreatePressureParameter()
             {
                 return new SimpleParameter((int)Field.pressure, LibraryResources.Pressure, new AbstractUnit[] { Units.Pressure.Pa }, true, Table.MinTablePressure, Table.MaxTablePressure);
             }
@@ -274,26 +361,15 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// Creates a input temperature parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreateInputTemperatureParameter()
+            protected virtual SimpleParameter CreateInputTemperatureParameter()
             {
                 return new SimpleParameter((int)Field.temp, LibraryResources.Temperature, new AbstractUnit[] { Units.Temperature.C }, true, Table.MinTableTemperature, Table.MaxTableTemperature);
             }
-
-            /// <summary>
-            /// Creates a saturated temperature output parameter for all SimpleFunctions within this class
-            /// </summary>
-            /// <returns></returns>
-            protected static SimpleParameter CreateSaturatedTemperatureParameter()
-            {
-                // will always be an output so don't care about the temperature range
-                return new SimpleParameter((int)Field.temp, LibraryResources.SatTemperature, new AbstractUnit[] { Units.Temperature.C }, false);
-            }
-
             /// <summary>
             /// Creates a SpecificVolume parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreateSpecificVolumeParameter()
+            private SimpleParameter CreateSpecificVolumeParameter()
             {
                 return new SimpleParameter((int)Field.v, LibraryResources.SpecificVolume, new AbstractUnit[] { Units.SpecificVolume.m3kg }, false);
             }
@@ -302,7 +378,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// Creates a Enthalpy parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreateEnthalpyParameter()
+            private SimpleParameter CreateEnthalpyParameter()
             {
                 return new SimpleParameter((int)Field.h, LibraryResources.Enthalpy, new AbstractUnit[] { Units.Enthalpy.kJkg }, false);
             }
@@ -311,7 +387,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// Creates a Entropy parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreateEntropyParameter()
+            private SimpleParameter CreateEntropyParameter()
             {
                 return new SimpleParameter((int)Field.s, LibraryResources.Entropy, new AbstractUnit[] { Units.Entropy.kJkgK }, false);
             }
@@ -322,7 +398,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// Creates a beta parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreateBetaParameter()
+            private SimpleParameter CreateBetaParameter()
             {
                 return new SimpleParameter((int)Field.beta, LibraryResources.VolumeExpansivity, new AbstractUnit[] { Units.VolumeExpansivity.Kinv }, false);
             }
@@ -331,7 +407,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// Creates a kappa parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreateKappaParameter()
+            private SimpleParameter CreateKappaParameter()
             {
                 return new SimpleParameter((int)Field.kappa, LibraryResources.IsothermalCompressibility, new AbstractUnit[] { Units.IsothermalCompressibility.PaInv }, false);
             }
@@ -340,7 +416,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// Creates a Cp parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreateCpParameter()
+            private SimpleParameter CreateCpParameter()
             {
                 // Entropy and Heat Capacity have the same units
                 return new SimpleParameter((int)Field.cp, LibraryResources.HeatCapacityConstantPressure, new AbstractUnit[] { Units.Entropy.kJkgK }, false);
@@ -350,7 +426,7 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             /// Creates a Cv parameter for all SimpleFunctions within this class
             /// </summary>
             /// <returns></returns>
-            private static SimpleParameter CreateCvParameter()
+            private SimpleParameter CreateCvParameter()
             {
                 // Entropy and Heat Capacity have the same units
                 return new SimpleParameter((int)Field.cv, LibraryResources.HeatCapacityConstantVolume, new AbstractUnit[] { Units.Entropy.kJkgK }, false);
@@ -398,57 +474,21 @@ namespace EngineeringMath.Calculations.Thermo.ThermoLookupTables
             }
 
 
-
-
-
-            public override IEnumerator GetEnumerator()
+            protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
             {
-                yield return PhaseSelection;
-                foreach (AbstractComponent obj in ParameterCollection())
+                return new ObservableCollection<AbstractComponent>
                 {
-                    yield return obj;
-                }
-            }
-
-            public override SimpleParameter GetParameter(int ID)
-            {
-                switch ((Field)ID)
-                {
-                    case Field.pressure:
-                        return Pressure;
-                    case Field.temp:
-                        return Temperature;
-                    case Field.v:
-                        return SpecificVolume;
-                    case Field.h:
-                        return Enthalpy;
-                    case Field.s:
-                        return Entropy;
-                    case Field.beta:
-                        return Beta;
-                    case Field.kappa:
-                        return Kappa;
-                    case Field.cp:
-                        return Cp;
-                    case Field.cv:
-                        return Cv;
-                    default:
-                        throw new NotImplementedException();
-                }
-                
-            }
-
-            internal override IEnumerable<SimpleParameter> ParameterCollection()
-            {
-                yield return Pressure;
-                yield return Temperature;
-                yield return SpecificVolume;
-                yield return Enthalpy;
-                yield return Entropy;
-                yield return Beta;
-                yield return Kappa;
-                yield return Cp;
-                yield return Cv;
+                    PhaseSelection,
+                    CreatePressureParameter(),
+                    CreateInputTemperatureParameter(),
+                    CreateSpecificVolumeParameter(),
+                    CreateEnthalpyParameter(),
+                    CreateEntropyParameter(),
+                    CreateBetaParameter(),
+                    CreateKappaParameter(),
+                    CreateCpParameter(),
+                    CreateCvParameter()
+                };
             }
         }
 

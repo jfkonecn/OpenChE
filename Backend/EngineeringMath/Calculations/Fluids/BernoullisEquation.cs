@@ -7,6 +7,8 @@ using EngineeringMath.Resources;
 using EngineeringMath.Units;
 using EngineeringMath.Calculations.Components.Functions;
 using EngineeringMath.Calculations.Components.Parameter;
+using System.Collections.ObjectModel;
+using EngineeringMath.Calculations.Components;
 
 namespace EngineeringMath.Calculations.Fluids
 {
@@ -15,13 +17,7 @@ namespace EngineeringMath.Calculations.Fluids
         public BernoullisEquation()
         {
             this.Title = LibraryResources.BernoullisEquation;
-            InletVelocity = new SimpleParameter((int)Field.inletVelo, LibraryResources.InletVelo, new AbstractUnit[] { Length.m, Time.sec }, true, 0);
-            OutletVelocity = new SimpleParameter((int)Field.outletVelo, LibraryResources.OutletVelo, new AbstractUnit[] { Length.m, Time.sec }, true, 0);
-            InletHeight = new SimpleParameter((int)Field.inletHeight, LibraryResources.InletHeight, new AbstractUnit[] { Length.m }, true, 0);
-            OutletHeight = new SimpleParameter((int)Field.outletHeight, LibraryResources.OutletHeight, new AbstractUnit[] { Length.m }, true, 0);
-            InletPressure= new SimpleParameter((int)Field.inletP, LibraryResources.InletP, new AbstractUnit[] { Pressure.Pa }, true, 0);
-            OutletPressure = new SimpleParameter((int)Field.outletP, LibraryResources.OutletP, new AbstractUnit[] { Pressure.Pa }, true, 0);
-            Density = new SimpleParameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Units.Density.kgm3 }, false, 0);
+            BuildComponentCollection();
 
 #if DEBUG
             InletVelocity.Value = 1;
@@ -75,42 +71,84 @@ namespace EngineeringMath.Calculations.Fluids
         /// <summary>
         /// Inlet Velocity (m/s)
         /// </summary>
-        public readonly SimpleParameter InletVelocity;
+        public SimpleParameter InletVelocity
+        {
+            get
+            {
+                return GetParameter((int)Field.inletVelo);
+            }
+        }
 
         /// <summary>
         /// Outlet Velocity (m/s)
         /// </summary>
-        public readonly SimpleParameter OutletVelocity;
+        public SimpleParameter OutletVelocity
+        {
+            get
+            {
+                return GetParameter((int)Field.outletVelo);
+            }
+        }
 
         /// <summary>
         /// Inlet Height (m)
         /// </summary>
-        public readonly SimpleParameter InletHeight;
+        public SimpleParameter InletHeight
+        {
+            get
+            {
+                return GetParameter((int)Field.inletHeight);
+            }
+        }
 
         /// <summary>
         /// Outlet Height (m)
         /// </summary>
-        public readonly SimpleParameter OutletHeight;
+        public SimpleParameter OutletHeight
+        {
+            get
+            {
+                return GetParameter((int)Field.outletHeight);
+            }
+        }
 
         /// <summary>
         /// Inlet Pressure (Pa)
         /// </summary>
-        public readonly SimpleParameter InletPressure;
+        public SimpleParameter InletPressure
+        {
+            get
+            {
+                return GetParameter((int)Field.inletP);
+            }
+        }
 
         /// <summary>
         /// Outlet Pressure (Pa)
         /// </summary>
-        public readonly SimpleParameter OutletPressure;
+        public SimpleParameter OutletPressure
+        {
+            get
+            {
+                return GetParameter((int)Field.outletP);
+            }
+        }
 
         /// <summary>
         /// Density of fluid (kg/m3)
         /// </summary>
-        public readonly SimpleParameter Density;
+        public SimpleParameter Density
+        {
+            get
+            {
+                return GetParameter((int)Field.density);
+            }
+        }
 
 
         protected override SimpleParameter GetDefaultOutput()
         {
-            return GetParameter((int)Field.density);
+            return Density;
         }
 
         /// <summary>
@@ -161,38 +199,18 @@ namespace EngineeringMath.Calculations.Fluids
             }
         }
 
-        public override SimpleParameter GetParameter(int ID)
+        protected override ObservableCollection<AbstractComponent> CreateRemainingDefaultComponentCollection()
         {
-            switch ((Field)ID)
+            return new ObservableCollection<AbstractComponent>
             {
-                case Field.inletVelo:
-                    return InletVelocity;
-                case Field.outletVelo:
-                    return OutletVelocity;
-                case Field.inletHeight:
-                    return InletHeight;
-                case Field.outletHeight:
-                    return OutletHeight;
-                case Field.inletP:
-                    return InletPressure;
-                case Field.outletP:
-                    return OutletPressure;
-                case Field.density:
-                    return Density;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        internal override IEnumerable<SimpleParameter> ParameterCollection()
-        {
-            yield return InletVelocity;
-            yield return OutletVelocity;
-            yield return InletHeight;
-            yield return OutletHeight;
-            yield return InletPressure;
-            yield return OutletPressure;
-            yield return Density;
+                new SimpleParameter((int)Field.inletVelo, LibraryResources.InletVelo, new AbstractUnit[] { Length.m, Time.sec }, true, 0),
+                new SimpleParameter((int)Field.outletVelo, LibraryResources.OutletVelo, new AbstractUnit[] { Length.m, Time.sec }, true, 0),
+                new SimpleParameter((int)Field.inletHeight, LibraryResources.InletHeight, new AbstractUnit[] { Length.m }, true, 0),
+                new SimpleParameter((int)Field.outletHeight, LibraryResources.OutletHeight, new AbstractUnit[] { Length.m }, true, 0),
+                new SimpleParameter((int)Field.inletP, LibraryResources.InletP, new AbstractUnit[] { Pressure.Pa }, true, 0),
+                new SimpleParameter((int)Field.outletP, LibraryResources.OutletP, new AbstractUnit[] { Pressure.Pa }, true, 0),
+                new SimpleParameter((int)Field.density, LibraryResources.Density, new AbstractUnit[] { Units.Density.kgm3 }, false, 0),
+            };
         }
     }
 }

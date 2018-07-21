@@ -16,6 +16,7 @@ namespace EngineeringMath.Calculations.Components.Selectors
         internal FunctionPicker(Dictionary<string, Type> funData) : base(funData)
         {
             this.OnSelectedIndexChanged += SubFunctionSelection_OnSelectedIndexChanged;
+            BuildSubFunction();
         }
 
 
@@ -25,15 +26,40 @@ namespace EngineeringMath.Calculations.Components.Selectors
         /// <summary>
         /// 
         /// </summary>
-        private void SubFunctionSelection_OnSelectedIndexChanged()
+        private void SubFunctionSelection_OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            // free the memory being used
-            _SubFunction = null;
+            BuildSubFunction();
         }
 
-        public override Type CastAs()
+        /// <summary>
+        /// Builds the SubFunctions
+        /// </summary>
+        private void BuildSubFunction()
         {
-            return typeof(FunctionPicker);
+            if (this.SelectedObject == null)
+            {
+                SubFunction = null;
+                OnPropertyChanged("SubFunction");
+            }
+            else
+            {
+                // Do not rebuild if right function is already in place
+                if (SubFunction == null || !this.SelectedObject.Equals(SubFunction.GetType()))
+                {
+                    Debug.WriteLine($"{TAG} Building a new SubFunction");
+                    SubFunction = FunctionConstructor();
+                    OnFunctionCreated();
+                }
+                else
+                {
+                    Debug.WriteLine($"{TAG} Kept old SubFunction");
+                }
+            }
+        }
+
+        protected virtual SimpleFunction FunctionConstructor()
+        {
+            return ComponentFactory.BuildComponent(this.SelectedObject) as SimpleFunction;
         }
 
         private SimpleFunction _SubFunction;
@@ -45,26 +71,12 @@ namespace EngineeringMath.Calculations.Components.Selectors
         {
             get
             {
-                if (this.SelectedObject == null)
-                {
-                    _SubFunction = null;
-                }
-                else
-                {
-                    // Do not rebuild if right function is already in place
-                    if (_SubFunction == null || !this.SelectedObject.Equals(_SubFunction.GetType()))
-                    {
-                        Debug.WriteLine($"{TAG} Building a new SubFunction");
-                        _SubFunction = FunctionFactory.BuildFunction(this.SelectedObject);
-                        OnFunctionCreated();
-                    }
-                    else
-                    {
-                        Debug.WriteLine($"{TAG} Kept old SubFunction");
-                    }
-                }
-
                 return _SubFunction;
+            }
+            private set
+            {
+                _SubFunction = value;
+                OnPropertyChanged();
             }
         }
 
@@ -72,19 +84,25 @@ namespace EngineeringMath.Calculations.Components.Selectors
         /// <summary>
         /// On function created handler
         /// </summary>
-        public delegate void OnFunctionCreatedEventHandler();
+        public delegate void OnFunctionCreatedEventHandler(object sender, EventArgs e);
 
         /// <summary>
         /// Called when a new subfunction is object is created
         /// </summary>
-        public event OnSuccessEventHandler OnFunctionCreatedEvent;
+        public event OnFunctionCreatedEventHandler OnFunctionCreatedEvent;
 
         /// <summary>
         /// Call on success event handler
         /// </summary>
-        internal virtual void OnFunctionCreated()
+        internal virtual void OnFunctionCreated(object sender, EventArgs e)
         {
-            OnFunctionCreatedEvent?.Invoke();
+            OnFunctionCreatedEvent?.Invoke(sender, e);
+            OnPropertyChanged("SubFunction");
+        }
+
+        internal virtual void OnFunctionCreated(EventArgs e = null)
+        {
+            OnFunctionCreated(this, e);
         }
     }
 }

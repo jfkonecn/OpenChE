@@ -10,19 +10,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FluidsPages\MainPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MainMenu.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\BasicGrids.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\BasicPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\ButtonFrame.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\CalculationPage\ParameterFrame.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\ButtonData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\MainMenu\MainMenuTab.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ThermoPages\MainPage.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Resources\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Templates\MainMenu\" />
-    <Folder Include="$(MSBuildThisFileDirectory)ThermoPages\" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AbstractComponentNavigationButtonBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\BoolToNotBool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\ComponentStateToTheme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\DoubleToString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\IsNotNullToBoolean.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\ObjectToObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\StringToIsNotEmptyBool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomUI\ClickableContentView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomUI\CollapsibleView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MasterPageItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Theming.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\FluidsMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\MainMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\AbstractComponentTemplateSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\CalculationPage\BasicPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\CalculationPage\ButtonFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\MainMenu\ButtonData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Templates\MainMenu\MainMenuDetailPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ThermoMenu.cs" />
   </ItemGroup>
 </Project>

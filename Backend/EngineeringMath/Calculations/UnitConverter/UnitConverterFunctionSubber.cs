@@ -29,7 +29,7 @@ namespace EngineeringMath.Calculations.UnitConverter
                         { LibraryResources.Energy, typeof(EnergyFun) }
             }.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
 
-        public class PressureFun : AbstractConverter
+        public class PressureFun : UnitConverter
         {
             public PressureFun() : base(new AbstractUnit[] { Pressure.Pa })
             {
@@ -37,7 +37,7 @@ namespace EngineeringMath.Calculations.UnitConverter
             }
         }
 
-        public class VolumetricFlowFun : AbstractConverter
+        public class VolumetricFlowFun : UnitConverter
         {
             public VolumetricFlowFun() : base(new AbstractUnit[] { Volume.m3, Time.sec })
             {
@@ -45,27 +45,27 @@ namespace EngineeringMath.Calculations.UnitConverter
             }
         }
 
-        public class TemperatureFun : AbstractConverter
+        public class TemperatureFun : UnitConverter
         {
             public TemperatureFun() : base(new AbstractUnit[] { Temperature.C }) { }
         }
 
-        public class MassFlowFun : AbstractConverter
+        public class MassFlowFun : UnitConverter
         {
             public MassFlowFun() : base(new AbstractUnit[] { Mass.g }) { }
         }
 
-        public class MassFun : AbstractConverter
+        public class MassFun : UnitConverter
         {
             public MassFun() : base(new AbstractUnit[] { Mass.g }) { }
         }
 
-        public class VolumeFun : AbstractConverter
+        public class VolumeFun : UnitConverter
         {
             public VolumeFun() : base(new AbstractUnit[] { Volume.m3 }) { }
         }
 
-        public class EnergyFun : AbstractConverter
+        public class EnergyFun : UnitConverter
         {
             public EnergyFun() : base(new AbstractUnit[] { Energy.kJ }) { }
         }
