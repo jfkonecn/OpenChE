@@ -22,29 +22,6 @@ namespace CheApp
 
             };
             
-            Resources.Add("Parameter.Success", new Style(typeof(CollapsibleView))
-            {
-                Setters =
-                {
-                    new Setter()
-                    {
-                        Property = CollapsibleView.BackgroundColorProperty,
-                        Value = Color.LightGreen
-                    }
-                }
-            });
-
-            Resources.Add("Parameter.Danger", new Style(typeof(CollapsibleView))
-            {
-                Setters =
-                {
-                    new Setter()
-                    {
-                        Property = CollapsibleView.BackgroundColorProperty,
-                        Value = Color.LightSalmon
-                    }
-                }
-            });
 
             switch (Device.RuntimePlatform)
             {
@@ -57,7 +34,7 @@ namespace CheApp
                     break;
             }
             Resources.TryGetValue("Xamarin.Forms.StyleClass.Success", out object temp);
-            MainPage = new MainMenu();
+            
         }
 
         protected override void OnStart()
