@@ -70,7 +70,7 @@ namespace EngineeringMath.Component
 
         private void Para_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(sender as SIUnitParameter != null && e.PropertyName.Equals(nameof(SIUnitParameter.SIValue)))
+            if(sender as SIUnitParameter != null && e.PropertyName.Equals(nameof(SIUnitParameter.Value)))
             {
                 _EquationTable.Rows[0][((SIUnitParameter)sender).Name] = ((SIUnitParameter)sender).SIValue;
             }

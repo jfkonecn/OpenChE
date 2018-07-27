@@ -12,16 +12,18 @@ namespace BackendTesting
         [TestMethod]
         public void StringTester()
         {
+            SIUnitParameter x = new SIUnitParameter("x", 0, double.MaxValue)
+            {
+                Value = 10
+            };
+            SIUnitParameter y = new SIUnitParameter("y", 0, double.MaxValue)
+            {
+                Value = 10
+            };
             ParameterList someParameters = new ParameterList()
             {
-                new SIUnitParameter("x", 0, double.MaxValue)
-                {
-                    Value = 10
-                },
-                new SIUnitParameter("y", 0, double.MaxValue)
-                {
-                    Value = 10
-                }
+                x,
+                y
             };
             Equation equation = new Equation()
             {
@@ -31,22 +33,10 @@ namespace BackendTesting
 
             Assert.AreEqual(100, equation.Evaluate());
 
-            equation.EquationExpression = string.Empty;
 
-            equation.Parameters = new ParameterList()
-            {
-                new SIUnitParameter("s", 0, double.MaxValue)
-                {
-                    Value = 10
-                },
-                new SIUnitParameter("t", 0, double.MaxValue)
-                {
-                    Value = 10
-                }
-            };
-
-            equation.EquationExpression = "s * t";
-            Assert.AreEqual(100, equation.Evaluate());
+            x.Value = 5;
+            y.Value = 30;
+            Assert.AreEqual(150, equation.Evaluate());
         }
 
     }
