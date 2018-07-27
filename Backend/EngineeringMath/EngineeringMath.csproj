@@ -27,4 +27,16 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\DataSet1.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="Resources\Functions.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="Resources\MathDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+  </ItemGroup>
+
 </Project>
