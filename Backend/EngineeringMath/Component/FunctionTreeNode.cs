@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension
+    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension, ISpaceSaver
     {
         private string _Name;
 

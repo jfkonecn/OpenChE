@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CheApp.CustomUI;
-using CheApp.Views;
 
 using Xamarin.Forms;
 

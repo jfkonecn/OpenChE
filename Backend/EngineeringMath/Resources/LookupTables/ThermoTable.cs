@@ -23,7 +23,7 @@ namespace EngineeringMath.Resources.LookupTables
         {
             Assembly assembly = Assembly.Load(new AssemblyName("EngineeringMath"));
             
-
+            // TODO: use a DataTable object
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
                 using (StreamReader reader = new StreamReader(stream))
