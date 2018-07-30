@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace EngineeringMath.Component
 {
-    public class Equation
+    public class Equation : ISpaceSaver
     {
 
         /// <summary>
@@ -19,47 +19,28 @@ namespace EngineeringMath.Component
         /// <exception cref="ArgumentNullException"></exception>
         public double Evaluate()
         {
-            if(Parameters == null)
-            {
-                throw new ArgumentNullException(nameof(Parameters));
-            }
-            return (double)_EquationTable.Compute($"Sum({ nameof(EquationExpression) })", "");
-        }
-
-        /// <summary>
-        /// Removes all rows and columns from _EquationTable then 
-        /// </summary>
-        private void RebuildEquationTable()
-        {
-            _EquationTable.Reset();
             if (Parameters == null)
             {
                 throw new ArgumentNullException(nameof(Parameters));
             }
-            // add columns
-            foreach (Parameter para in Parameters)
+            if (_EquationTable == null)
             {
-                _EquationTable.Columns.Add(para.Name, typeof(double));
-                para.PropertyChanged += Para_PropertyChanged;
+                _EquationTable = new DataTable();
             }
-            _EquationTable.Columns.Add(nameof(EquationExpression), typeof(double));
-            // add exactly one row
-            DataRow equationRow = _EquationTable.NewRow();
-            foreach (Parameter para in Parameters)
+            // replace all references to variables with numbers
+            string temp = EquationExpression;
+            foreach(Parameter para in Parameters)
             {
-                equationRow[para.Name] = ParameterToDoubleValue(para);
+                temp = temp.Replace(para.Name, ParameterToStringValue(para));
             }
-            List<double> strList = Parameters.ConvertAll<double>(ParameterToDoubleValue);    
-            
-            _EquationTable.Rows.Add(equationRow);
-            _EquationTable.Columns[nameof(EquationExpression)].Expression = EquationExpression;
+            return double.Parse(_EquationTable.Compute(temp, "").ToString());
         }
 
-        private double ParameterToDoubleValue(Parameter parameter)
+        private string ParameterToStringValue(Parameter parameter)
         {
-            if(parameter as SIUnitParameter != null)
+            if (parameter as SIUnitParameter != null)
             {
-                return ((SIUnitParameter)parameter).SIValue;
+                return ((SIUnitParameter)parameter).SIValue.ToString();
             }
             else
             {
@@ -67,48 +48,17 @@ namespace EngineeringMath.Component
             }
         }
 
-
-        private void Para_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void Nullify()
         {
-            if(sender as SIUnitParameter != null && e.PropertyName.Equals(nameof(SIUnitParameter.Value)))
-            {
-                _EquationTable.Rows[0][((SIUnitParameter)sender).Name] = ((SIUnitParameter)sender).SIValue;
-            }
+            Parameters = null;
         }
 
         [XmlIgnore]
-        private DataTable _EquationTable = new DataTable();
+        public ParameterList Parameters { get; set; }
+        public string EquationExpression { get; set; }
 
-        private ParameterList _Parameters;
+
         [XmlIgnore]
-        public ParameterList Parameters
-        {
-            get
-            {
-                return _Parameters;
-            }
-            set
-            {
-                _Parameters = value;
-                RebuildEquationTable();
-            }
-        }
-
-        private string _EquationExpression;
-        public string EquationExpression
-        {
-            get
-            {
-                return _EquationExpression;
-            }
-            set
-            {
-                _EquationExpression = value;
-                if(Parameters != null)
-                {
-                    RebuildEquationTable();
-                }
-            }
-        }
+        private static DataTable _EquationTable = null;
     }
 }
