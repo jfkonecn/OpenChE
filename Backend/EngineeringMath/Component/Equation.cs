@@ -12,6 +12,11 @@ namespace EngineeringMath.Component
     public class Equation : ISpaceSaver
     {
 
+        public Equation(string equationExpression)
+        {
+            EquationExpression = equationExpression;
+        }
+
         /// <summary>
         /// Calculates the result of this equation
         /// </summary>
@@ -19,20 +24,16 @@ namespace EngineeringMath.Component
         /// <exception cref="ArgumentNullException"></exception>
         public double Evaluate()
         {
-            if (Parameters == null)
-            {
-                throw new ArgumentNullException(nameof(Parameters));
-            }
-            if (_EquationTable == null)
-            {
-                _EquationTable = new DataTable();
-            }
-            // replace all references to variables with numbers
             string temp = EquationExpression;
-            foreach(Parameter para in Parameters)
+            if (Parameters != null)
             {
-                temp = temp.Replace(para.Name, ParameterToStringValue(para));
-            }
+                // replace all references to variables with numbers
+                foreach (Parameter para in Parameters)
+                {
+                    temp = temp.Replace(para.Name, ParameterToStringValue(para));
+                }
+            }          
+            
             return double.Parse(_EquationTable.Compute(temp, "").ToString());
         }
 
@@ -59,6 +60,6 @@ namespace EngineeringMath.Component
 
 
         [XmlIgnore]
-        private static DataTable _EquationTable = null;
+        private readonly static DataTable _EquationTable = new DataTable();
     }
 }

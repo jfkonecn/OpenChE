@@ -25,10 +25,9 @@ namespace BackendTesting
                 x,
                 y
             };
-            Equation equation = new Equation()
+            Equation equation = new Equation("x * y")
             {
-                Parameters = someParameters,
-                EquationExpression = "x * y"
+                Parameters = someParameters
             };
 
             Assert.AreEqual(100, equation.Evaluate());

@@ -6,6 +6,10 @@ namespace EngineeringMath.Component
 {
     public abstract class Parameter : NotifyPropertyChangedExtension
     {
+        protected Parameter()
+        {
+
+        }
         public Parameter(string name)
         {
             Name = name;
@@ -14,7 +18,7 @@ namespace EngineeringMath.Component
         public string Name
         {
             get { return _Name; }
-            private set
+            set
             {
                 _Name = value;
                 OnPropertyChanged();

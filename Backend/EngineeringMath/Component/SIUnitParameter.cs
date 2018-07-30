@@ -7,7 +7,10 @@ namespace EngineeringMath.Component
 {
     public class SIUnitParameter : Parameter, ISpaceSaver 
     {
+        protected SIUnitParameter() : base()
+        {
 
+        }
         public SIUnitParameter(string name, double minSIValue, double maxSIValue) : base(name)
         {
             MinSIValue = minSIValue;
