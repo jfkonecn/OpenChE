@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using EngineeringMath.Resources;
 
 namespace EngineeringMath.Component
 {
@@ -11,6 +12,74 @@ namespace EngineeringMath.Component
     {
         protected UnitCategory() : base()
         {
+
+        }
+
+        /// <summary>
+        /// Use this construtor when you want to make a unit category which is made up of other unit category
+        /// NOTE: This construtor uses UnitCategoryCollection.AllUnits so make sure that all referenced units are already in the collection
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="arr"></param>
+        /// <param name="isUserDefined"></param>
+        public UnitCategory(string name, CompositeUnitElement[] arr, bool isUserDefined = false) : this(name, isUserDefined)
+        {
+            arr.OrderBy(x => x.CategoryName).OrderBy(x => x.IsInverse);
+
+            foreach (UnitSystem.UnitSystemBaseUnit sysUnit in Enum.GetValues(typeof(UnitSystem.UnitSystemBaseUnit)))
+            {
+                // None will not be represented
+                if (sysUnit == UnitSystem.UnitSystemBaseUnit.None)
+                    continue;
+
+                string UnitSymbol = string.Empty;
+                double convertToBaseFactor = 1,
+                    convertFromBaseFactor = 1;
+                foreach (CompositeUnitElement ele in arr)
+                {
+                    UnitCategory cat = UnitCategoryCollection.AllUnits.GetUnitCategoryByName(ele.CategoryName);
+                    Unit baseUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI)),
+                        curUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(sysUnit));
+                    convertFromBaseFactor = cat.ConvertUnit(baseUnit.FullName, curUnit.FullName, convertFromBaseFactor);
+                    convertToBaseFactor = cat.ConvertUnit(curUnit.FullName, baseUnit.FullName, convertToBaseFactor);
+
+                    string invStr = string.Empty;
+                    if (ele.IsInverse)
+                    {
+                        invStr = "\x207B";
+                    }
+                    string pwStr = string.Empty;
+                    switch (ele.power)
+                    {
+                        case ToPowerOf.Two:
+                            pwStr = "\xB2";
+                            break;
+                        case ToPowerOf.Three:
+                            pwStr = "\xB3";
+                            break;
+                        case ToPowerOf.One:
+                        default:
+                            break;
+                    }
+
+                    UnitSymbol = string.Concat(UnitSymbol, $"{curUnit.Symbol}{invStr}{pwStr}");
+                }
+
+                string fullName = string.Format(LibraryResources.CompositeUnitFullName, name, UnitSymbol);
+
+                if(sysUnit == UnitSystem.UnitSystemBaseUnit.SI)
+                {
+                    this.Add(new Unit(fullName, UnitSymbol, "", "", sysUnit, true, isUserDefined));
+                }
+                else
+                {
+                    this.Add(new Unit(
+                        fullName,
+                        UnitSymbol, $"curUnit * {convertToBaseFactor}", $"baseUnit * {convertFromBaseFactor}", sysUnit, false, isUserDefined));
+                }
+
+            }
+
 
         }
 
@@ -141,6 +210,35 @@ namespace EngineeringMath.Component
         public class UnitsWithSameNameException : ArgumentException
         {
             public UnitsWithSameNameException(string unitName) : base(unitName) { }
+        }
+
+        /// <summary>
+        /// Used to build a collection of units which have no name, but are made up of several units (ex: enthalpy)
+        /// </summary>
+        public struct CompositeUnitElement
+        {
+            /// <summary>
+            /// Category Name of the type of unit to be used
+            /// </summary>
+            public string CategoryName;
+            /// <summary>
+            /// The power the predefined unit should be raise to
+            /// </summary>
+            public ToPowerOf power;
+            /// <summary>
+            /// true when this unit will be raise to the negative power
+            /// </summary>
+            public bool IsInverse;
+        }
+
+        /// <summary>
+        /// Used only by the CompositeUnitElement
+        /// </summary>
+        public enum ToPowerOf
+        {
+            One,
+            Two,
+            Three
         }
     }
 }

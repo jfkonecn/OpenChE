@@ -32,9 +32,6 @@ namespace EngineeringMath.Component
 
         // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
         private static readonly string 
-            SquaredSymbol = "\xB2",
-            CubedSymbol = "\xB3",
-            NegativeSuperScript = "\x207B",
             KelvinSymbol = "K",
             RankineSymbol = "°R",
             FahrenheitSymbol = "°F",
@@ -71,9 +68,9 @@ namespace EngineeringMath.Component
             },
             new UnitCategory(LibraryResources.Density)
             {
-                new Unit(LibraryResources.KgPerMeterCubed, $"{KilogramSymbol}*{MetersSymbol}{NegativeSuperScript}{CubedSymbol}", 
+                new Unit(LibraryResources.KgPerMeterCubed, $"{KilogramSymbol}*{MetersSymbol}{NegativeSuperScript}{CubedSymbol}",
                     "", "", UnitSystem.UnitSystemBaseUnit.SI, isBaseUnit: true),
-                new Unit(LibraryResources.LbsmPerFeetCubed, $"{PoundsMassSymbol}*{FeetSymbol}{NegativeSuperScript}{CubedSymbol}", 
+                new Unit(LibraryResources.LbsmPerFeetCubed, $"{PoundsMassSymbol}*{FeetSymbol}{NegativeSuperScript}{CubedSymbol}",
                     $"{CurUnit} * 16.0185", $"{BaseUnit} / 16.0185", UnitSystem.UnitSystemBaseUnit.USCS)
             },
             new UnitCategory(LibraryResources.Energy)
@@ -84,10 +81,22 @@ namespace EngineeringMath.Component
                 new Unit(LibraryResources.Kilojoules, $"{KilojoulesSymbol}", $"{CurUnit} * 1000", $"{BaseUnit} / 1000", UnitSystem.UnitSystemBaseUnit.None),
                 new Unit(LibraryResources.Therms, "Therms", $"{CurUnit} * 1.055e+8", $"{BaseUnit} / 1.055e+8", UnitSystem.UnitSystemBaseUnit.None)
             },
-            new UnitCategory(LibraryResources.Enthalpy)
+            new UnitCategory(LibraryResources.Enthalpy, new UnitCategory.CompositeUnitElement[]
+                {
+                    new UnitCategory.CompositeUnitElement()
+                    {
+                        CategoryName = LibraryResources.Energy,
+                        IsInverse = false,
+                        power = UnitCategory.ToPowerOf.One
+                    },
+                    new UnitCategory.CompositeUnitElement()
+                    {
+                        CategoryName = LibraryResources.Mass,
+                        IsInverse = true,
+                        power = UnitCategory.ToPowerOf.One
+                    }
+                })
             {
-                new Unit($"", "J", "", "", UnitSystem.UnitSystemBaseUnit.SI, isBaseUnit: true),
-                new Unit(LibraryResources.BTU, "BTU", $"{CurUnit} * 1055.06", $"{BaseUnit} / 1055.06", UnitSystem.UnitSystemBaseUnit.USCS)
             }
         };
 
