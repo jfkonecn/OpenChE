@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class Unit : NotifyPropertyChangedExtension
+    public class Unit : NotifyPropertyChangedExtension, ISortedListItem<string>
     {
 
         protected Unit() : base()
@@ -30,7 +30,7 @@ namespace EngineeringMath.Component
         public Unit(string fullName, string symbol,
             string convertToBaseEquation, 
             string convertFromBaseEquation, 
-            UnitSystem.UnitSystemType unitSystem, 
+            UnitSystem.UnitSystemBaseUnit unitSystem, 
             bool isBaseUnit = false,
             bool isUserDefined = false)
         {
@@ -90,8 +90,16 @@ namespace EngineeringMath.Component
 
         private readonly Equation _Converter = new Equation("42");
 
-        public UnitSystem.UnitSystemType UnitSystem { get; set; }
+        public UnitSystem.UnitSystemBaseUnit UnitSystem { get; set; }
         public bool IsBaseUnit { get; set; }
         public bool IsUserDefined { get; set; }
+
+        public string Key
+        {
+            get
+            {
+                return this.FullName;
+            }
+        }
     }
 }

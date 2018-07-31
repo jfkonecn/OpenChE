@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class UnitCategory : NotifyPropertyList<Unit>
+    public class UnitCategory : NotifyPropertySortedList<string, Unit>, ISortedListItem<string>
     {
         protected UnitCategory() : base()
         {
@@ -35,7 +35,7 @@ namespace EngineeringMath.Component
             return desiredUnit.ConvertFromBase(curUnit.ConvertToBase(curUnitValue));
         }
 
-        private Unit GetUnitByFullName(string unitFullName)
+        public Unit GetUnitByFullName(string unitFullName)
         {
             IEnumerable<Unit> temp = from unit in this
                                        where unit.FullName.Equals(unitFullName)
@@ -62,6 +62,7 @@ namespace EngineeringMath.Component
             }
         }
 
+
         public bool IsUserDefined { get; set; }
 
 
@@ -84,14 +85,22 @@ namespace EngineeringMath.Component
             }
         }
 
+        public string Key
+        {
+            get
+            {
+                return this.Name;
+            }
+        }
+
         /// <summary>
         /// Returns an empty string if "None" type is searched for since it is not required to have exactly one in a category
         /// </summary>
         /// <param name="system"></param>
         /// <returns></returns>
-        public string GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemType system)
+        public string GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit system)
         {
-            if(system == UnitSystem.UnitSystemType.None)
+            if(system == UnitSystem.UnitSystemBaseUnit.None)
             {
                 return string.Empty;
             }
@@ -118,11 +127,11 @@ namespace EngineeringMath.Component
 
         public class NoUnitSystemTypeException : ArgumentException
         {
-            public NoUnitSystemTypeException(UnitSystem.UnitSystemType system) : base(system.ToString()) { }
+            public NoUnitSystemTypeException(UnitSystem.UnitSystemBaseUnit system) : base(system.ToString()) { }
         }
         public class MoreThanOneUnitSystemTypeException : ArgumentException
         {
-            public MoreThanOneUnitSystemTypeException(UnitSystem.UnitSystemType system) : base(system.ToString()) { }
+            public MoreThanOneUnitSystemTypeException(UnitSystem.UnitSystemBaseUnit system) : base(system.ToString()) { }
         }
 
         public class UnitNotFoundException : ArgumentException

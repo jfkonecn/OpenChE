@@ -70,11 +70,65 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to British Thermal Units.
+        /// </summary>
+        public static string BTU {
+            get {
+                return ResourceManager.GetString("BTU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Celsius.
         /// </summary>
         public static string Celsius {
             get {
                 return ResourceManager.GetString("Celsius", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} in {1}.
+        /// </summary>
+        public static string CompositeUnitFullName {
+            get {
+                return ResourceManager.GetString("CompositeUnitFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Density.
+        /// </summary>
+        public static string Density {
+            get {
+                return ResourceManager.GetString("Density", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Energy.
+        /// </summary>
+        public static string Energy {
+            get {
+                return ResourceManager.GetString("Energy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enthalpy.
+        /// </summary>
+        public static string Enthalpy {
+            get {
+                return ResourceManager.GetString("Enthalpy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entropy.
+        /// </summary>
+        public static string Entropy {
+            get {
+                return ResourceManager.GetString("Entropy", resourceCulture);
             }
         }
         
@@ -97,11 +151,56 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Joules.
+        /// </summary>
+        public static string Joules {
+            get {
+                return ResourceManager.GetString("Joules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kelvin.
         /// </summary>
         public static string Kelvin {
             get {
                 return ResourceManager.GetString("Kelvin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kilograms per Meter Cubed.
+        /// </summary>
+        public static string KgPerMeterCubed {
+            get {
+                return ResourceManager.GetString("KgPerMeterCubed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kilocalories.
+        /// </summary>
+        public static string Kilocalories {
+            get {
+                return ResourceManager.GetString("Kilocalories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kilojoules.
+        /// </summary>
+        public static string Kilojoules {
+            get {
+                return ResourceManager.GetString("Kilojoules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pounds Mass per Feet Cubed.
+        /// </summary>
+        public static string LbsmPerFeetCubed {
+            get {
+                return ResourceManager.GetString("LbsmPerFeetCubed", resourceCulture);
             }
         }
         
@@ -129,6 +228,15 @@ namespace EngineeringMath.Resources {
         public static string Temperature {
             get {
                 return ResourceManager.GetString("Temperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to US Therms.
+        /// </summary>
+        public static string Therms {
+            get {
+                return ResourceManager.GetString("Therms", resourceCulture);
             }
         }
     }

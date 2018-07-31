@@ -4,9 +4,9 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class UnitSystem
+    public static class UnitSystem
     {
-        public enum UnitSystemType
+        public enum UnitSystemBaseUnit
         {
             /// <summary>
             /// International System of Units 

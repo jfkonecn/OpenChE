@@ -8,7 +8,7 @@ namespace EngineeringMath
     /// <summary>
     /// Class by which all actions start from with the UI
     /// </summary>
-    public static class MathManger
+    public static class MathManager
     {
 
 

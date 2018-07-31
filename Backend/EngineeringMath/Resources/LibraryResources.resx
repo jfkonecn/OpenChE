@@ -120,8 +120,27 @@
   <data name="Area" xml:space="preserve">
     <value>Area</value>
   </data>
+  <data name="BTU" xml:space="preserve">
+    <value>British Thermal Units</value>
+  </data>
   <data name="Celsius" xml:space="preserve">
     <value>Celsius</value>
+  </data>
+  <data name="CompositeUnitFullName" xml:space="preserve">
+    <value>{0} in {1}</value>
+    <comment>{0} is the unit's category and {1} is the unit's symbol. Used when a unit does not have a full name, but are instead now by the units they are made up of (i.e. enthapy units)</comment>
+  </data>
+  <data name="Density" xml:space="preserve">
+    <value>Density</value>
+  </data>
+  <data name="Energy" xml:space="preserve">
+    <value>Energy</value>
+  </data>
+  <data name="Enthalpy" xml:space="preserve">
+    <value>Enthalpy</value>
+  </data>
+  <data name="Entropy" xml:space="preserve">
+    <value>Entropy</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
     <value>Fahrenheit</value>
@@ -129,8 +148,23 @@
   <data name="FeetSquared" xml:space="preserve">
     <value>Feet Squared</value>
   </data>
+  <data name="Joules" xml:space="preserve">
+    <value>Joules</value>
+  </data>
   <data name="Kelvin" xml:space="preserve">
     <value>Kelvin</value>
+  </data>
+  <data name="KgPerMeterCubed" xml:space="preserve">
+    <value>Kilograms per Meter Cubed</value>
+  </data>
+  <data name="Kilocalories" xml:space="preserve">
+    <value>Kilocalories</value>
+  </data>
+  <data name="Kilojoules" xml:space="preserve">
+    <value>Kilojoules</value>
+  </data>
+  <data name="LbsmPerFeetCubed" xml:space="preserve">
+    <value>Pounds Mass per Feet Cubed</value>
   </data>
   <data name="MetersSquared" xml:space="preserve">
     <value>Meters Squared</value>
@@ -140,5 +174,8 @@
   </data>
   <data name="Temperature" xml:space="preserve">
     <value>Temperature</value>
+  </data>
+  <data name="Therms" xml:space="preserve">
+    <value>US Therms</value>
   </data>
 </root>
