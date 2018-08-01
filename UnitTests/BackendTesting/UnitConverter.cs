@@ -20,10 +20,10 @@ namespace BackendTesting
         {
             UnitCategory category = new UnitCategory("Temperature", true)
             {
-                new Unit("Kelvin", "°K","curUnit * 9/5","baseUnit * 5/9", UnitSystem.UnitSystemBaseUnit.SI, false, true),
-                new Unit("Rankine","°R","","", UnitSystem.UnitSystemBaseUnit.USCS, true, true),
-                new Unit("Fahrenheit", "°F","curUnit + 459.67", "baseUnit - 459.67", UnitSystem.UnitSystemBaseUnit.None, false, true),
-                new Unit("Celsius", "°C","(curUnit + 273.15) * 9/5", "baseUnit * 5/9 - 273.15", UnitSystem.UnitSystemBaseUnit.None, false, true)
+                new Unit("Kelvin", "°K", 1.8, UnitSystem.UnitSystemBaseUnit.SI, true),
+                new Unit("Rankine","°R", UnitSystem.UnitSystemBaseUnit.USCS, true, true),
+                new Unit("Fahrenheit", "°F",$"{Unit.CurUnitVar} + 459.67", $"{Unit.BaseUnitVar} - 459.67", UnitSystem.UnitSystemBaseUnit.None, true),
+                new Unit("Celsius", "°C",$"({Unit.CurUnitVar} + 273.15) * 9/5", $"{Unit.BaseUnitVar} * 5/9 - 273.15", UnitSystem.UnitSystemBaseUnit.None, true)
             };
             Assert.AreEqual("Kelvin", category.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI));
             Assert.AreEqual("Rankine", category.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS));
@@ -74,7 +74,7 @@ namespace BackendTesting
         {
             UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length);
             double temp = cat.ConvertUnit(LibraryResources.Meters, LibraryResources.Feet, 125);
-            Assert.AreEqual(410.105, temp);
+            Assert.AreEqual(410.105, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Feet, LibraryResources.Inches, temp);
             Assert.AreEqual(4921.26, temp, 0.01);
             temp = cat.ConvertUnit(LibraryResources.Inches, LibraryResources.Miles, temp);
@@ -105,7 +105,7 @@ namespace BackendTesting
             temp = cat.ConvertUnit(LibraryResources.Micrograms, LibraryResources.MetricTons, temp);
             Assert.AreEqual(0.125, temp);
             temp = cat.ConvertUnit(LibraryResources.MetricTons, LibraryResources.Ounces, temp);
-            Assert.AreEqual(4409.25, temp);
+            Assert.AreEqual(4409.25, temp, 0.01);
             temp = cat.ConvertUnit(LibraryResources.Ounces, LibraryResources.USTons, temp);
             Assert.AreEqual(0.137789, temp, 0.0001);
             temp = cat.ConvertUnit(LibraryResources.USTons, LibraryResources.Kilograms, temp);

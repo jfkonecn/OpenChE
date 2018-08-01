@@ -45,7 +45,7 @@ namespace EngineeringMath.Component
                     double localConvertFromBaseFactor = cat.ConvertUnit(baseUnit.FullName, curUnit.FullName, 1),
                         localConvertToBaseFactor = cat.ConvertUnit(curUnit.FullName, baseUnit.FullName, 1);
 
-
+                    // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
                     string invStr = ele.IsInverse ? "\u207B" : string.Empty;
 
                     string pwStr = string.Empty,
@@ -91,13 +91,13 @@ namespace EngineeringMath.Component
 
                 if(sysUnit == UnitSystem.UnitSystemBaseUnit.SI)
                 {
-                    this.Add(new Unit(unitFullName, unitSymbol, "", "", sysUnit, true, isUserDefined));
+                    this.Add(new Unit(unitFullName, unitSymbol, sysUnit, isUserDefined, true));
                 }
                 else
                 {
                     this.Add(new Unit(
                         unitFullName,
-                        unitSymbol, $"curUnit * {convertToBaseFactor}", $"baseUnit * {convertFromBaseFactor}", sysUnit, false, isUserDefined));
+                        unitSymbol, convertToBaseFactor, sysUnit, isUserDefined));
                 }
 
             }
