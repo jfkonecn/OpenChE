@@ -40,23 +40,17 @@ namespace BackendTesting
         }
 
         [TestMethod]
-        public void AreaUnits()
+        public void TemperatureUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area);
-            double temp = cat.ConvertUnit(LibraryResources.MetersSquared, LibraryResources.FeetSquared, 100);
-            Assert.AreEqual(1076.39, temp, 1);
-            temp = cat.ConvertUnit(LibraryResources.FeetSquared, LibraryResources.MetersSquared, temp);
-            Assert.AreEqual(100, temp, 1);
-        }
-
-        [TestMethod]
-        public void DensityUnits()
-        {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Density);
-            double temp = cat.ConvertUnit(LibraryResources.KgPerMeterCubed, LibraryResources.LbsmPerFeetCubed, 125);
-            Assert.AreEqual(7.8035, temp, 0.001);
-            temp = cat.ConvertUnit(LibraryResources.LbsmPerFeetCubed, LibraryResources.KgPerMeterCubed, temp);
-            Assert.AreEqual(125, temp, 0.1);
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Temperature);
+            double temp = cat.ConvertUnit(LibraryResources.Kelvin, LibraryResources.Fahrenheit, 373.15);
+            Assert.AreEqual(212, temp);
+            temp = cat.ConvertUnit(LibraryResources.Fahrenheit, LibraryResources.Celsius, temp);
+            Assert.AreEqual(100, temp);
+            temp = cat.ConvertUnit(LibraryResources.Celsius, LibraryResources.Rankine, temp);
+            Assert.AreEqual(671.67, temp);
+            temp = cat.ConvertUnit(LibraryResources.Rankine, LibraryResources.Kelvin, temp);
+            Assert.AreEqual(373.15, temp);
         }
 
         [TestMethod]
@@ -76,9 +70,131 @@ namespace BackendTesting
         }
 
         [TestMethod]
+        public void LengthUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length);
+            double temp = cat.ConvertUnit(LibraryResources.Meters, LibraryResources.Feet, 125);
+            Assert.AreEqual(410.105, temp);
+            temp = cat.ConvertUnit(LibraryResources.Feet, LibraryResources.Inches, temp);
+            Assert.AreEqual(4921.26, temp, 0.01);
+            temp = cat.ConvertUnit(LibraryResources.Inches, LibraryResources.Miles, temp);
+            Assert.AreEqual(0.0776714, temp, 0.0001);
+            temp = cat.ConvertUnit(LibraryResources.Miles, LibraryResources.Millimeters, temp);
+            Assert.AreEqual(125000, temp);
+            temp = cat.ConvertUnit(LibraryResources.Millimeters, LibraryResources.Centimeters, temp);
+            Assert.AreEqual(12500, temp);
+            temp = cat.ConvertUnit(LibraryResources.Centimeters, LibraryResources.Kilometers, temp);
+            Assert.AreEqual(0.125, temp);
+            temp = cat.ConvertUnit(LibraryResources.Kilometers, LibraryResources.Meters, temp);
+            Assert.AreEqual(125, temp);
+        }
+
+
+        [TestMethod]
+        public void MassUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Mass);
+            double temp = cat.ConvertUnit(LibraryResources.Kilograms, LibraryResources.PoundsMass, 125);
+            Assert.AreEqual(275.578, temp, 0.001);
+            temp = cat.ConvertUnit(LibraryResources.PoundsMass, LibraryResources.Grams, temp);
+            Assert.AreEqual(125e3, temp);
+            temp = cat.ConvertUnit(LibraryResources.Grams, LibraryResources.Milligrams, temp);
+            Assert.AreEqual(125e6, temp);
+            temp = cat.ConvertUnit(LibraryResources.Milligrams, LibraryResources.Micrograms, temp);
+            Assert.AreEqual(125e9, temp);
+            temp = cat.ConvertUnit(LibraryResources.Micrograms, LibraryResources.MetricTons, temp);
+            Assert.AreEqual(0.125, temp);
+            temp = cat.ConvertUnit(LibraryResources.MetricTons, LibraryResources.Ounces, temp);
+            Assert.AreEqual(4409.25, temp);
+            temp = cat.ConvertUnit(LibraryResources.Ounces, LibraryResources.USTons, temp);
+            Assert.AreEqual(0.137789, temp, 0.0001);
+            temp = cat.ConvertUnit(LibraryResources.USTons, LibraryResources.Kilograms, temp);
+            Assert.AreEqual(125, temp, 0.00001);
+        }
+
+
+        [TestMethod]
+        public void AreaUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI),
+                usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS);
+            // SI is m2 and USCS is ft2
+            double temp = cat.ConvertUnit(siName, usName, 100);
+            Assert.AreEqual(1076.39, temp, 1);
+            temp = cat.ConvertUnit(usName, siName, temp);
+            Assert.AreEqual(100, temp, 1);
+        }
+
+        [TestMethod]
+        public void DensityUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Density);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS);
+            // SI is kg/m3 and USCS is lbsm/ft3
+            double temp = cat.ConvertUnit(siName, usName, 125);
+            Assert.AreEqual(7.8035, temp, 0.001);
+            temp = cat.ConvertUnit(usName, siName, temp);
+            Assert.AreEqual(125, temp, 0.1);
+        }
+
+
+
+        [TestMethod]
         public void EnthalpyUnits()
         {
-            
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Enthalpy);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS);
+            // SI is J/kg and USCS is BTU/lbsm
+            double temp = cat.ConvertUnit(siName, usName, 125000);
+            Assert.AreEqual(125000 * 4.302104e-4, temp, 0.05);
+            temp = cat.ConvertUnit(usName, siName, temp);
+            Assert.AreEqual(125000, temp, 0.1);
+        }
+
+        [TestMethod]
+        public void EntropyUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Entropy);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS);
+            // SI is J/kg and USCS is BTU/lbsm
+            double temp = cat.ConvertUnit(siName, usName, 125000);
+            Assert.AreEqual(125000 * 2.390057e-4, temp, 0.05);
+            temp = cat.ConvertUnit(usName, siName, temp);
+            Assert.AreEqual(125000, temp, 0.1);
+        }
+
+        [TestMethod]
+        public void PowerUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Power);
+            double temp = cat.ConvertUnit(LibraryResources.Kilowatt, LibraryResources.Watt, 125);
+            Assert.AreEqual(125e3, temp);
+            temp = cat.ConvertUnit(LibraryResources.Watt, LibraryResources.Horsepower, temp);
+            Assert.AreEqual(167.627761, temp, 0.001);
+            temp = cat.ConvertUnit(LibraryResources.Horsepower, LibraryResources.Kilowatt, temp);
+            Assert.AreEqual(125, temp, 0.0001);
+        }
+
+        [TestMethod]
+        public void PressureUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Pressure);
+            double temp = cat.ConvertUnit(LibraryResources.Kilopascals, LibraryResources.Pascals, 125);
+            Assert.AreEqual(125e3, temp);
+            temp = cat.ConvertUnit(LibraryResources.Pascals, LibraryResources.Atmospheres, temp);
+            Assert.AreEqual(1.23365, temp, 0.001);
+            temp = cat.ConvertUnit(LibraryResources.Atmospheres, LibraryResources.Bar, temp);
+            Assert.AreEqual(1.25, temp);
+            temp = cat.ConvertUnit(LibraryResources.Bar, LibraryResources.PoundsForcePerSqIn, temp);
+            Assert.AreEqual(18.1297, temp, 0.001);
+            temp = cat.ConvertUnit(LibraryResources.PoundsForcePerSqIn, LibraryResources.Torr, temp);
+            Assert.AreEqual(937.577, temp, 0.01);
+            temp = cat.ConvertUnit(LibraryResources.Torr, LibraryResources.Kilopascals, temp);
+            Assert.AreEqual(125, temp);
         }
     }
 }

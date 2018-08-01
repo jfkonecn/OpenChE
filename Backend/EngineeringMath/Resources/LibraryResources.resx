@@ -120,15 +120,22 @@
   <data name="Area" xml:space="preserve">
     <value>Area</value>
   </data>
+  <data name="Atmospheres" xml:space="preserve">
+    <value>Atmospheres</value>
+    <comment>Pressure Unit</comment>
+  </data>
+  <data name="Bar" xml:space="preserve">
+    <value>Bar</value>
+    <comment>Pressure Unit</comment>
+  </data>
   <data name="BTU" xml:space="preserve">
     <value>British Thermal Units</value>
   </data>
   <data name="Celsius" xml:space="preserve">
     <value>Celsius</value>
   </data>
-  <data name="CompositeUnitFullName" xml:space="preserve">
-    <value>{0} in {1}</value>
-    <comment>{0} is the unit's category and {1} is the unit's symbol. Used when a unit does not have a full name, but are instead now by the units they are made up of (i.e. enthapy units)</comment>
+  <data name="Centimeters" xml:space="preserve">
+    <value>Centimeters</value>
   </data>
   <data name="Density" xml:space="preserve">
     <value>Density</value>
@@ -145,8 +152,17 @@
   <data name="Fahrenheit" xml:space="preserve">
     <value>Fahrenheit</value>
   </data>
-  <data name="FeetSquared" xml:space="preserve">
-    <value>Feet Squared</value>
+  <data name="Feet" xml:space="preserve">
+    <value>Feet</value>
+  </data>
+  <data name="Grams" xml:space="preserve">
+    <value>grams</value>
+  </data>
+  <data name="Horsepower" xml:space="preserve">
+    <value>Horsepower</value>
+  </data>
+  <data name="Inches" xml:space="preserve">
+    <value>Inches</value>
   </data>
   <data name="Joules" xml:space="preserve">
     <value>Joules</value>
@@ -154,20 +170,66 @@
   <data name="Kelvin" xml:space="preserve">
     <value>Kelvin</value>
   </data>
-  <data name="KgPerMeterCubed" xml:space="preserve">
-    <value>Kilograms per Meter Cubed</value>
-  </data>
   <data name="Kilocalories" xml:space="preserve">
     <value>Kilocalories</value>
+  </data>
+  <data name="Kilograms" xml:space="preserve">
+    <value>Kilograms</value>
   </data>
   <data name="Kilojoules" xml:space="preserve">
     <value>Kilojoules</value>
   </data>
-  <data name="LbsmPerFeetCubed" xml:space="preserve">
-    <value>Pounds Mass per Feet Cubed</value>
+  <data name="Kilometers" xml:space="preserve">
+    <value>Kilometers</value>
   </data>
-  <data name="MetersSquared" xml:space="preserve">
-    <value>Meters Squared</value>
+  <data name="Kilopascals" xml:space="preserve">
+    <value>Kilopascals</value>
+  </data>
+  <data name="Kilowatt" xml:space="preserve">
+    <value>Kilowatt</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="Mass" xml:space="preserve">
+    <value>Mass</value>
+  </data>
+  <data name="Meters" xml:space="preserve">
+    <value>Meters</value>
+  </data>
+  <data name="MetricTons" xml:space="preserve">
+    <value>Metric Tons</value>
+  </data>
+  <data name="Micrograms" xml:space="preserve">
+    <value>Micrograms</value>
+  </data>
+  <data name="Miles" xml:space="preserve">
+    <value>Miles</value>
+  </data>
+  <data name="Milligrams" xml:space="preserve">
+    <value>Milligrams</value>
+  </data>
+  <data name="Millimeters" xml:space="preserve">
+    <value>Millimeters</value>
+  </data>
+  <data name="Ounces" xml:space="preserve">
+    <value>Ounces</value>
+  </data>
+  <data name="Pascals" xml:space="preserve">
+    <value>Pascals</value>
+  </data>
+  <data name="PoundsForcePerSqIn" xml:space="preserve">
+    <value>Pounds-Force per Square Inch</value>
+  </data>
+  <data name="PoundsMass" xml:space="preserve">
+    <value>Pounds Mass</value>
+  </data>
+  <data name="Power" xml:space="preserve">
+    <value>Power</value>
+    <comment>as in kW</comment>
+  </data>
+  <data name="Pressure" xml:space="preserve">
+    <value>Pressure</value>
   </data>
   <data name="Rankine" xml:space="preserve">
     <value>Rankine</value>
@@ -177,5 +239,27 @@
   </data>
   <data name="Therms" xml:space="preserve">
     <value>US Therms</value>
+  </data>
+  <data name="Torr" xml:space="preserve">
+    <value>Torr</value>
+    <comment>Pressure Unit</comment>
+  </data>
+  <data name="UnitCubed" xml:space="preserve">
+    <value>{0} Cubed</value>
+    <comment>Where {0} is the unit name</comment>
+  </data>
+  <data name="UnitInversed" xml:space="preserve">
+    <value>{0} Inversed</value>
+    <comment>Where {0} is the unit name</comment>
+  </data>
+  <data name="UnitSquared" xml:space="preserve">
+    <value>{0} Squared</value>
+    <comment>Where {0} is the unit name</comment>
+  </data>
+  <data name="USTons" xml:space="preserve">
+    <value>US Tons</value>
+  </data>
+  <data name="Watt" xml:space="preserve">
+    <value>Watt</value>
   </data>
 </root>

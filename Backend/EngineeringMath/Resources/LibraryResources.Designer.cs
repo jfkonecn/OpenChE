@@ -70,6 +70,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Atmospheres.
+        /// </summary>
+        public static string Atmospheres {
+            get {
+                return ResourceManager.GetString("Atmospheres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bar.
+        /// </summary>
+        public static string Bar {
+            get {
+                return ResourceManager.GetString("Bar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to British Thermal Units.
         /// </summary>
         public static string BTU {
@@ -88,11 +106,11 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} in {1}.
+        ///   Looks up a localized string similar to Centimeters.
         /// </summary>
-        public static string CompositeUnitFullName {
+        public static string Centimeters {
             get {
-                return ResourceManager.GetString("CompositeUnitFullName", resourceCulture);
+                return ResourceManager.GetString("Centimeters", resourceCulture);
             }
         }
         
@@ -142,11 +160,38 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feet Squared.
+        ///   Looks up a localized string similar to Feet.
         /// </summary>
-        public static string FeetSquared {
+        public static string Feet {
             get {
-                return ResourceManager.GetString("FeetSquared", resourceCulture);
+                return ResourceManager.GetString("Feet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to grams.
+        /// </summary>
+        public static string Grams {
+            get {
+                return ResourceManager.GetString("Grams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Horsepower.
+        /// </summary>
+        public static string Horsepower {
+            get {
+                return ResourceManager.GetString("Horsepower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inches.
+        /// </summary>
+        public static string Inches {
+            get {
+                return ResourceManager.GetString("Inches", resourceCulture);
             }
         }
         
@@ -169,20 +214,20 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kilograms per Meter Cubed.
-        /// </summary>
-        public static string KgPerMeterCubed {
-            get {
-                return ResourceManager.GetString("KgPerMeterCubed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Kilocalories.
         /// </summary>
         public static string Kilocalories {
             get {
                 return ResourceManager.GetString("Kilocalories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kilograms.
+        /// </summary>
+        public static string Kilograms {
+            get {
+                return ResourceManager.GetString("Kilograms", resourceCulture);
             }
         }
         
@@ -196,20 +241,155 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pounds Mass per Feet Cubed.
+        ///   Looks up a localized string similar to Kilometers.
         /// </summary>
-        public static string LbsmPerFeetCubed {
+        public static string Kilometers {
             get {
-                return ResourceManager.GetString("LbsmPerFeetCubed", resourceCulture);
+                return ResourceManager.GetString("Kilometers", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Meters Squared.
+        ///   Looks up a localized string similar to Kilopascals.
         /// </summary>
-        public static string MetersSquared {
+        public static string Kilopascals {
             get {
-                return ResourceManager.GetString("MetersSquared", resourceCulture);
+                return ResourceManager.GetString("Kilopascals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kilowatt.
+        /// </summary>
+        public static string Kilowatt {
+            get {
+                return ResourceManager.GetString("Kilowatt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Length.
+        /// </summary>
+        public static string Length {
+            get {
+                return ResourceManager.GetString("Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mass.
+        /// </summary>
+        public static string Mass {
+            get {
+                return ResourceManager.GetString("Mass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meters.
+        /// </summary>
+        public static string Meters {
+            get {
+                return ResourceManager.GetString("Meters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metric Tons.
+        /// </summary>
+        public static string MetricTons {
+            get {
+                return ResourceManager.GetString("MetricTons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Micrograms.
+        /// </summary>
+        public static string Micrograms {
+            get {
+                return ResourceManager.GetString("Micrograms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Miles.
+        /// </summary>
+        public static string Miles {
+            get {
+                return ResourceManager.GetString("Miles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Milligrams.
+        /// </summary>
+        public static string Milligrams {
+            get {
+                return ResourceManager.GetString("Milligrams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Millimeters.
+        /// </summary>
+        public static string Millimeters {
+            get {
+                return ResourceManager.GetString("Millimeters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ounces.
+        /// </summary>
+        public static string Ounces {
+            get {
+                return ResourceManager.GetString("Ounces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pascals.
+        /// </summary>
+        public static string Pascals {
+            get {
+                return ResourceManager.GetString("Pascals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pounds-Force per Square Inch.
+        /// </summary>
+        public static string PoundsForcePerSqIn {
+            get {
+                return ResourceManager.GetString("PoundsForcePerSqIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pounds Mass.
+        /// </summary>
+        public static string PoundsMass {
+            get {
+                return ResourceManager.GetString("PoundsMass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Power.
+        /// </summary>
+        public static string Power {
+            get {
+                return ResourceManager.GetString("Power", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pressure.
+        /// </summary>
+        public static string Pressure {
+            get {
+                return ResourceManager.GetString("Pressure", resourceCulture);
             }
         }
         
@@ -237,6 +417,60 @@ namespace EngineeringMath.Resources {
         public static string Therms {
             get {
                 return ResourceManager.GetString("Therms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Torr.
+        /// </summary>
+        public static string Torr {
+            get {
+                return ResourceManager.GetString("Torr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Cubed.
+        /// </summary>
+        public static string UnitCubed {
+            get {
+                return ResourceManager.GetString("UnitCubed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Inversed.
+        /// </summary>
+        public static string UnitInversed {
+            get {
+                return ResourceManager.GetString("UnitInversed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Squared.
+        /// </summary>
+        public static string UnitSquared {
+            get {
+                return ResourceManager.GetString("UnitSquared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to US Tons.
+        /// </summary>
+        public static string USTons {
+            get {
+                return ResourceManager.GetString("USTons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Watt.
+        /// </summary>
+        public static string Watt {
+            get {
+                return ResourceManager.GetString("Watt", resourceCulture);
             }
         }
     }

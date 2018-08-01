@@ -32,7 +32,8 @@ namespace EngineeringMath.Component
                 if (sysUnit == UnitSystem.UnitSystemBaseUnit.None)
                     continue;
 
-                string UnitSymbol = string.Empty;
+                string unitSymbol = string.Empty,
+                    unitFullName = string.Empty;
                 double convertToBaseFactor = 1,
                     convertFromBaseFactor = 1;
                 foreach (CompositeUnitElement ele in arr)
@@ -40,42 +41,63 @@ namespace EngineeringMath.Component
                     UnitCategory cat = UnitCategoryCollection.AllUnits.GetUnitCategoryByName(ele.CategoryName);
                     Unit baseUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI)),
                         curUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(sysUnit));
-                    convertFromBaseFactor = cat.ConvertUnit(baseUnit.FullName, curUnit.FullName, convertFromBaseFactor);
-                    convertToBaseFactor = cat.ConvertUnit(curUnit.FullName, baseUnit.FullName, convertToBaseFactor);
 
-                    string invStr = string.Empty;
-                    if (ele.IsInverse)
-                    {
-                        invStr = "\x207B";
-                    }
-                    string pwStr = string.Empty;
+                    double localConvertFromBaseFactor = cat.ConvertUnit(baseUnit.FullName, curUnit.FullName, 1),
+                        localConvertToBaseFactor = cat.ConvertUnit(curUnit.FullName, baseUnit.FullName, 1);
+
+
+                    string invStr = ele.IsInverse ? "\u207B" : string.Empty;
+
+                    string pwStr = string.Empty,
+                        localUnitName = string.Empty;
                     switch (ele.power)
                     {
                         case ToPowerOf.Two:
-                            pwStr = "\xB2";
+                            pwStr = "\u00B2";
+                            localUnitName = string.Format(LibraryResources.UnitSquared, curUnit.FullName);
+                            localConvertFromBaseFactor = Math.Pow(localConvertFromBaseFactor, 2);
+                            localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 2);
                             break;
                         case ToPowerOf.Three:
-                            pwStr = "\xB3";
+                            pwStr = "\u00B3";
+                            localUnitName = string.Format(LibraryResources.UnitCubed, curUnit.FullName);
+                            localConvertFromBaseFactor = Math.Pow(localConvertFromBaseFactor, 3);
+                            localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 3);
                             break;
                         case ToPowerOf.One:
                         default:
+                            localUnitName = string.Copy(curUnit.FullName);
                             break;
                     }
 
-                    UnitSymbol = string.Concat(UnitSymbol, $"{curUnit.Symbol}{invStr}{pwStr}");
+                    if (ele.IsInverse)
+                    {
+                        convertFromBaseFactor /= localConvertFromBaseFactor;
+                        convertToBaseFactor /= localConvertToBaseFactor;
+                    }
+                    else
+                    {
+                        convertFromBaseFactor *= localConvertFromBaseFactor;
+                        convertToBaseFactor *= localConvertToBaseFactor;
+                    }
+
+
+                    localUnitName = ele.IsInverse ? string.Format(LibraryResources.UnitInversed, localUnitName) : localUnitName;
+                    unitFullName = string.Concat(unitFullName, unitFullName.Equals(string.Empty) ? string.Empty : "-", localUnitName);
+                    unitSymbol = string.Concat(unitSymbol, $"{curUnit.Symbol}{invStr}{pwStr}");
                 }
 
-                string fullName = string.Format(LibraryResources.CompositeUnitFullName, name, UnitSymbol);
+                
 
                 if(sysUnit == UnitSystem.UnitSystemBaseUnit.SI)
                 {
-                    this.Add(new Unit(fullName, UnitSymbol, "", "", sysUnit, true, isUserDefined));
+                    this.Add(new Unit(unitFullName, unitSymbol, "", "", sysUnit, true, isUserDefined));
                 }
                 else
                 {
                     this.Add(new Unit(
-                        fullName,
-                        UnitSymbol, $"curUnit * {convertToBaseFactor}", $"baseUnit * {convertFromBaseFactor}", sysUnit, false, isUserDefined));
+                        unitFullName,
+                        unitSymbol, $"curUnit * {convertToBaseFactor}", $"baseUnit * {convertFromBaseFactor}", sysUnit, false, isUserDefined));
                 }
 
             }
