@@ -26,81 +26,119 @@ namespace EngineeringMath.Component
         {
             arr.OrderBy(x => x.CategoryName).OrderBy(x => x.IsInverse);
 
-            foreach (UnitSystem.UnitSystemBaseUnit sysUnit in Enum.GetValues(typeof(UnitSystem.UnitSystemBaseUnit)))
+            Stack<UnitContructorContainer> oldStack = new Stack<UnitContructorContainer>();
+            Stack<UnitContructorContainer> newStack = new Stack<UnitContructorContainer>();
+
+            for (int i = 0; i < arr.Count(); i++)
             {
-                // None will not be represented
-                if (sysUnit == UnitSystem.UnitSystemBaseUnit.None)
-                    continue;
-
-                string unitSymbol = string.Empty,
-                    unitFullName = string.Empty;
-                double convertToBaseFactor = 1,
-                    convertFromBaseFactor = 1;
-                foreach (CompositeUnitElement ele in arr)
+                UnitCategory cat = UnitCategoryCollection.AllUnits.GetUnitCategoryByName(arr[i].CategoryName);
+                Unit baseUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI));
+                while (newStack.Count > 0)
                 {
-                    UnitCategory cat = UnitCategoryCollection.AllUnits.GetUnitCategoryByName(ele.CategoryName);
-                    Unit baseUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI)),
-                        curUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(sysUnit));
+                    oldStack.Push(newStack.Pop());
+                }
+                UnitContructorContainer oldContainer;
 
-                    double localConvertFromBaseFactor = cat.ConvertUnit(baseUnit.FullName, curUnit.FullName, 1),
-                        localConvertToBaseFactor = cat.ConvertUnit(curUnit.FullName, baseUnit.FullName, 1);
-
-                    // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
-                    string invStr = ele.IsInverse ? "\u207B" : string.Empty;
-
-                    string pwStr = string.Empty,
-                        localUnitName = string.Empty;
-                    switch (ele.power)
+                do
+                {
+                    if (i != 0)
                     {
-                        case ToPowerOf.Two:
-                            pwStr = "\u00B2";
-                            localUnitName = string.Format(LibraryResources.UnitSquared, curUnit.FullName);
-                            localConvertFromBaseFactor = Math.Pow(localConvertFromBaseFactor, 2);
-                            localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 2);
-                            break;
-                        case ToPowerOf.Three:
-                            pwStr = "\u00B3";
-                            localUnitName = string.Format(LibraryResources.UnitCubed, curUnit.FullName);
-                            localConvertFromBaseFactor = Math.Pow(localConvertFromBaseFactor, 3);
-                            localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 3);
-                            break;
-                        case ToPowerOf.One:
-                        default:
-                            localUnitName = string.Copy(curUnit.FullName);
-                            break;
-                    }
-
-                    if (ele.IsInverse)
-                    {
-                        convertFromBaseFactor /= localConvertFromBaseFactor;
-                        convertToBaseFactor /= localConvertToBaseFactor;
+                        oldContainer = oldStack.Pop();
                     }
                     else
                     {
-                        convertFromBaseFactor *= localConvertFromBaseFactor;
-                        convertToBaseFactor *= localConvertToBaseFactor;
+                        oldContainer = new UnitContructorContainer();
                     }
+                    foreach (Unit curUnit in cat)
+                    {
+                        if (i == 0)
+                        {
+                            oldContainer.UnitFullName = string.Empty;
+                            oldContainer.UnitSymbol = string.Empty;
+                            oldContainer.ConvertToBaseFactor = 1;
+                            oldContainer.SysUnit = curUnit.UnitSystem;
+                            oldContainer.IsUserDefined = isUserDefined;
+                        }
+
+                        double localConvertToBaseFactor = cat.ConvertUnit(baseUnit.FullName, curUnit.FullName, 1);
+
+                        // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
+                        string invStr = arr[i].IsInverse ? "\u207B" : string.Empty;
+
+                        string pwStr = string.Empty,
+                            localUnitName = string.Empty;
+                        switch (arr[i].power)
+                        {
+                            case ToPowerOf.Two:
+                                pwStr = "\u00B2";
+                                localUnitName = string.Format(LibraryResources.UnitSquared, curUnit.FullName);
+                                localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 2);
+                                break;
+                            case ToPowerOf.Three:
+                                pwStr = "\u00B3";
+                                localUnitName = string.Format(LibraryResources.UnitCubed, curUnit.FullName);
+                                localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 3);
+                                break;
+                            case ToPowerOf.One:
+                            default:
+                                localUnitName = string.Copy(curUnit.FullName);
+                                break;
+                        }
 
 
-                    localUnitName = ele.IsInverse ? string.Format(LibraryResources.UnitInversed, localUnitName) : localUnitName;
-                    unitFullName = string.Concat(unitFullName, unitFullName.Equals(string.Empty) ? string.Empty : "-", localUnitName);
-                    unitSymbol = string.Concat(unitSymbol, $"{curUnit.Symbol}{invStr}{pwStr}");
-                }
+
+                        UnitContructorContainer newContainer = new UnitContructorContainer();
+
+                        if (oldContainer.SysUnit != curUnit.UnitSystem)
+                        {
+                            newContainer.SysUnit = UnitSystem.UnitSystemBaseUnit.None;
+                        }
+                        else
+                        {
+                            newContainer.SysUnit = oldContainer.SysUnit;
+                        }
+
+                        if (arr[i].IsInverse)
+                        {
+                            newContainer.ConvertToBaseFactor = oldContainer.ConvertToBaseFactor * localConvertToBaseFactor;
+                        }
+                        else
+                        {
+                            newContainer.ConvertToBaseFactor = oldContainer.ConvertToBaseFactor / localConvertToBaseFactor;
+                        }
+
+
+                        localUnitName = arr[i].IsInverse ? string.Format(LibraryResources.UnitInversed, localUnitName) : localUnitName;
+                        newContainer.UnitFullName = string.Concat(oldContainer.UnitFullName, oldContainer.UnitFullName.Equals(string.Empty) ? string.Empty : "-", localUnitName);
+                        newContainer.UnitSymbol = string.Concat(oldContainer.UnitSymbol, $"{curUnit.Symbol}{invStr}{pwStr}");
+
+                        newStack.Push(newContainer);
+                    }
+                } while (oldStack.Count > 0);
 
                 
+            }
 
-                if(sysUnit == UnitSystem.UnitSystemBaseUnit.SI)
+
+
+
+
+            while(newStack.Count > 0)
+            {
+                UnitContructorContainer container = newStack.Pop();
+                if (container.SysUnit == UnitSystem.UnitSystemBaseUnit.SI)
                 {
-                    this.Add(new Unit(unitFullName, unitSymbol, sysUnit, isUserDefined, true));
+                    this.Add(new Unit(container.UnitFullName, container.UnitSymbol, container.SysUnit, isUserDefined, true));
                 }
                 else
                 {
                     this.Add(new Unit(
-                        unitFullName,
-                        unitSymbol, convertToBaseFactor, sysUnit, isUserDefined));
+                        container.UnitFullName,
+                        container.UnitSymbol, container.ConvertToBaseFactor, container.SysUnit, isUserDefined));
                 }
-
+                
             }
+
 
 
         }
@@ -251,6 +289,18 @@ namespace EngineeringMath.Component
             /// true when this unit will be raise to the negative power
             /// </summary>
             public bool IsInverse;
+        }
+
+        /// <summary>
+        /// Contains all information required to build a unit
+        /// </summary>
+        public struct UnitContructorContainer
+        {
+            public string UnitFullName;
+            public string UnitSymbol;
+            public double ConvertToBaseFactor;
+            public UnitSystem.UnitSystemBaseUnit SysUnit;
+            public bool IsUserDefined;
         }
 
         /// <summary>
