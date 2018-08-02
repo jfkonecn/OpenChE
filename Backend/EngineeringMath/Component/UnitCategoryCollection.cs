@@ -172,6 +172,27 @@ namespace EngineeringMath.Component
                 new Unit(LibraryResources.Liters, "l", 1e-3, UnitSystem.Imperial.BaselineSystem),
                 new Unit(LibraryResources.Milliliters, "ml", 1e-6, UnitSystem.Imperial.BaselineSystem)
             });
+
+            _AllUnits.Add(
+                    new UnitCategory(LibraryResources.VolumetricFlowRate,
+                    new UnitCategory.CompositeUnitElement[]
+                    {
+                                    new UnitCategory.CompositeUnitElement()
+                                    {
+                                        CategoryName = LibraryResources.Volume,
+                                        IsInverse = false,
+                                        power = UnitCategory.ToPowerOf.One
+                                    },
+                                    new UnitCategory.CompositeUnitElement()
+                                    {
+                                        CategoryName = LibraryResources.Time,
+                                        IsInverse = true,
+                                        power = UnitCategory.ToPowerOf.One
+                                    }
+                    })
+                {
+                });
+
             _AllUnits.Add(new UnitCategory(LibraryResources.Density, new UnitCategory.CompositeUnitElement[]
                     {
                         new UnitCategory.CompositeUnitElement()

@@ -682,6 +682,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Volumetric Flow Rate.
+        /// </summary>
+        public static string VolumetricFlowRate {
+            get {
+                return ResourceManager.GetString("VolumetricFlowRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Watt.
         /// </summary>
         public static string Watt {
