@@ -32,12 +32,12 @@ namespace EngineeringMath.Component
         private Unit(string fullName, string symbol,
             string convertToBaseEquation,
             string convertFromBaseEquation,
-            UnitSystem.UnitSystemBaseUnit unitSystem,
+            UnitSystem unitSystem,
             bool isBaseUnit,
             bool isUserDefined,
             bool absoluteScaleUnit)
         {
-            if (unitSystem == Component.UnitSystem.UnitSystemBaseUnit.SI &&
+            if (unitSystem == Component.UnitSystem.Metric.SI &&
                 !absoluteScaleUnit)
             {
                 throw new UnitSIUnitNotOnAbsoluteScaleException(fullName);
@@ -72,7 +72,7 @@ namespace EngineeringMath.Component
         public Unit(string fullName, string symbol,
             string convertToBaseEquation, 
             string convertFromBaseEquation, 
-            UnitSystem.UnitSystemBaseUnit unitSystem,
+            UnitSystem unitSystem,
             bool isUserDefined = false) :
             this(fullName, symbol, convertToBaseEquation,
                 convertFromBaseEquation, unitSystem, false, isUserDefined, false)
@@ -90,7 +90,7 @@ namespace EngineeringMath.Component
         /// <param name="isUserDefined"></param>
         /// <param name="absoluteScale">true if unit is on an absolute scale (i.e. meters) as opposed to Celsius</param>
         public Unit(string fullName, string symbol,
-            UnitSystem.UnitSystemBaseUnit unitSystem,
+            UnitSystem unitSystem,
             bool isUserDefined = false,
             bool absoluteScale = true) :
             this(fullName, symbol, string.Empty,
@@ -110,7 +110,7 @@ namespace EngineeringMath.Component
         /// <param name="isUserDefined"></param>
         public Unit(string fullName, string symbol,
             double convertToBaseFactor,
-            UnitSystem.UnitSystemBaseUnit unitSystem,            
+            UnitSystem unitSystem,            
             bool isUserDefined = false) : 
             this(fullName, symbol, $"{CurUnitVar} * {convertToBaseFactor}", 
                 $"{BaseUnitVar} / {convertToBaseFactor}", unitSystem, false, isUserDefined, true)
@@ -180,7 +180,7 @@ namespace EngineeringMath.Component
 
         private readonly Equation _Converter = new Equation("42");
 
-        public UnitSystem.UnitSystemBaseUnit UnitSystem { get; set; }
+        public UnitSystem UnitSystem { get; set; }
         public bool IsBaseUnit { get; set; }
         public bool IsUserDefined { get; set; }
 

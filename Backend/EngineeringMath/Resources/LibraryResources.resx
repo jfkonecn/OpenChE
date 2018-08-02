@@ -262,4 +262,73 @@
   <data name="Watt" xml:space="preserve">
     <value>Watt</value>
   </data>
+  <data name="Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="DaysAbbrev" xml:space="preserve">
+    <value>day</value>
+  </data>
+  <data name="Gallons" xml:space="preserve">
+    <value>Gallons</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="HoursAbbrev" xml:space="preserve">
+    <value>hr</value>
+  </data>
+  <data name="ImperialSystem" xml:space="preserve">
+    <value>Imperial System</value>
+  </data>
+  <data name="IsothermalCompressibility" xml:space="preserve">
+    <value>Isothermal Compressibility</value>
+  </data>
+  <data name="Liters" xml:space="preserve">
+    <value>Liters</value>
+  </data>
+  <data name="MetricSystem" xml:space="preserve">
+    <value>Metric System</value>
+  </data>
+  <data name="Milliliters" xml:space="preserve">
+    <value>Milliliters</value>
+  </data>
+  <data name="Milliseconds" xml:space="preserve">
+    <value>Milliseconds</value>
+  </data>
+  <data name="MillisecondsAbbrev" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="MinutesAbbrev" xml:space="preserve">
+    <value>min</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>Seconds</value>
+  </data>
+  <data name="SecondsAbbrev" xml:space="preserve">
+    <value>sec</value>
+  </data>
+  <data name="SIAbbrev" xml:space="preserve">
+    <value>SI</value>
+  </data>
+  <data name="SIFullName" xml:space="preserve">
+    <value>International System of Units</value>
+  </data>
+  <data name="SpecificVolume" xml:space="preserve">
+    <value>Specific Volume</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="USCSAbbrev" xml:space="preserve">
+    <value>USCS</value>
+  </data>
+  <data name="USCSFullName" xml:space="preserve">
+    <value>United States customary system</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
 </root>

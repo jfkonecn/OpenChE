@@ -20,13 +20,13 @@ namespace BackendTesting
         {
             UnitCategory category = new UnitCategory("Temperature", true)
             {
-                new Unit("Kelvin", "°K", 1.8, UnitSystem.UnitSystemBaseUnit.SI, true),
-                new Unit("Rankine","°R", UnitSystem.UnitSystemBaseUnit.USCS, true, true),
-                new Unit("Fahrenheit", "°F",$"{Unit.CurUnitVar} + 459.67", $"{Unit.BaseUnitVar} - 459.67", UnitSystem.UnitSystemBaseUnit.None, true),
-                new Unit("Celsius", "°C",$"({Unit.CurUnitVar} + 273.15) * 9/5", $"{Unit.BaseUnitVar} * 5/9 - 273.15", UnitSystem.UnitSystemBaseUnit.None, true)
+                new Unit("Kelvin", "°K", 1.8, UnitSystem.Metric.SI, true),
+                new Unit("Rankine","°R", UnitSystem.Imperial.USCS, true, true),
+                new Unit("Fahrenheit", "°F",$"{Unit.CurUnitVar} + 459.67", $"{Unit.BaseUnitVar} - 459.67", UnitSystem.Imperial.BaselineSystem, true),
+                new Unit("Celsius", "°C",$"({Unit.CurUnitVar} + 273.15) * 9/5", $"{Unit.BaseUnitVar} * 5/9 - 273.15", UnitSystem.Metric.BaselineSystem, true)
             };
-            Assert.AreEqual("Kelvin", category.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI));
-            Assert.AreEqual("Rankine", category.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS));
+            Assert.AreEqual("Kelvin", category.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI));
+            Assert.AreEqual("Rankine", category.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS));
             Assert.AreEqual("Rankine", category.BaseUnitFullName);
             double num = category.ConvertUnit("Celsius", "Fahrenheit", 100);
             Assert.AreEqual(212, num);
@@ -117,8 +117,8 @@ namespace BackendTesting
         public void AreaUnits()
         {
             UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area);
-            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI),
-                usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is m2 and USCS is ft2
             double temp = cat.ConvertUnit(siName, usName, 100);
             Assert.AreEqual(1076.39, temp, 1);
@@ -130,8 +130,8 @@ namespace BackendTesting
         public void DensityUnits()
         {
             UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Density);
-            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI),
-                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is kg/m3 and USCS is lbsm/ft3
             double temp = cat.ConvertUnit(siName, usName, 125);
             Assert.AreEqual(7.8035, temp, 0.001);
@@ -145,8 +145,8 @@ namespace BackendTesting
         public void EnthalpyUnits()
         {
             UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Enthalpy);
-            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI),
-                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is J/kg and USCS is BTU/lbsm
             double temp = cat.ConvertUnit(siName, usName, 125000);
             Assert.AreEqual(125000 * 4.302104e-4, temp, 0.05);
@@ -158,13 +158,39 @@ namespace BackendTesting
         public void EntropyUnits()
         {
             UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Entropy);
-            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI),
-                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.USCS);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is J/kg and USCS is BTU/lbsm
             double temp = cat.ConvertUnit(siName, usName, 125000);
             Assert.AreEqual(125000 * 2.390057e-4, temp, 0.05);
             temp = cat.ConvertUnit(usName, siName, temp);
             Assert.AreEqual(125000, temp, 0.1);
+        }
+
+        [TestMethod]
+        public void IsothermalCompressibilityUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.IsothermalCompressibility);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
+            // SI is 1/Pa and USCS is 1/psi
+            double temp = cat.ConvertUnit(siName, usName, 125);
+            Assert.AreEqual(861845, temp, 0.01);
+            temp = cat.ConvertUnit(usName, siName, temp);
+            Assert.AreEqual(125, temp, 0.1);
+        }
+
+        [TestMethod]
+        public void SpecificVolumeUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.SpecificVolume);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
+            // SI is m3/kg and USCS is ft3/lbsm
+            double temp = cat.ConvertUnit(siName, usName, 1/125.0);
+            Assert.AreEqual(1/7.8035, temp, 0.001);
+            temp = cat.ConvertUnit(usName, siName, temp);
+            Assert.AreEqual(1/125, temp, 0.1);
         }
 
         [TestMethod]
@@ -195,6 +221,41 @@ namespace BackendTesting
             Assert.AreEqual(937.577, temp, 0.01);
             temp = cat.ConvertUnit(LibraryResources.Torr, LibraryResources.Kilopascals, temp);
             Assert.AreEqual(125, temp);
+        }
+
+        [TestMethod]
+        public void TimesUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Time);
+            double temp = cat.ConvertUnit(LibraryResources.Seconds, LibraryResources.Milliseconds, 125);
+            Assert.AreEqual(125e3, temp);
+            temp = cat.ConvertUnit(LibraryResources.Milliseconds, LibraryResources.Minutes, temp);
+            Assert.AreEqual(125/60.0, temp, 0.001);
+            temp = cat.ConvertUnit(LibraryResources.Minutes, LibraryResources.Hours, temp);
+            Assert.AreEqual(125/(3600.0), temp, 0.0001);
+            temp = cat.ConvertUnit(LibraryResources.Hours, LibraryResources.Days, temp);
+            Assert.AreEqual(125 / (3600.0 * 24), temp, 0.0001);
+            temp = cat.ConvertUnit(LibraryResources.Days, LibraryResources.Seconds, temp);
+            Assert.AreEqual(125, temp, 0.0001);
+        }
+
+        [TestMethod]
+        public void VolumeUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Volume);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
+            // SI is m3 and USCS is ft3
+            double temp = cat.ConvertUnit(siName, usName, 125);
+            Assert.AreEqual(4414.33, temp, 0.05);
+            temp = cat.ConvertUnit(usName, LibraryResources.Gallons, temp);
+            Assert.AreEqual(33021.5, temp, 0.1);
+            temp = cat.ConvertUnit(LibraryResources.Gallons, LibraryResources.Milliliters, temp);
+            Assert.AreEqual(125e6, temp, 0.1);
+            temp = cat.ConvertUnit(LibraryResources.Milliliters, LibraryResources.Liters, temp);
+            Assert.AreEqual(125e3, temp, 0.1);
+            temp = cat.ConvertUnit(LibraryResources.Liters, siName, temp);
+            Assert.AreEqual(125, temp, 0.1);
         }
     }
 }

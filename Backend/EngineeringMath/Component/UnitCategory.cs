@@ -24,7 +24,7 @@ namespace EngineeringMath.Component
         /// <param name="isUserDefined"></param>
         public UnitCategory(string name, CompositeUnitElement[] arr, bool isUserDefined = false) : this(name, isUserDefined)
         {
-            arr.OrderBy(x => x.CategoryName).OrderBy(x => x.IsInverse);
+            arr = arr.OrderBy(x => x.CategoryName).OrderBy(x => x.IsInverse).ToArray();
 
             Stack<UnitContructorContainer> oldStack = new Stack<UnitContructorContainer>();
             Stack<UnitContructorContainer> newStack = new Stack<UnitContructorContainer>();
@@ -32,7 +32,7 @@ namespace EngineeringMath.Component
             for (int i = 0; i < arr.Count(); i++)
             {
                 UnitCategory cat = UnitCategoryCollection.AllUnits.GetUnitCategoryByName(arr[i].CategoryName);
-                Unit baseUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit.SI));
+                Unit baseUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI));
                 while (newStack.Count > 0)
                 {
                     oldStack.Push(newStack.Pop());
@@ -60,6 +60,13 @@ namespace EngineeringMath.Component
                             oldContainer.IsUserDefined = isUserDefined;
                         }
 
+
+
+                        // don't mix imperial with metric
+                        UnitContructorContainer newContainer = new UnitContructorContainer();
+                        if (!UnitSystem.TryToFindCommonUnitSystem(curUnit.UnitSystem, oldContainer.SysUnit, out newContainer.SysUnit))
+                            continue;
+
                         double localConvertToBaseFactor = cat.ConvertUnit(baseUnit.FullName, curUnit.FullName, 1);
 
                         // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
@@ -83,19 +90,6 @@ namespace EngineeringMath.Component
                             default:
                                 localUnitName = string.Copy(curUnit.FullName);
                                 break;
-                        }
-
-
-
-                        UnitContructorContainer newContainer = new UnitContructorContainer();
-
-                        if (oldContainer.SysUnit != curUnit.UnitSystem)
-                        {
-                            newContainer.SysUnit = UnitSystem.UnitSystemBaseUnit.None;
-                        }
-                        else
-                        {
-                            newContainer.SysUnit = oldContainer.SysUnit;
                         }
 
                         if (arr[i].IsInverse)
@@ -126,7 +120,7 @@ namespace EngineeringMath.Component
             while(newStack.Count > 0)
             {
                 UnitContructorContainer container = newStack.Pop();
-                if (container.SysUnit == UnitSystem.UnitSystemBaseUnit.SI)
+                if (container.SysUnit.Equals(UnitSystem.Metric.SI))
                 {
                     this.Add(new Unit(container.UnitFullName, container.UnitSymbol, container.SysUnit, isUserDefined, true));
                 }
@@ -223,19 +217,21 @@ namespace EngineeringMath.Component
         }
 
         /// <summary>
-        /// Returns an empty string if "None" type is searched for since it is not required to have exactly one in a category
+        /// Returns an empty string if "NoSpecialSystem" type is searched for since it is not required to have exactly one in a category
         /// </summary>
         /// <param name="system"></param>
         /// <returns></returns>
-        public string GetUnitFullNameByUnitSystem(UnitSystem.UnitSystemBaseUnit system)
+        public string GetUnitFullNameByUnitSystem(UnitSystem system)
         {
-            if(system == UnitSystem.UnitSystemBaseUnit.None)
+            if(system.Equals(UnitSystem.Imperial.BaselineSystem) 
+                || system.Equals(UnitSystem.Metric.BaselineSystem) 
+                || system.Equals(UnitSystem.ImperialAndMetric.BaselineSystem))
             {
                 return string.Empty;
             }
 
             IEnumerable<string> temp = from unit in this
-                                       where unit.UnitSystem == system
+                                       where unit.UnitSystem.Equals(system) || unit.UnitSystem.Equals(UnitSystem.ImperialAndMetric.SI_USCS)
                                        select unit.FullName;
 
             if (temp.Count() == 0)
@@ -256,11 +252,11 @@ namespace EngineeringMath.Component
 
         public class NoUnitSystemTypeException : ArgumentException
         {
-            public NoUnitSystemTypeException(UnitSystem.UnitSystemBaseUnit system) : base(system.ToString()) { }
+            public NoUnitSystemTypeException(UnitSystem system) : base(system.FullName) { }
         }
         public class MoreThanOneUnitSystemTypeException : ArgumentException
         {
-            public MoreThanOneUnitSystemTypeException(UnitSystem.UnitSystemBaseUnit system) : base(system.ToString()) { }
+            public MoreThanOneUnitSystemTypeException(UnitSystem system) : base(system.FullName) { }
         }
 
         public class UnitNotFoundException : ArgumentException
@@ -299,7 +295,7 @@ namespace EngineeringMath.Component
             public string UnitFullName;
             public string UnitSymbol;
             public double ConvertToBaseFactor;
-            public UnitSystem.UnitSystemBaseUnit SysUnit;
+            public UnitSystem SysUnit;
             public bool IsUserDefined;
         }
 

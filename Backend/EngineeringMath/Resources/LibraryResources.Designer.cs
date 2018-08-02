@@ -115,6 +115,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Days.
+        /// </summary>
+        public static string Days {
+            get {
+                return ResourceManager.GetString("Days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to day.
+        /// </summary>
+        public static string DaysAbbrev {
+            get {
+                return ResourceManager.GetString("DaysAbbrev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Density.
         /// </summary>
         public static string Density {
@@ -169,6 +187,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gallons.
+        /// </summary>
+        public static string Gallons {
+            get {
+                return ResourceManager.GetString("Gallons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to grams.
         /// </summary>
         public static string Grams {
@@ -187,11 +214,47 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hours.
+        /// </summary>
+        public static string Hours {
+            get {
+                return ResourceManager.GetString("Hours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to hr.
+        /// </summary>
+        public static string HoursAbbrev {
+            get {
+                return ResourceManager.GetString("HoursAbbrev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Imperial System.
+        /// </summary>
+        public static string ImperialSystem {
+            get {
+                return ResourceManager.GetString("ImperialSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inches.
         /// </summary>
         public static string Inches {
             get {
                 return ResourceManager.GetString("Inches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Isothermal Compressibility.
+        /// </summary>
+        public static string IsothermalCompressibility {
+            get {
+                return ResourceManager.GetString("IsothermalCompressibility", resourceCulture);
             }
         }
         
@@ -277,6 +340,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Liters.
+        /// </summary>
+        public static string Liters {
+            get {
+                return ResourceManager.GetString("Liters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mass.
         /// </summary>
         public static string Mass {
@@ -291,6 +363,15 @@ namespace EngineeringMath.Resources {
         public static string Meters {
             get {
                 return ResourceManager.GetString("Meters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metric System.
+        /// </summary>
+        public static string MetricSystem {
+            get {
+                return ResourceManager.GetString("MetricSystem", resourceCulture);
             }
         }
         
@@ -331,11 +412,56 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Milliliters.
+        /// </summary>
+        public static string Milliliters {
+            get {
+                return ResourceManager.GetString("Milliliters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Millimeters.
         /// </summary>
         public static string Millimeters {
             get {
                 return ResourceManager.GetString("Millimeters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Milliseconds.
+        /// </summary>
+        public static string Milliseconds {
+            get {
+                return ResourceManager.GetString("Milliseconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ms.
+        /// </summary>
+        public static string MillisecondsAbbrev {
+            get {
+                return ResourceManager.GetString("MillisecondsAbbrev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minutes.
+        /// </summary>
+        public static string Minutes {
+            get {
+                return ResourceManager.GetString("Minutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to min.
+        /// </summary>
+        public static string MinutesAbbrev {
+            get {
+                return ResourceManager.GetString("MinutesAbbrev", resourceCulture);
             }
         }
         
@@ -403,6 +529,51 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seconds.
+        /// </summary>
+        public static string Seconds {
+            get {
+                return ResourceManager.GetString("Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to sec.
+        /// </summary>
+        public static string SecondsAbbrev {
+            get {
+                return ResourceManager.GetString("SecondsAbbrev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SI.
+        /// </summary>
+        public static string SIAbbrev {
+            get {
+                return ResourceManager.GetString("SIAbbrev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to International System of Units.
+        /// </summary>
+        public static string SIFullName {
+            get {
+                return ResourceManager.GetString("SIFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specific Volume.
+        /// </summary>
+        public static string SpecificVolume {
+            get {
+                return ResourceManager.GetString("SpecificVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temperature.
         /// </summary>
         public static string Temperature {
@@ -417,6 +588,15 @@ namespace EngineeringMath.Resources {
         public static string Therms {
             get {
                 return ResourceManager.GetString("Therms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time.
+        /// </summary>
+        public static string Time {
+            get {
+                return ResourceManager.GetString("Time", resourceCulture);
             }
         }
         
@@ -457,11 +637,38 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to USCS.
+        /// </summary>
+        public static string USCSAbbrev {
+            get {
+                return ResourceManager.GetString("USCSAbbrev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to United States customary system.
+        /// </summary>
+        public static string USCSFullName {
+            get {
+                return ResourceManager.GetString("USCSFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to US Tons.
         /// </summary>
         public static string USTons {
             get {
                 return ResourceManager.GetString("USTons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume.
+        /// </summary>
+        public static string Volume {
+            get {
+                return ResourceManager.GetString("Volume", resourceCulture);
             }
         }
         
