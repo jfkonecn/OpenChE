@@ -331,4 +331,7 @@
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
   </data>
+  <data name="VolumeExpansivity" xml:space="preserve">
+    <value>Volume Expansivity</value>
+  </data>
 </root>

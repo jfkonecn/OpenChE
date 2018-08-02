@@ -257,5 +257,18 @@ namespace BackendTesting
             temp = cat.ConvertUnit(LibraryResources.Liters, siName, temp);
             Assert.AreEqual(125, temp, 0.1);
         }
+
+        [TestMethod]
+        public void VolumeExpansivityUnits()
+        {
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.VolumeExpansivity);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                    usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
+            // SI is 1/K and USCS is 1/R
+            double temp = cat.ConvertUnit(siName, usName, 125);
+            Assert.AreEqual(125.0 * 5 / 9, temp, 0.001);
+            temp = cat.ConvertUnit(usName, siName, temp);
+            Assert.AreEqual(125, temp, 0.1);
+        }
     }
 }

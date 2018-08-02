@@ -141,6 +141,21 @@ namespace EngineeringMath.Component
             {
 
             });
+
+            _AllUnits.Add(
+                new UnitCategory(LibraryResources.VolumeExpansivity,
+                new UnitCategory.CompositeUnitElement[]
+                {
+                                new UnitCategory.CompositeUnitElement()
+                                {
+                                    CategoryName = LibraryResources.Temperature,
+                                    IsInverse = true,
+                                    power = UnitCategory.ToPowerOf.One
+                                }
+                })
+                {
+
+                });
             _AllUnits.Add(
                 new UnitCategory(LibraryResources.Volume, 
                 new UnitCategory.CompositeUnitElement[]

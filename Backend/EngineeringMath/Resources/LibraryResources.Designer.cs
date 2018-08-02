@@ -673,6 +673,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Volume Expansivity.
+        /// </summary>
+        public static string VolumeExpansivity {
+            get {
+                return ResourceManager.GetString("VolumeExpansivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Watt.
         /// </summary>
         public static string Watt {
