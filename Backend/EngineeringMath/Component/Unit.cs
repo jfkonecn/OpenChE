@@ -5,12 +5,12 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class Unit : NotifyPropertyChangedExtension, ISortedListItem<string, UnitCategory>
+    public class Unit : NotifyPropertyChangedExtension, ISortedListItem<string, UnitCategory> 
     {
 
         protected Unit() : base()
         {
-
+            
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace EngineeringMath.Component
             UnitSystem unitSystem,
             bool isBaseUnit,
             bool isUserDefined,
-            bool absoluteScaleUnit)
+            bool absoluteScaleUnit) : this()
         {
             if (unitSystem == Component.UnitSystem.Metric.SI &&
                 !absoluteScaleUnit)
@@ -113,8 +113,8 @@ namespace EngineeringMath.Component
             double convertToBaseFactor,
             UnitSystem unitSystem,            
             bool isUserDefined = false) : 
-            this(fullName, symbol, $"{CurUnitVar} * {convertToBaseFactor}", 
-                $"{BaseUnitVar} / {convertToBaseFactor}", unitSystem, false, isUserDefined, true)
+            this(fullName, symbol, $"${CurUnitVar}$ * {convertToBaseFactor}", 
+                $"${BaseUnitVar}$ / {convertToBaseFactor}", unitSystem, false, isUserDefined, true)
         {
 
         }
@@ -169,20 +169,21 @@ namespace EngineeringMath.Component
         /// </summary>
         public static readonly string BaseUnitVar = "baseUnit";
 
+
+
+
         public double ConvertToBase(double curUnit)
         {
             if (IsBaseUnit)
                 return curUnit;
-            _Converter.EquationExpression = ConvertToBaseEquation.Replace(CurUnitVar, curUnit.ToString());
-            return _Converter.Evaluate();
+            return Equation.Evaluate(ConvertToBaseEquation, new KeyValuePair<string, double>(CurUnitVar, curUnit));
         }
 
         public double ConvertFromBase(double baseUnit)
         {
             if (IsBaseUnit)
                 return baseUnit;
-            _Converter.EquationExpression = ConvertFromBaseEquation.Replace(BaseUnitVar, baseUnit.ToString());
-            return _Converter.Evaluate();
+            return Equation.Evaluate(ConvertFromBaseEquation, new KeyValuePair<string, double>(BaseUnitVar, baseUnit));
         }
 
 
@@ -196,7 +197,6 @@ namespace EngineeringMath.Component
         /// </summary>
         public bool AbsoluteScaleUnit { get; set; }
 
-        private readonly Equation _Converter = new Equation("42");
 
         public UnitSystem UnitSystem { get; set; }
         public bool IsBaseUnit { get; set; }
@@ -209,6 +209,9 @@ namespace EngineeringMath.Component
                 return this.FullName;
             }
         }
+
+
+
 
         public class UnitSIUnitNotOnAbsoluteScaleException : ArgumentException
         {

@@ -6,15 +6,16 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Data;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace EngineeringMath.Component
 {
-    public class Equation
+    public class Equation : IChildItem<ParameterContainer>
     {
 
-        public Equation(string equationExpression)
+        public Equation(ParameterContainer parameters)
         {
-            EquationExpression = equationExpression;
+            ParentObject = parameters;
         }
 
         /// <summary>
@@ -24,18 +25,57 @@ namespace EngineeringMath.Component
         /// <exception cref="ArgumentNullException"></exception>
         public double Evaluate()
         {
-            string temp = EquationExpression;
-            if (Parameters != null)
-            {
-                // replace all references to variables with numbers
-                foreach (Parameter para in Parameters)
-                {
-                    temp = temp.Replace(para.Name, ParameterToStringValue(para));
-                }
-            }          
-            
-            return double.Parse(_EquationTable.Compute(temp, "").ToString());
+            if (ParentObject != null)
+                throw new ArgumentNullException();
+
+            return Evalutate(ParentObject.EquationExpression, ParentObject.GetBaseUnitValue);
         }
+
+        /// <summary>
+        /// Standalone evaluate function
+        /// </summary>
+        /// <param name="equation"></param>
+        /// <param name="allParams"></param>
+        /// <returns></returns>
+        public static double Evaluate(string equation, params KeyValuePair<string, double>[] allParams)
+        {
+            Dictionary<string, double> dic = new Dictionary<string, double>();
+            foreach(KeyValuePair<string, double> keyPair in allParams)
+            {
+                dic.Add(keyPair.Key, keyPair.Value);
+            }
+            return Evalutate(equation, (string name) => { return dic[name]; });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="equation"></param>
+        /// <param name="getParaValue">Given the name of a parameter the calculation value is returned</param>
+        /// <returns></returns>
+        private static double Evalutate(string equation, Func<string, double> getParaValue)
+        {
+            /*
+                https://stackoverflow.com/questions/378415/how-do-i-extract-text-that-lies-between-parentheses-round-brackets
+                \$             # Escaped parenthesis, means "starts with a '$' character"
+                    (          # Parentheses in a regex mean "put (capture) the stuff 
+                        #     in between into the Groups array" 
+                        [^)]    # Any character that is not a ')' character
+                        *       # Zero or more occurrences of the aforementioned "non ')' char"
+                    )          # Close the capturing group
+                \$             # "Ends with a ')' character"
+             */
+            Match m = Regex.Match(equation, @"\$([^$]*)\$");
+
+            for (int i = 1; i < m.Groups.Count; i += 2)
+            {
+                double num = getParaValue(m.Groups[i].Value);
+                equation = equation.Replace(m.Groups[i - 1].Value, num.ToString());
+            }
+
+            return double.Parse(_EquationTable.Compute(equation, "").ToString());
+        }
+
 
         private string ParameterToStringValue(Parameter parameter)
         {
@@ -50,11 +90,23 @@ namespace EngineeringMath.Component
         }
 
         [XmlIgnore]
-        public ParameterList Parameters { get; set; }
-        public string EquationExpression { get; set; }
+        public ParameterContainer ParentObject { get; internal set; }
+        
+        ParameterContainer IChildItem<ParameterContainer>.Parent
+        {
+            get
+            {
+                return this.ParentObject;
+            }
+            set
+            {
+                this.ParentObject = value;
+            }
+        }
 
 
         [XmlIgnore]
         private readonly static DataTable _EquationTable = new DataTable();
+
     }
 }

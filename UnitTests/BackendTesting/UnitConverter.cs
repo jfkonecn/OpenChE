@@ -24,8 +24,8 @@ namespace BackendTesting
                 {
                     new Unit("Kelvin", "°K", 1.8, UnitSystem.Metric.SI, true),
                     new Unit("Rankine","°R", UnitSystem.Imperial.USCS, true, true),
-                    new Unit("Fahrenheit", "°F",$"{Unit.CurUnitVar} + 459.67", $"{Unit.BaseUnitVar} - 459.67", UnitSystem.Imperial.BaselineSystem, true),
-                    new Unit("Celsius", "°C",$"({Unit.CurUnitVar} + 273.15) * 9/5", $"{Unit.BaseUnitVar} * 5/9 - 273.15", UnitSystem.Metric.BaselineSystem, true)
+                    new Unit("Fahrenheit", "°F",$"${Unit.CurUnitVar}$ + 459.67", $"${Unit.BaseUnitVar}$ - 459.67", UnitSystem.Imperial.BaselineSystem, true),
+                    new Unit("Celsius", "°C",$"(${Unit.CurUnitVar}$ + 273.15) * 9/5", $"${Unit.BaseUnitVar}$ * 5/9 - 273.15", UnitSystem.Metric.BaselineSystem, true)
                 }
 
             };
