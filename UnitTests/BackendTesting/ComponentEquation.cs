@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using EngineeringMath.Component;
+using EngineeringMath;
+using EngineeringMath.Resources;
 
 namespace BackendTesting
 {
@@ -10,22 +12,21 @@ namespace BackendTesting
     public class ComponentEquation
     {
         [TestMethod]
-        public void StringTester()
+        public void CustomEquation()
         {
-            SIUnitParameter x = new SIUnitParameter("x", 0, double.MaxValue)
-            {
-                Value = 10
-            };
-            SIUnitParameter y = new SIUnitParameter("y", 0, double.MaxValue)
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+                usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
+
+            SIUnitParameter r = new SIUnitParameter("x", 0, double.MaxValue, LibraryResources.Length)
             {
                 Value = 10
             };
             ParameterList someParameters = new ParameterList()
             {
-                x,
-                y
+                r
             };
-            Equation equation = new Equation("x * y")
+            Equation equation = new Equation("r * r")
             {
                 Parameters = someParameters
             };
@@ -33,8 +34,6 @@ namespace BackendTesting
             Assert.AreEqual(100, equation.Evaluate());
 
 
-            x.Value = 5;
-            y.Value = 30;
             Assert.AreEqual(150, equation.Evaluate());
         }
 

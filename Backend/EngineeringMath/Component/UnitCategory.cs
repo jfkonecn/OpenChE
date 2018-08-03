@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 using EngineeringMath.Resources;
 
 namespace EngineeringMath.Component
 {
-    public class UnitCategory : NotifyPropertySortedList<string, Unit>, ISortedListItem<string>
+    public class UnitCategory : NotifyPropertyChangedExtension, ISortedListItem<string, UnitCategoryCollection>
     {
         protected UnitCategory() : base()
         {
-
+            Children = new NotifyPropertySortedList<string, Unit, UnitCategory>(this);
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace EngineeringMath.Component
                     {
                         oldContainer = new UnitContructorContainer();
                     }
-                    foreach (Unit curUnit in cat)
+                    foreach (Unit curUnit in cat.Children)
                     {
                         if (i == 0)
                         {
@@ -122,11 +123,11 @@ namespace EngineeringMath.Component
                 UnitContructorContainer container = newStack.Pop();
                 if (container.SysUnit.Equals(UnitSystem.Metric.SI))
                 {
-                    this.Add(new Unit(container.UnitFullName, container.UnitSymbol, container.SysUnit, isUserDefined, true));
+                    Children.Add(new Unit(container.UnitFullName, container.UnitSymbol, container.SysUnit, isUserDefined, true));
                 }
                 else
                 {
-                    this.Add(new Unit(
+                    Children.Add(new Unit(
                         container.UnitFullName,
                         container.UnitSymbol, container.ConvertToBaseFactor, container.SysUnit, isUserDefined));
                 }
@@ -137,7 +138,7 @@ namespace EngineeringMath.Component
 
         }
 
-        public UnitCategory(string name, bool isUserDefined = false)
+        public UnitCategory(string name, bool isUserDefined = false) : this()
         {
             Name = name;
             IsUserDefined = isUserDefined;
@@ -160,7 +161,7 @@ namespace EngineeringMath.Component
 
         public Unit GetUnitByFullName(string unitFullName)
         {
-            IEnumerable<Unit> temp = from unit in this
+            IEnumerable<Unit> temp = from unit in Children
                                        where unit.FullName.Equals(unitFullName)
                                        select unit;
             if (temp.Count() == 0)
@@ -172,6 +173,35 @@ namespace EngineeringMath.Component
                 throw new UnitsWithSameNameException(unitFullName);
             }
             return temp.ElementAt(0);
+        }
+
+        [XmlIgnore]
+        public UnitCategoryCollection ParentObject { get; internal set; }
+
+
+        UnitCategoryCollection IChildItem<UnitCategoryCollection>.Parent
+        {
+            get
+            {
+                return this.ParentObject;
+            }
+            set
+            {
+                this.ParentObject = value;
+            }
+        }
+
+
+
+        private NotifyPropertySortedList<string, Unit, UnitCategory> _Children;
+        public NotifyPropertySortedList<string, Unit, UnitCategory> Children
+        {
+            get { return _Children; }
+            set
+            {
+                _Children = value;
+                OnPropertyChanged();
+            }
         }
 
         private string _Name;
@@ -193,7 +223,7 @@ namespace EngineeringMath.Component
         {
             get
             {
-                IEnumerable<string> temp = from unit in this
+                IEnumerable<string> temp = from unit in Children
                        where unit.IsBaseUnit == true
                        select unit.FullName;
                 if(temp.Count() == 0)
@@ -230,7 +260,7 @@ namespace EngineeringMath.Component
                 return string.Empty;
             }
 
-            IEnumerable<string> temp = from unit in this
+            IEnumerable<string> temp = from unit in Children
                                        where unit.UnitSystem.Equals(system) || unit.UnitSystem.Equals(UnitSystem.ImperialAndMetric.SI_USCS)
                                        select unit.FullName;
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension, ISpaceSaver
+    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension
     {
         private string _Name;
 
@@ -30,10 +30,5 @@ namespace EngineeringMath.Component
             }
         }
 
-
-        /// <summary>
-        /// To save space when this function is not in use we remove any parameters which are not needed to recreate this function
-        /// </summary>
-        public abstract void Nullify();
     }
 }

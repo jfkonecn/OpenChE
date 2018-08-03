@@ -5,28 +5,32 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class SIUnitParameter : Parameter, ISpaceSaver 
+    public class SIUnitParameter : Parameter
     {
         protected SIUnitParameter() : base()
         {
 
         }
-        public SIUnitParameter(string name, double minSIValue, double maxSIValue) : base(name)
+        public SIUnitParameter(string name, double minSIValue, double maxSIValue, string unitCategoryName) : base(name)
         {
             MinSIValue = minSIValue;
             MaxSIValue = maxSIValue;
+            UnitCategoryName = unitCategoryName;
+            SelectedUnitName = MathManager.AllUnits.GetUnitCategoryByName(UnitCategoryName).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
         }
 
         private double SIValueToValue(double value)
         {
-            // TODO: Make unit converter
-            return value;
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(UnitCategoryName);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
+            return cat.ConvertUnit(siName, SelectedUnitName, value);
         }
 
         private double ValueToSIValue(double value)
         {
-            // TODO: Make unit converter
-            return value;
+            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(UnitCategoryName);
+            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
+            return cat.ConvertUnit(SelectedUnitName, siName, value);
         }
 
 
@@ -111,12 +115,33 @@ namespace EngineeringMath.Component
                 OnPropertyChanged();
             }
         }
-
-        
-
-        public void Nullify()
+        private string _UnitCategoryName;
+        public string UnitCategoryName
         {
-            throw new NotImplementedException();
+            get
+            {
+                return _UnitCategoryName;
+            }
+            set
+            {
+                _UnitCategoryName = value;
+                OnPropertyChanged();
+            }
         }
+
+        private string _SelectedUnitName;
+        public string SelectedUnitName
+        {
+            get
+            {
+                return _SelectedUnitName;
+            }
+            set
+            {
+                _SelectedUnitName = value;
+                OnPropertyChanged();
+            }
+        }
+
     }
 }

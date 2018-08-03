@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace EngineeringMath.Component
 {
-    public class Equation : ISpaceSaver
+    public class Equation
     {
 
         public Equation(string equationExpression)
@@ -47,11 +47,6 @@ namespace EngineeringMath.Component
             {
                 throw new NotImplementedException();
             }
-        }
-
-        public void Nullify()
-        {
-            Parameters = null;
         }
 
         [XmlIgnore]

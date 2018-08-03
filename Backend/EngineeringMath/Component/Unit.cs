@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class Unit : NotifyPropertyChangedExtension, ISortedListItem<string>
+    public class Unit : NotifyPropertyChangedExtension, ISortedListItem<string, UnitCategory>
     {
 
         protected Unit() : base()
@@ -116,6 +117,23 @@ namespace EngineeringMath.Component
                 $"{BaseUnitVar} / {convertToBaseFactor}", unitSystem, false, isUserDefined, true)
         {
 
+        }
+
+
+        [XmlIgnore]
+        public UnitCategory ParentObject { get; internal set; }
+
+
+        UnitCategory IChildItem<UnitCategory>.Parent
+        {
+            get
+            {
+                return this.ParentObject;
+            }
+            set
+            {
+                this.ParentObject = value;
+            }
         }
 
 
