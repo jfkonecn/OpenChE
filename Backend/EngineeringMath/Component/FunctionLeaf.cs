@@ -16,11 +16,14 @@ namespace EngineeringMath.Component
         private Equation FunctionEquation { get; set;}
 
 
-        public FunctionLeaf(string equationExpression) : this()
+        public FunctionLeaf(string name, string equationExpression, string outputParameterName) : this()
         {
+            Name = name;
             EquationExpression = equationExpression;
+            OutputParameterName = outputParameterName;
         }
 
+        public string OutputParameterName { get; protected set; }
 
         public string EquationExpression { get; protected set; }
 

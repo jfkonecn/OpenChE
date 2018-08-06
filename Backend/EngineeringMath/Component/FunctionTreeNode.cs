@@ -61,7 +61,6 @@ namespace EngineeringMath.Component
             }
         }
 
-
         public double GetBaseUnitValue(string paraName)
         {
             if (this.Parameters.TryGetValue(paraName, out Parameter para))
@@ -71,6 +70,16 @@ namespace EngineeringMath.Component
             return ParentObject.GetBaseUnitValue(paraName);
         }
 
+        public void SetBaseUnitValue(string paraName, double num)
+        {
+            if (this.Parameters.TryGetValue(paraName, out Parameter para))
+            {
+                para.BaseUnitValue = num;
+            }
+            ParentObject.SetBaseUnitValue(paraName, num);
+        }
+
         public abstract void Calculate();
+
     }
 }

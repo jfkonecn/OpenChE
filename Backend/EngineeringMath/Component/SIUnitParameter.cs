@@ -11,29 +11,41 @@ namespace EngineeringMath.Component
         {
 
         }
-        public SIUnitParameter(string name, double minSIValue, double maxSIValue, string unitCategoryName) : base(name)
+        public SIUnitParameter(string name, string unitCategoryName, double minSIValue = double.MinValue, double maxSIValue = double.MaxValue) : base(name)
         {
             MinSIValue = minSIValue;
             MaxSIValue = maxSIValue;
             UnitCategoryName = unitCategoryName;
-            SelectedUnitName = MathManager.AllUnits.GetUnitCategoryByName(UnitCategoryName).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
         }
 
         private double SIValueToValue(double value)
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(UnitCategoryName);
-            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
-            return cat.ConvertUnit(siName, SelectedUnitName, value);
+            return GetUnitCategory().ConvertUnit(GetSIUnitName(), ParameterUnits.ItemAtSelectedIndex.FullName, value);
         }
 
         private double ValueToSIValue(double value)
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(UnitCategoryName);
-            string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
-            return cat.ConvertUnit(SelectedUnitName, siName, value);
+            return GetUnitCategory().ConvertUnit(ParameterUnits.ItemAtSelectedIndex.FullName, GetSIUnitName(), value);
+        }
+
+        private SelectableList<string, Unit, UnitCategory> _ParameterUnits;
+        [XmlIgnore]
+        public SelectableList<string, Unit, UnitCategory> ParameterUnits
+        {
+            get { return _ParameterUnits; }
+            set
+            {
+                _ParameterUnits = value;
+                OnPropertyChanged();
+            }
         }
 
 
+        [XmlIgnore]
+        private Func<string> GetSIUnitName;
+
+        [XmlIgnore]
+        private Func<UnitCategory> GetUnitCategory;
 
 
         private double _Value = double.NaN;
@@ -125,29 +137,27 @@ namespace EngineeringMath.Component
             set
             {
                 _UnitCategoryName = value;
+                UnitCategory temp = MathManager.AllUnits.GetUnitCategoryByName(_UnitCategoryName);
+                // pointer share so that you can unit data is current
+                GetUnitCategory = () => { return temp; };                
+                GetSIUnitName = () => { return GetUnitCategory().GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI); };
+                ParameterUnits = new SelectableList<string, Unit, UnitCategory>(temp.Children);
                 OnPropertyChanged();
             }
         }
 
-        private string _SelectedUnitName;
-        public string SelectedUnitName
-        {
-            get
-            {
-                return _SelectedUnitName;
-            }
-            set
-            {
-                _SelectedUnitName = value;
-                OnPropertyChanged();
-            }
-        }
-
+        /// <summary>
+        /// Bind to SIValue!!
+        /// </summary>
         public override double BaseUnitValue
         {
             get
             {
                 return SIValue;
+            }
+            set
+            {
+                SIValue = value;
             }
         }
     }

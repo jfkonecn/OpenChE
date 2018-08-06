@@ -17,8 +17,9 @@ namespace EngineeringMath.Component
         where TValue : ISortedListItem<TKey, P>
         where P : class
     {
-        private P _Parent;
-        private SortedList<TKey, TValue> _List;
+        private readonly P _Parent;
+        protected SortedList<TKey, TValue> _List;
+
         public NotifyPropertySortedList(P parent)
         {
             this._Parent = parent;
@@ -29,6 +30,16 @@ namespace EngineeringMath.Component
         {
             _Parent = parent;
             _List = list;
+        }
+
+        /// <summary>
+        /// Used to pointer share with another existing list
+        /// </summary>
+        /// <param name="list"></param>
+        protected NotifyPropertySortedList(NotifyPropertySortedList<TKey, TValue, P> list)
+        {
+            _Parent = list._Parent;
+            _List = list._List;
         }
 
 
@@ -158,29 +169,7 @@ namespace EngineeringMath.Component
             return _List.GetEnumerator();
         }
 
-        private int _SelectedIndex = 0;
-        public int SelectedIndex
-        {
-            get
-            {
-                return _SelectedIndex;
-            }
-            set
-            {
-                _SelectedIndex = value;
-                OnPropertyChanged(nameof(ItemAtSelectedIndex));
-                OnPropertyChanged();
-            }
-        }
 
-
-        public TValue ItemAtSelectedIndex
-        {
-            get
-            {
-                return this[this.SelectedIndex];
-            }
-        }
 
         public IList<TKey> AllOptions
         {

@@ -29,7 +29,7 @@ namespace EngineeringMath.Component
         /// <summary>
         /// Used to get value from this parameter for functions
         /// </summary>
-        public abstract double BaseUnitValue { get; }
+        public abstract double BaseUnitValue { get; set; }
 
 
         [XmlIgnore]

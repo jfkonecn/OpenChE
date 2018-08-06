@@ -15,10 +15,27 @@ namespace EngineeringMath.Component
         protected Function()
         {
             NextNode = new FunctionBranch(this);
-            Command Solve = new Command(
+            NextNode.PropertyChanged += NextNode_PropertyChanged;
+            Solve = new Command(
                 SolveFunction,
                 CanSolve
                 );
+        }
+
+        private void NextNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e == null)
+                return;
+            if (e.PropertyName.Equals(nameof(FunctionBranch.Children)))
+            {
+                OnPropertyChanged(nameof(Children));
+            }
+        }
+
+        public Function(string name, string category) : this()
+        {
+            Name = name;
+            Category = category;
         }
 
 
@@ -70,7 +87,12 @@ namespace EngineeringMath.Component
 
         public double GetBaseUnitValue(string paraName)
         {
-            throw new NotImplementedException();
+            throw new ParameterNotFoundException(paraName);
+        }
+
+        public void SetBaseUnitValue(string paraName, double num)
+        {
+            throw new ParameterNotFoundException(paraName);
         }
         #endregion
 
@@ -99,7 +121,7 @@ namespace EngineeringMath.Component
             {
                 return _Category;
             }
-            internal set
+            set
             {
                 _Category = value;
                 OnPropertyChanged();
@@ -142,7 +164,7 @@ namespace EngineeringMath.Component
 
         FunctionBranch _NextNode;
 
-        public FunctionBranch NextNode
+        internal FunctionBranch NextNode
         {
             get { return _NextNode; }
             set
@@ -151,6 +173,15 @@ namespace EngineeringMath.Component
                 OnPropertyChanged();
             }
         }
+
+        public NotifyPropertySortedList<string, FunctionTreeNode, IParameterContainerNode> Children
+        {
+            get
+            {
+                return NextNode.Children;
+            }
+        }
+
 
         #endregion
 
@@ -165,5 +196,13 @@ namespace EngineeringMath.Component
 
         public event EventHandler WasReset;
         #endregion
+
+        public class ParameterNotFoundException : ArgumentException
+        {
+            public ParameterNotFoundException(string ParameterName) : base(string.Empty, paramName: ParameterName)
+            {
+
+            }
+        }
     }
 }

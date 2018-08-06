@@ -9,7 +9,7 @@ namespace EngineeringMath.Component
     {
         protected FunctionBranch()
         {
-            Children = new NotifyPropertySortedList<string, FunctionTreeNode, IParameterContainerNode>(this);
+            Children = new SelectableList<string, FunctionTreeNode, IParameterContainerNode>(this);
         }
 
         public FunctionBranch(Function fun) : this()
@@ -17,8 +17,8 @@ namespace EngineeringMath.Component
             ParentObject = this;
         }
 
-        private NotifyPropertySortedList<string, FunctionTreeNode, IParameterContainerNode> _Children;
-        public NotifyPropertySortedList<string, FunctionTreeNode, IParameterContainerNode> Children
+        private SelectableList<string, FunctionTreeNode, IParameterContainerNode> _Children;
+        public SelectableList<string, FunctionTreeNode, IParameterContainerNode> Children
         {
             get { return _Children; }
             set
