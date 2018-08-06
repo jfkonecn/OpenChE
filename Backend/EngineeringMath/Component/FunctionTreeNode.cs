@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension
+    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension, 
+        IChildItem<IParameterContainerNode>, ISortedListItem<string, IParameterContainerNode>, IParameterContainerNode
     {
+        protected FunctionTreeNode()
+        {
+            Parameters = new NotifyPropertySortedList<string, Parameter, IParameterContainerNode>(this);
+        }
+
         private string _Name;
 
         public string Name
@@ -18,9 +25,33 @@ namespace EngineeringMath.Component
             }
         }
 
-        private Parameter[] _Parameters;
+        public string Key
+        {
+            get
+            {
+                return Name;
+            }
+        }
 
-        public Parameter[] Parameters
+        [XmlIgnore]
+        public IParameterContainerNode ParentObject { get; internal set; }
+
+
+
+        IParameterContainerNode IChildItem<IParameterContainerNode>.Parent
+        {
+            get
+            {
+                return this.ParentObject;
+            }
+            set
+            {
+                this.ParentObject = value;
+            }
+        }
+
+        private NotifyPropertySortedList<string, Parameter, IParameterContainerNode> _Parameters;
+        public NotifyPropertySortedList<string, Parameter, IParameterContainerNode> Parameters
         {
             get { return _Parameters; }
             set
@@ -30,5 +61,16 @@ namespace EngineeringMath.Component
             }
         }
 
+
+        public double GetBaseUnitValue(string paraName)
+        {
+            if (this.Parameters.TryGetValue(paraName, out Parameter para))
+            {
+                return para.BaseUnitValue;
+            }
+            return ParentObject.GetBaseUnitValue(paraName);
+        }
+
+        public abstract void Calculate();
     }
 }

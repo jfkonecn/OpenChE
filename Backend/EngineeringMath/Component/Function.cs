@@ -10,17 +10,18 @@ namespace EngineeringMath.Component
     /// <summary>
     /// Performs an engineering calculation
     /// </summary>
-    public abstract class Function : NotifyPropertyChangedExtension
+    public class Function : NotifyPropertyChangedExtension, IParameterContainerNode
     {
         protected Function()
         {
+            NextNode = new FunctionBranch(this);
             Command Solve = new Command(
                 SolveFunction,
                 CanSolve
                 );
         }
 
-        
+
         #region Methods
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace EngineeringMath.Component
         protected virtual void SolveFunction(object parameter)
         {
             OnSolving();
-            Calculate();
+            this.Calculate();
             OnSolved();
         }
 
@@ -40,11 +41,6 @@ namespace EngineeringMath.Component
         {
             return true;
         }
-
-        /// <summary>
-        /// Performs the actual calculation for this function object
-        /// </summary>
-        protected abstract void Calculate();
 
 
         protected void OnSolved()
@@ -66,37 +62,46 @@ namespace EngineeringMath.Component
         {
             WasReset?.Invoke(this, EventArgs.Empty);
         }
+
+        public void Calculate()
+        {
+            NextNode.Calculate();
+        }
+
+        public double GetBaseUnitValue(string paraName)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Properties
 
         private string _Name;
+
         public string Name
         {
-            get
-            {
-                return _Name;
-            }
-            internal set
+            get { return _Name; }
+            set
             {
                 _Name = value;
                 OnPropertyChanged();
             }
         }
 
-        private string _CatName;
+
+        private string _Category;
         /// <summary>
-        /// Category Name
+        /// Category
         /// </summary>
-        public string CatName
+        public string Category
         {
             get
             {
-                return _CatName;
+                return _Category;
             }
             internal set
             {
-                _CatName = value;
+                _Category = value;
                 OnPropertyChanged();
             }
         }
@@ -131,6 +136,18 @@ namespace EngineeringMath.Component
             private set
             {
                 _Save = value;
+                OnPropertyChanged();
+            }
+        }
+
+        FunctionBranch _NextNode;
+
+        public FunctionBranch NextNode
+        {
+            get { return _NextNode; }
+            set
+            {
+                _NextNode = value;
                 OnPropertyChanged();
             }
         }

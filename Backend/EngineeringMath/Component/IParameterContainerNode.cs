@@ -4,16 +4,19 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public abstract class ParameterContainer : NotifyPropertyChangedExtension
+    public interface IParameterContainerNode
     {
         /// <summary>
         /// Gets the value of paraName used to perform calculations
         /// </summary>
         /// <param name="paraName">Name of the parameter</param>
         /// <returns></returns>
-        public abstract double GetBaseUnitValue(string paraName);
+        double GetBaseUnitValue(string paraName);
 
 
-        public abstract string EquationExpression { get; }
+        /// <summary>
+        /// Performs the actual calculation for this function object
+        /// </summary>
+        void Calculate();
     }
 }

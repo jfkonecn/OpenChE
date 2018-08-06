@@ -143,5 +143,12 @@ namespace EngineeringMath.Component
             }
         }
 
+        public override double BaseUnitValue
+        {
+            get
+            {
+                return SIValue;
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace EngineeringMath.Component
 {
     public class UnitCategoryCollection : NotifyPropertyChangedExtension
     {
-        private UnitCategoryCollection()
+        protected UnitCategoryCollection()
         {
             Children = new NotifyPropertySortedList<string, UnitCategory, UnitCategoryCollection>(this);
         }

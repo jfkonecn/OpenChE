@@ -78,6 +78,7 @@ namespace EngineeringMath.Component
                 throw new ArgumentNullException();
             item.Parent = _Parent;
             _List.Add(item.Key, item);
+            OnPropertyChanged(nameof(AllOptions));
         }
 
         public void Clear()
@@ -88,11 +89,18 @@ namespace EngineeringMath.Component
                     obj.Value.Parent = null;
             }
             _List.Clear();
+            OnPropertyChanged(nameof(AllOptions));
         }
 
         public bool Contains(TValue item)
         {
             return _List.ContainsValue(item);
+        }
+
+
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            return _List.TryGetValue(key, out value);
         }
 
         public void CopyTo(TValue[] array, int arrayIndex)
@@ -131,6 +139,7 @@ namespace EngineeringMath.Component
 
             bool IsRemoved = _List.Remove(item.Key);
             item.Parent = null;
+            OnPropertyChanged(nameof(AllOptions));
             return IsRemoved;
         }
 
@@ -141,11 +150,44 @@ namespace EngineeringMath.Component
             _List[obj.Key] = obj.Value;
             if (obj.Value != null)
                 obj.Value.Parent = null;
+            OnPropertyChanged(nameof(AllOptions));
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _List.GetEnumerator();
+        }
+
+        private int _SelectedIndex = 0;
+        public int SelectedIndex
+        {
+            get
+            {
+                return _SelectedIndex;
+            }
+            set
+            {
+                _SelectedIndex = value;
+                OnPropertyChanged(nameof(ItemAtSelectedIndex));
+                OnPropertyChanged();
+            }
+        }
+
+
+        public TValue ItemAtSelectedIndex
+        {
+            get
+            {
+                return this[this.SelectedIndex];
+            }
+        }
+
+        public IList<TKey> AllOptions
+        {
+            get
+            {
+                return _List.Keys;
+            }
         }
     }
 }
