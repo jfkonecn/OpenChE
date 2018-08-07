@@ -14,7 +14,7 @@ namespace EngineeringMath.Component
     {
         protected Function()
         {
-            NextNode = new FunctionBranch(this);
+            NextNode = new FunctionBranch(this, Name);
             NextNode.PropertyChanged += NextNode_PropertyChanged;
             Solve = new Command(
                 SolveFunction,

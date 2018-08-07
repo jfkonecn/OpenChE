@@ -27,14 +27,26 @@ namespace BackendTesting
             {
                 Children =
                 {
-                    new FunctionLeaf("Hello",$"$r$ * $r$ * {Math.PI}", "a")
+                    new FunctionQueueNode("Hello")
                     {
-                        Parameters =
+                        Children =
                         {
-                            areaPara,
-                            lenPara
+                            new PriorityFunctionBranch(
+                                "Hello", 1,
+                                new FunctionLeaf("Hello",$"$r$ * $r$ * {Math.PI}", "a")
+                                    {
+                                        Parameters =
+                                        {
+                                            areaPara,
+                                            lenPara
+                                        }
+                                    })
+                            {
+                                
+                            }
                         }
                     }
+
                 }
             };
 

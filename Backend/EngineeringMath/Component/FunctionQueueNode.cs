@@ -12,9 +12,14 @@ namespace EngineeringMath.Component
             Children = new QueuingSortedList<string, PriorityFunctionBranch, IParameterContainerNode>(this);
         }
 
-        public FunctionQueueNode(Function fun) : this()
+        internal FunctionQueueNode(Function fun, string name) : this(name)
         {
             ParentObject = fun;
+        }
+
+        public FunctionQueueNode(string name) : this()
+        {
+            Name = name;
         }
 
         private QueuingSortedList<string, PriorityFunctionBranch, IParameterContainerNode> _Children;

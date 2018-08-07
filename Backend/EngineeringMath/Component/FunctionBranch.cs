@@ -7,14 +7,19 @@ namespace EngineeringMath.Component
 {
     public class FunctionBranch : FunctionTreeNode
     {
-        protected FunctionBranch()
+        protected FunctionBranch() : base()
         {
             Children = new SelectableList<string, FunctionTreeNode, IParameterContainerNode>(this);
         }
 
-        public FunctionBranch(Function fun) : this()
+        internal FunctionBranch(Function fun, string name) : this(name)
         {
             ParentObject = fun;
+        }
+
+        public FunctionBranch(string name) : this()
+        {
+            Name = name;
         }
 
         private SelectableList<string, FunctionTreeNode, IParameterContainerNode> _Children;

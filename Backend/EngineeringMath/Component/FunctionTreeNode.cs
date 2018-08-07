@@ -13,6 +13,11 @@ namespace EngineeringMath.Component
             Parameters = new NotifyPropertySortedList<string, Parameter, IParameterContainerNode>(this);
         }
 
+        protected FunctionTreeNode(string name) : this()
+        {
+            Name = name;
+        }
+
         private string _Name;
 
         public string Name
