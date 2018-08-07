@@ -46,6 +46,18 @@ namespace EngineeringMath.Component
             {
                 return this[this.SelectedIndex];
             }
+            set
+            {
+                for (int i = 0; i < this.Count; i++)
+                {
+                    if (this[i].Equals(value))
+                    {
+                        SelectedIndex = i;
+                        return;
+                    }                        
+                }
+                throw new ArgumentException(value.ToString());
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ namespace EngineeringMath.Component
         /// <exception cref="ArgumentNullException"></exception>
         public double Evaluate()
         {
-            if (ParentObject != null)
+            if (ParentObject == null)
                 throw new ArgumentNullException();
 
             return Evalutate(ParentObject.EquationExpression, ParentObject.GetBaseUnitValue);

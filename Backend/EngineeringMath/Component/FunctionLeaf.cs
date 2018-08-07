@@ -29,7 +29,7 @@ namespace EngineeringMath.Component
 
         public override void Calculate()
         {
-            FunctionEquation.Evaluate();
+            SetBaseUnitValue(OutputParameterName, FunctionEquation.Evaluate());
         }
     }
 }

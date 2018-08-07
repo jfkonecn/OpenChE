@@ -75,6 +75,7 @@ namespace EngineeringMath.Component
             if (this.Parameters.TryGetValue(paraName, out Parameter para))
             {
                 para.BaseUnitValue = num;
+                return;
             }
             ParentObject.SetBaseUnitValue(paraName, num);
         }

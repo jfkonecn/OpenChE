@@ -15,6 +15,14 @@ namespace BackendTesting
         [TestMethod]
         public void CustomFunction()
         {
+            Parameter areaPara = new SIUnitParameter("a", LibraryResources.Area)
+            {
+            },
+            lenPara = new SIUnitParameter("r", LibraryResources.Length)
+            {
+                BaseUnitValue = 10
+            };
+
             Function fun = new Function("Test Function", "Thermo")
             {
                 Children =
@@ -23,12 +31,16 @@ namespace BackendTesting
                     {
                         Parameters =
                         {
-                            new SIUnitParameter("a", LibraryResources.Area),
-                            new SIUnitParameter("r", LibraryResources.Length)
+                            areaPara,
+                            lenPara
                         }
                     }
                 }
             };
+
+            fun.Calculate();
+            Assert.AreEqual(10.0 * 10.0 * Math.PI, areaPara.BaseUnitValue, 0.001);
+
             
         }
 

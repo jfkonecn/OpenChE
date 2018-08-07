@@ -14,7 +14,7 @@ namespace EngineeringMath.Component
 
         public FunctionBranch(Function fun) : this()
         {
-            ParentObject = this;
+            ParentObject = fun;
         }
 
         private SelectableList<string, FunctionTreeNode, IParameterContainerNode> _Children;
