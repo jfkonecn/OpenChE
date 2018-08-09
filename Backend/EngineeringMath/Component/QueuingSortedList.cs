@@ -5,9 +5,8 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class QueuingSortedList<TKey, TValue, P> : NotifyPropertySortedList<TKey, TValue, P>
-        where TKey : class
-        where TValue : QueuingSortedListItem<TKey, P>
+    public class QueuingSortedList<TValue, P> : NotifyPropertySortedList<TValue, P>
+        where TValue : IQueuingSortedListItem<P>
         where P : class
     {
         public QueuingSortedList(P parent) : base(parent)
@@ -15,12 +14,12 @@ namespace EngineeringMath.Component
 
         }
 
-        public QueuingSortedList(P parent, SortedList<TKey, TValue> list) : base(parent, list)
+        public QueuingSortedList(P parent, SortedList<string, TValue> list) : base(parent, list)
         {
 
         }
 
-        public QueuingSortedList(NotifyPropertySortedList<TKey, TValue, P> list) : base(list)
+        public QueuingSortedList(NotifyPropertySortedList<TValue, P> list) : base(list)
         {
 
         }

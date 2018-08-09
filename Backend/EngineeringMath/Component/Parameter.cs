@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class Parameter : NotifyPropertyChangedExtension, ISortedListItem<string, IParameterContainerNode>
+    public abstract class Parameter : NotifyPropertyChangedExtension, IChildItem<IParameterContainerNode>
     {
         protected Parameter()
         {
@@ -48,13 +48,9 @@ namespace EngineeringMath.Component
                 this.ParentObject = value;
             }
         }
-
-        public string Key
+        public override string ToString()
         {
-            get
-            {
-                return Name;
-            }
+            return Name;
         }
     }
 }

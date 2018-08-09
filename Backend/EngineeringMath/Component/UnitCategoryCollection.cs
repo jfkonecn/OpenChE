@@ -10,7 +10,7 @@ namespace EngineeringMath.Component
     {
         protected UnitCategoryCollection()
         {
-            Children = new NotifyPropertySortedList<string, UnitCategory, UnitCategoryCollection>(this);
+            Children = new NotifyPropertySortedList<UnitCategory, UnitCategoryCollection>(this);
         }
 
 
@@ -31,8 +31,8 @@ namespace EngineeringMath.Component
         }
 
         
-        private NotifyPropertySortedList<string, UnitCategory, UnitCategoryCollection> _Children;
-        public NotifyPropertySortedList<string, UnitCategory, UnitCategoryCollection> Children
+        private NotifyPropertySortedList<UnitCategory, UnitCategoryCollection> _Children;
+        public NotifyPropertySortedList<UnitCategory, UnitCategoryCollection> Children
         {
             get { return _Children; }
             set

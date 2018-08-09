@@ -28,9 +28,9 @@ namespace EngineeringMath.Component
             return GetUnitCategory().ConvertUnit(ParameterUnits.ItemAtSelectedIndex.FullName, GetSIUnitName(), value);
         }
 
-        private SelectableList<string, Unit, UnitCategory> _ParameterUnits;
+        private SelectableList<Unit, UnitCategory> _ParameterUnits;
         [XmlIgnore]
-        public SelectableList<string, Unit, UnitCategory> ParameterUnits
+        public SelectableList<Unit, UnitCategory> ParameterUnits
         {
             get { return _ParameterUnits; }
             set
@@ -141,7 +141,7 @@ namespace EngineeringMath.Component
                 // pointer share so that you can unit data is current
                 GetUnitCategory = () => { return temp; };                
                 GetSIUnitName = () => { return GetUnitCategory().GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI); };
-                ParameterUnits = new SelectableList<string, Unit, UnitCategory>(temp.Children);
+                ParameterUnits = new SelectableList<Unit, UnitCategory>(temp.Children);
                 OnPropertyChanged();
             }
         }

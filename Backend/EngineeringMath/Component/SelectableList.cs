@@ -4,9 +4,8 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class SelectableList<TKey, TValue, P> : NotifyPropertySortedList<TKey, TValue, P>
-        where TKey : class
-        where TValue : ISortedListItem<TKey, P>
+    public class SelectableList<TValue, P> : NotifyPropertySortedList<TValue, P>, ISetting
+        where TValue : IChildItem<P>
         where P : class
     {
         public SelectableList(P parent) : base(parent)
@@ -14,12 +13,12 @@ namespace EngineeringMath.Component
 
         }
 
-        public SelectableList(P parent, SortedList<TKey, TValue> list) : base(parent, list)
+        public SelectableList(P parent, SortedList<string, TValue> list) : base(parent, list)
         {
 
         }
 
-        public SelectableList(NotifyPropertySortedList<TKey, TValue, P> list) : base(list)
+        public SelectableList(NotifyPropertySortedList<TValue, P> list) : base(list)
         {
 
         }

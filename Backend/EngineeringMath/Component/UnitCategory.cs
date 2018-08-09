@@ -9,11 +9,11 @@ using EngineeringMath.Resources;
 
 namespace EngineeringMath.Component
 {
-    public class UnitCategory : NotifyPropertyChangedExtension, ISortedListItem<string, UnitCategoryCollection>
+    public class UnitCategory : NotifyPropertyChangedExtension, IChildItem<UnitCategoryCollection>
     {
         protected UnitCategory() : base()
         {
-            Children = new NotifyPropertySortedList<string, Unit, UnitCategory>(this);
+            Children = new NotifyPropertySortedList<Unit, UnitCategory>(this);
         }
 
         /// <summary>
@@ -193,8 +193,8 @@ namespace EngineeringMath.Component
 
 
 
-        private NotifyPropertySortedList<string, Unit, UnitCategory> _Children;
-        public NotifyPropertySortedList<string, Unit, UnitCategory> Children
+        private NotifyPropertySortedList<Unit, UnitCategory> _Children;
+        public NotifyPropertySortedList<Unit, UnitCategory> Children
         {
             get { return _Children; }
             set
@@ -238,14 +238,6 @@ namespace EngineeringMath.Component
             }
         }
 
-        public string Key
-        {
-            get
-            {
-                return this.Name;
-            }
-        }
-
         /// <summary>
         /// Returns an empty string if "NoSpecialSystem" type is searched for since it is not required to have exactly one in a category
         /// </summary>
@@ -275,7 +267,10 @@ namespace EngineeringMath.Component
             return temp.ElementAt(0);
         }
 
-
+        public override string ToString()
+        {
+            return this.Name;
+        }
 
         public class NoBaseUnitsException : Exception { }
         public class MoreThanOneBaseUnitException : Exception { }

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class Unit : NotifyPropertyChangedExtension, ISortedListItem<string, UnitCategory> 
+    public class Unit : NotifyPropertyChangedExtension, IChildItem<UnitCategory> 
     {
 
         protected Unit() : base()
@@ -202,15 +202,11 @@ namespace EngineeringMath.Component
         public bool IsBaseUnit { get; set; }
         public bool IsUserDefined { get; set; }
 
-        public string Key
+
+        public override string ToString()
         {
-            get
-            {
-                return this.FullName;
-            }
+            return this.FullName;
         }
-
-
 
 
         public class UnitSIUnitNotOnAbsoluteScaleException : ArgumentException

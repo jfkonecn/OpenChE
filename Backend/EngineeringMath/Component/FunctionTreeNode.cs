@@ -6,11 +6,11 @@ using System.Xml.Serialization;
 namespace EngineeringMath.Component
 {
     public abstract class FunctionTreeNode : NotifyPropertyChangedExtension, 
-        IChildItem<IParameterContainerNode>, ISortedListItem<string, IParameterContainerNode>, IParameterContainerNode
+        IChildItem<IParameterContainerNode>, IParameterContainerNode
     {
         protected FunctionTreeNode()
         {
-            Parameters = new NotifyPropertySortedList<string, Parameter, IParameterContainerNode>(this);
+            Parameters = new NotifyPropertySortedList<Parameter, IParameterContainerNode>(this);
         }
 
         protected FunctionTreeNode(string name) : this()
@@ -55,8 +55,8 @@ namespace EngineeringMath.Component
             }
         }
 
-        private NotifyPropertySortedList<string, Parameter, IParameterContainerNode> _Parameters;
-        public NotifyPropertySortedList<string, Parameter, IParameterContainerNode> Parameters
+        private NotifyPropertySortedList<Parameter, IParameterContainerNode> _Parameters;
+        public NotifyPropertySortedList<Parameter, IParameterContainerNode> Parameters
         {
             get { return _Parameters; }
             set
@@ -87,5 +87,9 @@ namespace EngineeringMath.Component
 
         public abstract void Calculate();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract void Invalidate();
     }
 }

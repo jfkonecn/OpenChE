@@ -9,7 +9,7 @@ namespace EngineeringMath.Component
     {
         protected FunctionBranch() : base()
         {
-            Children = new SelectableList<string, FunctionTreeNode, IParameterContainerNode>(this);
+            Children = new SelectableList<FunctionTreeNode, IParameterContainerNode>(this);
         }
 
         internal FunctionBranch(Function fun, string name) : this(name)
@@ -22,8 +22,8 @@ namespace EngineeringMath.Component
             Name = name;
         }
 
-        private SelectableList<string, FunctionTreeNode, IParameterContainerNode> _Children;
-        public SelectableList<string, FunctionTreeNode, IParameterContainerNode> Children
+        private SelectableList<FunctionTreeNode, IParameterContainerNode> _Children;
+        public SelectableList<FunctionTreeNode, IParameterContainerNode> Children
         {
             get { return _Children; }
             set
@@ -36,6 +36,11 @@ namespace EngineeringMath.Component
         public override void Calculate()
         {
             Children.ItemAtSelectedIndex.Calculate();
+        }
+
+        public override void Invalidate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

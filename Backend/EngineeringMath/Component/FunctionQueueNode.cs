@@ -9,7 +9,7 @@ namespace EngineeringMath.Component
     {
         protected FunctionQueueNode() : base()
         {
-            Children = new QueuingSortedList<string, PriorityFunctionBranch, IParameterContainerNode>(this);
+            Children = new QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode>(this);
         }
 
         internal FunctionQueueNode(Function fun, string name) : this(name)
@@ -22,8 +22,8 @@ namespace EngineeringMath.Component
             Name = name;
         }
 
-        private QueuingSortedList<string, PriorityFunctionBranch, IParameterContainerNode> _Children;
-        public QueuingSortedList<string, PriorityFunctionBranch, IParameterContainerNode> Children
+        private QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode> _Children;
+        public QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode> Children
         {
             get { return _Children; }
             set
@@ -39,6 +39,11 @@ namespace EngineeringMath.Component
             {
                 branch.Calculate();
             }
+        }
+
+        public override void Invalidate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

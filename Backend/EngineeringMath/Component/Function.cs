@@ -174,7 +174,7 @@ namespace EngineeringMath.Component
             }
         }
 
-        public NotifyPropertySortedList<string, FunctionTreeNode, IParameterContainerNode> Children
+        public NotifyPropertySortedList<FunctionTreeNode, IParameterContainerNode> Children
         {
             get
             {

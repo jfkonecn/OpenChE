@@ -31,5 +31,10 @@ namespace EngineeringMath.Component
         {
             SetBaseUnitValue(OutputParameterName, FunctionEquation.Evaluate());
         }
+
+        public override void Invalidate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
