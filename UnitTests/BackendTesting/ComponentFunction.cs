@@ -15,7 +15,7 @@ namespace BackendTesting
         [TestMethod]
         public void CustomFunction()
         {
-            Parameter areaPara = new SIUnitParameter("a", LibraryResources.Area)
+            IParameter areaPara = new SIUnitParameter("a", LibraryResources.Area)
             {
             },
             lenPara = new SIUnitParameter("r", LibraryResources.Length)

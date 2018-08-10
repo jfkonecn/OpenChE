@@ -77,17 +77,6 @@ namespace EngineeringMath.Component
         }
 
 
-        private string ParameterToStringValue(Parameter parameter)
-        {
-            if (parameter as SIUnitParameter != null)
-            {
-                return ((SIUnitParameter)parameter).SIValue.ToString();
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
 
         [XmlIgnore]
         public IParameterContainerLeaf ParentObject { get; internal set; }

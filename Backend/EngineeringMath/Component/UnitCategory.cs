@@ -9,7 +9,7 @@ using EngineeringMath.Resources;
 
 namespace EngineeringMath.Component
 {
-    public class UnitCategory : NotifyPropertyChangedExtension, IChildItem<UnitCategoryCollection>
+    public class UnitCategory : NotifyPropertyChangedExtension, IChildItem<UnitCategoryCollection>, ISIParameterUnitCategory
     {
         protected UnitCategory() : base()
         {
@@ -270,6 +270,16 @@ namespace EngineeringMath.Component
         public override string ToString()
         {
             return this.Name;
+        }
+
+        public double ConverterToSIUnit(string curUnitFullName, double curValue)
+        {
+            return ConvertUnit(curUnitFullName, GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI), curValue);
+        }
+
+        public double ConverterFromSIUnit(string desiredUnitFullName, double curValue)
+        {
+            return ConvertUnit(GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI), desiredUnitFullName, curValue);
         }
 
         public class NoBaseUnitsException : Exception { }
