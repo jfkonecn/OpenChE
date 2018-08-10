@@ -10,7 +10,7 @@ namespace EngineeringMath.Component
     {
         protected FunctionTreeNode()
         {
-            Parameters = new NotifyPropertySortedList<IParameter, IParameterContainerNode>(this);
+            Parameters = new NotifyPropertySortedList<Parameter, IParameterContainerNode>(this);
         }
 
         protected FunctionTreeNode(string name) : this()
@@ -55,8 +55,8 @@ namespace EngineeringMath.Component
             }
         }
 
-        private NotifyPropertySortedList<IParameter, IParameterContainerNode> _Parameters;
-        public NotifyPropertySortedList<IParameter, IParameterContainerNode> Parameters
+        private NotifyPropertySortedList<Parameter, IParameterContainerNode> _Parameters;
+        public NotifyPropertySortedList<Parameter, IParameterContainerNode> Parameters
         {
             get { return _Parameters; }
             set
@@ -68,7 +68,7 @@ namespace EngineeringMath.Component
 
         public double GetBaseUnitValue(string paraName)
         {
-            if (this.Parameters.TryGetValue(paraName, out IParameter para))
+            if (this.Parameters.TryGetValue(paraName, out Parameter para))
             {
                 return para.BaseUnitValue;
             }
@@ -77,7 +77,7 @@ namespace EngineeringMath.Component
 
         public void SetBaseUnitValue(string paraName, double num)
         {
-            if (this.Parameters.TryGetValue(paraName, out IParameter para))
+            if (this.Parameters.TryGetValue(paraName, out Parameter para))
             {
                 para.BaseUnitValue = num;
                 return;

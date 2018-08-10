@@ -15,13 +15,17 @@ namespace BackendTesting
         [TestMethod]
         public void CustomFunction()
         {
-            IParameter areaPara = new SIUnitParameter("a", LibraryResources.Area)
+            string siArea = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+            siLength = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
+            SIUnitParameter areaPara = new SIUnitParameter("a", LibraryResources.Area)
             {
             },
             lenPara = new SIUnitParameter("r", LibraryResources.Length)
             {
-                BaseUnitValue = 10
             };
+            lenPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length).GetUnitByFullName(siLength);
+            areaPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area).GetUnitByFullName(siArea);
+            lenPara.BindValue = 10;
 
             Function fun = new Function("Test Function", "Thermo")
             {
@@ -51,7 +55,7 @@ namespace BackendTesting
             };
 
             fun.Calculate();
-            Assert.AreEqual(10.0 * 10.0 * Math.PI, areaPara.BaseUnitValue, 0.001);
+            Assert.AreEqual(10.0 * 10.0 * Math.PI, areaPara.BindValue, 0.001);
 
             
         }

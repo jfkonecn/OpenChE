@@ -5,7 +5,19 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class Parameter<T> : NotifyPropertyChangedExtension, IParameter
+    public abstract class Parameter : NotifyPropertyChangedExtension, IChildItem<IParameterContainerNode>
+    {
+        public abstract string Name { get; protected set; }
+        internal abstract double BaseUnitValue { get; set; }
+
+        public abstract double MinBaseValue { get; protected set; }
+
+        public abstract double MaxBaseValue { get; protected set; }
+        public abstract IParameterContainerNode Parent { get; set; }
+    }
+
+
+    public abstract class Parameter<T> : Parameter
         where T : IComparable
     {
         protected Parameter()
@@ -27,7 +39,7 @@ namespace EngineeringMath.Component
 
 
         private string _Name;
-        public string Name
+        public override string Name
         {
             get { return _Name; }
             protected set
@@ -41,7 +53,7 @@ namespace EngineeringMath.Component
         /// <summary>
         /// In SI units
         /// </summary>
-        public double MinBaseValue
+        public override double MinBaseValue
         {
             get { return _MinBaseValue; }
             protected set
@@ -55,7 +67,7 @@ namespace EngineeringMath.Component
         /// <summary>
         /// In SI units
         /// </summary>
-        public double MaxBaseValue
+        public override double MaxBaseValue
         {
             get { return _MaxBaseValue; }
             protected set
@@ -71,7 +83,7 @@ namespace EngineeringMath.Component
         /// Used to get value from this parameter for functions
         /// </summary>
         [XmlIgnore]
-        public double BaseUnitValue
+        internal override double BaseUnitValue
         {
             get { return _BaseValue; }
             set
@@ -130,7 +142,7 @@ namespace EngineeringMath.Component
 
 
 
-        IParameterContainerNode IChildItem<IParameterContainerNode>.Parent
+        public override IParameterContainerNode Parent
         {
             get
             {
