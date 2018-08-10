@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class PriorityFunctionBranch : FunctionTreeNode, IQueuingSortedListItem<IParameterContainerNode>
+    public class PriorityFunctionBranch : FunctionTreeNode, IQueuingSortedListItem
     {
         protected PriorityFunctionBranch() : base()
         {

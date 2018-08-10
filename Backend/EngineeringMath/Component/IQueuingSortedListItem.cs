@@ -4,8 +4,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public interface IQueuingSortedListItem<P> : IChildItem<P>
-        where P : class
+    public interface IQueuingSortedListItem
     {
 
         /// <summary>

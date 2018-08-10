@@ -14,7 +14,7 @@ namespace EngineeringMath.Component
 
         internal FunctionQueueNode(Function fun, string name) : this(name)
         {
-            ParentObject = fun;
+            Parent = fun;
         }
 
         public FunctionQueueNode(string name) : this()

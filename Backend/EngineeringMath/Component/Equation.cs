@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace EngineeringMath.Component
 {
-    public class Equation : IChildItem<IParameterContainerLeaf>
+    public class Equation : ChildItem<IParameterContainerLeaf>
     {
 
         public Equation(IParameterContainerLeaf parameters)
@@ -79,15 +79,15 @@ namespace EngineeringMath.Component
 
 
         [XmlIgnore]
-        public IParameterContainerLeaf ParentObject { get; internal set; }
+        private IParameterContainerLeaf ParentObject { get; set; }
 
-        IParameterContainerLeaf IChildItem<IParameterContainerLeaf>.Parent
+        public override IParameterContainerLeaf Parent
         {
             get
             {
                 return this.ParentObject;
             }
-            set
+            internal set
             {
                 this.ParentObject = value;
             }

@@ -22,7 +22,7 @@ namespace BackendTesting
             },
             lenPara = new SIUnitParameter("r", LibraryResources.Length)
             {
-            };
+            };            
             lenPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length).GetUnitByFullName(siLength);
             areaPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area).GetUnitByFullName(siArea);
             lenPara.BindValue = 10;

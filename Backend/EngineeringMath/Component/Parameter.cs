@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class Parameter : NotifyPropertyChangedExtension, IChildItem<IParameterContainerNode>
+    public abstract class Parameter : ChildItem<IParameterContainerNode>
     {
         public abstract string Name { get; protected set; }
         internal abstract double BaseUnitValue { get; set; }
@@ -13,7 +13,6 @@ namespace EngineeringMath.Component
         public abstract double MinBaseValue { get; protected set; }
 
         public abstract double MaxBaseValue { get; protected set; }
-        public abstract IParameterContainerNode Parent { get; set; }
     }
 
 
@@ -138,7 +137,7 @@ namespace EngineeringMath.Component
 
 
         [XmlIgnore]
-        public IParameterContainerNode ParentObject { get; internal set; }
+        private IParameterContainerNode ParentObject { get; set; }
 
 
 
@@ -148,7 +147,7 @@ namespace EngineeringMath.Component
             {
                 return this.ParentObject;
             }
-            set
+            internal set
             {
                 this.ParentObject = value;
             }

@@ -9,7 +9,7 @@ using EngineeringMath.Resources;
 
 namespace EngineeringMath.Component
 {
-    public class UnitCategory : NotifyPropertyChangedExtension, IChildItem<UnitCategoryCollection>, ISIParameterUnitCategory
+    public class UnitCategory : ChildItem<UnitCategoryCollection>, ISIParameterUnitCategory
     {
         protected UnitCategory() : base()
         {
@@ -176,16 +176,16 @@ namespace EngineeringMath.Component
         }
 
         [XmlIgnore]
-        public UnitCategoryCollection ParentObject { get; internal set; }
+        private UnitCategoryCollection ParentObject { get; set; }
 
 
-        UnitCategoryCollection IChildItem<UnitCategoryCollection>.Parent
+        public override UnitCategoryCollection Parent
         {
             get
             {
                 return this.ParentObject;
             }
-            set
+            internal set
             {
                 this.ParentObject = value;
             }

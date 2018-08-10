@@ -6,7 +6,7 @@ using System.Text;
 namespace EngineeringMath.Component
 {
     public class QueuingSortedList<TValue, P> : NotifyPropertySortedList<TValue, P>
-        where TValue : IQueuingSortedListItem<P>
+        where TValue : ChildItem<P>, IQueuingSortedListItem
         where P : class
     {
         public QueuingSortedList(P parent) : base(parent)

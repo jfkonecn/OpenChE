@@ -5,7 +5,7 @@ using System.Text;
 namespace EngineeringMath.Component
 {
     public class SelectableList<TValue, P> : NotifyPropertySortedList<TValue, P>, ISetting
-        where TValue : IChildItem<P>
+        where TValue : ChildItem<P>
         where P : class
     {
         public SelectableList(P parent) : base(parent)

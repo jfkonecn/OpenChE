@@ -5,8 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension, 
-        IChildItem<IParameterContainerNode>, IParameterContainerNode
+    public abstract class FunctionTreeNode : ChildItem<IParameterContainerNode>, IParameterContainerNode
     {
         protected FunctionTreeNode()
         {
@@ -39,17 +38,17 @@ namespace EngineeringMath.Component
         }
 
         [XmlIgnore]
-        public IParameterContainerNode ParentObject { get; internal set; }
+        private IParameterContainerNode ParentObject { get; set; }
 
 
 
-        IParameterContainerNode IChildItem<IParameterContainerNode>.Parent
+        public override IParameterContainerNode Parent
         {
             get
             {
                 return this.ParentObject;
             }
-            set
+            internal set
             {
                 this.ParentObject = value;
             }

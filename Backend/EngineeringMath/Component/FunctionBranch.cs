@@ -14,7 +14,7 @@ namespace EngineeringMath.Component
 
         internal FunctionBranch(Function fun, string name) : this(name)
         {
-            ParentObject = fun;
+            Parent = fun;
         }
 
         public FunctionBranch(string name) : this()

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class Unit : NotifyPropertyChangedExtension, IChildItem<UnitCategory> 
+    public class Unit : ChildItem<UnitCategory> 
     {
 
         protected Unit() : base()
@@ -121,16 +121,16 @@ namespace EngineeringMath.Component
 
 
         [XmlIgnore]
-        public UnitCategory ParentObject { get; internal set; }
+        private UnitCategory ParentObject { get; set; }
 
 
-        UnitCategory IChildItem<UnitCategory>.Parent
+        public override UnitCategory Parent
         {
             get
             {
                 return this.ParentObject;
             }
-            set
+            internal set
             {
                 this.ParentObject = value;
             }

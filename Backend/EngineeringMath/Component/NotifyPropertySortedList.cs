@@ -12,7 +12,7 @@ namespace EngineeringMath.Component
     /// <typeparam name="TValue">List item type</typeparam>
     public class NotifyPropertySortedList<TValue, P>: NotifyPropertyChangedExtension,
         IEnumerable<TValue>, ICollection<TValue>, IList<TValue>
-        where TValue : IChildItem<P>
+        where TValue : ChildItem<P>
         where P : class
     {
         private readonly P _Parent;
