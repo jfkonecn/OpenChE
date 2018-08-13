@@ -41,9 +41,45 @@ namespace EngineeringMath.Component
             }
         }
 
-        public override void Invalidate()
+        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
         {
-            throw new NotImplementedException();
+            foreach (Parameter para in this.Parameters)
+            {
+                parameter.Add(para);
+            }
+            foreach (FunctionTreeNode node in Children)
+            {
+                node.BuildLists(settings, parameter);
+            }
+        }
+
+        public override void DeactivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Inactive;
+            foreach (FunctionTreeNode node in Children)
+            {
+                node.DeactivateStates();
+            }
+        }
+
+        public override void ActivateStates()
+        {
+            foreach (FunctionTreeNode node in Children)
+            {
+                node.ActivateStates();
+            }
+        }
+
+        public override bool IsOutput(string parameterName)
+        {
+            foreach (FunctionTreeNode node in Children)
+            {
+                if (node.IsOutput(parameterName))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

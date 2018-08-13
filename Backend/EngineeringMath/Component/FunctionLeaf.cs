@@ -32,9 +32,42 @@ namespace EngineeringMath.Component
             SetBaseUnitValue(OutputParameterName, FunctionEquation.Evaluate());
         }
 
-        public override void Invalidate()
+        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
         {
-            throw new NotImplementedException();
+            foreach(Parameter para in this.Parameters)
+            {
+                parameter.Add(para);
+            }
+        }
+
+        public override void DeactivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Inactive;
+            foreach(Parameter para in Parameters)
+            {
+                para.CurrentState = ParameterState.Inactive;
+            }
+        }
+
+        public override void ActivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Active;
+            foreach (Parameter para in Parameters)
+            {
+                if (IsOutput(para.Name))
+                {
+                    para.CurrentState = ParameterState.Output;
+                }
+                else
+                {
+                    para.CurrentState = ParameterState.Input;
+                }
+            }
+        }
+
+        public override bool IsOutput(string parameterName)
+        {
+            return OutputParameterName.Equals(parameterName);
         }
     }
 }

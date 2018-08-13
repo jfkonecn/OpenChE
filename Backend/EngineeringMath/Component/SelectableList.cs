@@ -8,19 +8,19 @@ namespace EngineeringMath.Component
         where TValue : ChildItem<P>
         where P : class
     {
-        public SelectableList(P parent) : base(parent)
+        public SelectableList(string name, P parent) : base(parent)
         {
-
+            Name = name;
         }
 
-        public SelectableList(P parent, SortedList<string, TValue> list) : base(parent, list)
+        public SelectableList(string name, P parent, SortedList<string, TValue> list) : base(parent, list)
         {
-
+            Name = name;
         }
 
-        public SelectableList(NotifyPropertySortedList<TValue, P> list) : base(list)
+        public SelectableList(string name, NotifyPropertySortedList<TValue, P> list) : base(list)
         {
-
+            Name = name;
         }
 
         private int _SelectedIndex = 0;
@@ -58,5 +58,9 @@ namespace EngineeringMath.Component
                 throw new ArgumentException(value.ToString());
             }
         }
+
+        public SettingState CurrentState { get; internal set; }
+
+        public string Name { get; protected set; }
     }
 }

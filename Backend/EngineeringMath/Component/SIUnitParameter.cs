@@ -57,7 +57,7 @@ namespace EngineeringMath.Component
             {
                 _UnitCategoryName = value;
                 UnitCategory = MathManager.AllUnits.GetUnitCategoryByName(_UnitCategoryName);
-                ParameterUnits = new SelectableList<Unit, UnitCategory>(UnitCategory.Children);
+                ParameterUnits = new SelectableList<Unit, UnitCategory>(Name, UnitCategory.Children);
                 OnPropertyChanged();
             }
         }

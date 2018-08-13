@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Text;
 using System.Windows.Input;
+using System.Xml.Serialization;
+using System.Linq;
 
 namespace EngineeringMath.Component
 {
@@ -14,7 +16,12 @@ namespace EngineeringMath.Component
     {
         protected Function()
         {
-            NextNode = new FunctionBranch(this, Name);
+            AllParameters = new List<Parameter>();
+            AllSettings = new List<ISetting>();
+            NextNode = new FunctionBranch(this, Name)
+            {
+                CurrentState = FunctionTreeNodeState.Active
+            };
             NextNode.PropertyChanged += NextNode_PropertyChanged;
             Solve = new Command(
                 SolveFunction,
@@ -40,6 +47,8 @@ namespace EngineeringMath.Component
 
 
         #region Methods
+
+        
 
         /// <summary>
         /// Function called by the solve command
@@ -94,9 +103,85 @@ namespace EngineeringMath.Component
         {
             throw new ParameterNotFoundException(paraName);
         }
+
+        public void Reset()
+        {
+            AllSettings = new List<ISetting>();
+            AllParameters = new List<Parameter>();
+            NextNode.BuildLists(AllSettings, AllParameters);
+        }
+
+        public void SettingAdded(ISetting setting)
+        {
+            AllSettings.Add(setting);
+        }
+        public void SettingRemoved(ISetting setting)
+        {
+            AllSettings.Remove(setting);
+        }
+        public void SettingRemoved(IList<ISetting> settings)
+        {
+            foreach(ISetting setting in settings)
+            {
+                AllSettings.Remove(setting);
+            }
+        }
+
+        public void ParameterAdded(Parameter parameter)
+        {
+            AllParameters.Add(parameter);
+        }
+        public void ParameterRemoved(Parameter parameter)
+        {
+            AllParameters.Remove(parameter);
+        }
+        public void ParameterRemoved(IList<Parameter> parameters)
+        {
+            foreach (Parameter parameter in parameters)
+            {
+                AllParameters.Remove(parameter);
+            }
+        }
         #endregion
 
         #region Properties
+
+        public List<Parameter> InputParameters
+        {
+            get
+            {
+                return (from para in AllParameters
+                       where para.CurrentState == ParameterState.Input
+                       orderby para.ToString()
+                       select para)
+                       .ToList();
+            }
+        }
+
+        public List<Parameter> OutputParameters
+        {
+            get
+            {
+                return (from para in AllParameters
+                        where para.CurrentState == ParameterState.Output
+                        orderby para.ToString()
+                        select para)
+                       .ToList();
+            }
+        }
+
+
+        public List<ISetting> ActiveSettings
+        {
+            get
+            {
+                return (from setting in AllSettings
+                        where setting.CurrentState == SettingState.Active
+                        orderby setting.ToString()
+                        select setting)
+                       .ToList();
+            }
+        }
 
         private string _Name;
 
@@ -144,6 +229,38 @@ namespace EngineeringMath.Component
                 OnPropertyChanged();
             }
         }
+
+        private List<ISetting> _AllSettings;
+        [XmlIgnore]
+        internal List<ISetting> AllSettings
+        {
+            get
+            {
+                return _AllSettings;
+            }
+            set
+            {
+                _AllSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private List<Parameter> _AllParameters;
+        [XmlIgnore]
+        internal List<Parameter> AllParameters
+        {
+            get
+            {
+                return _AllParameters;
+            }
+            set
+            {
+                _AllParameters = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         private Command _Save;
         /// <summary>

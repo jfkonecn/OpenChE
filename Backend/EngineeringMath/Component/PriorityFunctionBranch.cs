@@ -25,9 +25,31 @@ namespace EngineeringMath.Component
             NextNode.Calculate();
         }
 
-        public override void Invalidate()
+
+        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
         {
-            throw new NotImplementedException();
+            foreach (Parameter para in this.Parameters)
+            {
+                parameter.Add(para);
+            }
+            NextNode.BuildLists(settings, parameter);
+        }
+
+        public override void DeactivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Inactive;
+            NextNode.DeactivateStates();
+        }
+
+        public override void ActivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Active;
+            NextNode.ActivateStates();
+        }
+
+        public override bool IsOutput(string parameterName)
+        {
+            return NextNode.IsOutput(parameterName);
         }
     }
 }

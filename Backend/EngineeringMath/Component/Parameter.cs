@@ -13,8 +13,16 @@ namespace EngineeringMath.Component
         public abstract double MinBaseValue { get; protected set; }
 
         public abstract double MaxBaseValue { get; protected set; }
-    }
 
+        public ParameterState CurrentState { get; internal set; } = ParameterState.Inactive;
+    }
+    
+    public enum ParameterState
+    {
+        Input,
+        Output,
+        Inactive
+    }
 
     public abstract class Parameter<T> : Parameter
         where T : IComparable

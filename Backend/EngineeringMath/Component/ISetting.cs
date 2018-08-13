@@ -10,5 +10,16 @@ namespace EngineeringMath.Component
         int SelectedIndex { get; set; }
 
         IList<string> AllOptions { get; }
+
+        SettingState CurrentState { get; }
+
+        string Name { get; }
+
+
+    }
+    public enum SettingState
+    {
+        Active,
+        Inactive
     }
 }

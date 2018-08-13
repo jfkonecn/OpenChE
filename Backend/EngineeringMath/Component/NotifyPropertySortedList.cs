@@ -87,6 +87,7 @@ namespace EngineeringMath.Component
                 throw new ArgumentNullException();
             item.Parent = _Parent;
             _List.Add(item.ToString(), item);
+            OnItemAdded(item);
             OnPropertyChanged(nameof(AllOptions));
         }
 
@@ -97,6 +98,7 @@ namespace EngineeringMath.Component
                 if(obj.Value != null)
                     obj.Value.Parent = null;
             }
+            OnItemsCleared(_List.Values);
             _List.Clear();
             OnPropertyChanged(nameof(AllOptions));
         }
@@ -149,6 +151,7 @@ namespace EngineeringMath.Component
             bool IsRemoved = _List.Remove(item.ToString());
             item.Parent = null;
             OnPropertyChanged(nameof(AllOptions));
+            OnItemRemoved(item);
             return IsRemoved;
         }
 
@@ -159,6 +162,7 @@ namespace EngineeringMath.Component
             _List[obj.Key] = obj.Value;
             if (obj.Value != null)
                 obj.Value.Parent = null;
+            OnItemRemoved(obj.Value);
             OnPropertyChanged(nameof(AllOptions));
         }
 
@@ -175,5 +179,24 @@ namespace EngineeringMath.Component
                 return _List.Keys;
             }
         }
+
+        protected void OnItemAdded(TValue item)
+        {
+            ItemAdded?.Invoke(this, new ItemEventArgs<TValue>(item));
+        }
+        public event EventHandler<ItemEventArgs<TValue>> ItemAdded;
+
+        protected void OnItemRemoved(TValue item)
+        {
+            ItemRemoved?.Invoke(this, new ItemEventArgs<TValue>(item));
+        }
+        public event EventHandler<ItemEventArgs<TValue>> ItemRemoved;
+
+        protected void OnItemsCleared(IList<TValue> list)
+        {
+            ItemsCleared?.Invoke(this, new ItemEventArgs<IList<TValue>>(list));
+        }
+        public event EventHandler<ItemEventArgs<IList<TValue>>> ItemsCleared;
+
     }
 }
