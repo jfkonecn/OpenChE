@@ -8,12 +8,13 @@ namespace EngineeringMath.Component
     {
         protected PriorityFunctionBranch() : base()
         {
-
+            NextNode.Parent = this;
         }
 
         public PriorityFunctionBranch(string name, uint priority, FunctionTreeNode nextNode) : base(name)
         {
             NextNode = nextNode;
+            nextNode.Parent = this;
             Priority = priority;
         }
         public uint Priority { get; protected set; }
