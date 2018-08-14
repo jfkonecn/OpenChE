@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace EngineeringMath.Component
 {
-    public class FunctionQueueNode : FunctionTreeNode
+    public class FunctionQueueNode : FunctionTreeNodeWithParameters
     {
         protected FunctionQueueNode() : base()
         {

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class FunctionLeaf : FunctionTreeNode, IParameterContainerLeaf
+    public class FunctionLeaf : FunctionTreeNodeWithParameters, IParameterContainerLeaf
     {
         protected FunctionLeaf() : base()
         {

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class FunctionBranch : FunctionTreeNode
+    public class FunctionBranch : FunctionTreeNodeWithParameters
     {
         protected FunctionBranch() : base()
         {

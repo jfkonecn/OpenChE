@@ -9,46 +9,10 @@ namespace EngineeringMath.Component
     {
         protected FunctionTreeNode()
         {
-            Parameters = new NotifyPropertySortedList<Parameter, IParameterContainerNode>(this);
-            Parameters.ItemAdded += Parameters_ItemAdded;
-            Parameters.ItemRemoved += Parameters_ItemRemoved;
-            Parameters.ItemsCleared += Parameters_ItemsCleared;
+
         }
 
-        private void Parameters_ItemsCleared(object sender, ItemEventArgs<IList<Parameter>> e)
-        {
-            ParameterRemoved(e.ModifiedItem);
-        }
 
-        private void Parameters_ItemRemoved(object sender, ItemEventArgs<Parameter> e)
-        {
-            ParameterRemoved(e.ModifiedItem);
-        }
-
-        private void Parameters_ItemAdded(object sender, ItemEventArgs<Parameter> e)
-        {
-            Parameter para = e.ModifiedItem;
-            switch (CurrentState)
-            {
-                case FunctionTreeNodeState.Active:
-                    if (IsOutput(para.Name))
-                    {
-                        para.CurrentState = ParameterState.Output;
-                    }
-                    else
-                    {
-                        para.CurrentState = ParameterState.Input;
-                    }
-                    break;
-                case FunctionTreeNodeState.Inactive:
-                    para.CurrentState = ParameterState.Inactive;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
-            ParameterAdded(para);
-        }
 
         protected FunctionTreeNode(string name) : this()
         {
@@ -68,7 +32,7 @@ namespace EngineeringMath.Component
         }
 
         [XmlIgnore]
-        private IParameterContainerNode ParentObject { get; set; }
+        protected IParameterContainerNode ParentObject { get; set; }
 
 
 
@@ -84,8 +48,7 @@ namespace EngineeringMath.Component
                     return;
 
 
-                FunctionTreeNode node = ParentObject as FunctionTreeNode;
-                if (node != null)
+                if (ParentObject is FunctionTreeNode node)
                 {
                     node.ParentChanged -= Parent_ParentChanged;
                 }
@@ -108,35 +71,11 @@ namespace EngineeringMath.Component
         }
 
 
-        private NotifyPropertySortedList<Parameter, IParameterContainerNode> _Parameters;
-        public NotifyPropertySortedList<Parameter, IParameterContainerNode> Parameters
-        {
-            get { return _Parameters; }
-            set
-            {
-                _Parameters = value;
-                OnPropertyChanged();
-            }
-        }
 
-        public double GetBaseUnitValue(string paraName)
-        {
-            if (this.Parameters.TryGetValue(paraName, out Parameter para))
-            {
-                return para.BaseUnitValue;
-            }
-            return ParentObject.GetBaseUnitValue(paraName);
-        }
 
-        public void SetBaseUnitValue(string paraName, double num)
-        {
-            if (this.Parameters.TryGetValue(paraName, out Parameter para))
-            {
-                para.BaseUnitValue = num;
-                return;
-            }
-            ParentObject.SetBaseUnitValue(paraName, num);
-        }
+        public abstract double GetBaseUnitValue(string paraName);
+
+        public abstract void SetBaseUnitValue(string paraName, double num);
 
         public abstract void Calculate();
 
@@ -217,15 +156,7 @@ namespace EngineeringMath.Component
 
         protected virtual void OnParentChanged()
         {
-            ParentChanged?.Invoke(this, EventArgs.Empty);
-            if (Parent != null)
-            {
-
-                foreach (Parameter para in Parameters)
-                {
-                    Parent.ParameterAdded(para);
-                }
-            }            
+            ParentChanged?.Invoke(this, EventArgs.Empty);          
         }
 
         public EventHandler<EventArgs> ParentChanged;
