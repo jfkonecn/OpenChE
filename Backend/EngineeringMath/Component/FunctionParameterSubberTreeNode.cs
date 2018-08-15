@@ -14,7 +14,6 @@ namespace EngineeringMath.Component
     {
         protected FunctionParameterSubberTreeNode() : base()
         {
-            ReplacingParameter.CurrentStateChanged += ReplacingParameter_CurrentStateChanged;
             ParentChanged += FunctionParameterSubberTreeNode_ParentChanged;
         }
 
@@ -68,25 +67,6 @@ namespace EngineeringMath.Component
             }
         }
 
-        private void ReplacingParameter_CurrentStateChanged(object sender, EventArgs e)
-        {
-            switch (ReplacingParameter.CurrentState)
-            {
-                case ParameterState.Input:
-                    InputBranch.DeactivateStates();
-                    OutputBranch.ActivateStates();
-                    break;
-                case ParameterState.Output:
-                    InputBranch.ActivateStates();
-                    OutputBranch.DeactivateStates();
-                    break;
-                case ParameterState.Inactive:
-                default:
-                    InputBranch.DeactivateStates();
-                    OutputBranch.DeactivateStates();
-                    break;
-            }
-        }
 
         /// <summary>
         /// Adds a node which either uses ReplacingParameter as an input or an output.
