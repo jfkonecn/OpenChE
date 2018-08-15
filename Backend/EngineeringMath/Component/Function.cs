@@ -12,7 +12,7 @@ namespace EngineeringMath.Component
     /// <summary>
     /// Performs an engineering calculation
     /// </summary>
-    public class Function : NotifyPropertyChangedExtension, IParameterContainerNode
+    public class Function : ChildItem<FunctionCategory>, IParameterContainerNode
     {
         protected Function()
         {
@@ -299,6 +299,21 @@ namespace EngineeringMath.Component
             }
         }
 
+        [XmlIgnore]
+        private FunctionCategory ParentObject { get; set; }
+
+
+        public override FunctionCategory Parent
+        {
+            get
+            {
+                return this.ParentObject;
+            }
+            internal set
+            {
+                this.ParentObject = value;
+            }
+        }
 
         #endregion
 

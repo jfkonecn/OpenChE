@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    interface ISIParameterUnitCategory
+    interface ISIParameterUnitCategory : ICategory
     {
         double ConverterToSIUnit(string curUnitFullName, double curValue);
 
