@@ -6,6 +6,8 @@ namespace EngineeringMath.Component
 {
     public interface IParameterContainerLeaf : IParameterContainerNode
     {
-        string EquationExpression { get; }
+        string EquationExpression { get; set; }
+
+        string OutputParameterName { get; set; }
     }
 }

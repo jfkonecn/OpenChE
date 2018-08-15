@@ -15,11 +15,6 @@ namespace EngineeringMath.Component
             Parameters.ItemsCleared += Parameters_ItemsCleared;
         }
 
-        protected FunctionTreeNodeWithParameters(string name) : this()
-        {
-            Name = name;
-        }
-
         private void Parameters_ItemsCleared(object sender, ItemEventArgs<IList<Parameter>> e)
         {
             ParameterRemoved(e.ModifiedItem);
@@ -36,7 +31,7 @@ namespace EngineeringMath.Component
             {
                 return para.BaseUnitValue;
             }
-            return ParentObject.GetBaseUnitValue(paraName);
+            return base.GetBaseUnitValue(paraName);
         }
 
         public override void SetBaseUnitValue(string paraName, double num)
@@ -46,7 +41,7 @@ namespace EngineeringMath.Component
                 para.BaseUnitValue = num;
                 return;
             }
-            ParentObject.SetBaseUnitValue(paraName, num);
+            base.SetBaseUnitValue(paraName, num);
         }
 
         private void Parameters_ItemAdded(object sender, ItemEventArgs<Parameter> e)
@@ -73,6 +68,32 @@ namespace EngineeringMath.Component
 
             ParameterAdded(para);
         }
+
+        public override void DeactivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Inactive;
+            foreach (Parameter para in Parameters)
+            {
+                para.CurrentState = ParameterState.Inactive;
+            }
+        }
+
+        public override void ActivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Active;
+            foreach (Parameter para in Parameters)
+            {
+                if (IsOutput(para.Name))
+                {
+                    para.CurrentState = ParameterState.Output;
+                }
+                else
+                {
+                    para.CurrentState = ParameterState.Input;
+                }
+            }
+        }
+
 
         protected override void OnParentChanged()
         {

@@ -142,6 +142,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do not replace the parameter with a function.
+        /// </summary>
+        public static string DontReplaceParameter {
+            get {
+                return ResourceManager.GetString("DontReplaceParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Energy.
         /// </summary>
         public static string Energy {
@@ -525,6 +534,15 @@ namespace EngineeringMath.Resources {
         public static string Rankine {
             get {
                 return ResourceManager.GetString("Rankine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace {0} with a function.
+        /// </summary>
+        public static string ReplaceParameterName {
+            get {
+                return ResourceManager.GetString("ReplaceParameterName", resourceCulture);
             }
         }
         

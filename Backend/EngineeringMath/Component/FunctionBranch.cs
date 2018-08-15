@@ -26,9 +26,14 @@ namespace EngineeringMath.Component
             }
         }
 
-        internal FunctionBranch(Function fun, string name) : this(name)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        internal FunctionBranch(IParameterContainerNode parent, string name) : this(name)
         {
-            Parent = fun;
+            Parent = parent;
         }
 
         public FunctionBranch(string name) : this()
@@ -68,8 +73,8 @@ namespace EngineeringMath.Component
 
         public override void DeactivateStates()
         {
+            base.DeactivateStates();
             Children.CurrentState = SettingState.Inactive;
-            CurrentState = FunctionTreeNodeState.Inactive;
             foreach (FunctionTreeNode node in Children)
             {
                 node.DeactivateStates();
@@ -78,6 +83,7 @@ namespace EngineeringMath.Component
 
         public override void ActivateStates()
         {
+            base.ActivateStates();
             Children.CurrentState = SettingState.Active;
             foreach (FunctionTreeNode node in Children)
             {

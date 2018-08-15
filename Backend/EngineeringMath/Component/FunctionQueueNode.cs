@@ -55,7 +55,7 @@ namespace EngineeringMath.Component
 
         public override void DeactivateStates()
         {
-            CurrentState = FunctionTreeNodeState.Inactive;
+            base.DeactivateStates();
             foreach (FunctionTreeNode node in Children)
             {
                 node.DeactivateStates();
@@ -64,6 +64,7 @@ namespace EngineeringMath.Component
 
         public override void ActivateStates()
         {
+            base.ActivateStates();
             foreach (FunctionTreeNode node in Children)
             {
                 node.ActivateStates();

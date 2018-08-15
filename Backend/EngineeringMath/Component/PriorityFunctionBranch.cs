@@ -4,17 +4,18 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class PriorityFunctionBranch : FunctionTreeNodeWithParameters, IQueuingSortedListItem
+    public class PriorityFunctionBranch : FunctionTreeNode, IQueuingSortedListItem
     {
         protected PriorityFunctionBranch() : base()
         {
             NextNode.Parent = this;
         }
 
-        public PriorityFunctionBranch(string name, uint priority, FunctionTreeNode nextNode) : base(name)
+        public PriorityFunctionBranch(string name, uint priority, FunctionTreeNode nextNode) : base()
         {
+            Name = name;
             NextNode = nextNode;
-            nextNode.Parent = this;
+            NextNode.Parent = this;
             Priority = priority;
         }
         public uint Priority { get; protected set; }
@@ -29,22 +30,18 @@ namespace EngineeringMath.Component
 
         public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
         {
-            foreach (Parameter para in this.Parameters)
-            {
-                parameter.Add(para);
-            }
             NextNode.BuildLists(settings, parameter);
         }
 
         public override void DeactivateStates()
         {
-            CurrentState = FunctionTreeNodeState.Inactive;
+            base.DeactivateStates();
             NextNode.DeactivateStates();
         }
 
         public override void ActivateStates()
         {
-            CurrentState = FunctionTreeNodeState.Active;
+            base.ActivateStates();
             NextNode.ActivateStates();
         }
 

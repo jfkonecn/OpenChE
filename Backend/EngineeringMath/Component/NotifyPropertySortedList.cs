@@ -18,6 +18,43 @@ namespace EngineeringMath.Component
         private readonly P _Parent;
         protected SortedList<string, TValue> _List;
 
+        private TValue _TopValue = null;
+        /// <summary>
+        /// Forces a value to the top of this list
+        /// </summary>
+        public TValue TopValue
+        {
+            get
+            {
+                return _TopValue;
+            }
+            set
+            {
+                if (TopValue.Equals(value))
+                    return;
+                foreach(KeyValuePair<string, TValue> pair in _List)
+                {
+                    if (pair.Value.Equals(value))
+                    {
+                        _List.Remove(pair.Key);
+                        break;
+                    }
+                }
+
+                TopValue = value;
+                if(TopValue == null)
+                {
+                    OnItemRemoved(value);
+                }
+                else
+                {
+                    OnItemAdded(value);
+                }
+                OnPropertyChanged();
+            }
+        }
+
+
         public NotifyPropertySortedList(P parent)
         {
             this._Parent = parent;
@@ -49,6 +86,15 @@ namespace EngineeringMath.Component
         /// <exception cref="IndexOutOfRangeException"></exception>
         private KeyValuePair<string, TValue> GetKeyValuePairAtIndex(int index)
         {
+            if(index < 0 || index > _List.Count)
+                throw new IndexOutOfRangeException();
+
+            if (TopValue != null)
+                index--;
+
+            if (index == -1)
+                return new KeyValuePair<string, TValue>(TopValue.ToString(), TopValue);
+
             int i = 0;
             foreach (KeyValuePair<string, TValue> val in _List)
             {
@@ -68,16 +114,37 @@ namespace EngineeringMath.Component
             }
             set
             {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+
                 KeyValuePair<string, TValue> obj = GetKeyValuePairAtIndex(index);
-                if (value != null)
-                    value.Parent = _Parent;
-                _List[obj.Key] = value;
+                
+                value.Parent = _Parent;
+
+                if(index == 0 && TopValue != null)
+                {
+                    TopValue = value;
+                }
+                else
+                {
+                    _List[obj.Key] = value;
+                }
+
+                
                 if (obj.Value != null)
                     obj.Value.Parent = null;
             }
         }
 
-        public int Count => _List.Count;
+        public int Count
+        {
+            get
+            {
+                if(TopValue == null)
+                    return _List.Count;
+                return _List.Count + 1;
+            }
+        } 
 
         public bool IsReadOnly => true;
 
@@ -98,6 +165,7 @@ namespace EngineeringMath.Component
                 if(obj.Value != null)
                     obj.Value.Parent = null;
             }
+            TopValue = null;
             OnItemsCleared(_List.Values);
             _List.Clear();
             OnPropertyChanged(nameof(AllOptions));
@@ -105,20 +173,33 @@ namespace EngineeringMath.Component
 
         public bool Contains(TValue item)
         {
+            if (TopValue != null && TopValue.Equals(item))
+                return true;
+
             return _List.ContainsValue(item);
         }
 
 
         public bool TryGetValue(string key, out TValue value)
         {
-            return _List.TryGetValue(key, out value);
+            if (TopValue != null && TopValue.ToString().Equals(key))
+            {
+                value = TopValue;
+                return true;
+            }
+            else
+            {
+                return _List.TryGetValue(key, out value);
+            }              
         }
 
         public void CopyTo(TValue[] array, int arrayIndex)
         {
 
             List<KeyValuePair<string, TValue>> temp = new List<KeyValuePair<string, TValue>>();
-            foreach(TValue val in array)
+            if (TopValue != null)
+                temp.Add(new KeyValuePair<string, TValue>(TopValue.ToString(), TopValue));
+            foreach (TValue val in array)
             {
                 temp.Add(new KeyValuePair<string, TValue>(val.ToString(), val));
             }
@@ -127,7 +208,9 @@ namespace EngineeringMath.Component
 
         public IEnumerator<TValue> GetEnumerator()
         {
-            foreach(KeyValuePair<string, TValue> keyPair in _List)
+            if (TopValue != null)
+                yield return TopValue;
+            foreach (KeyValuePair<string, TValue> keyPair in _List)
             {
                 yield return keyPair.Value;
             }
@@ -135,6 +218,10 @@ namespace EngineeringMath.Component
 
         public int IndexOf(TValue item)
         {
+            if (TopValue != null && TopValue.Equals(item))
+            {
+                return 0;
+            }
             return _List.IndexOfValue(item);
         }
 
@@ -148,6 +235,13 @@ namespace EngineeringMath.Component
             if (item == null)
                 return false;
 
+            if (TopValue != null && TopValue.Equals(item))
+            {
+                TopValue = null;
+                return false;
+            }
+
+
             bool IsRemoved = _List.Remove(item.ToString());
             item.Parent = null;
             OnPropertyChanged(nameof(AllOptions));
@@ -157,6 +251,12 @@ namespace EngineeringMath.Component
 
         public void RemoveAt(int index)
         {
+            if (TopValue != null && index == 0)
+            {
+                TopValue = null;
+                return;
+            }
+
             KeyValuePair<string, TValue> obj = GetKeyValuePairAtIndex(index);
             obj.Value.Parent = _Parent;
             _List[obj.Key] = obj.Value;
@@ -168,7 +268,7 @@ namespace EngineeringMath.Component
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _List.GetEnumerator();
+            return GetEnumerator();
         }
 
 
@@ -176,6 +276,12 @@ namespace EngineeringMath.Component
         {
             get
             {
+                if (TopValue != null)
+                {
+                    List<string> temp = new List<string>() { TopValue.ToString() };
+                    temp.AddRange(_List.Keys);
+                    return temp;
+                }
                 return _List.Keys;
             }
         }

@@ -14,7 +14,29 @@ namespace EngineeringMath.Component
 
         public abstract double MaxBaseValue { get; protected set; }
 
-        public ParameterState CurrentState { get; internal set; } = ParameterState.Inactive;
+        private ParameterState _CurrentState = ParameterState.Inactive;
+        public ParameterState CurrentState
+        {
+            get
+            {
+                return _CurrentState;
+            }
+            internal set
+            {
+                if (_CurrentState == value)
+                    return;
+                _CurrentState = value;
+                OnCurrentStateChanged();
+            }
+
+        }
+
+        protected void OnCurrentStateChanged()
+        {
+            CurrentStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler<EventArgs> CurrentStateChanged;
     }
     
     public enum ParameterState

@@ -13,12 +13,6 @@ namespace EngineeringMath.Component
         }
 
 
-
-        protected FunctionTreeNode(string name) : this()
-        {
-            Name = name;
-        }
-
         private string _Name;
 
         public string Name
@@ -73,9 +67,15 @@ namespace EngineeringMath.Component
 
 
 
-        public abstract double GetBaseUnitValue(string paraName);
+        public virtual double GetBaseUnitValue(string paraName)
+        {
+            return ParentObject.GetBaseUnitValue(paraName);
+        }
 
-        public abstract void SetBaseUnitValue(string paraName, double num);
+        public virtual void SetBaseUnitValue(string paraName, double num)
+        {
+            ParentObject.SetBaseUnitValue(paraName, num);
+        }
 
         public abstract void Calculate();
 
@@ -92,13 +92,19 @@ namespace EngineeringMath.Component
         /// <summary>
         /// Makes all states along branch stateless
         /// </summary>
-        public abstract void DeactivateStates();
+        public virtual void DeactivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Inactive;
+        }
 
 
         /// <summary>
         /// Makes all states along the ACTIVE branch the correct state i.e. making a parameter input or output
         /// </summary>
-        public abstract void ActivateStates();
+        public virtual void ActivateStates()
+        {
+            CurrentState = FunctionTreeNodeState.Active;
+        }
 
         public abstract void BuildLists(List<ISetting> settings, List<Parameter> parameter);
 
@@ -159,7 +165,7 @@ namespace EngineeringMath.Component
             ParentChanged?.Invoke(this, EventArgs.Empty);          
         }
 
-        public EventHandler<EventArgs> ParentChanged;
+        public event EventHandler<EventArgs> ParentChanged;
 
     }
     public enum FunctionTreeNodeState

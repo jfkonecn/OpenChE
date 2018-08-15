@@ -23,9 +23,9 @@ namespace EngineeringMath.Component
             OutputParameterName = outputParameterName;
         }
 
-        public string OutputParameterName { get; protected set; }
+        public string OutputParameterName { get; set; }
 
-        public string EquationExpression { get; protected set; }
+        public string EquationExpression { get; set; }
 
         public override void Calculate()
         {
@@ -42,27 +42,12 @@ namespace EngineeringMath.Component
 
         public override void DeactivateStates()
         {
-            CurrentState = FunctionTreeNodeState.Inactive;
-            foreach(Parameter para in Parameters)
-            {
-                para.CurrentState = ParameterState.Inactive;
-            }
+            base.DeactivateStates();
         }
 
         public override void ActivateStates()
         {
-            CurrentState = FunctionTreeNodeState.Active;
-            foreach (Parameter para in Parameters)
-            {
-                if (IsOutput(para.Name))
-                {
-                    para.CurrentState = ParameterState.Output;
-                }
-                else
-                {
-                    para.CurrentState = ParameterState.Input;
-                }
-            }
+            base.ActivateStates();
         }
 
         public override bool IsOutput(string parameterName)

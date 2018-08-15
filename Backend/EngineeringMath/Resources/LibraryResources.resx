@@ -337,4 +337,10 @@
   <data name="VolumetricFlowRate" xml:space="preserve">
     <value>Volumetric Flow Rate</value>
   </data>
+  <data name="DontReplaceParameter" xml:space="preserve">
+    <value>Do not replace the parameter with a function</value>
+  </data>
+  <data name="ReplaceParameterName" xml:space="preserve">
+    <value>Replace {0} with a function</value>
+  </data>
 </root>
