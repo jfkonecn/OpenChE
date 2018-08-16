@@ -37,13 +37,13 @@ namespace EngineeringMath.Component
             {
 
             };
-            InputBranch.Children.TopValue = new FunctionLeaf(LibraryResources.DontReplaceParameter, string.Empty, ReplacingParameter.Name); ;
+            InputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.DontReplaceParameter, ReplacingParameter.Name); ;
 
             OutputBranch = new FunctionBranch(string.Format(LibraryResources.ReplaceParameterName, ReplacingParameter.Name))
             {
 
             };
-            OutputBranch.Children.TopValue = new FunctionLeaf(LibraryResources.DontReplaceParameter, string.Empty, string.Empty);
+            OutputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.DontReplaceParameter);
 
 
 

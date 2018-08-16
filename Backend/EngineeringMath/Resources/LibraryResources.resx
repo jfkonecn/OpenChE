@@ -343,4 +343,29 @@
   <data name="ReplaceParameterName" xml:space="preserve">
     <value>Replace {0} with a function</value>
   </data>
+  <data name="ChangeOutputs" xml:space="preserve">
+    <value>Change Output(s)</value>
+  </data>
+  <data name="DischargeCoefficient" xml:space="preserve">
+    <value>Discharge Coefficient</value>
+  </data>
+  <data name="FluidDynamics" xml:space="preserve">
+    <value>Fluid Dynamics</value>
+  </data>
+  <data name="InletPipeArea" xml:space="preserve">
+    <value>Inlet Pipe Area</value>
+  </data>
+  <data name="OrificeArea" xml:space="preserve">
+    <value>Orifice Area</value>
+  </data>
+  <data name="OrificePlate" xml:space="preserve">
+    <value>Orifice Plate</value>
+  </data>
+  <data name="PressureDrop" xml:space="preserve">
+    <value>Pressure Drop</value>
+  </data>
+  <data name="SolveFor" xml:space="preserve">
+    <value>Solve for {0}</value>
+    <comment>Where {0} is the parameter name</comment>
+  </data>
 </root>

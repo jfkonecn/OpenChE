@@ -46,6 +46,9 @@ namespace EngineeringMath.Component
 
 
         private string _Name;
+        /// <summary>
+        /// Name used for calculations
+        /// </summary>
         public override string Name
         {
             get { return _Name; }
@@ -55,6 +58,9 @@ namespace EngineeringMath.Component
                 OnPropertyChanged();
             }
         }
+
+
+
 
         private double _MinBaseValue;
         /// <summary>

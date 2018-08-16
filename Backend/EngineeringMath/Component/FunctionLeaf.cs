@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+using EngineeringMath.Resources;
 
 namespace EngineeringMath.Component
 {
@@ -16,14 +17,40 @@ namespace EngineeringMath.Component
         private Equation FunctionEquation { get; set;}
 
 
-        public FunctionLeaf(string name, string equationExpression, string outputParameterName) : this()
+        public FunctionLeaf(string equationExpression, string outputParameterName) : this()
         {
-            Name = name;
             EquationExpression = equationExpression;
             OutputParameterName = outputParameterName;
         }
 
-        public string OutputParameterName { get; set; }
+
+        public override string Name
+        {
+            get
+            {
+                return string.Format(LibraryResources.SolveFor, OutputParameterName);
+            }
+            protected set
+            {
+                throw new NotSupportedException();
+            }
+
+        }
+
+        private string _OutputParameterName;
+        public string OutputParameterName
+        {
+            get
+            {
+                return _OutputParameterName;
+            }
+            set
+            {
+                _OutputParameterName = value;
+                OnPropertyChanged(nameof(Name));
+                OnPropertyChanged();
+            }
+        }
 
         public string EquationExpression { get; set; }
 

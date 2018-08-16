@@ -15,10 +15,10 @@ namespace EngineeringMath.Component
 
         private string _Name;
 
-        public string Name
+        public virtual string Name
         {
             get { return _Name; }
-            set
+            protected set
             {
                 _Name = value;
                 OnPropertyChanged();

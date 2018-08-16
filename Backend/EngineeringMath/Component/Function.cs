@@ -18,11 +18,7 @@ namespace EngineeringMath.Component
         {
             AllParameters = new List<Parameter>();
             AllSettings = new List<ISetting>();
-            NextNode = new FunctionBranch(this, Name)
-            {
-                CurrentState = FunctionTreeNodeState.Active
-            };
-            NextNode.PropertyChanged += NextNode_PropertyChanged;
+
             Solve = new Command(
                 SolveFunction,
                 CanSolve
@@ -33,16 +29,11 @@ namespace EngineeringMath.Component
         {
             if (e == null)
                 return;
-            if (e.PropertyName.Equals(nameof(FunctionBranch.Children)))
-            {
-                OnPropertyChanged(nameof(Children));
-            }
         }
 
-        public Function(string name, string category) : this()
+        public Function(string name) : this()
         {
             Name = name;
-            Category = category;
         }
 
 
@@ -196,22 +187,6 @@ namespace EngineeringMath.Component
         }
 
 
-        private string _Category;
-        /// <summary>
-        /// Category
-        /// </summary>
-        public string Category
-        {
-            get
-            {
-                return _Category;
-            }
-            set
-            {
-                _Category = value;
-                OnPropertyChanged();
-            }
-        }
 
         private Command _Solve;
         /// <summary>
@@ -279,23 +254,29 @@ namespace EngineeringMath.Component
             }
         }
 
-        FunctionBranch _NextNode;
+        FunctionTreeNode _NextNode;
 
-        internal FunctionBranch NextNode
+        public FunctionTreeNode NextNode
         {
             get { return _NextNode; }
             set
             {
-                _NextNode = value;
-                OnPropertyChanged();
-            }
-        }
+                if (_NextNode != null && _NextNode.Equals(value))
+                    return;
+                if(_NextNode != null)
+                {
+                    _NextNode.PropertyChanged -= NextNode_PropertyChanged;
+                    _NextNode.Parent = null;
+                }                    
 
-        public NotifyPropertySortedList<FunctionTreeNode, IParameterContainerNode> Children
-        {
-            get
-            {
-                return NextNode.Children;
+                _NextNode = value;
+                if(_NextNode != null)
+                {
+                    _NextNode.CurrentState = FunctionTreeNodeState.Active;
+                    _NextNode.PropertyChanged += NextNode_PropertyChanged;
+                    _NextNode.Parent = this;
+                }
+                OnPropertyChanged();
             }
         }
 

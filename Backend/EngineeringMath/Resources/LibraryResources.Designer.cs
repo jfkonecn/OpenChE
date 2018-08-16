@@ -115,6 +115,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change Output(s).
+        /// </summary>
+        public static string ChangeOutputs {
+            get {
+                return ResourceManager.GetString("ChangeOutputs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Days.
         /// </summary>
         public static string Days {
@@ -138,6 +147,15 @@ namespace EngineeringMath.Resources {
         public static string Density {
             get {
                 return ResourceManager.GetString("Density", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discharge Coefficient.
+        /// </summary>
+        public static string DischargeCoefficient {
+            get {
+                return ResourceManager.GetString("DischargeCoefficient", resourceCulture);
             }
         }
         
@@ -192,6 +210,15 @@ namespace EngineeringMath.Resources {
         public static string Feet {
             get {
                 return ResourceManager.GetString("Feet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fluid Dynamics.
+        /// </summary>
+        public static string FluidDynamics {
+            get {
+                return ResourceManager.GetString("FluidDynamics", resourceCulture);
             }
         }
         
@@ -255,6 +282,15 @@ namespace EngineeringMath.Resources {
         public static string Inches {
             get {
                 return ResourceManager.GetString("Inches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inlet Pipe Area.
+        /// </summary>
+        public static string InletPipeArea {
+            get {
+                return ResourceManager.GetString("InletPipeArea", resourceCulture);
             }
         }
         
@@ -475,6 +511,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Orifice Area.
+        /// </summary>
+        public static string OrificeArea {
+            get {
+                return ResourceManager.GetString("OrificeArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orifice Plate.
+        /// </summary>
+        public static string OrificePlate {
+            get {
+                return ResourceManager.GetString("OrificePlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ounces.
         /// </summary>
         public static string Ounces {
@@ -529,6 +583,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pressure Drop.
+        /// </summary>
+        public static string PressureDrop {
+            get {
+                return ResourceManager.GetString("PressureDrop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rankine.
         /// </summary>
         public static string Rankine {
@@ -579,6 +642,15 @@ namespace EngineeringMath.Resources {
         public static string SIFullName {
             get {
                 return ResourceManager.GetString("SIFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solve for {0}.
+        /// </summary>
+        public static string SolveFor {
+            get {
+                return ResourceManager.GetString("SolveFor", resourceCulture);
             }
         }
         

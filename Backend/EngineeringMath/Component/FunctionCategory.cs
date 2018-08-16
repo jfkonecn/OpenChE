@@ -13,6 +13,12 @@ namespace EngineeringMath.Component
             Children = new NotifyPropertySortedList<Function, FunctionCategory>(this);
         }
 
+        public FunctionCategory(string name, bool isUserDefined = false) : this()
+        {
+            Name = name;
+            IsUserDefined = isUserDefined;
+        }
+
         private string _Name;
         public string Name
         {

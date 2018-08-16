@@ -27,30 +27,27 @@ namespace BackendTesting
             areaPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area).GetUnitByFullName(siArea);
             lenPara.BindValue = 10;
 
-            Function fun = new Function("Test Function", "Thermo")
+            Function fun = new Function("Test Function")
             {
-                Children =
+                NextNode =
+                new FunctionQueueNode("Hello")
                 {
-                    new FunctionQueueNode("Hello")
+                    Children =
                     {
-                        Children =
-                        {
-                            new PriorityFunctionBranch(
-                                "Hello", 1,
-                                new FunctionLeaf("Hello",$"$r$ * $r$ * {Math.PI}", "a")
+                        new PriorityFunctionBranch(
+                            "Hello", 1,
+                            new FunctionLeaf($"$r$ * $r$ * {Math.PI}", "a")
+                                {
+                                    Parameters =
                                     {
-                                        Parameters =
-                                        {
-                                            areaPara,
-                                            lenPara
-                                        }
-                                    })
-                            {
-                                
-                            }
+                                        areaPara,
+                                        lenPara
+                                    }
+                                })
+                        {
+
                         }
                     }
-
                 }
             };
 
