@@ -6,10 +6,33 @@ namespace StringMath
 {
     internal class Number : IEquationToken
     {
-        internal static bool TryGetNumber(char[] charArr, ref int idx,
-            IEquationToken previousToken, out Number num)
+        private Number(double num)
         {
-            throw new NotImplementedException();
+            Num = num;
+        }
+
+        public readonly double Num;
+
+        internal static bool TryGetNumber(ref string equationString,
+            IEquationToken previousToken, Func<string,double> varFinder, out Number num)
+        {
+            if(previousToken == null || previousToken as IOperator != null)
+            {
+                if (HelperFunctions.RegularExpressionParser(@"^\s*\d*(\.\d+)?", ref equationString, out string matchStr))
+                {
+                    num = new Number(double.Parse(matchStr));
+                    return true;
+                }
+                else if (HelperFunctions.RegularExpressionParser(@"^\s*\$[\w\_]+[\w\d]*", ref equationString, out matchStr))
+                {
+                    // remove $
+                    matchStr = matchStr.Remove(0, 1);
+                    num = new Number(varFinder(matchStr));
+                    return true;
+                }
+            }
+            num = null;
+            return false;
         }
     }
 }

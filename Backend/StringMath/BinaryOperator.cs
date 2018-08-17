@@ -8,10 +8,10 @@ namespace StringMath
     internal class BinaryOperator : IOperator
     {
 
-        private BinaryOperator(char opt, UInt16 precedence, 
+        private BinaryOperator(string regularExpression, ushort precedence, 
             OperatorAssociativity associativity, Func<double, double, double> evaluator)
         {
-            Operator = opt;
+            RegularExpression = regularExpression;
             Associativity = associativity;
             Evaluator = evaluator;
         }
@@ -19,54 +19,42 @@ namespace StringMath
         /// <summary>
         /// i.e. "+" (without quotes) if this is an addition operator
         /// </summary>
-        internal readonly char Operator;
+        internal readonly string RegularExpression;
 
-        internal readonly UInt16 Precedence;
 
-        internal readonly OperatorAssociativity Associativity;
+        public ushort Precedence { get; }
+
+        public OperatorAssociativity Associativity { get; }
+
+        public ushort TotalParameters { get { return 2; } }
 
         private readonly Func<double, double, double> Evaluator;
 
 
-        internal double Evaluate(double leftNum, double rightNum)
+        public double Evaluate(ref Stack<double> vs)
         {
+            if (TotalParameters > vs.Count)
+                throw new SyntaxException();
+            double rightNum = vs.Pop(), leftNum = vs.Pop();
             return Evaluator(leftNum, rightNum);
         }
 
 
-        //https://en.wikipedia.org/wiki/Operator_associativity
-        internal enum OperatorAssociativity
-        {
-            /// <summary>
-            /// operations can be grouped arbitrarily
-            /// </summary>
-            Associative,
-            /// <summary>
-            /// operations are grouped from the left
-            /// </summary>
-            LeftAssociative,
-            /// <summary>
-            /// operations are grouped from the right
-            /// </summary>
-            RightAssociative,
-            /// <summary>
-            /// operations cannot be chained
-            /// </summary>
-            NonAssociative
-        }
+
         // https://en.wikipedia.org/wiki/Shunting-yard_algorithm
+        // https://en.wikipedia.org/wiki/Order_of_operations
         private static readonly ReadOnlyCollection<BinaryOperator> AllOperators = 
             new ReadOnlyCollection<BinaryOperator>(new List<BinaryOperator>()
             {
-                new BinaryOperator('^', 4, OperatorAssociativity.RightAssociative, 
+                new BinaryOperator(@"^\s*\^", 4, OperatorAssociativity.RightAssociative, 
                     (double left, double right)=>{ return Math.Pow(left, right); }),
-                new BinaryOperator('*', 3, OperatorAssociativity.LeftAssociative,
+                new BinaryOperator(@"^\s*\*", 3, OperatorAssociativity.LeftAssociative,
                     (double left, double right)=>{ return left * right; }),
-                new BinaryOperator('/', 3, OperatorAssociativity.LeftAssociative,
+                new BinaryOperator(@"^\s*/", 3, OperatorAssociativity.LeftAssociative,
                     (double left, double right)=>{ return left / right; }),
-                new BinaryOperator('+', 2, OperatorAssociativity.LeftAssociative,
+                new BinaryOperator(@"^\s*\+", 2, OperatorAssociativity.LeftAssociative,
                     (double left, double right)=>{ return left + right; }),
-                new BinaryOperator('-', 2, OperatorAssociativity.LeftAssociative,
+                new BinaryOperator(@"^\s*-", 2, OperatorAssociativity.LeftAssociative,
                     (double left, double right)=>{ return left - right; })
             });
 
@@ -75,19 +63,18 @@ namespace StringMath
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="charArr"></param>
-        /// <param name="idx">Changes only if a this method returns true</param>
+        /// <param name="charArr">Changes only if a this method returns true</param>
         /// <param name="previousToken"></param>
         /// <param name="opt">null if BinaryOperator cannot be made</param>
         /// <returns>True if object can be created</returns>
-        internal static bool TryGetBinaryOperator(char[] charArr, ref int idx,
-            IEquationToken previousToken, out BinaryOperator opt)
+        internal static bool TryGetBinaryOperator(ref string equationString,
+            IEquationToken previousToken, out IOperator opt)
         {
             if (ValidPreviousOperator(previousToken))
             {
                 foreach (BinaryOperator obj in AllOperators)
                 {
-                    if (HelperFunctions.IsThisOperator(obj.Operator, charArr, ref idx))
+                    if (HelperFunctions.RegularExpressionParser(obj.RegularExpression, ref equationString))
                     {
                         opt = obj;
                         return true;

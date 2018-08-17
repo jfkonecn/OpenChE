@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Text;
-using EngineeringMath.Component;
+using StringMath;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BackendTesting
@@ -19,12 +18,12 @@ namespace BackendTesting
             {
                 x = Rnd.NextDouble();
                 y = Rnd.NextDouble();
-                Assert.AreEqual(x + y, Equation.Evaluate($"{x} + {y}"), 1e-3);
-                Assert.AreEqual(x + y, Equation.Evaluate($"{x} +{y}"), 1e-3);
-                Assert.AreEqual(x + y, Equation.Evaluate($"{x}+{y}"), 1e-3);
+                Assert.AreEqual(x + y, EquationParser.Evaluate($"{x} + {y}"), 1e-3);
+                Assert.AreEqual(x + y, EquationParser.Evaluate($"{x} +{y}"), 1e-3);
+                Assert.AreEqual(x + y, EquationParser.Evaluate($"{x}+{y}"), 1e-3);
             }
-            Assert.ThrowsException<SyntaxErrorException>(() => { Equation.Evaluate("1 + 4 +"); });
-            Assert.ThrowsException<SyntaxErrorException>(() => { Equation.Evaluate("*-+1 + 4"); });
+            Assert.ThrowsException<SyntaxException>(() => { EquationParser.Evaluate("1 + 4 +"); });
+            Assert.ThrowsException<SyntaxException>(() => { EquationParser.Evaluate("*-+1 + 4"); });
         }
     }
 }
