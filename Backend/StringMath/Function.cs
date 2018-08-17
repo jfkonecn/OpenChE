@@ -28,7 +28,7 @@ namespace StringMath
         {
             if (previousToken == null || previousToken as IOperator != null)
             {
-                if (HelperFunctions.RegularExpressionParser(@"^\s*[\w\_]+[\w\d]*\(", ref equationString, out string matchStr))
+                if (HelperFunctions.RegularExpressionParser(@"^\s*[\w_]+[\w\d]*\(", ref equationString, out string matchStr))
                 {
                     // '(' should be the last character
                     fun = new Function(matchStr.Remove(matchStr.Length - 1));

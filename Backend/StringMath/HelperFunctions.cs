@@ -42,7 +42,7 @@ namespace StringMath
         }
 
         /// <summary>
-        /// Does not include functions!!!
+        /// Does not include functions or brackets!!!
         /// </summary>
         /// <param name="equationString"></param>
         /// <param name="previousToken"></param>

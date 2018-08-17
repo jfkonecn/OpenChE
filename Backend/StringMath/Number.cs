@@ -18,12 +18,12 @@ namespace StringMath
         {
             if(previousToken == null || previousToken as IOperator != null)
             {
-                if (HelperFunctions.RegularExpressionParser(@"^\s*\d*(\.\d+)?", ref equationString, out string matchStr))
+                if (HelperFunctions.RegularExpressionParser(@"^\s*\d+(\.\d+)?", ref equationString, out string matchStr))
                 {
                     num = new Number(double.Parse(matchStr));
                     return true;
                 }
-                else if (HelperFunctions.RegularExpressionParser(@"^\s*\$[\w\_]+[\w\d]*", ref equationString, out matchStr))
+                else if (HelperFunctions.RegularExpressionParser(@"^\s*\$[\w_]+[\w\d]*", ref equationString, out matchStr))
                 {
                     // remove $
                     matchStr = matchStr.Remove(0, 1);

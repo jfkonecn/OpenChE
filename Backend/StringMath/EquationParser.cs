@@ -75,10 +75,17 @@ namespace StringMath
                 int startingLength = equationString.Length;
 
                 if (Number.TryGetNumber(ref equationString, previousToken, varFinder, out Number num))
+                {
                     outputQueue.Enqueue(num);
+                    previousToken = num;
+                }                    
 
                 if (Function.TryGetFunction(ref equationString, previousToken, out curFun))
+                {
+                    previousToken = curFun;
                     operatorStack.Push(curFun);
+                }
+                    
 
                 if (HelperFunctions.TryGetOperator(ref equationString, previousToken, out IOperator opt))
                 {
@@ -96,6 +103,7 @@ namespace StringMath
                             outputQueue.Enqueue(operatorStack.Pop());
                         }
                     }
+                    previousToken = opt;
                     operatorStack.Push(opt);
                 }
 
@@ -120,6 +128,7 @@ namespace StringMath
                     {
                         throw new NotImplementedException();
                     }
+                    previousToken = bracket;
                 }
 
                 if (Function.IsFunctionArgumentSeparator(ref equationString))

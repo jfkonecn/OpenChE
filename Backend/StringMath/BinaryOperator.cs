@@ -92,8 +92,8 @@ namespace StringMath
         private static bool ValidPreviousOperator(IEquationToken previousToken)
         {
             if (previousToken == null || 
-                previousToken as IOperator == null || 
-                (previousToken as IOperator != null && previousToken.Equals(Bracket.RightBracket)))
+                previousToken as IOperator != null || 
+                previousToken.Equals(Bracket.RightBracket))
                 return false;
 
             return true;
