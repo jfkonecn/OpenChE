@@ -14,6 +14,7 @@ namespace StringMath
             RegularExpression = regularExpression;
             Associativity = associativity;
             Evaluator = evaluator;
+            Precedence = precedence;
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace StringMath
                     (double left, double right)=>{ return left / right; }),
                 new BinaryOperator(@"^\s*\+", 2, OperatorAssociativity.LeftAssociative,
                     (double left, double right)=>{ return left + right; }),
-                new BinaryOperator(@"^\s*-", 2, OperatorAssociativity.LeftAssociative,
+                new BinaryOperator(@"^\s*[-−]", 2, OperatorAssociativity.LeftAssociative,
                     (double left, double right)=>{ return left - right; })
             });
 
@@ -89,14 +90,14 @@ namespace StringMath
         /// </summary>
         /// <param name="previousToken"></param>
         /// <returns></returns>
-        private static bool ValidPreviousOperator(IEquationToken previousToken)
+        internal static bool ValidPreviousOperator(IEquationToken previousToken)
         {
-            if (previousToken == null || 
-                previousToken as IOperator != null || 
-                previousToken.Equals(Bracket.RightBracket))
-                return false;
+            if (previousToken != null && 
+                (!(previousToken is IOperator) ||
+                previousToken.Equals(Bracket.RightBracket)))
+                return true;
 
-            return true;
+            return false;
         }
 
 

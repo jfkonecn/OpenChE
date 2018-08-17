@@ -26,7 +26,7 @@ namespace StringMath
                 else if (HelperFunctions.RegularExpressionParser(@"^\s*\$[\w_]+[\w\d]*", ref equationString, out matchStr))
                 {
                     // remove $
-                    matchStr = matchStr.Remove(0, 1);
+                    matchStr = matchStr.Remove(0, matchStr.IndexOf('$') + 1);
                     num = new Number(varFinder(matchStr));
                     return true;
                 }

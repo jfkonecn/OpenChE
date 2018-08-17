@@ -38,7 +38,7 @@ namespace StringMath
         {
             new UnaryOperator(@"^\s*\+\b",
                 (double num)=>{ return num; }),
-            new UnaryOperator(@"^\s*-\b",
+            new UnaryOperator(@"^\s*[-−]\b",
                 (double num)=>{ return -num; })
         });
 
@@ -71,14 +71,9 @@ namespace StringMath
         /// </summary>
         /// <param name="previousToken"></param>
         /// <returns></returns>
-        private static bool ValidPreviousOperator(IEquationToken previousToken)
+        internal static bool ValidPreviousOperator(IEquationToken previousToken)
         {
-            if (previousToken != null ||
-                previousToken as IOperator == null ||
-                (previousToken as IOperator != null && previousToken.Equals(Bracket.RightBracket)))
-                return false;
-
-            return true;
+            return !BinaryOperator.ValidPreviousOperator(previousToken);
         }
     }
 }

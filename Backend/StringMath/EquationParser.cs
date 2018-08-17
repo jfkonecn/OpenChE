@@ -80,28 +80,24 @@ namespace StringMath
                     previousToken = num;
                 }                    
 
-                if (Function.TryGetFunction(ref equationString, previousToken, out curFun))
+                if (Function.TryGetFunction(ref equationString, previousToken, out Function temp))
                 {
-                    previousToken = curFun;
+                    curFun = temp;
+                    previousToken = temp;
                     operatorStack.Push(curFun);
                 }
                     
 
                 if (HelperFunctions.TryGetOperator(ref equationString, previousToken, out IOperator opt))
                 {
-                    if (operatorStack.Count > 0)
+                    while (
+                        operatorStack.Count > 0 &&
+                        (operatorStack.Peek() is Function ||
+                        operatorStack.Peek().Precedence > opt.Precedence ||
+                        (operatorStack.Peek().Precedence == opt.Precedence && opt.Associativity == OperatorAssociativity.LeftAssociative))
+                        && !operatorStack.Peek().Equals(Bracket.LeftBracket))
                     {
-                        IOperator topStackOpt = operatorStack.Peek();
-                        while (
-                            (
-                            topStackOpt as Function != null ||
-                            topStackOpt.Precedence > opt.Precedence ||
-                            (topStackOpt.Precedence == opt.Precedence && opt.Associativity == OperatorAssociativity.LeftAssociative)
-                            )
-                            && !topStackOpt.Equals(Bracket.LeftBracket))
-                        {
-                            outputQueue.Enqueue(operatorStack.Pop());
-                        }
+                        outputQueue.Enqueue(operatorStack.Pop());
                     }
                     previousToken = opt;
                     operatorStack.Push(opt);
@@ -117,7 +113,7 @@ namespace StringMath
                     {
                         while (!operatorStack.Peek().Equals(Bracket.LeftBracket))
                         {
-                            // unbalaced parentheses
+                            // Unbalanced  parentheses
                             if (operatorStack.Count < 1)
                                 throw new SyntaxException();
                             outputQueue.Enqueue(operatorStack.Pop());
@@ -133,6 +129,8 @@ namespace StringMath
 
                 if (Function.IsFunctionArgumentSeparator(ref equationString))
                 {
+                    if (curFun == null)
+                        throw new SyntaxException();
                     curFun.TotalParameters++;
                     previousToken = null;
                 }
