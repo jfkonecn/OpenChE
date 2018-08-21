@@ -61,6 +61,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Functions.
+        /// </summary>
+        public static string AllFunctions {
+            get {
+                return ResourceManager.GetString("AllFunctions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Area.
         /// </summary>
         public static string Area {

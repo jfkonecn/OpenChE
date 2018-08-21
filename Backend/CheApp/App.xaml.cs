@@ -2,25 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+using CheApp.View;
 
 namespace CheApp
 {
-    /*
-     * https://developer.xamarin.com/guides/xamarin-forms/user-interface/styles/application/
-     */
     public partial class App : Application
     {
         public App()
         {
-
-            Resources = new ResourceDictionary()
-            {
-
-            };
-            
-
+            InitializeComponent();
             switch (Device.RuntimePlatform)
             {
                 case Device.iOS:
@@ -33,18 +27,16 @@ namespace CheApp
             }
             Resources.TryGetValue("Xamarin.Forms.StyleClass.Success", out object temp);
             
+            MainPage = new MainMenu();
         }
-
         protected override void OnStart()
         {
             // Handle when your app starts
         }
-
         protected override void OnSleep()
         {
             // Handle when your app sleeps
         }
-
         protected override void OnResume()
         {
             // Handle when your app resumes

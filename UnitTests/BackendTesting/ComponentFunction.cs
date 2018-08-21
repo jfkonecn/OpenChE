@@ -80,9 +80,9 @@ namespace BackendTesting
         private void RunFunctionSolveTest(string funCat, string funName, Dictionary<string, double> paramValues)
         {
             Function fun;
-            if (MathManager.AllFunctions.Children.TryGetValue(funCat, out FunctionCategory cat))
+            if (MathManager.AllFunctions.TryGetValue(funCat, out FunctionCategory cat))
             {
-                if (!cat.Children.TryGetValue(funName, out fun))
+                if (!cat.TryGetValue(funName, out fun))
                     throw new Exception($"{funName} not found");
             }
             else

@@ -368,4 +368,7 @@
     <value>Solve for {0}</value>
     <comment>Where {0} is the parameter name</comment>
   </data>
+  <data name="AllFunctions" xml:space="preserve">
+    <value>All Functions</value>
+  </data>
 </root>

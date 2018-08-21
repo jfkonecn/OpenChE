@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:view="clr-namespace:CheApp.View"
+                  xmlns:mathMan="clr-namespace:EngineeringMath;assembly=EngineeringMath"
+                  x:Class="CheApp.View.MainMenu"
+                  MasterBehavior="Popover">
+    <MasterDetailPage.Master>
+        <view:MasterPage x:Name="masterPage" />
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
+        <NavigationPage>
+            <x:Arguments>
+                <ContentPage Title="{Binding Name}" BindingContext="{x:Static mathMan:MathManager.AllFunctions}">
+
+                    <Label Text="hello"></Label>
+                </ContentPage>
+            </x:Arguments>
+        </NavigationPage>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>
+
+
