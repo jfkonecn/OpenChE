@@ -113,8 +113,8 @@ namespace EngineeringMath.Component
             double convertToBaseFactor,
             UnitSystem unitSystem,            
             bool isUserDefined = false) : 
-            this(fullName, symbol, $"${CurUnitVar}$ * {convertToBaseFactor}", 
-                $"${BaseUnitVar}$ / {convertToBaseFactor}", unitSystem, false, isUserDefined, true)
+            this(fullName, symbol, $"${CurUnitVar} * {convertToBaseFactor}", 
+                $"${BaseUnitVar} / {convertToBaseFactor}", unitSystem, false, isUserDefined, true)
         {
 
         }

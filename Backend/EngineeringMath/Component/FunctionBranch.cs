@@ -11,6 +11,12 @@ namespace EngineeringMath.Component
         {
             Children = new SelectableList<FunctionTreeNode, IParameterContainerNode>(Name, this);
             Children.ItemAdded += Children_ItemAdded;
+            Children.IndexChanged += Children_IndexChanged;
+        }
+
+        private void Children_IndexChanged(object sender, EventArgs e)
+        {
+            OnStateChanged();
         }
 
         private void Children_ItemAdded(object sender, ItemEventArgs<FunctionTreeNode> e)

@@ -24,8 +24,8 @@ namespace BackendTesting
                 {
                     new Unit("Kelvin", "°K", 1.8, UnitSystem.Metric.SI, true),
                     new Unit("Rankine","°R", UnitSystem.Imperial.USCS, true, true),
-                    new Unit("Fahrenheit", "°F",$"${Unit.CurUnitVar}$ + 459.67", $"${Unit.BaseUnitVar}$ - 459.67", UnitSystem.Imperial.BaselineSystem, true),
-                    new Unit("Celsius", "°C",$"(${Unit.CurUnitVar}$ + 273.15) * 9/5", $"${Unit.BaseUnitVar}$ * 5/9 - 273.15", UnitSystem.Metric.BaselineSystem, true)
+                    new Unit("Fahrenheit", "°F",$"${Unit.CurUnitVar} + 459.67", $"${Unit.BaseUnitVar} - 459.67", UnitSystem.Imperial.BaselineSystem, true),
+                    new Unit("Celsius", "°C",$"(${Unit.CurUnitVar} + 273.15) * 9/5", $"${Unit.BaseUnitVar} * 5/9 - 273.15", UnitSystem.Metric.BaselineSystem, true)
                 }
 
             };
@@ -33,13 +33,13 @@ namespace BackendTesting
             Assert.AreEqual("Rankine", category.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS));
             Assert.AreEqual("Rankine", category.BaseUnitFullName);
             double num = category.ConvertUnit("Celsius", "Fahrenheit", 100);
-            Assert.AreEqual(212, num);
+            Assert.AreEqual(212, num, 0.001);
             num = category.ConvertUnit("Fahrenheit", "Rankine", num);
-            Assert.AreEqual(671.67, num);
+            Assert.AreEqual(671.67, num, 0.001);
             num = category.ConvertUnit("Rankine", "Kelvin", num);
-            Assert.AreEqual(373.15, num);
+            Assert.AreEqual(373.15, num, 0.001);
             num = category.ConvertUnit("Kelvin", "Celsius", num);
-            Assert.AreEqual(100, num);
+            Assert.AreEqual(100, num, 0.001);
 
         }
 
@@ -48,13 +48,13 @@ namespace BackendTesting
         {
             UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Temperature);
             double temp = cat.ConvertUnit(LibraryResources.Kelvin, LibraryResources.Fahrenheit, 373.15);
-            Assert.AreEqual(212, temp);
+            Assert.AreEqual(212, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Fahrenheit, LibraryResources.Celsius, temp);
-            Assert.AreEqual(100, temp);
+            Assert.AreEqual(100, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Celsius, LibraryResources.Rankine, temp);
-            Assert.AreEqual(671.67, temp);
+            Assert.AreEqual(671.67, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Rankine, LibraryResources.Kelvin, temp);
-            Assert.AreEqual(373.15, temp);
+            Assert.AreEqual(373.15, temp, 0.001);
         }
 
         [TestMethod]
@@ -84,13 +84,13 @@ namespace BackendTesting
             temp = cat.ConvertUnit(LibraryResources.Inches, LibraryResources.Miles, temp);
             Assert.AreEqual(0.0776714, temp, 0.0001);
             temp = cat.ConvertUnit(LibraryResources.Miles, LibraryResources.Millimeters, temp);
-            Assert.AreEqual(125000, temp);
+            Assert.AreEqual(125000, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Millimeters, LibraryResources.Centimeters, temp);
-            Assert.AreEqual(12500, temp);
+            Assert.AreEqual(12500, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Centimeters, LibraryResources.Kilometers, temp);
-            Assert.AreEqual(0.125, temp);
+            Assert.AreEqual(0.125, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Kilometers, LibraryResources.Meters, temp);
-            Assert.AreEqual(125, temp);
+            Assert.AreEqual(125, temp, 0.001);
         }
 
 
@@ -101,13 +101,13 @@ namespace BackendTesting
             double temp = cat.ConvertUnit(LibraryResources.Kilograms, LibraryResources.PoundsMass, 125);
             Assert.AreEqual(275.578, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.PoundsMass, LibraryResources.Grams, temp);
-            Assert.AreEqual(125e3, temp);
+            Assert.AreEqual(125e3, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Grams, LibraryResources.Milligrams, temp);
-            Assert.AreEqual(125e6, temp);
+            Assert.AreEqual(125e6, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Milligrams, LibraryResources.Micrograms, temp);
-            Assert.AreEqual(125e9, temp);
+            Assert.AreEqual(125e9, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Micrograms, LibraryResources.MetricTons, temp);
-            Assert.AreEqual(0.125, temp);
+            Assert.AreEqual(0.125, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.MetricTons, LibraryResources.Ounces, temp);
             Assert.AreEqual(4409.25, temp, 0.01);
             temp = cat.ConvertUnit(LibraryResources.Ounces, LibraryResources.USTons, temp);

@@ -7,19 +7,12 @@ namespace EngineeringMath.Component
     public interface IParameterContainerNode
     {
         /// <summary>
-        /// Gets the value of paraName used to perform calculations
+        /// Finds the parameter with the name, paraVarName
         /// </summary>
-        /// <param name="paraName">Name of the parameter</param>
+        /// <param name="paraVarName">Name of the parameter</param>
         /// <returns></returns>
-        double GetBaseUnitValue(string paraName);
+        Parameter FindParameter(string paraVarName);
 
-
-        /// <summary>
-        /// Sets the value of paraName used to perform calculations
-        /// </summary>
-        /// <param name="paraName">Name of the parameter</param>
-        /// <returns></returns>
-        void SetBaseUnitValue(string paraName, double num);
 
         /// <summary>
         /// Performs the actual calculation for this function object

@@ -33,13 +33,13 @@ namespace EngineeringMath.Component
             Name = name;
 
 
-            InputBranch = new FunctionBranch(string.Format(LibraryResources.ReplaceParameterName, ReplacingParameter.Name))
+            InputBranch = new FunctionBranch(string.Format(LibraryResources.ReplaceParameterName, ReplacingParameter.DisplayName))
             {
 
             };
-            InputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.DontReplaceParameter, ReplacingParameter.Name); ;
+            InputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.DontReplaceParameter, ReplacingParameter.DisplayName); ;
 
-            OutputBranch = new FunctionBranch(string.Format(LibraryResources.ReplaceParameterName, ReplacingParameter.Name))
+            OutputBranch = new FunctionBranch(string.Format(LibraryResources.ReplaceParameterName, ReplacingParameter.DisplayName))
             {
 
             };
@@ -78,8 +78,8 @@ namespace EngineeringMath.Component
         {
             string replacingStr = "#";
 
-            if ((node.EquationExpression.Contains(replacingStr) && node.OutputParameterName.Equals(replacingStr)) ||
-                (!node.EquationExpression.Contains(replacingStr) && !node.OutputParameterName.Equals(replacingStr))
+            if ((node.EquationExpression.Contains(replacingStr) && node.OutputParameterVarName.Equals(replacingStr)) ||
+                (!node.EquationExpression.Contains(replacingStr) && !node.OutputParameterVarName.Equals(replacingStr))
                 )
             {
                 throw new ArgumentException("The expression must be an input XOR output");
@@ -87,11 +87,11 @@ namespace EngineeringMath.Component
 
             if (node.EquationExpression.Contains(replacingStr))
             {
-                node.EquationExpression = node.EquationExpression.Replace(replacingStr, ReplacingParameter.Name);
+                node.EquationExpression = node.EquationExpression.Replace(replacingStr, ReplacingParameter.VarName);
             }
             else
             {
-                node.OutputParameterName = node.OutputParameterName.Replace(replacingStr, ReplacingParameter.Name);
+                node.OutputParameterVarName = node.OutputParameterVarName.Replace(replacingStr, ReplacingParameter.VarName);
             }
         }
 
@@ -185,24 +185,16 @@ namespace EngineeringMath.Component
             NextNode.DeactivateStates();
         }
 
-        public override double GetBaseUnitValue(string paraName)
+        public override Parameter FindParameter(string paraVarName)
         {
-            if (ReplacingParameter.Name.Equals(paraName))
-                return ReplacingParameter.BaseUnitValue;
-            return ParentObject.GetBaseUnitValue(paraName);
+            if (ReplacingParameter.VarName.Equals(paraVarName))
+                return ReplacingParameter;
+            return ParentObject.FindParameter(paraVarName);
         }
 
         public override bool IsOutput(string parameterName)
         {
             return NextNode.IsOutput(parameterName);
-        }
-
-        public override void SetBaseUnitValue(string paraName, double num)
-        {
-            if (ReplacingParameter.Name.Equals(paraName))
-                ReplacingParameter.BaseUnitValue = num;
-
-            ParentObject.SetBaseUnitValue(paraName, num);
         }
     }
 }

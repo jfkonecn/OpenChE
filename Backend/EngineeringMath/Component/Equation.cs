@@ -5,8 +5,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Data;
-using System.ComponentModel;
-using System.Text.RegularExpressions;
+using StringMath;
 
 namespace EngineeringMath.Component
 {
@@ -28,7 +27,9 @@ namespace EngineeringMath.Component
             if (ParentObject == null)
                 throw new ArgumentNullException();
 
-            return Evalutate(ParentObject.EquationExpression, ParentObject.GetBaseUnitValue);
+            
+
+            return Evalutate(ParentObject.EquationExpression, (x) => { return ParentObject.FindParameter(x).BaseUnitValue; });
         }
 
         /// <summary>
@@ -55,25 +56,8 @@ namespace EngineeringMath.Component
         /// <returns></returns>
         private static double Evalutate(string equation, Func<string, double> getParaValue)
         {
-            /*
-                https://stackoverflow.com/questions/378415/how-do-i-extract-text-that-lies-between-parentheses-round-brackets
-                \$             # Escaped parenthesis, means "starts with a '$' character"
-                    (          # Parentheses in a regex mean "put (capture) the stuff 
-                        #     in between into the Groups array" 
-                        [^)]    # Any character that is not a ')' character
-                        *       # Zero or more occurrences of the aforementioned "non ')' char"
-                    )          # Close the capturing group
-                \$             # "Ends with a ')' character"
-             */
-            Match m = Regex.Match(equation, @"\$([^$]*)\$");
 
-            for (int i = 1; i < m.Groups.Count; i += 2)
-            {
-                double num = getParaValue(m.Groups[i].Value);
-                equation = equation.Replace(m.Groups[i - 1].Value, num.ToString());
-            }
-
-            return double.Parse(_EquationTable.Compute(equation, "").ToString());
+            return EquationParser.Evaluate(equation, getParaValue);
         }
 
 
@@ -92,10 +76,6 @@ namespace EngineeringMath.Component
                 this.ParentObject = value;
             }
         }
-
-
-        [XmlIgnore]
-        private readonly static DataTable _EquationTable = new DataTable();
 
     }
 }

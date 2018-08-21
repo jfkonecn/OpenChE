@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace StringMath
 {
@@ -10,7 +11,19 @@ namespace StringMath
 
         private Function(string methodName)
         {
-            MethodInfo = typeof(Math).GetMethod(methodName);
+            if(methodName.Equals("Sqrt"))
+            {
+                Func<double, double> fun = Math.Sqrt;
+                MethodInfo = fun.Method;
+            }
+            else
+            {
+                MethodInfo = typeof(Math).GetMethod(methodName);
+            }
+
+
+            if (MethodInfo == null)
+                throw new SyntaxException();
         }
 
         public ushort TotalParameters { get; internal set; } = 1;
@@ -31,7 +44,7 @@ namespace StringMath
                 if (HelperFunctions.RegularExpressionParser(@"^\s*[\w_]+[\w\d]*\(", ref equationString, out string matchStr))
                 {
                     // '(' should be the last character
-                    fun = new Function(matchStr.Remove(matchStr.Length - 1));
+                    fun = new Function(Regex.Replace(matchStr.Remove(matchStr.Length - 1), @"\s+", ""));
                     equationString = $"({ equationString }";                    
                     return true;
                 }

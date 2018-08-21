@@ -85,12 +85,7 @@ namespace EngineeringMath.Component
             NextNode.Calculate();
         }
 
-        public double GetBaseUnitValue(string paraName)
-        {
-            throw new ParameterNotFoundException(paraName);
-        }
-
-        public void SetBaseUnitValue(string paraName, double num)
+        public Parameter FindParameter(string paraName)
         {
             throw new ParameterNotFoundException(paraName);
         }
@@ -207,13 +202,13 @@ namespace EngineeringMath.Component
 
         private List<ISetting> _AllSettings;
         [XmlIgnore]
-        internal List<ISetting> AllSettings
+        public List<ISetting> AllSettings
         {
             get
             {
                 return _AllSettings;
             }
-            set
+            protected set
             {
                 _AllSettings = value;
                 OnPropertyChanged();
@@ -316,6 +311,11 @@ namespace EngineeringMath.Component
             {
 
             }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

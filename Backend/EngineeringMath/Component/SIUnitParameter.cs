@@ -11,9 +11,10 @@ namespace EngineeringMath.Component
         {
             
         }
-        public SIUnitParameter(string name, string unitCategoryName, double minSIValue = double.MinValue, double maxSIValue = double.MaxValue) : base(name, minSIValue, maxSIValue)
+        public SIUnitParameter(string displayName, string varName, string unitCategoryName, 
+            double minSIValue = double.MinValue, double maxSIValue = double.MaxValue) 
+            : base(displayName, varName, minSIValue, maxSIValue)
         {
-
             UnitCategoryName = unitCategoryName;
         }
 
@@ -57,10 +58,9 @@ namespace EngineeringMath.Component
             {
                 _UnitCategoryName = value;
                 UnitCategory = MathManager.AllUnits.GetUnitCategoryByName(_UnitCategoryName);
-                ParameterUnits = new SelectableList<Unit, UnitCategory>(Name, UnitCategory.Children);
+                ParameterUnits = new SelectableList<Unit, UnitCategory>(VarName, UnitCategory.Children);
                 OnPropertyChanged();
             }
         }
-
     }
 }

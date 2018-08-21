@@ -111,6 +111,8 @@ namespace StringMath
                     }
                     else if (bracket.Equals(Bracket.RightBracket))
                     {
+                        if (operatorStack.Count == 0)
+                            throw new SyntaxException();
                         while (!operatorStack.Peek().Equals(Bracket.LeftBracket))
                         {
                             // Unbalanced  parentheses

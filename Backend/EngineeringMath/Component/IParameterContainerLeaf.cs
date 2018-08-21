@@ -8,6 +8,6 @@ namespace EngineeringMath.Component
     {
         string EquationExpression { get; set; }
 
-        string OutputParameterName { get; set; }
+        string OutputParameterVarName { get; set; }
     }
 }

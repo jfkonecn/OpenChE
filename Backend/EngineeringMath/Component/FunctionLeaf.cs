@@ -17,10 +17,10 @@ namespace EngineeringMath.Component
         private Equation FunctionEquation { get; set;}
 
 
-        public FunctionLeaf(string equationExpression, string outputParameterName) : this()
+        public FunctionLeaf(string equationExpression, string outputParameterVarName) : this()
         {
             EquationExpression = equationExpression;
-            OutputParameterName = outputParameterName;
+            OutputParameterVarName = outputParameterVarName;
         }
 
 
@@ -28,7 +28,7 @@ namespace EngineeringMath.Component
         {
             get
             {
-                return string.Format(LibraryResources.SolveFor, OutputParameterName);
+                return string.Format(LibraryResources.SolveFor, FindParameter(OutputParameterVarName).DisplayName);
             }
             protected set
             {
@@ -38,7 +38,7 @@ namespace EngineeringMath.Component
         }
 
         private string _OutputParameterName;
-        public string OutputParameterName
+        public string OutputParameterVarName
         {
             get
             {
@@ -56,7 +56,8 @@ namespace EngineeringMath.Component
 
         public override void Calculate()
         {
-            SetBaseUnitValue(OutputParameterName, FunctionEquation.Evaluate());
+            Parameter para = FindParameter(OutputParameterVarName);
+            para.BaseUnitValue = FunctionEquation.Evaluate();
         }
 
         public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
@@ -79,7 +80,7 @@ namespace EngineeringMath.Component
 
         public override bool IsOutput(string parameterName)
         {
-            return OutputParameterName.Equals(parameterName);
+            return OutputParameterVarName.Equals(parameterName);
         }
     }
 }

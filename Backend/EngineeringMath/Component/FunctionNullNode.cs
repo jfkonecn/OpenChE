@@ -39,17 +39,12 @@ namespace EngineeringMath.Component
             CurrentState = FunctionTreeNodeState.Inactive;
         }
 
-        public override double GetBaseUnitValue(string paraName)
+        public override Parameter FindParameter(string paraName)
         {
             throw new NotSupportedException();
         }
 
         public override bool IsOutput(string parameterName)
-        {
-            throw new NotSupportedException();
-        }
-
-        public override void SetBaseUnitValue(string paraName, double num)
         {
             throw new NotSupportedException();
         }

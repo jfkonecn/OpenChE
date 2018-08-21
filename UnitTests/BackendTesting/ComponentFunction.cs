@@ -17,10 +17,10 @@ namespace BackendTesting
         {
             string siArea = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
             siLength = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
-            SIUnitParameter areaPara = new SIUnitParameter("a", LibraryResources.Area)
+            SIUnitParameter areaPara = new SIUnitParameter("x", "a", LibraryResources.Area)
             {
             },
-            lenPara = new SIUnitParameter("r", LibraryResources.Length)
+            lenPara = new SIUnitParameter("y", "r", LibraryResources.Length)
             {
             };            
             lenPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length).GetUnitByFullName(siLength);
@@ -36,7 +36,7 @@ namespace BackendTesting
                     {
                         new PriorityFunctionBranch(
                             "Hello", 1,
-                            new FunctionLeaf($"$r$ * $r$ * {Math.PI}", "a")
+                            new FunctionLeaf($"$r * $r * {Math.PI}", "a")
                                 {
                                     Parameters =
                                     {
@@ -57,5 +57,112 @@ namespace BackendTesting
             
         }
 
+        [TestMethod]
+        public void OrificePlate()
+        {
+            RunFunctionSolveTest(LibraryResources.FluidDynamics, LibraryResources.OrificePlate, new Dictionary<string, double>()
+            {
+                { LibraryResources.DischargeCoefficient, 0.7 },
+                { LibraryResources.Density, 1000 },
+                { LibraryResources.InletPipeArea, 10 * 10 * Math.PI / 4.0 },
+                { LibraryResources.OrificeArea,  8 * 8 * Math.PI / 4.0 },
+                { LibraryResources.PressureDrop, 10 },
+                { LibraryResources.VolumetricFlowRate, 6.476 }
+            });
+        }
+
+        /// <summary>
+        /// Runs the same parameter values for each setting to make sure the function is solving correctly 
+        /// </summary>
+        /// <param name="paramValues">where the key is the display name of the parameter and the double is its value</param>
+        /// <param name="funCat"></param>
+        /// <param name="funName"></param>
+        private void RunFunctionSolveTest(string funCat, string funName, Dictionary<string, double> paramValues)
+        {
+            Function fun;
+            if (MathManager.AllFunctions.Children.TryGetValue(funCat, out FunctionCategory cat))
+            {
+                if (!cat.Children.TryGetValue(funName, out fun))
+                    throw new Exception($"{funName} not found");
+            }
+            else
+            {
+                throw new Exception($"{funCat} not found");
+            }
+
+            Stack<ISetting> preStack = new Stack<ISetting>();
+            Stack<ISetting> postStack = new Stack<ISetting>();
+
+            for (int i = 0; i < fun.AllSettings.Count; i++)
+            {
+                fun.AllSettings[i].SelectedIndex = 0;
+                preStack.Push(fun.AllSettings[i]);
+            }
+
+            if(preStack.Count == 0)
+            {
+                CheckFunctionWithCurrentSettings(fun, paramValues);
+            }
+
+
+            while (true)
+            {
+
+                CheckFunctionWithCurrentSettings(fun, paramValues);
+
+
+                ISetting curSetting = preStack.Pop();
+                postStack.Push(curSetting);
+
+                while (curSetting.SelectedIndex == curSetting.AllOptions.Count - 1 || curSetting.CurrentState == SettingState.Inactive)
+                {
+                    if (curSetting.CurrentState == SettingState.Active)
+                        curSetting.SelectedIndex = 0;
+
+                    if (!preStack.TryPop(out curSetting))
+                    {
+                        return;
+                    }
+                    postStack.Push(curSetting);
+                    if (curSetting.CurrentState == SettingState.Active)
+                        curSetting.SelectedIndex++;
+                }
+                while (postStack.Count > 0)
+                {
+                    preStack.Push(postStack.Pop());
+                }
+
+
+                preStack.Peek().SelectedIndex++;
+            }
+        }
+
+        private void CheckFunctionWithCurrentSettings(Function fun, Dictionary<string, double> paramValues)
+        {
+            bool paramsChecked = false;
+            
+            foreach (Parameter para in fun.InputParameters)
+            {
+                para.BaseUnitValue = paramValues[para.DisplayName];
+            }
+            foreach(Parameter para in fun.OutputParameters)
+            {
+                para.BaseUnitValue = double.NaN;
+            }
+
+            fun.Solve.Execute(null);
+            foreach (Parameter para in fun.InputParameters)
+            {
+                Assert.AreEqual(paramValues[para.DisplayName], para.BaseUnitValue, 1e-3);
+                paramsChecked = true;
+            }
+            foreach (Parameter para in fun.OutputParameters)
+            {
+                Assert.AreEqual(paramValues[para.DisplayName], para.BaseUnitValue, 1e-1, $"Output: {para.DisplayName}");
+                paramsChecked = true;
+            }
+            if (!paramsChecked)
+                Assert.Fail();
+        }
     }
 }

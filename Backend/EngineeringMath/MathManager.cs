@@ -22,5 +22,13 @@ namespace EngineeringMath
             }
         }
         
+
+        public static FunctionCategoryCollection AllFunctions
+        {
+            get
+            {
+                return FunctionCategoryCollection.AllFunctions;
+            }
+        }
     }
 }

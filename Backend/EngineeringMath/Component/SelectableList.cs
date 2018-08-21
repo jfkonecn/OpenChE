@@ -33,8 +33,9 @@ namespace EngineeringMath.Component
             set
             {
                 _SelectedIndex = value;
+                OnIndexChanged();
                 OnPropertyChanged(nameof(ItemAtSelectedIndex));
-                OnPropertyChanged();
+                OnPropertyChanged();                
             }
         }
 
@@ -62,5 +63,12 @@ namespace EngineeringMath.Component
         public SettingState CurrentState { get; internal set; }
 
         public string Name { get; protected set; }
+
+        protected void OnIndexChanged()
+        {
+            IndexChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler IndexChanged;
     }
 }

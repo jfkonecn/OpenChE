@@ -18,7 +18,7 @@ namespace StringMath
         {
             if(previousToken == null || previousToken as IOperator != null)
             {
-                if (HelperFunctions.RegularExpressionParser(@"^\s*\d+(\.\d+)?", ref equationString, out string matchStr))
+                if (HelperFunctions.RegularExpressionParser(@"^\s*\d+(\.\d+)?([eE][-+]?\d+)?", ref equationString, out string matchStr))
                 {
                     num = new Number(double.Parse(matchStr));
                     return true;

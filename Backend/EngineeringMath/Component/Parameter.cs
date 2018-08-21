@@ -7,8 +7,10 @@ namespace EngineeringMath.Component
 {
     public abstract class Parameter : ChildItem<IParameterContainerNode>
     {
-        public abstract string Name { get; protected set; }
-        internal abstract double BaseUnitValue { get; set; }
+        public abstract string DisplayName { get; protected set; }
+
+        public abstract string VarName { get; protected set; }
+        public abstract double BaseUnitValue { get; set; }
 
         public abstract double MinBaseValue { get; protected set; }
 
@@ -32,11 +34,12 @@ namespace EngineeringMath.Component
 
         }
 
-        public Parameter(string name, double minBaseValue, double maxBaseValue)
+        public Parameter(string displayName, string varName, double minBaseValue, double maxBaseValue)
         {
             MinBaseValue = minBaseValue;
             MaxBaseValue = maxBaseValue;
-            Name = name;
+            DisplayName = displayName;
+            VarName = varName;
         }
 
 
@@ -45,16 +48,30 @@ namespace EngineeringMath.Component
         protected abstract double BindToBaseValue(T value);
 
 
-        private string _Name;
+        private string _DisplayName;
+        /// <summary>
+        /// Name used in UI
+        /// </summary>
+        public override string DisplayName
+        {
+            get { return _DisplayName; }
+            protected set
+            {
+                _DisplayName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _VarName;
         /// <summary>
         /// Name used for calculations
         /// </summary>
-        public override string Name
+        public override string VarName
         {
-            get { return _Name; }
+            get { return _VarName; }
             protected set
             {
-                _Name = value;
+                _VarName = value;
                 OnPropertyChanged();
             }
         }
@@ -96,7 +113,7 @@ namespace EngineeringMath.Component
         /// Used to get value from this parameter for functions
         /// </summary>
         [XmlIgnore]
-        internal override double BaseUnitValue
+        public override double BaseUnitValue
         {
             get { return _BaseValue; }
             set
@@ -168,7 +185,7 @@ namespace EngineeringMath.Component
         }
         public override string ToString()
         {
-            return Name;
+            return VarName;
         }
     }
 }

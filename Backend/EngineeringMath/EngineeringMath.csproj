@@ -12,6 +12,10 @@
     <EmbeddedResource Include="Resources\LookupTables\SteamTable.csv" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StringMath\StringMath.csproj" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <Compile Update="Resources\LibraryResources.Designer.cs">

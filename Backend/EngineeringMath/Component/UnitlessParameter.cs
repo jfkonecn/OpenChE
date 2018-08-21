@@ -11,7 +11,8 @@ namespace EngineeringMath.Component
         {
 
         }
-        public UnitlessParameter(string name, double minValue = double.MinValue, double maxValue = double.MaxValue) : base(name, minValue, maxValue)
+        public UnitlessParameter(string displayName, string varName, 
+            double minValue = double.MinValue, double maxValue = double.MaxValue) : base(displayName, varName, minValue, maxValue)
         {
 
         }

@@ -67,14 +67,9 @@ namespace EngineeringMath.Component
 
 
 
-        public virtual double GetBaseUnitValue(string paraName)
+        public virtual Parameter FindParameter(string paraVarName)
         {
-            return ParentObject.GetBaseUnitValue(paraName);
-        }
-
-        public virtual void SetBaseUnitValue(string paraName, double num)
-        {
-            ParentObject.SetBaseUnitValue(paraName, num);
+            return ParentObject.FindParameter(paraVarName);
         }
 
         public abstract void Calculate();
@@ -108,7 +103,19 @@ namespace EngineeringMath.Component
 
         public abstract void BuildLists(List<ISetting> settings, List<Parameter> parameter);
 
-        public FunctionTreeNodeState CurrentState { get; internal set; } = FunctionTreeNodeState.Inactive;
+        private FunctionTreeNodeState _CurrentState = FunctionTreeNodeState.Inactive;
+        public FunctionTreeNodeState CurrentState
+        {
+            get
+            {
+                return _CurrentState;
+            }
+            internal set
+            {
+                _CurrentState = value;
+                OnStateChanged();
+            }
+        }
         public override string ToString()
         {
             return Name;
@@ -166,6 +173,14 @@ namespace EngineeringMath.Component
         }
 
         public event EventHandler<EventArgs> ParentChanged;
+
+
+        protected virtual void OnStateChanged()
+        {
+            StateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler<EventArgs> StateChanged;
 
     }
     public enum FunctionTreeNodeState

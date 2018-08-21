@@ -60,5 +60,10 @@ namespace EngineeringMath.Component
                 this.ParentObject = value;
             }
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

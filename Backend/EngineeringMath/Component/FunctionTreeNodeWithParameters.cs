@@ -15,6 +15,7 @@ namespace EngineeringMath.Component
             Parameters.ItemsCleared += Parameters_ItemsCleared;
         }
 
+
         private void Parameters_ItemsCleared(object sender, ItemEventArgs<IList<Parameter>> e)
         {
             ParameterRemoved(e.ModifiedItem);
@@ -25,23 +26,13 @@ namespace EngineeringMath.Component
             ParameterRemoved(e.ModifiedItem);
         }
 
-        public override double GetBaseUnitValue(string paraName)
+        public override Parameter FindParameter(string paraVarName)
         {
-            if (this.Parameters.TryGetValue(paraName, out Parameter para))
+            if (this.Parameters.TryGetValue(paraVarName, out Parameter para))
             {
-                return para.BaseUnitValue;
+                return para;
             }
-            return base.GetBaseUnitValue(paraName);
-        }
-
-        public override void SetBaseUnitValue(string paraName, double num)
-        {
-            if (this.Parameters.TryGetValue(paraName, out Parameter para))
-            {
-                para.BaseUnitValue = num;
-                return;
-            }
-            base.SetBaseUnitValue(paraName, num);
+            return base.FindParameter(paraVarName);
         }
 
         private void Parameters_ItemAdded(object sender, ItemEventArgs<Parameter> e)
@@ -50,7 +41,7 @@ namespace EngineeringMath.Component
             switch (CurrentState)
             {
                 case FunctionTreeNodeState.Active:
-                    if (IsOutput(para.Name))
+                    if (IsOutput(para.VarName))
                     {
                         para.CurrentState = ParameterState.Output;
                     }
@@ -72,28 +63,45 @@ namespace EngineeringMath.Component
         public override void DeactivateStates()
         {
             CurrentState = FunctionTreeNodeState.Inactive;
-            foreach (Parameter para in Parameters)
-            {
-                para.CurrentState = ParameterState.Inactive;
-            }
+
         }
 
         public override void ActivateStates()
         {
             CurrentState = FunctionTreeNodeState.Active;
-            foreach (Parameter para in Parameters)
-            {
-                if (IsOutput(para.Name))
-                {
-                    para.CurrentState = ParameterState.Output;
-                }
-                else
-                {
-                    para.CurrentState = ParameterState.Input;
-                }
-            }
+
         }
 
+
+        protected override void OnStateChanged()
+        {
+            base.OnStateChanged();
+            if (CurrentState == FunctionTreeNodeState.Active)
+            {
+                foreach (Parameter para in Parameters)
+                {
+                    if (IsOutput(para.VarName))
+                    {
+                        para.CurrentState = ParameterState.Output;
+                    }
+                    else
+                    {
+                        para.CurrentState = ParameterState.Input;
+                    }
+                }
+            }
+            else if (CurrentState == FunctionTreeNodeState.Inactive)
+            {
+                foreach (Parameter para in Parameters)
+                {
+                    para.CurrentState = ParameterState.Inactive;
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         protected override void OnParentChanged()
         {
