@@ -70,6 +70,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Units.
+        /// </summary>
+        public static string AllUnits {
+            get {
+                return ResourceManager.GetString("AllUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Area.
         /// </summary>
         public static string Area {
@@ -637,6 +646,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SI.
         /// </summary>
         public static string SIAbbrev {
@@ -723,6 +741,15 @@ namespace EngineeringMath.Resources {
         public static string UnitInversed {
             get {
                 return ResourceManager.GetString("UnitInversed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Units.
+        /// </summary>
+        public static string Units {
+            get {
+                return ResourceManager.GetString("Units", resourceCulture);
             }
         }
         

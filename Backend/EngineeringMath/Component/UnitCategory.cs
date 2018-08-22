@@ -9,11 +9,11 @@ using EngineeringMath.Resources;
 
 namespace EngineeringMath.Component
 {
-    public class UnitCategory : ChildItem<UnitCategoryCollection>, ISIParameterUnitCategory
+    public class UnitCategory : Category<Unit>
     {
         protected UnitCategory() : base()
         {
-            Children = new NotifyPropertySortedList<Unit, UnitCategory>(this);
+           
         }
 
         /// <summary>
@@ -138,10 +138,9 @@ namespace EngineeringMath.Component
 
         }
 
-        public UnitCategory(string name, bool isUserDefined = false) : this()
+        public UnitCategory(string name, bool isUserDefined = false) : base(name, isUserDefined)
         {
-            Name = name;
-            IsUserDefined = isUserDefined;
+
         }
 
         /// <summary>
@@ -175,48 +174,7 @@ namespace EngineeringMath.Component
             return temp.ElementAt(0);
         }
 
-        [XmlIgnore]
-        private UnitCategoryCollection ParentObject { get; set; }
 
-
-        public override UnitCategoryCollection Parent
-        {
-            get
-            {
-                return this.ParentObject;
-            }
-            internal set
-            {
-                this.ParentObject = value;
-            }
-        }
-
-
-
-        private NotifyPropertySortedList<Unit, UnitCategory> _Children;
-        public NotifyPropertySortedList<Unit, UnitCategory> Children
-        {
-            get { return _Children; }
-            set
-            {
-                _Children = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _Name;
-        public string Name
-        {
-            get { return _Name; }
-            set
-            {
-                _Name = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        public bool IsUserDefined { get; set; }
 
 
         public string BaseUnitFullName

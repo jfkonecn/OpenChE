@@ -4,9 +4,8 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public interface ICategory
+    public interface ICategoryItem
     {
-        string Name { get; set; }
-        bool IsUserDefined { get; set; }
+        string FullName { get; }
     }
 }

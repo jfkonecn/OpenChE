@@ -30,12 +30,12 @@ namespace EngineeringMath.Component
 
 
         [XmlIgnore]
-        private ISIParameterUnitCategory UnitCategory { get; set; }
+        private UnitCategory UnitCategory { get; set; }
 
 
-        private SelectableList<Unit, UnitCategory> _ParameterUnits;
+        private SelectableList<Unit, Category<Unit>> _ParameterUnits;
         [XmlIgnore]
-        public SelectableList<Unit, UnitCategory> ParameterUnits
+        public SelectableList<Unit, Category<Unit>> ParameterUnits
         {
             get { return _ParameterUnits; }
             set
@@ -58,7 +58,7 @@ namespace EngineeringMath.Component
             {
                 _UnitCategoryName = value;
                 UnitCategory = MathManager.AllUnits.GetUnitCategoryByName(_UnitCategoryName);
-                ParameterUnits = new SelectableList<Unit, UnitCategory>(VarName, UnitCategory.Children);
+                ParameterUnits = new SelectableList<Unit, Category<Unit>>(VarName, UnitCategory.Children);
                 OnPropertyChanged();
             }
         }

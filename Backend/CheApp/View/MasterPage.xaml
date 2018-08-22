@@ -2,16 +2,17 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:CheApp.ViewModel"
+             xmlns:view="clr-namespace:CheApp.View"
+             xmlns:lib="clr-namespace:EngineeringMath.Resources;assembly=EngineeringMath"
+             xmlns:mathMan="clr-namespace:EngineeringMath;assembly=EngineeringMath"
              x:Class="CheApp.View.MasterPage"
              Padding="0,40,0,0"
-             Title="Personal Organiser">
+             Title="{x:Static lib:LibraryResources.Settings}">
     <StackLayout>
-        <ListView x:Name="listView" x:FieldModifier="public">
+        <ListView x:Name="masterPageList" x:FieldModifier="public">
             <ListView.ItemsSource>
                 <x:Array Type="{x:Type local:MasterPageItem}">
-                    <local:MasterPageItem Title="Contacts" IconSource="contacts.png"  />
-                    <local:MasterPageItem Title="TodoList" IconSource="todo.png"  />
-                    <local:MasterPageItem Title="Reminders" IconSource="reminders.png"  />
+                    <local:MasterPageItem Title="{x:Static lib:LibraryResources.Units}" TargetType="{x:Type view:CategoryPage}" BindingContext="{x:Static mathMan:MathManager.AllUnits}"/>
                 </x:Array>
             </ListView.ItemsSource>
             <ListView.ItemTemplate>

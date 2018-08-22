@@ -8,7 +8,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EngineeringMath;
 using CheApp;
-
+using CheApp.ViewModel;
 
 namespace CheApp.View
 {
@@ -18,7 +18,21 @@ namespace CheApp.View
 		public MainMenu ()
 		{
             InitializeComponent();
-            //BindingContext = MathManager.AllFunctions;
+            masterPage.masterPageList.ItemSelected += MasterPageList_ItemSelected;
         }
-	}
+
+        private void MasterPageList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            var item = e.SelectedItem as MasterPageItem;
+            if (item != null)
+            {
+                Detail = new NavigationPage((Page)Activator.CreateInstance(item.TargetType))
+                {
+                    BindingContext = item.BindingContext
+                };
+                masterPage.masterPageList.SelectedItem = null;
+                IsPresented = false;
+            }
+        }
+    }
 }

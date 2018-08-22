@@ -6,17 +6,16 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class UnitCategoryCollection : NotifyPropertyChangedExtension
+    public class UnitCategoryCollection : CategoryCollection<Unit>
     {
-        protected UnitCategoryCollection()
+        protected UnitCategoryCollection(string name) : base(name)
         {
-            Children = new NotifyPropertySortedList<UnitCategory, UnitCategoryCollection>(this);
         }
 
 
         public UnitCategory GetUnitCategoryByName(string name)
         {
-            IEnumerable<UnitCategory> temp = from cat in AllUnits.Children
+            IEnumerable<Category<Unit>> temp = from cat in AllUnits.Children
                                        where cat.Name.Equals(name)
                                        select cat;
             if (temp.Count() == 0)
@@ -27,20 +26,11 @@ namespace EngineeringMath.Component
             {
                 throw new UnitCategoriesWithSameNameException(name);
             }
-            return temp.ElementAt(0);
+            return (UnitCategory)temp.ElementAt(0);
         }
 
         
-        private NotifyPropertySortedList<UnitCategory, UnitCategoryCollection> _Children;
-        public NotifyPropertySortedList<UnitCategory, UnitCategoryCollection> Children
-        {
-            get { return _Children; }
-            set
-            {
-                _Children = value;
-                OnPropertyChanged();
-            }
-        }
+        
 
         // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
 
@@ -59,7 +49,7 @@ namespace EngineeringMath.Component
 
         internal static void BuildAllUnits()
         {
-            _AllUnits = new UnitCategoryCollection()
+            _AllUnits = new UnitCategoryCollection(LibraryResources.AllUnits)
             {
                 Children =
                 {

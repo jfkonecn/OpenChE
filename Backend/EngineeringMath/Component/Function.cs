@@ -12,7 +12,7 @@ namespace EngineeringMath.Component
     /// <summary>
     /// Performs an engineering calculation
     /// </summary>
-    public class Function : ChildItem<FunctionCategory>, IParameterContainerNode
+    public class Function : ChildItem<Category<Function>>, IParameterContainerNode, ICategoryItem
     {
         protected Function()
         {
@@ -31,9 +31,9 @@ namespace EngineeringMath.Component
                 return;
         }
 
-        public Function(string name) : this()
+        public Function(string fullName) : this()
         {
-            Name = name;
+            FullName = fullName;
         }
 
 
@@ -169,14 +169,14 @@ namespace EngineeringMath.Component
             }
         }
 
-        private string _Name;
+        private string _FullName;
 
-        public string Name
+        public string FullName
         {
-            get { return _Name; }
+            get { return _FullName; }
             set
             {
-                _Name = value;
+                _FullName = value;
                 OnPropertyChanged();
             }
         }
@@ -187,6 +187,7 @@ namespace EngineeringMath.Component
         /// <summary>
         /// Solves this function 
         /// </summary>
+        [XmlIgnore]
         public Command Solve
         {
             get
@@ -276,10 +277,10 @@ namespace EngineeringMath.Component
         }
 
         [XmlIgnore]
-        private FunctionCategory ParentObject { get; set; }
+        private Category<Function> ParentObject { get; set; }
 
 
-        public override FunctionCategory Parent
+        public override Category<Function> Parent
         {
             get
             {
@@ -315,7 +316,7 @@ namespace EngineeringMath.Component
 
         public override string ToString()
         {
-            return Name;
+            return FullName;
         }
     }
 }

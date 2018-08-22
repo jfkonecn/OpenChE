@@ -2,44 +2,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 using EngineeringMath.Resources;
+using System.Linq;
 
 namespace EngineeringMath.Component
 {
-    public class FunctionCategoryCollection : NotifyPropertyChangedExtension, IList<FunctionCategory>
+    public class FunctionCategoryCollection : CategoryCollection<Function>
     {
-        protected FunctionCategoryCollection(string name)
+        protected FunctionCategoryCollection(string name) : base(name)
         {
-            Name = name;
-            Children = new NotifyPropertySortedList<FunctionCategory, FunctionCategoryCollection>(this);
-        }
 
-        private string _Name;
-        public string Name
-        {
-            get
-            {
-                return _Name;
-            }
-            protected set
-            {
-                _Name = value;
-                OnPropertyChanged();
-            }
         }
 
 
-        private NotifyPropertySortedList<FunctionCategory, FunctionCategoryCollection> _Children;
-        public NotifyPropertySortedList<FunctionCategory, FunctionCategoryCollection> Children
-        {
-            get { return _Children; }
-            set
-            {
-                _Children = value;
-                OnPropertyChanged();
-            }
-        }
 
+
+  
+
+  
+
+
+
+ 
         private static FunctionCategoryCollection _AllFunctions = null;
         internal static FunctionCategoryCollection AllFunctions
         {
@@ -52,12 +37,6 @@ namespace EngineeringMath.Component
                 return _AllFunctions;
             }
         }
-
-        public int Count => Children.Count;
-
-        public bool IsReadOnly => Children.IsReadOnly;
-
-        public FunctionCategory this[int index] { get => Children[index]; set => Children[index] = value; }
 
         internal static void BuildAllFunctions()
         {
@@ -91,61 +70,6 @@ namespace EngineeringMath.Component
                     }
                 }
             };
-        }
-
-        public bool TryGetValue(string key, out FunctionCategory value)
-        {
-            return Children.TryGetValue(key, out value);
-        }
-
-        public int IndexOf(FunctionCategory item)
-        {
-            return Children.IndexOf(item);
-        }
-
-        public void Insert(int index, FunctionCategory item)
-        {
-            Children.Insert(index, item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            Children.RemoveAt(index);
-        }
-
-        public void Add(FunctionCategory item)
-        {
-            Children.Add(item);
-        }
-
-        public void Clear()
-        {
-            Children.Clear();
-        }
-
-        public bool Contains(FunctionCategory item)
-        {
-            return Children.Contains(item);
-        }
-
-        public void CopyTo(FunctionCategory[] array, int arrayIndex)
-        {
-            Children.CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(FunctionCategory item)
-        {
-            return Children.Remove(item);
-        }
-
-        public IEnumerator<FunctionCategory> GetEnumerator()
-        {
-            return Children.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Children.GetEnumerator();
         }
     }
 }

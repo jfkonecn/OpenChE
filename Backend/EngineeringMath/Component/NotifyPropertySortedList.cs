@@ -67,6 +67,13 @@ namespace EngineeringMath.Component
             _List = list;
         }
 
+        public NotifyPropertySortedList(List<TValue> list)
+        {
+            _Parent = null;
+            _List = new SortedList<string, TValue>();
+            AddRange(list);
+        }
+
         /// <summary>
         /// Used to pointer share with another existing list
         /// </summary>
@@ -156,6 +163,14 @@ namespace EngineeringMath.Component
             _List.Add(item.ToString(), item);
             OnItemAdded(item);
             OnPropertyChanged(nameof(AllOptions));
+        }
+
+        public void AddRange(IEnumerable<TValue> c)
+        {
+            foreach(TValue val in c)
+            {
+                Add(val);
+            }
         }
 
         public void Clear()
@@ -265,6 +280,8 @@ namespace EngineeringMath.Component
             OnItemRemoved(obj.Value);
             OnPropertyChanged(nameof(AllOptions));
         }
+
+
 
         IEnumerator IEnumerable.GetEnumerator()
         {

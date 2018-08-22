@@ -11,10 +11,7 @@
     <MasterDetailPage.Detail>
         <NavigationPage>
             <x:Arguments>
-                <ContentPage Title="{Binding Name}" BindingContext="{x:Static mathMan:MathManager.AllFunctions}">
-
-                    <Label Text="hello"></Label>
-                </ContentPage>
+                <view:CategoryPage BindingContext="{x:Static mathMan:MathManager.AllFunctions}"/>
             </x:Arguments>
         </NavigationPage>
     </MasterDetailPage.Detail>
