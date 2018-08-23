@@ -322,6 +322,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inputs.
+        /// </summary>
+        public static string Inputs {
+            get {
+                return ResourceManager.GetString("Inputs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Isothermal Compressibility.
         /// </summary>
         public static string IsothermalCompressibility {
@@ -561,6 +570,15 @@ namespace EngineeringMath.Resources {
         public static string Ounces {
             get {
                 return ResourceManager.GetString("Ounces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outputs.
+        /// </summary>
+        public static string Outputs {
+            get {
+                return ResourceManager.GetString("Outputs", resourceCulture);
             }
         }
         

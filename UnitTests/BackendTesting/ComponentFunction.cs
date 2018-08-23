@@ -15,16 +15,16 @@ namespace BackendTesting
         [TestMethod]
         public void CustomFunction()
         {
-            string siArea = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
-            siLength = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
+            string siArea = MathManager.AllUnits.GetCategoryByName(LibraryResources.Area).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
+            siLength = MathManager.AllUnits.GetCategoryByName(LibraryResources.Length).GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI);
             SIUnitParameter areaPara = new SIUnitParameter("x", "a", LibraryResources.Area)
             {
             },
             lenPara = new SIUnitParameter("y", "r", LibraryResources.Length)
             {
             };            
-            lenPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length).GetUnitByFullName(siLength);
-            areaPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area).GetUnitByFullName(siArea);
+            lenPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetItemByFullName(LibraryResources.Length, siLength);
+            areaPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetItemByFullName(LibraryResources.Area, siArea);
             lenPara.BindValue = 10;
 
             Function fun = new Function("Test Function")

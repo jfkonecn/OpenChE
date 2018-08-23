@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -44,6 +45,14 @@ namespace EngineeringMath.Component
                 _Children = value;
                 OnPropertyChanged();
             }
+        }
+
+
+        public T GetItemByFullName(string itemFullName)
+        {
+            return (from item in Children
+                    where item.FullName.Equals(itemFullName)
+                    select item).Single();
         }
 
         public bool TryGetValue(string key, out T value)

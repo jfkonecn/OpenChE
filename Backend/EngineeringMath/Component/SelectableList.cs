@@ -64,6 +64,8 @@ namespace EngineeringMath.Component
 
         public string Name { get; protected set; }
 
+        public string SelectedStr { get { return ItemAtSelectedIndex.ToString(); } }
+
         protected void OnIndexChanged()
         {
             IndexChanged?.Invoke(this, EventArgs.Empty);

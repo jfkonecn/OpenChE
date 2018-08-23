@@ -132,40 +132,37 @@ namespace EngineeringMath.Component
 
         #region Properties
 
-        public List<Parameter> InputParameters
+        public IEnumerable<Parameter> InputParameters
         {
             get
             {
-                return (from para in AllParameters
+                return from para in AllParameters
                        where para.CurrentState == ParameterState.Input
                        orderby para.ToString()
-                       select para)
-                       .ToList();
+                       select para;
             }
         }
 
-        public List<Parameter> OutputParameters
+        public IEnumerable<Parameter> OutputParameters
         {
             get
             {
-                return (from para in AllParameters
+                return from para in AllParameters
                         where para.CurrentState == ParameterState.Output
                         orderby para.ToString()
-                        select para)
-                       .ToList();
+                        select para;
             }
         }
 
 
-        public List<ISetting> ActiveSettings
+        public IEnumerable<ISetting> ActiveSettings
         {
             get
             {
-                return (from setting in AllSettings
+                return from setting in AllSettings
                         where setting.CurrentState == SettingState.Active
                         orderby setting.ToString()
-                        select setting)
-                       .ToList();
+                        select setting;
             }
         }
 

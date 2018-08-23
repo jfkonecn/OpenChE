@@ -46,7 +46,7 @@ namespace BackendTesting
         [TestMethod]
         public void TemperatureUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Temperature);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Temperature);
             double temp = cat.ConvertUnit(LibraryResources.Kelvin, LibraryResources.Fahrenheit, 373.15);
             Assert.AreEqual(212, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Fahrenheit, LibraryResources.Celsius, temp);
@@ -60,7 +60,7 @@ namespace BackendTesting
         [TestMethod]
         public void EnergyUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Energy);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Energy);
             double temp = cat.ConvertUnit(LibraryResources.Joules, LibraryResources.Kilojoules, 125);
             Assert.AreEqual(0.125, temp);
             temp = cat.ConvertUnit(LibraryResources.Kilojoules, LibraryResources.Kilocalories, temp);
@@ -76,7 +76,7 @@ namespace BackendTesting
         [TestMethod]
         public void LengthUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Length);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Length);
             double temp = cat.ConvertUnit(LibraryResources.Meters, LibraryResources.Feet, 125);
             Assert.AreEqual(410.105, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.Feet, LibraryResources.Inches, temp);
@@ -97,7 +97,7 @@ namespace BackendTesting
         [TestMethod]
         public void MassUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Mass);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Mass);
             double temp = cat.ConvertUnit(LibraryResources.Kilograms, LibraryResources.PoundsMass, 125);
             Assert.AreEqual(275.578, temp, 0.001);
             temp = cat.ConvertUnit(LibraryResources.PoundsMass, LibraryResources.Grams, temp);
@@ -120,7 +120,7 @@ namespace BackendTesting
         [TestMethod]
         public void AreaUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Area);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Area);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                 usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is m2 and USCS is ft2
@@ -133,7 +133,7 @@ namespace BackendTesting
         [TestMethod]
         public void DensityUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Density);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Density);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                     usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is kg/m3 and USCS is lbsm/ft3
@@ -148,7 +148,7 @@ namespace BackendTesting
         [TestMethod]
         public void EnthalpyUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Enthalpy);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Enthalpy);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                     usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is J/kg and USCS is BTU/lbsm
@@ -161,7 +161,7 @@ namespace BackendTesting
         [TestMethod]
         public void EntropyUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Entropy);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Entropy);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                     usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is J/kg and USCS is BTU/lbsm
@@ -174,7 +174,7 @@ namespace BackendTesting
         [TestMethod]
         public void IsothermalCompressibilityUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.IsothermalCompressibility);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.IsothermalCompressibility);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                     usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is 1/Pa and USCS is 1/psi
@@ -187,7 +187,7 @@ namespace BackendTesting
         [TestMethod]
         public void SpecificVolumeUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.SpecificVolume);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.SpecificVolume);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                     usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is m3/kg and USCS is ft3/lbsm
@@ -200,7 +200,7 @@ namespace BackendTesting
         [TestMethod]
         public void PowerUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Power);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Power);
             double temp = cat.ConvertUnit(LibraryResources.Kilowatt, LibraryResources.Watt, 125);
             Assert.AreEqual(125e3, temp);
             temp = cat.ConvertUnit(LibraryResources.Watt, LibraryResources.Horsepower, temp);
@@ -212,7 +212,7 @@ namespace BackendTesting
         [TestMethod]
         public void PressureUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Pressure);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Pressure);
             double temp = cat.ConvertUnit(LibraryResources.Kilopascals, LibraryResources.Pascals, 125);
             Assert.AreEqual(125e3, temp);
             temp = cat.ConvertUnit(LibraryResources.Pascals, LibraryResources.Atmospheres, temp);
@@ -230,7 +230,7 @@ namespace BackendTesting
         [TestMethod]
         public void TimesUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Time);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Time);
             double temp = cat.ConvertUnit(LibraryResources.Seconds, LibraryResources.Milliseconds, 125);
             Assert.AreEqual(125e3, temp);
             temp = cat.ConvertUnit(LibraryResources.Milliseconds, LibraryResources.Minutes, temp);
@@ -248,7 +248,7 @@ namespace BackendTesting
         [TestMethod]
         public void VolumeUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.Volume);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.Volume);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                     usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is m3 and USCS is ft3
@@ -267,7 +267,7 @@ namespace BackendTesting
         [TestMethod]
         public void VolumeExpansivityUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.VolumeExpansivity);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.VolumeExpansivity);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                     usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is 1/K and USCS is 1/R
@@ -280,7 +280,7 @@ namespace BackendTesting
         [TestMethod]
         public void VolumetricFlowRateUnits()
         {
-            UnitCategory cat = MathManager.AllUnits.GetUnitCategoryByName(LibraryResources.VolumetricFlowRate);
+            UnitCategory cat = MathManager.AllUnits.GetCategoryByName(LibraryResources.VolumetricFlowRate);
             string siName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI),
                     usName = cat.GetUnitFullNameByUnitSystem(UnitSystem.Imperial.USCS);
             // SI is 1/K and USCS is 1/R

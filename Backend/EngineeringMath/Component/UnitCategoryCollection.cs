@@ -11,24 +11,6 @@ namespace EngineeringMath.Component
         protected UnitCategoryCollection(string name) : base(name)
         {
         }
-
-
-        public UnitCategory GetUnitCategoryByName(string name)
-        {
-            IEnumerable<Category<Unit>> temp = from cat in AllUnits.Children
-                                       where cat.Name.Equals(name)
-                                       select cat;
-            if (temp.Count() == 0)
-            {
-                throw new UnitCategoryNotFoundException(name);
-            }
-            else if (temp.Count() > 1)
-            {
-                throw new UnitCategoriesWithSameNameException(name);
-            }
-            return (UnitCategory)temp.ElementAt(0);
-        }
-
         
         
 
@@ -45,6 +27,12 @@ namespace EngineeringMath.Component
                 }
                 return _AllUnits;
             }
+        }
+
+        public new UnitCategory GetCategoryByName(string catName)
+        {
+            return (UnitCategory)base.GetCategoryByName(catName);
+
         }
 
         internal static void BuildAllUnits()

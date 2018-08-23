@@ -9,6 +9,8 @@ namespace EngineeringMath.Component
     {
         int SelectedIndex { get; set; }
 
+        string SelectedStr { get; }
+
         IList<string> AllOptions { get; }
 
         SettingState CurrentState { get; }

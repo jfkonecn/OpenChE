@@ -77,6 +77,21 @@ namespace EngineeringMath.Component
             SearchResults = temp;
         }
 
+        public Category<T> GetCategoryByName(string catName)
+        {
+            return (from cat in Children
+                    where cat.Name.Equals(catName)
+                    select cat).Single();
+
+        }
+
+        public T GetItemByFullName(string catName, string itemFullName)
+        {
+            return (from item in GetCategoryByName(catName).Children
+                    where item.FullName.Equals(itemFullName)
+                    select item).Single();
+        }
+
         private string _Name;
         public string Name
         {

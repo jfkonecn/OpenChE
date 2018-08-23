@@ -383,4 +383,10 @@
   <data name="Functions" xml:space="preserve">
     <value>Functions</value>
   </data>
+  <data name="Inputs" xml:space="preserve">
+    <value>Inputs</value>
+  </data>
+  <data name="Outputs" xml:space="preserve">
+    <value>Outputs</value>
+  </data>
 </root>

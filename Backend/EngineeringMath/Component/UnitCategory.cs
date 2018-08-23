@@ -32,8 +32,8 @@ namespace EngineeringMath.Component
 
             for (int i = 0; i < arr.Count(); i++)
             {
-                UnitCategory cat = UnitCategoryCollection.AllUnits.GetUnitCategoryByName(arr[i].CategoryName);
-                Unit baseUnit = cat.GetUnitByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI));
+                UnitCategory cat = UnitCategoryCollection.AllUnits.GetCategoryByName(arr[i].CategoryName) as UnitCategory;
+                Unit baseUnit = cat.GetItemByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI));
                 while (newStack.Count > 0)
                 {
                     oldStack.Push(newStack.Pop());
@@ -152,29 +152,11 @@ namespace EngineeringMath.Component
         /// <returns></returns>
         public double ConvertUnit(string curUnitFullName, string desiredUnitFullName, double curUnitValue)
         {
-            Unit curUnit = GetUnitByFullName(curUnitFullName),
-                desiredUnit = GetUnitByFullName(desiredUnitFullName);
+            Unit curUnit = GetItemByFullName(curUnitFullName),
+                desiredUnit = GetItemByFullName(desiredUnitFullName);
 
             return desiredUnit.ConvertFromBase(curUnit.ConvertToBase(curUnitValue));
         }
-
-        public Unit GetUnitByFullName(string unitFullName)
-        {
-            IEnumerable<Unit> temp = from unit in Children
-                                       where unit.FullName.Equals(unitFullName)
-                                       select unit;
-            if (temp.Count() == 0)
-            {
-                throw new UnitNotFoundException(unitFullName);
-            }
-            else if (temp.Count() > 1)
-            {
-                throw new UnitsWithSameNameException(unitFullName);
-            }
-            return temp.ElementAt(0);
-        }
-
-
 
 
         public string BaseUnitFullName

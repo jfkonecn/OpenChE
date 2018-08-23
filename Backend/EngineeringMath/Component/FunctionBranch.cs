@@ -9,9 +9,7 @@ namespace EngineeringMath.Component
     {
         protected FunctionBranch() : base()
         {
-            Children = new SelectableList<FunctionTreeNode, IParameterContainerNode>(Name, this);
-            Children.ItemAdded += Children_ItemAdded;
-            Children.IndexChanged += Children_IndexChanged;
+            FinishBuilding();
         }
 
         private void Children_IndexChanged(object sender, EventArgs e)
@@ -42,10 +40,19 @@ namespace EngineeringMath.Component
             Parent = parent;
         }
 
-        public FunctionBranch(string name) : this()
+        public FunctionBranch(string name) : base()
         {
             Name = name;
+            FinishBuilding();
         }
+
+        private void FinishBuilding()
+        {
+            Children = new SelectableList<FunctionTreeNode, IParameterContainerNode>(Name, this);
+            Children.ItemAdded += Children_ItemAdded;
+            Children.IndexChanged += Children_IndexChanged;
+        }
+
 
         private SelectableList<FunctionTreeNode, IParameterContainerNode> _Children;
         public SelectableList<FunctionTreeNode, IParameterContainerNode> Children

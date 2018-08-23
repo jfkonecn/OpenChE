@@ -18,13 +18,17 @@ namespace EngineeringMath.Component
 
 
 
-  
-
-  
 
 
+        public new FunctionCategory GetCategoryByName(string catName)
+        {
+            return (FunctionCategory)base.GetCategoryByName(catName);
 
- 
+        }
+
+
+
+
         private static FunctionCategoryCollection _AllFunctions = null;
         internal static FunctionCategoryCollection AllFunctions
         {

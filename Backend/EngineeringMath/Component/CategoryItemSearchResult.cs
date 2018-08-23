@@ -15,6 +15,10 @@ namespace EngineeringMath.Component
         private readonly T _Item;
 
         public string FullName { get { return _Item.FullName; } }
+        /// <summary>
+        /// Category Name
+        /// </summary>
+        public string CatName { get { return _Item.Parent.Name; } }
 
         public override bool Equals(object obj)
         {

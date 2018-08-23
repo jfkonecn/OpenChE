@@ -6,9 +6,12 @@
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" Margin="20,20,20,0">
             <SearchBar x:Name="SearchBar" Text="{Binding SearchKeyword}" SearchCommand="{Binding Search}" />
-            <ListView ItemsSource="{Binding SearchResults}"
+            <ListView
+                x:Name="CatListView"
+                ItemsSource="{Binding SearchResults}"
                               GroupDisplayBinding="{Binding Name}"
                               IsGroupingEnabled="True"
+                      ItemSelected="CatListView_ItemSelected"
                               >
                 <ListView.ItemTemplate>
                     <DataTemplate>
