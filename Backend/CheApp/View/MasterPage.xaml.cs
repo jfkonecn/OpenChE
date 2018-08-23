@@ -16,6 +16,7 @@ namespace CheApp.View
 		public MasterPage ()
 		{
 			InitializeComponent ();
+            Array.Sort(MasterArray);
 		}
-	}
+    }
 }

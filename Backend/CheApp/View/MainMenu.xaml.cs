@@ -26,10 +26,9 @@ namespace CheApp.View
             var item = e.SelectedItem as MasterPageItem;
             if (item != null)
             {
-                Detail = new NavigationPage((Page)Activator.CreateInstance(item.TargetType))
-                {
-                    BindingContext = item.BindingContext
-                };
+                Page temp = (Page)Activator.CreateInstance(item.TargetType);
+                temp.BindingContext = item.BindingContext;
+                Detail = temp;
                 masterPage.masterPageList.SelectedItem = null;
                 IsPresented = false;
             }

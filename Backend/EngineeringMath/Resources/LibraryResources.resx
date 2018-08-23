@@ -380,4 +380,7 @@
   <data name="AllUnits" xml:space="preserve">
     <value>All Units</value>
   </data>
+  <data name="Functions" xml:space="preserve">
+    <value>Functions</value>
+  </data>
 </root>

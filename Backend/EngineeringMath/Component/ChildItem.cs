@@ -12,5 +12,6 @@ namespace EngineeringMath.Component
     {
         // based on http://www.thomaslevesque.com/2009/06/12/c-parentchild-relationship-and-xml-serialization/
         public abstract P Parent { get; internal set; }
+
     }
 }

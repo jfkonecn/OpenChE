@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace CheApp.ViewModel
 {
-    public class MasterPageItem
+    public class MasterPageItem : IComparable
     {
 
         public string Title { get; set; }
@@ -15,5 +15,13 @@ namespace CheApp.ViewModel
 
         public object BindingContext { get; set; }
 
+        public int CompareTo(object obj)
+        {
+            if(obj is MasterPageItem item)
+            {
+                return -item.Title.CompareTo(Title);
+            }
+            return 1;
+        }
     }
 }

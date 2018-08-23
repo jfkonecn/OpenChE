@@ -18,7 +18,13 @@ namespace EngineeringMath.Component
             SearchFunction,
             CanSearch
             );
-            SearchResults = this;
+            Children.ItemAdded += Children_ItemAdded;
+            
+        }
+
+        private void Children_ItemAdded(object sender, ItemEventArgs<Category<T>> e)
+        {
+            Search.Execute(null);
         }
 
         private bool CanSearch(object parameter)
@@ -28,32 +34,46 @@ namespace EngineeringMath.Component
 
         private void SearchFunction(object parameter)
         {
-            CategoryCollection<T> temp = new CategoryCollection<T>(Name)
+
+            SortedSet<CategorySearchResult<T>> temp = new SortedSet<CategorySearchResult<T>>();
+            IEnumerable<Category<T>> catResults = 
+                from cat in Children
+                where cat.Name.ToLower().Contains(SearchKeyword.ToLower())    
+                select cat;
+
+
+            foreach (Category<T> cat in catResults)
             {
-
-            };
-
-            IEnumerable<Category<T>> results = from cat in Children
-                                                       where cat.Name.ToLower().Contains(SearchKeyword.ToLower())
-                                                       select cat;
-
-            foreach (Category<T> cat in results)
-            {
-                temp.Children.Add(cat);
+                CategorySearchResult<T> catSearchObj = new CategorySearchResult<T>(cat);
+                foreach(T item in cat.Children)
+                {
+                    catSearchObj.ItemResults.Add(new CategoryItemSearchResult<T>(item));
+                }
+                temp.Add(catSearchObj);
             }
 
-            results = from cat in Children
-                                               where !temp.Children.Contains(cat)
-                                               from fun in cat.Children
-                                               where fun.FullName.ToLower().Contains(SearchKeyword.ToLower())
-                                               group fun by fun.Parent into newCat
-                                               select new Category<T>(newCat.Key.Name, newCat.Key.IsUserDefined) { Children = new NotifyPropertySortedList<T, Category<T>>(newCat.ToList()) };
-            foreach (Category<T> cat in results)
+            IEnumerable<T> itemResults = from cat in Children
+                                               where !temp.Contains(new CategorySearchResult<T>(cat))
+                                               from item in cat.Children
+                                               where item.FullName.ToLower().Contains(SearchKeyword.ToLower())
+                                               select item;
+            foreach (T item in itemResults)
             {
-
-                temp.Children.Add(cat);
+                CategorySearchResult<T> catSearchObj = null;
+                if (!temp.Contains(new CategorySearchResult<T>(item.Parent)))
+                {
+                    catSearchObj = new CategorySearchResult<T>(item.Parent);
+                    temp.Add(catSearchObj);
+                }
+                else
+                {
+                    catSearchObj = (from obj in temp
+                                    where item.Parent.Name == obj.Name
+                                    select obj).Single();
+                }
+                catSearchObj.ItemResults.Add(new CategoryItemSearchResult<T>(item));
             }
-
+            
             SearchResults = temp;
         }
 
@@ -82,7 +102,10 @@ namespace EngineeringMath.Component
             }
             set
             {
+                if (_SearchKeyword.Equals(value))
+                    return;
                 _SearchKeyword = value;
+                Search.Execute(null);
                 OnPropertyChanged();
             }
         }
@@ -108,9 +131,9 @@ namespace EngineeringMath.Component
         }
 
 
-        private CategoryCollection<T> _SearchResults = null;
+        private SortedSet<CategorySearchResult<T>> _SearchResults = null;
         [XmlIgnore]
-        public CategoryCollection<T> SearchResults
+        public SortedSet<CategorySearchResult<T>> SearchResults
         {
             get
             {

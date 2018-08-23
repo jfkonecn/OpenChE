@@ -11,8 +11,9 @@
     <StackLayout>
         <ListView x:Name="masterPageList" x:FieldModifier="public">
             <ListView.ItemsSource>
-                <x:Array Type="{x:Type local:MasterPageItem}">
+                <x:Array x:Name="MasterArray" Type="{x:Type local:MasterPageItem}">
                     <local:MasterPageItem Title="{x:Static lib:LibraryResources.Units}" TargetType="{x:Type view:CategoryPage}" BindingContext="{x:Static mathMan:MathManager.AllUnits}"/>
+                    <local:MasterPageItem Title="{x:Static lib:LibraryResources.Functions}" TargetType="{x:Type view:CategoryPage}" BindingContext="{x:Static mathMan:MathManager.AllFunctions}"/>
                 </x:Array>
             </ListView.ItemsSource>
             <ListView.ItemTemplate>
