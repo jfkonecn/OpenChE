@@ -21,17 +21,7 @@ namespace EngineeringMath.Component
         {
             Name = name;
         }
-
-        private QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode> _Children;
-        public QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode> Children
-        {
-            get { return _Children; }
-            set
-            {
-                _Children = value;
-                OnPropertyChanged();
-            }
-        }
+        public QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode> Children { get; protected set; }
 
         public override void Calculate()
         {

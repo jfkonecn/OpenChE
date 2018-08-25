@@ -7,8 +7,8 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class Category<T> : ChildItem<CategoryCollection<T>>, IList<T>
-        where T : ChildItem<Category<T>>, ICategoryItem
+    public class Category<T> : NotifyPropertyChangedExtension, IChildItem<CategoryCollection<T>>, IList<T>
+        where T : class, IChildItem<Category<T>>, ICategoryItem
     {
         protected Category() : base()
         {
@@ -64,7 +64,7 @@ namespace EngineeringMath.Component
         private CategoryCollection<T> ParentObject { get; set; }
 
 
-        public override CategoryCollection<T> Parent
+        public CategoryCollection<T> Parent
         {
             get
             {
@@ -79,6 +79,9 @@ namespace EngineeringMath.Component
         public int Count => Children.Count;
 
         public bool IsReadOnly => Children.IsReadOnly;
+
+        CategoryCollection<T> IChildItem<CategoryCollection<T>>.Parent { get => Parent; set => Parent = value; }
+        string IChildItem<CategoryCollection<T>>.Key => Name;
 
         public T this[int index] { get => Children[index]; set => Children[index] = value; }
 

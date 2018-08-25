@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace EngineeringMath.Component
 {
     public class CategoryCollection<T> : NotifyPropertyChangedExtension, IList<Category<T>>
-        where T : ChildItem<Category<T>>, ICategoryItem
+        where T : class, IChildItem<Category<T>>, ICategoryItem
     {
         protected CategoryCollection(string name)
         {

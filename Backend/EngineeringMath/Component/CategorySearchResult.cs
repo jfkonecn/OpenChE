@@ -6,7 +6,7 @@ using System.Text;
 namespace EngineeringMath.Component
 {
     public class CategorySearchResult<T> : NotifyPropertyChangedExtension, IComparable, IEnumerable
-        where T : ChildItem<Category<T>>, ICategoryItem
+        where T : class, IChildItem<Category<T>>, ICategoryItem
     {
         public CategorySearchResult(Category<T> cat)
         {

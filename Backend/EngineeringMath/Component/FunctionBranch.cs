@@ -52,18 +52,7 @@ namespace EngineeringMath.Component
             Children.ItemAdded += Children_ItemAdded;
             Children.IndexChanged += Children_IndexChanged;
         }
-
-
-        private SelectableList<FunctionTreeNode, IParameterContainerNode> _Children;
-        public SelectableList<FunctionTreeNode, IParameterContainerNode> Children
-        {
-            get { return _Children; }
-            set
-            {
-                _Children = value;
-                OnPropertyChanged();
-            }
-        }
+        public SelectableList<FunctionTreeNode, IParameterContainerNode> Children { get; protected set; }
 
         public override void Calculate()
         {

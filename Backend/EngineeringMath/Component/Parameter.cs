@@ -5,8 +5,22 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class Parameter : ChildItem<IParameterContainerNode>
+    public abstract class Parameter : NotifyPropertyChangedExtension, IChildItem<IParameterContainerNode>
     {
+        protected Parameter()
+        {
+
+        }
+
+        public Parameter(string displayName, string varName, double minBaseValue, double maxBaseValue)
+        {
+            MinBaseValue = minBaseValue;
+            MaxBaseValue = maxBaseValue;
+            DisplayName = displayName;
+            VarName = varName;
+        }
+
+
         public abstract string DisplayName { get; protected set; }
 
         public abstract string VarName { get; protected set; }
@@ -17,6 +31,26 @@ namespace EngineeringMath.Component
         public abstract double MaxBaseValue { get; protected set; }
 
         public ParameterState CurrentState { get; internal set; }
+
+        [XmlIgnore]
+        private IParameterContainerNode ParentObject { get; set; }
+
+
+
+        public IParameterContainerNode Parent
+        {
+            get
+            {
+                return this.ParentObject;
+            }
+            internal set
+            {
+                this.ParentObject = value;
+            }
+        }
+        IParameterContainerNode IChildItem<IParameterContainerNode>.Parent { get => Parent; set => Parent = value; }
+
+        string IChildItem<IParameterContainerNode>.Key => VarName;
     }
     
     public enum ParameterState
@@ -30,16 +64,14 @@ namespace EngineeringMath.Component
         where T : IComparable
     {
         protected Parameter()
+            : base()
         {
 
         }
 
-        public Parameter(string displayName, string varName, double minBaseValue, double maxBaseValue)
+        public Parameter(string displayName, string varName, double minBaseValue, double maxBaseValue) :
+            base(displayName, varName, minBaseValue, maxBaseValue)
         {
-            MinBaseValue = minBaseValue;
-            MaxBaseValue = maxBaseValue;
-            DisplayName = displayName;
-            VarName = varName;
         }
 
 
@@ -167,22 +199,7 @@ namespace EngineeringMath.Component
         }
 
 
-        [XmlIgnore]
-        private IParameterContainerNode ParentObject { get; set; }
 
-
-
-        public override IParameterContainerNode Parent
-        {
-            get
-            {
-                return this.ParentObject;
-            }
-            internal set
-            {
-                this.ParentObject = value;
-            }
-        }
         public override string ToString()
         {
             return VarName;

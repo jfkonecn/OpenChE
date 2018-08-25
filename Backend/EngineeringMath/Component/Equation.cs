@@ -9,7 +9,7 @@ using StringMath;
 
 namespace EngineeringMath.Component
 {
-    public class Equation : ChildItem<IParameterContainerLeaf>
+    public class Equation : IChildItem<IParameterContainerLeaf>
     {
 
         public Equation(IParameterContainerLeaf parameters)
@@ -65,7 +65,7 @@ namespace EngineeringMath.Component
         [XmlIgnore]
         private IParameterContainerLeaf ParentObject { get; set; }
 
-        public override IParameterContainerLeaf Parent
+        public IParameterContainerLeaf Parent
         {
             get
             {
@@ -77,5 +77,8 @@ namespace EngineeringMath.Component
             }
         }
 
+        IParameterContainerLeaf IChildItem<IParameterContainerLeaf>.Parent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        string IChildItem<IParameterContainerLeaf>.Key => throw new NotImplementedException();
     }
 }

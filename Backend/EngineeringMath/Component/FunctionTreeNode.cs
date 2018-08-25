@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class FunctionTreeNode : ChildItem<IParameterContainerNode>, IParameterContainerNode
+    public abstract class FunctionTreeNode : IChildItem<IParameterContainerNode>, IParameterContainerNode
     {
         protected FunctionTreeNode()
         {
@@ -21,7 +21,6 @@ namespace EngineeringMath.Component
             protected set
             {
                 _Name = value;
-                OnPropertyChanged();
             }
         }
 
@@ -30,7 +29,7 @@ namespace EngineeringMath.Component
 
 
 
-        public override IParameterContainerNode Parent
+        public IParameterContainerNode Parent
         {
             get
             {
@@ -116,6 +115,11 @@ namespace EngineeringMath.Component
                 OnStateChanged();
             }
         }
+
+        IParameterContainerNode IChildItem<IParameterContainerNode>.Parent { get => Parent; set => Parent = value; }
+
+        string IChildItem<IParameterContainerNode>.Key => Name;
+
         public override string ToString()
         {
             return Name;

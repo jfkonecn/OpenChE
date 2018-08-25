@@ -36,21 +36,7 @@ namespace EngineeringMath.Component
             }
 
         }
-
-        private string _OutputParameterName;
-        public string OutputParameterVarName
-        {
-            get
-            {
-                return _OutputParameterName;
-            }
-            set
-            {
-                _OutputParameterName = value;
-                OnPropertyChanged(nameof(Name));
-                OnPropertyChanged();
-            }
-        }
+        public string OutputParameterVarName { get; set; }
 
         public string EquationExpression { get; set; }
 

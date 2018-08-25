@@ -114,16 +114,6 @@ namespace EngineeringMath.Component
                 }
             }
         }
-
-        private NotifyPropertySortedList<Parameter, IParameterContainerNode> _Parameters;
-        public NotifyPropertySortedList<Parameter, IParameterContainerNode> Parameters
-        {
-            get { return _Parameters; }
-            set
-            {
-                _Parameters = value;
-                OnPropertyChanged();
-            }
-        }
+        public NotifyPropertySortedList<Parameter, IParameterContainerNode> Parameters { get; protected set; }
     }
 }

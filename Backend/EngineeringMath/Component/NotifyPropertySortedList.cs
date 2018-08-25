@@ -7,12 +7,12 @@ namespace EngineeringMath.Component
 {
     // adapted from http://www.thomaslevesque.com/2009/06/12/c-parentchild-relationship-and-xml-serialization/
     /// <summary>
-    /// Creates list of objects sorted by their ToString() method
+    /// Creates list of objects sorted by their Key property
     /// </summary>
     /// <typeparam name="TValue">List item type</typeparam>
     public class NotifyPropertySortedList<TValue, P>: NotifyPropertyChangedExtension,
         IEnumerable<TValue>, ICollection<TValue>, IList<TValue>
-        where TValue : ChildItem<P>
+        where TValue : class, IChildItem<P>
         where P : class
     {
         private readonly P _Parent;
@@ -100,7 +100,7 @@ namespace EngineeringMath.Component
                 index--;
 
             if (index == -1)
-                return new KeyValuePair<string, TValue>(TopValue.ToString(), TopValue);
+                return new KeyValuePair<string, TValue>(TopValue.Key, TopValue);
 
             int i = 0;
             foreach (KeyValuePair<string, TValue> val in _List)
@@ -160,7 +160,7 @@ namespace EngineeringMath.Component
             if (item == null)
                 throw new ArgumentNullException();
             item.Parent = _Parent;
-            _List.Add(item.ToString(), item);
+            _List.Add(item.Key, item);
             OnItemAdded(item);
             OnPropertyChanged(nameof(AllOptions));
         }
@@ -197,7 +197,7 @@ namespace EngineeringMath.Component
 
         public bool TryGetValue(string key, out TValue value)
         {
-            if (TopValue != null && TopValue.ToString().Equals(key))
+            if (TopValue != null && TopValue.Key.Equals(key))
             {
                 value = TopValue;
                 return true;
@@ -213,10 +213,10 @@ namespace EngineeringMath.Component
 
             List<KeyValuePair<string, TValue>> temp = new List<KeyValuePair<string, TValue>>();
             if (TopValue != null)
-                temp.Add(new KeyValuePair<string, TValue>(TopValue.ToString(), TopValue));
+                temp.Add(new KeyValuePair<string, TValue>(TopValue.Key, TopValue));
             foreach (TValue val in array)
             {
-                temp.Add(new KeyValuePair<string, TValue>(val.ToString(), val));
+                temp.Add(new KeyValuePair<string, TValue>(val.Key, val));
             }
             ((ICollection<KeyValuePair<string,TValue>>)_List).CopyTo(temp.ToArray(), arrayIndex);
         }
@@ -257,7 +257,7 @@ namespace EngineeringMath.Component
             }
 
 
-            bool IsRemoved = _List.Remove(item.ToString());
+            bool IsRemoved = _List.Remove(item.Key);
             item.Parent = null;
             OnPropertyChanged(nameof(AllOptions));
             OnItemRemoved(item);
@@ -295,7 +295,7 @@ namespace EngineeringMath.Component
             {
                 if (TopValue != null)
                 {
-                    List<string> temp = new List<string>() { TopValue.ToString() };
+                    List<string> temp = new List<string>() { TopValue.Key };
                     temp.AddRange(_List.Keys);
                     return temp;
                 }

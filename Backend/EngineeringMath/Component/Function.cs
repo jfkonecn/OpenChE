@@ -12,7 +12,7 @@ namespace EngineeringMath.Component
     /// <summary>
     /// Performs an engineering calculation
     /// </summary>
-    public class Function : ChildItem<Category<Function>>, IParameterContainerNode, ICategoryItem
+    public class Function : NotifyPropertyChangedExtension, IChildItem<Category<Function>>, IParameterContainerNode, ICategoryItem
     {
         protected Function()
         {
@@ -258,7 +258,6 @@ namespace EngineeringMath.Component
                     return;
                 if(_NextNode != null)
                 {
-                    _NextNode.PropertyChanged -= NextNode_PropertyChanged;
                     _NextNode.Parent = null;
                 }                    
 
@@ -266,7 +265,6 @@ namespace EngineeringMath.Component
                 if(_NextNode != null)
                 {
                     _NextNode.CurrentState = FunctionTreeNodeState.Active;
-                    _NextNode.PropertyChanged += NextNode_PropertyChanged;
                     _NextNode.Parent = this;
                 }
                 OnPropertyChanged();
@@ -277,7 +275,7 @@ namespace EngineeringMath.Component
         private Category<Function> ParentObject { get; set; }
 
 
-        public override Category<Function> Parent
+        public Category<Function> Parent
         {
             get
             {
@@ -288,6 +286,10 @@ namespace EngineeringMath.Component
                 this.ParentObject = value;
             }
         }
+
+        Category<Function> IChildItem<Category<Function>>.Parent { get => Parent; set => Parent = value; }
+
+        string IChildItem<Category<Function>>.Key => FullName;
 
         #endregion
 
