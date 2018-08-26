@@ -9,16 +9,16 @@ namespace EngineeringMath.Component
     {
         internal CategoryItemSearchResult(T item)
         {
-            _Item = item;
+            Item = item;
         }
 
-        private readonly T _Item;
+        public T Item { get; }
 
-        public string FullName { get { return _Item.FullName; } }
+        public string FullName { get { return Item.FullName; } }
         /// <summary>
         /// Category Name
         /// </summary>
-        public string CatName { get { return _Item.Parent.Name; } }
+        public string CatName { get { return Item.Parent.Name; } }
 
         public override bool Equals(object obj)
         {

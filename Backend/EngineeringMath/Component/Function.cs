@@ -216,13 +216,13 @@ namespace EngineeringMath.Component
 
         private List<Parameter> _AllParameters;
         [XmlIgnore]
-        internal List<Parameter> AllParameters
+        public List<Parameter> AllParameters
         {
             get
             {
                 return _AllParameters;
             }
-            set
+            protected set
             {
                 _AllParameters = value;
                 OnPropertyChanged();

@@ -24,8 +24,9 @@
       <DependentUpon>CategoryPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)View\FunctionPage.xaml.cs">
-      <DependentUpon>FunctionPage.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)View\FunctionPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)View\FunctionPageStackLayout.xaml.cs">
+      <DependentUpon>FunctionPageStackLayout.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)View\MainMenu.xaml.cs">
@@ -36,6 +37,7 @@
       <DependentUpon>MasterPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)View\SettingsFlexLayout.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)View\MainMenu.xaml">
@@ -56,7 +58,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)View\FunctionPage.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)View\FunctionPageStackLayout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>

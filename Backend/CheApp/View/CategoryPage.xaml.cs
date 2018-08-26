@@ -25,7 +25,7 @@ namespace CheApp.View
             {
                 Debug.WriteLine("this is a function");
                 ((ListView)sender).SelectedItem = null;
-                Navigation.PushAsync(new FunctionPage(funResult));
+                Navigation.PushAsync(new FunctionPage(funResult.Item));
             }
             else if(e.SelectedItem is CategoryItemSearchResult<Unit> unit)
             {
