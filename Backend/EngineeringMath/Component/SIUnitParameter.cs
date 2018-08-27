@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class SIUnitParameter : Parameter<double>
+    public class SIUnitParameter : Parameter
     {
         protected SIUnitParameter() : base()
         {
@@ -41,6 +41,7 @@ namespace EngineeringMath.Component
             set
             {
                 _ParameterUnits = value;
+                OnPropertyChanged(nameof(DisplayDetail));
                 OnPropertyChanged();
             }
         }
@@ -60,6 +61,14 @@ namespace EngineeringMath.Component
                 UnitCategory = MathManager.AllUnits.GetCategoryByName(_UnitCategoryName);
                 ParameterUnits = new SelectableList<Unit, Category<Unit>>(VarName, UnitCategory.Children);
                 OnPropertyChanged();
+            }
+        }
+
+        public override string DisplayDetail
+        {
+            get
+            {
+                return $"{BindValue} {ParameterUnits.ItemAtSelectedIndex.Symbol}";
             }
         }
     }

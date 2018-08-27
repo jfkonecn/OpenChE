@@ -700,6 +700,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Solve.
+        /// </summary>
+        public static string Solve {
+            get {
+                return ResourceManager.GetString("Solve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Solve for {0}.
         /// </summary>
         public static string SolveFor {

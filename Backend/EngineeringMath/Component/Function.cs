@@ -16,7 +16,7 @@ namespace EngineeringMath.Component
     {
         protected Function()
         {
-            AllParameters = new List<Parameter>();
+            AllParameters = new List<IParameter>();
             AllSettings = new List<ISetting>();
 
             Solve = new Command(
@@ -85,7 +85,7 @@ namespace EngineeringMath.Component
             NextNode.Calculate();
         }
 
-        public Parameter FindParameter(string paraName)
+        public IParameter FindParameter(string paraName)
         {
             throw new ParameterNotFoundException(paraName);
         }
@@ -93,7 +93,7 @@ namespace EngineeringMath.Component
         public void Reset()
         {
             AllSettings = new List<ISetting>();
-            AllParameters = new List<Parameter>();
+            AllParameters = new List<IParameter>();
             NextNode.BuildLists(AllSettings, AllParameters);
         }
 
@@ -113,17 +113,17 @@ namespace EngineeringMath.Component
             }
         }
 
-        public void ParameterAdded(Parameter parameter)
+        public void ParameterAdded(IParameter parameter)
         {
             AllParameters.Add(parameter);
         }
-        public void ParameterRemoved(Parameter parameter)
+        public void ParameterRemoved(IParameter parameter)
         {
             AllParameters.Remove(parameter);
         }
-        public void ParameterRemoved(IList<Parameter> parameters)
+        public void ParameterRemoved(IList<IParameter> parameters)
         {
-            foreach (Parameter parameter in parameters)
+            foreach (IParameter parameter in parameters)
             {
                 AllParameters.Remove(parameter);
             }
@@ -132,7 +132,7 @@ namespace EngineeringMath.Component
 
         #region Properties
 
-        public IEnumerable<Parameter> InputParameters
+        public IEnumerable<IParameter> InputParameters
         {
             get
             {
@@ -143,7 +143,7 @@ namespace EngineeringMath.Component
             }
         }
 
-        public IEnumerable<Parameter> OutputParameters
+        public IEnumerable<IParameter> OutputParameters
         {
             get
             {
@@ -214,9 +214,9 @@ namespace EngineeringMath.Component
         }
 
 
-        private List<Parameter> _AllParameters;
+        private List<IParameter> _AllParameters;
         [XmlIgnore]
-        public List<Parameter> AllParameters
+        public List<IParameter> AllParameters
         {
             get
             {

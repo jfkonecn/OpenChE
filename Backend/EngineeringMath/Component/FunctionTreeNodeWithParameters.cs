@@ -9,35 +9,35 @@ namespace EngineeringMath.Component
 
         protected FunctionTreeNodeWithParameters() : base()
         {
-            Parameters = new NotifyPropertySortedList<Parameter, IParameterContainerNode>(this);
+            Parameters = new NotifyPropertySortedList<IParameter, IParameterContainerNode>(this);
             Parameters.ItemAdded += Parameters_ItemAdded;
             Parameters.ItemRemoved += Parameters_ItemRemoved;
             Parameters.ItemsCleared += Parameters_ItemsCleared;
         }
 
 
-        private void Parameters_ItemsCleared(object sender, ItemEventArgs<IList<Parameter>> e)
+        private void Parameters_ItemsCleared(object sender, ItemEventArgs<IList<IParameter>> e)
         {
             ParameterRemoved(e.ModifiedItem);
         }
 
-        private void Parameters_ItemRemoved(object sender, ItemEventArgs<Parameter> e)
+        private void Parameters_ItemRemoved(object sender, ItemEventArgs<IParameter> e)
         {
             ParameterRemoved(e.ModifiedItem);
         }
 
-        public override Parameter FindParameter(string paraVarName)
+        public override IParameter FindParameter(string paraVarName)
         {
-            if (this.Parameters.TryGetValue(paraVarName, out Parameter para))
+            if (this.Parameters.TryGetValue(paraVarName, out IParameter para))
             {
                 return para;
             }
             return base.FindParameter(paraVarName);
         }
 
-        private void Parameters_ItemAdded(object sender, ItemEventArgs<Parameter> e)
+        private void Parameters_ItemAdded(object sender, ItemEventArgs<IParameter> e)
         {
-            Parameter para = e.ModifiedItem;
+            IParameter para = e.ModifiedItem;
             switch (CurrentState)
             {
                 case FunctionTreeNodeState.Active:
@@ -78,7 +78,7 @@ namespace EngineeringMath.Component
             base.OnStateChanged();
             if (CurrentState == FunctionTreeNodeState.Active)
             {
-                foreach (Parameter para in Parameters)
+                foreach (IParameter para in Parameters)
                 {
                     if (IsOutput(para.VarName))
                     {
@@ -92,7 +92,7 @@ namespace EngineeringMath.Component
             }
             else if (CurrentState == FunctionTreeNodeState.Inactive)
             {
-                foreach (Parameter para in Parameters)
+                foreach (IParameter para in Parameters)
                 {
                     para.CurrentState = ParameterState.Inactive;
                 }
@@ -108,12 +108,12 @@ namespace EngineeringMath.Component
             base.OnParentChanged();
             if (Parent != null)
             {
-                foreach (Parameter para in Parameters)
+                foreach (IParameter para in Parameters)
                 {
                     Parent.ParameterAdded(para);
                 }
             }
         }
-        public NotifyPropertySortedList<Parameter, IParameterContainerNode> Parameters { get; protected set; }
+        public NotifyPropertySortedList<IParameter, IParameterContainerNode> Parameters { get; protected set; }
     }
 }

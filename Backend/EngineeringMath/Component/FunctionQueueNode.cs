@@ -31,9 +31,9 @@ namespace EngineeringMath.Component
             }
         }
 
-        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
+        public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
         {
-            foreach (Parameter para in this.Parameters)
+            foreach (IParameter para in this.Parameters)
             {
                 parameter.Add(para);
             }

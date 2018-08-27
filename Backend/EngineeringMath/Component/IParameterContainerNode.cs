@@ -11,7 +11,7 @@ namespace EngineeringMath.Component
         /// </summary>
         /// <param name="paraVarName">Name of the parameter</param>
         /// <returns></returns>
-        Parameter FindParameter(string paraVarName);
+        IParameter FindParameter(string paraVarName);
 
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace EngineeringMath.Component
         void SettingRemoved(ISetting setting);
         void SettingRemoved(IList<ISetting> settings);
 
-        void ParameterAdded(Parameter parameter);
-        void ParameterRemoved(Parameter parameter);
-        void ParameterRemoved(IList<Parameter> parameters);
+        void ParameterAdded(IParameter parameter);
+        void ParameterRemoved(IParameter parameter);
+        void ParameterRemoved(IList<IParameter> parameters);
     }
 }

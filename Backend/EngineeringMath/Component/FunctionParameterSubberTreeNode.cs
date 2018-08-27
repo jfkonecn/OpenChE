@@ -27,7 +27,7 @@ namespace EngineeringMath.Component
         /// </summary>
         /// <param name="replacingParameter"></param>
         /// <param name="replacmentFunctions"></param>
-        public FunctionParameterSubberTreeNode(string name, Parameter replacingParameter, params IParameterContainerLeaf[] replacmentFunctions) : this()
+        public FunctionParameterSubberTreeNode(string name, IParameter replacingParameter, params IParameterContainerLeaf[] replacmentFunctions) : this()
         {
             ReplacingParameter = replacingParameter;            
             Name = name;
@@ -100,8 +100,8 @@ namespace EngineeringMath.Component
 
         public string Category { get; protected set; }
 
-        private Parameter _ReplacingParameter;
-        public Parameter ReplacingParameter
+        private IParameter _ReplacingParameter;
+        public IParameter ReplacingParameter
         {
             get
             {
@@ -167,7 +167,7 @@ namespace EngineeringMath.Component
             NextNode.ActivateStates();
         }
 
-        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
+        public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
         {
             MainBranch.BuildLists(settings, parameter);
             NextNode.BuildLists(settings, parameter);
@@ -185,7 +185,7 @@ namespace EngineeringMath.Component
             NextNode.DeactivateStates();
         }
 
-        public override Parameter FindParameter(string paraVarName)
+        public override IParameter FindParameter(string paraVarName)
         {
             if (ReplacingParameter.VarName.Equals(paraVarName))
                 return ReplacingParameter;

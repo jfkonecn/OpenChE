@@ -88,6 +88,11 @@ namespace EngineeringMath.Component
                                 localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 3);
                                 break;
                             case ToPowerOf.One:
+                                if (arr[i].IsInverse)
+                                {
+                                    pwStr = "\u00B9";
+                                }
+                                goto default;
                             default:
                                 localUnitName = string.Copy(curUnit.FullName);
                                 break;

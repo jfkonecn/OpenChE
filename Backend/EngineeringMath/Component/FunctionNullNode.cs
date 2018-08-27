@@ -24,7 +24,7 @@ namespace EngineeringMath.Component
             CurrentState = FunctionTreeNodeState.Active;
         }
 
-        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
+        public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
         {
             return;
         }
@@ -39,7 +39,7 @@ namespace EngineeringMath.Component
             CurrentState = FunctionTreeNodeState.Inactive;
         }
 
-        public override Parameter FindParameter(string paraName)
+        public override IParameter FindParameter(string paraName)
         {
             throw new NotSupportedException();
         }

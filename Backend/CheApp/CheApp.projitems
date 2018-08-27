@@ -37,6 +37,8 @@
       <DependentUpon>MasterPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)View\ParameterPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)View\SettingPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)View\SettingsFlexLayout.cs" />
   </ItemGroup>
   <ItemGroup>

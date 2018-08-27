@@ -59,9 +59,9 @@ namespace EngineeringMath.Component
             Children.ItemAtSelectedIndex.Calculate();
         }
 
-        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
+        public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
         {
-            foreach (Parameter para in this.Parameters)
+            foreach (IParameter para in this.Parameters)
             {
                 parameter.Add(para);
             }
@@ -111,6 +111,8 @@ namespace EngineeringMath.Component
 
         public override bool IsOutput(string parameterName)
         {
+            if (Children.ItemAtSelectedIndex == null)
+                return false;
             return Children.ItemAtSelectedIndex.IsOutput(parameterName);
         }
     }

@@ -4,31 +4,14 @@
              x:Class="CheApp.View.FunctionPageStackLayout"
              FlexLayout.Grow="1"
             >
-    <Label Text="HEADER"
+    <Label
+        x:Name="Header"
                FontSize="Large"
                BackgroundColor="Aqua"
                HorizontalTextAlignment="Center" />
     <Frame>
-        <FlexLayout FlexLayout.Grow="1" Direction="Row" Wrap="Wrap">
-            <BoxView Color="CornflowerBlue"
-             WidthRequest="160"
-             HeightRequest="160"
-             VerticalOptions="Center"
-             HorizontalOptions="Center" 
-             Margin="10"/>
+        <FlexLayout x:Name="Payload" FlexLayout.Grow="1" Direction="Row" Wrap="Wrap" AlignItems="Center">
 
-            <BoxView Color="Red"
-             WidthRequest="160"
-             HeightRequest="160"
-             VerticalOptions="Center"
-             HorizontalOptions="Center" 
-             Margin="10"/>
-            <BoxView Color="CornflowerBlue"
-             WidthRequest="160"
-             HeightRequest="160"
-             VerticalOptions="Center"
-             HorizontalOptions="Center" 
-             Margin="10"/>
         </FlexLayout>
     </Frame>
 

@@ -5,8 +5,10 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class UnitlessParameter : Parameter<double>
+    public class UnitlessParameter : Parameter
     {
+        public override string DisplayDetail => $"{BindValue}";
+
         protected UnitlessParameter() : base()
         {
 

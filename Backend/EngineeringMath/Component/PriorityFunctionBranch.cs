@@ -28,7 +28,7 @@ namespace EngineeringMath.Component
         }
 
 
-        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
+        public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
         {
             NextNode.BuildLists(settings, parameter);
         }

@@ -162,7 +162,6 @@ namespace EngineeringMath.Component
             item.Parent = _Parent;
             _List.Add(item.Key, item);
             OnItemAdded(item);
-            OnPropertyChanged(nameof(AllOptions));
         }
 
         public void AddRange(IEnumerable<TValue> c)
@@ -183,7 +182,6 @@ namespace EngineeringMath.Component
             TopValue = null;
             OnItemsCleared(_List.Values);
             _List.Clear();
-            OnPropertyChanged(nameof(AllOptions));
         }
 
         public bool Contains(TValue item)
@@ -259,7 +257,6 @@ namespace EngineeringMath.Component
 
             bool IsRemoved = _List.Remove(item.Key);
             item.Parent = null;
-            OnPropertyChanged(nameof(AllOptions));
             OnItemRemoved(item);
             return IsRemoved;
         }
@@ -278,7 +275,7 @@ namespace EngineeringMath.Component
             if (obj.Value != null)
                 obj.Value.Parent = null;
             OnItemRemoved(obj.Value);
-            OnPropertyChanged(nameof(AllOptions));
+            
         }
 
 
@@ -289,19 +286,7 @@ namespace EngineeringMath.Component
         }
 
 
-        public IList<string> AllOptions
-        {
-            get
-            {
-                if (TopValue != null)
-                {
-                    List<string> temp = new List<string>() { TopValue.Key };
-                    temp.AddRange(_List.Keys);
-                    return temp;
-                }
-                return _List.Keys;
-            }
-        }
+
 
         protected void OnItemAdded(TValue item)
         {

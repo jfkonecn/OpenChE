@@ -141,22 +141,22 @@ namespace BackendTesting
         {
             bool paramsChecked = false;
             
-            foreach (Parameter para in fun.InputParameters)
+            foreach (IParameter para in fun.InputParameters)
             {
                 para.BaseUnitValue = paramValues[para.DisplayName];
             }
-            foreach(Parameter para in fun.OutputParameters)
+            foreach(IParameter para in fun.OutputParameters)
             {
                 para.BaseUnitValue = double.NaN;
             }
 
             fun.Solve.Execute(null);
-            foreach (Parameter para in fun.InputParameters)
+            foreach (IParameter para in fun.InputParameters)
             {
                 Assert.AreEqual(paramValues[para.DisplayName], para.BaseUnitValue, 1e-3);
                 paramsChecked = true;
             }
-            foreach (Parameter para in fun.OutputParameters)
+            foreach (IParameter para in fun.OutputParameters)
             {
                 Assert.AreEqual(paramValues[para.DisplayName], para.BaseUnitValue, 1e-1, $"Output: {para.DisplayName}");
                 paramsChecked = true;

@@ -29,7 +29,7 @@ namespace EngineeringMath.Component
 
         protected List<string> OutputParameterNames { get; set; }
 
-        public override void BuildLists(List<ISetting> settings, List<Parameter> parameter)
+        public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
         {
             return;
         }

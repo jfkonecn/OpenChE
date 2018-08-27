@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class FunctionTreeNode : IChildItem<IParameterContainerNode>, IParameterContainerNode
+    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension, IChildItem<IParameterContainerNode>, IParameterContainerNode, ISettingOption
     {
         protected FunctionTreeNode()
         {
@@ -21,6 +21,7 @@ namespace EngineeringMath.Component
             protected set
             {
                 _Name = value;
+                OnPropertyChanged();
             }
         }
 
@@ -66,7 +67,7 @@ namespace EngineeringMath.Component
 
 
 
-        public virtual Parameter FindParameter(string paraVarName)
+        public virtual IParameter FindParameter(string paraVarName)
         {
             return ParentObject.FindParameter(paraVarName);
         }
@@ -100,7 +101,7 @@ namespace EngineeringMath.Component
             CurrentState = FunctionTreeNodeState.Active;
         }
 
-        public abstract void BuildLists(List<ISetting> settings, List<Parameter> parameter);
+        public abstract void BuildLists(List<ISetting> settings, List<IParameter> parameter);
 
         private FunctionTreeNodeState _CurrentState = FunctionTreeNodeState.Inactive;
         public FunctionTreeNodeState CurrentState
@@ -144,19 +145,19 @@ namespace EngineeringMath.Component
             Parent.SettingRemoved(settings);
         }
 
-        public void ParameterAdded(Parameter parameter)
+        public void ParameterAdded(IParameter parameter)
         {
             if (Parent == null)
                 return;
             Parent.ParameterAdded(parameter);
         }
-        public void ParameterRemoved(Parameter parameter)
+        public void ParameterRemoved(IParameter parameter)
         {
             if (Parent == null)
                 return;
             Parent.ParameterRemoved(parameter);
         }
-        public void ParameterRemoved(IList<Parameter> parameters)
+        public void ParameterRemoved(IList<IParameter> parameters)
         {
             if (Parent == null)
                 return;
