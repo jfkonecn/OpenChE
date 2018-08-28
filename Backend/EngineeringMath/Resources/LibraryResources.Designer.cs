@@ -592,6 +592,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter a number between {0:G4} and {1:G4}..
+        /// </summary>
+        public static string Placeholder {
+            get {
+                return ResourceManager.GetString("Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pounds-Force per Square Inch.
         /// </summary>
         public static string PoundsForcePerSqIn {

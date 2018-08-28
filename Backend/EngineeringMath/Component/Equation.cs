@@ -29,7 +29,7 @@ namespace EngineeringMath.Component
 
             
 
-            return Evalutate(ParentObject.EquationExpression, (x) => { return ParentObject.FindParameter(x).BaseUnitValue; });
+            return Evalutate(ParentObject.EquationExpression, (x) => { return ParentObject.FindParameter(x).BaseValue; });
         }
 
         /// <summary>

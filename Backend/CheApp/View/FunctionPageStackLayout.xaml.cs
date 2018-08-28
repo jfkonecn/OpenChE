@@ -22,11 +22,11 @@ namespace CheApp.View
 
         public static FunctionPageStackLayout Builder(string header, IEnumerable<ISetting> settings, SettingState state = SettingState.Active)
         {
-            FunctionPageStackLayout page = new FunctionPageStackLayout();
+            FunctionPageStackLayout page = new FunctionPageStackLayout();            
             page.Header.Text = header;
             foreach(ISetting setting in settings)
             {
-                page.Payload.Children.Add(new CustomFrame(setting, state));
+                page.Payload.Children.Add(new CustomButton(setting, state));
             }
             return page;
         }
@@ -37,117 +37,89 @@ namespace CheApp.View
             page.Header.Text = header;
             foreach (IParameter parameter in parameters)
             {
-                page.Payload.Children.Add(new CustomFrame(parameter, state));
+                page.Payload.Children.Add(new CustomButton(parameter, state));
             }
+            page.InvalidateLayout();
             return page;
         }
 
 
-        private class CustomFrame : Frame
+        private class CustomButton : Button
         {
 
-            public CustomFrame(ISetting setting, SettingState state) : this((int)state)
+            public CustomButton(ISetting setting, SettingState state) : this((int)state)
             {
                 BindingContext = setting;
-                SetBinding(CustomFrame.TitleProperty, new Binding(nameof(setting.Name)));
-                SetBinding(CustomFrame.DetailProperty, new Binding(nameof(setting.SelectOptionStr)));
-                SetBinding(CustomFrame.CurrentStateProperty, new Binding(nameof(setting.CurrentState)));
-                Tapped +=(object sender, EventArgs e) => { Navigation.PushAsync(SettingPage.Builder(setting)); };
+                SetBinding(CustomButton.TitleProperty, new Binding(nameof(setting.Name)));
+                SetBinding(CustomButton.DetailProperty, new Binding(nameof(setting.SelectOptionStr)));
+                SetBinding(CustomButton.CurrentStateProperty, new Binding(nameof(setting.CurrentState)));
+                Clicked += (object sender, EventArgs e) => { Navigation.PushAsync(SettingPage.Builder(setting)); };
             }
 
-            public CustomFrame(IParameter para, ParameterState state) : this((int)state)
+            public CustomButton(IParameter para, ParameterState state) : this((int)state)
             {
                 BindingContext = para;
-                SetBinding(CustomFrame.TitleProperty, new Binding(nameof(para.DisplayName)));
-                SetBinding(CustomFrame.DetailProperty, new Binding(nameof(para.DisplayDetail)));
-                SetBinding(CustomFrame.CurrentStateProperty, new Binding(nameof(para.CurrentState)));
-                Tapped += (object sender, EventArgs e) => { Navigation.PushAsync(ParameterPage.Builder(para)); };
+                SetBinding(CustomButton.TitleProperty, new Binding(nameof(para.DisplayName)));
+                SetBinding(CustomButton.DetailProperty, new Binding(nameof(para.DisplayDetail)));
+                SetBinding(CustomButton.CurrentStateProperty, new Binding(nameof(para.CurrentState)));
+                Clicked += (object sender, EventArgs e) => { Navigation.PushAsync(ParameterPage.Builder(para)); };
             }
 
             /// <summary>
             /// 
             /// </summary>
             /// <param name="visibleState">the enum which this Frame should be visible for</param>
-            private CustomFrame(int visibleState)
+            private CustomButton(int visibleState)
             {
                 switch (Device.RuntimePlatform)
                 {
                     case Device.iOS:
                     case Device.Android:
-                        WidthRequest = 100;
-                        HeightRequest = 80;
+
                         Margin = 1;
                         break;
                     case Device.UWP:
-                        WidthRequest = 160;
-                        HeightRequest = 160;
+
                         Margin = 5;
                         break;
                 }
-
-
                 VerticalOptions = LayoutOptions.CenterAndExpand;
                 HorizontalOptions = LayoutOptions.CenterAndExpand;
-                BorderColor = Color.Black;
-                GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Xamarin.Forms.Command(() => { OnTapped(); }) });
                 VisibleState = visibleState;
-                Content = new StackLayout
-                {
-                    VerticalOptions = LayoutOptions.CenterAndExpand,
-                    HorizontalOptions = LayoutOptions.CenterAndExpand,
-                    Children =
-                    {
-                        TitleLabel,
-                        DetailLabel
-                    }
-                };
             }
 
-            private readonly Label TitleLabel = new Label
-            {
-                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label))
-            };
-            private readonly Label DetailLabel = new Label
-            {
-                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label))
-            };
-
-            public event EventHandler Tapped;
-            private void OnTapped()
-            {
-                Tapped?.Invoke(this, EventArgs.Empty);
-            }
+ 
 
             public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), 
-                typeof(string), typeof(CustomFrame), string.Empty, 
+                typeof(string), typeof(CustomButton), string.Empty, 
                 propertyChanged: TitlePropertyChanged);
 
             private static void TitlePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-            {                
-                CustomFrame frame = (CustomFrame)bindable;
-                frame.TitleLabel.Text = (string)newValue;
+            {
+                CustomButton btn = (CustomButton)bindable;
+                btn.Text = $"{(string)newValue}\n{btn.Detail}";
             }
 
             public static readonly BindableProperty DetailProperty = BindableProperty.Create(nameof(Detail), 
-                typeof(string), typeof(CustomFrame), string.Empty,
+                typeof(string), typeof(CustomButton), string.Empty,
                 propertyChanged: DetailPropertyChanged);
             private static void DetailPropertyChanged(BindableObject bindable, object oldValue, object newValue)
             {
-                CustomFrame frame = (CustomFrame)bindable;
-                frame.DetailLabel.Text = (string)newValue;
+                CustomButton btn = (CustomButton)bindable;
+                btn.Text = $"{btn.Title}\n{(string)newValue}";
             }
 
             public static readonly BindableProperty CurrentStateProperty = BindableProperty.Create(nameof(Detail),
-    typeof(int), typeof(CustomFrame), -1,
+    typeof(int), typeof(CustomButton), -1,
     propertyChanged: CurrentStatePropertyChanged);
             private static void CurrentStatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
             {
-                CustomFrame frame = (CustomFrame)bindable;
+                CustomButton frame = (CustomButton)bindable;
                 frame.IsVisible = (int)newValue == frame.VisibleState;
             }
 
             public static readonly BindableProperty VisibleStateProperty = BindableProperty.Create(nameof(Detail),
-typeof(int), typeof(CustomFrame), -1);
+typeof(int), typeof(CustomButton), -1);
 
 
             public string Title

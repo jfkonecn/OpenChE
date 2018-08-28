@@ -26,9 +26,9 @@ namespace CheApp.View
         {
             Picker picker = new Picker()
             {
-                SelectedIndex = 0
+
             };
-            picker.SetBinding(Picker.TitleProperty, new Binding(nameof(ISetting.Name)));
+            //picker.SetBinding(Picker.TitleProperty, new Binding(nameof(ISetting.Name)));
             picker.SetBinding(Picker.SelectedIndexProperty, new Binding(nameof(ISetting.SelectedIndex)));
             picker.SetBinding(Picker.ItemsSourceProperty, new Binding(nameof(ISetting.AllOptions)));
             SetBinding(ContentPage.TitleProperty, new Binding(nameof(ISetting.Name)));

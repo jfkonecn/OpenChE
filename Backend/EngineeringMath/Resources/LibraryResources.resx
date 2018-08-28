@@ -392,4 +392,7 @@
   <data name="Solve" xml:space="preserve">
     <value>Solve</value>
   </data>
+  <data name="Placeholder" xml:space="preserve">
+    <value>Enter a number between {0:G4} and {1:G4}.</value>
+  </data>
 </root>

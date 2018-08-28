@@ -20,11 +20,15 @@ namespace EngineeringMath.Component
 
         protected override double BaseToBindValue(double value)
         {
+            if(ParameterUnits.ItemAtSelectedIndex == null)
+                return value;
             return UnitCategory.ConverterFromSIUnit(ParameterUnits.ItemAtSelectedIndex.FullName, value);
         }
 
         protected override double BindToBaseValue(double value)
         {
+            if (ParameterUnits.ItemAtSelectedIndex == null)
+                return value;
             return UnitCategory.ConverterToSIUnit(ParameterUnits.ItemAtSelectedIndex.FullName, value);
         }
 
@@ -40,13 +44,22 @@ namespace EngineeringMath.Component
             get { return _ParameterUnits; }
             set
             {
+                if (_ParameterUnits != null)
+                    _ParameterUnits.IndexChanged -= _ParameterUnits_IndexChanged;
                 _ParameterUnits = value;
+                _ParameterUnits.IndexChanged += _ParameterUnits_IndexChanged;
                 OnPropertyChanged(nameof(DisplayDetail));
                 OnPropertyChanged();
             }
         }
 
-
+        private void _ParameterUnits_IndexChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(MinBindValue));
+            OnPropertyChanged(nameof(MaxBindValue));
+            OnPropertyChanged(nameof(Placeholder));
+            OnPropertyChanged(nameof(DisplayDetail));
+        }
 
         private string _UnitCategoryName;
         public string UnitCategoryName
@@ -68,7 +81,7 @@ namespace EngineeringMath.Component
         {
             get
             {
-                return $"{BindValue} {ParameterUnits.ItemAtSelectedIndex.Symbol}";
+                return $"{string.Format("{0:G4}",BindValue)} {ParameterUnits.ItemAtSelectedIndex?.Symbol}";
             }
         }
     }

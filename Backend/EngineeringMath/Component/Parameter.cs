@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EngineeringMath.Resources;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -21,6 +22,7 @@ namespace EngineeringMath.Component
             MaxBaseValue = maxBaseValue;
             DisplayName = displayName;
             VarName = varName;
+            _BaseValue = MinBaseValue <= 0 ? 0 : MinBaseValue;
         }
 
 
@@ -30,19 +32,12 @@ namespace EngineeringMath.Component
 
 
 
-
-
-
-
-
-
-
         private double _BaseValue = double.NaN;
         /// <summary>
         /// Used to get value from this parameter for functions
         /// </summary>
         [XmlIgnore]
-        public double BaseUnitValue
+        public double BaseValue
         {
             get { return _BaseValue; }
             set
@@ -56,10 +51,20 @@ namespace EngineeringMath.Component
                 // call _BindValue to prevent stack overflow
                 _BindValue = BaseToBindValue(_BaseValue);
                 OnPropertyChanged(nameof(BindValue));
+                OnPropertyChanged(nameof(DisplayDetail));
             }
         }
 
-        private double _BindValue = default(double);
+
+        public string Placeholder
+        {
+            get
+            {
+                return string.Format(LibraryResources.Placeholder, MinBindValue, MaxBindValue);
+            }
+        }
+
+        private double _BindValue;
         /// <summary>
         /// Value the user sees and may change
         /// </summary>
@@ -70,9 +75,9 @@ namespace EngineeringMath.Component
             set
             {
                 double num = value;
-                if (num.Equals(default(double)) || num.CompareTo(MaxBaseValue) > 0 || num.CompareTo(MinBindValue) < 0)
+                if (num > MaxBindValue || num < MinBaseValue)
                 {
-                    num = default(double);
+                    num = double.NaN;
                 }
 
                 _BindValue = num;

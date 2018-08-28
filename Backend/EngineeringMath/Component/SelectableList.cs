@@ -70,6 +70,10 @@ namespace EngineeringMath.Component
             }
             set
             {
+                if (SelectedIndex < 0 || SelectedIndex >= _List.Count)
+                {
+                    return;
+                }
                 for (int i = 0; i < this.Count; i++)
                 {
                     if (this[i].Equals(value))

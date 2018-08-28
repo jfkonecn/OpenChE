@@ -9,8 +9,8 @@
                FontSize="Large"
                BackgroundColor="Aqua"
                HorizontalTextAlignment="Center" />
-    <Frame>
-        <FlexLayout x:Name="Payload" FlexLayout.Grow="1" Direction="Row" Wrap="Wrap" AlignItems="Center">
+    <Frame BackgroundColor="Transparent" BorderColor="Transparent" HasShadow="False">
+        <FlexLayout x:Name="Payload" Direction="Row" Wrap="Wrap" AlignItems="Start" JustifyContent="SpaceEvenly">
 
         </FlexLayout>
     </Frame>

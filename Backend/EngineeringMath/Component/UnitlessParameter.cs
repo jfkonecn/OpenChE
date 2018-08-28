@@ -7,7 +7,7 @@ namespace EngineeringMath.Component
 {
     public class UnitlessParameter : Parameter
     {
-        public override string DisplayDetail => $"{BindValue}";
+        public override string DisplayDetail => $"{string.Format("{0:G4}", BindValue)}";
 
         protected UnitlessParameter() : base()
         {

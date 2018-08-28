@@ -7,7 +7,7 @@ namespace EngineeringMath.Component
 {
     public interface IParameter : INotifyPropertyChanged, IChildItem<IParameterContainerNode>
     {
-        double BaseUnitValue { get; set; }
+        double BaseValue { get; set; }
 
         double BindValue { get; set; }
 
@@ -16,9 +16,12 @@ namespace EngineeringMath.Component
         string DisplayDetail { get; }
 
         string VarName { get; }
-
+        string Placeholder { get; }
         double MinBaseValue { get; }
         double MaxBaseValue { get; }
+
+        double MinBindValue { get; }
+        double MaxBindValue { get; }
         ParameterState CurrentState { get; set; }
     }
     public enum ParameterState
