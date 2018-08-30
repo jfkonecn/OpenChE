@@ -157,6 +157,14 @@ namespace EngineeringMath.Component
             result = left.FindCommonUnits(right);
             if (result == null)
                 result = right.FindCommonUnits(left);
+            if(result == null && left.Equals(ImperialAndMetric.SI_USCS))
+            {
+                result = ExtractBaselineSystem(left);
+            }
+            else if(result == null && right.Equals(ImperialAndMetric.SI_USCS))
+            {
+                result = ExtractBaselineSystem(right);
+            }
             return result != null;
         }
 

@@ -34,23 +34,25 @@ namespace EngineeringMath.Component
             AbsoluteScaleUnit = true;
             UnitCompositeElement preElement = null;
             double localConvertToBaseFactor = 1;
-            foreach(UnitCompositeElement element in elements)
+            foreach (UnitCompositeElement element in elements)
             {
                 Unit curUnit = element.Unit;
                 if (!UnitSystem.TryToFindCommonUnitSystem(UnitSystem, curUnit.UnitSystem, out UnitSystem temp))
                     throw new UnitSystem.NoCommonUnitSystemFoundException();
+                if (!curUnit.AbsoluteScaleUnit)
+                    throw new NonAbsoluteUnitException();
                 UnitSystem = temp;
                 if (preElement == null)
                 {
-                    if(element.Power < 0)
+                    if (element.Power < 0)
                     {
-                        FullName = $"1 / {element.Unit.FullName}";
+                        FullName = $"1 / {element.FullName}";
                     }
                     else
                     {
-                        FullName = $"{element.Unit.FullName}";
+                        FullName = $"{element.FullName}";
                     }
-                    Symbol = element.UnitSymbol;                    
+                    Symbol = element.UnitSymbol;
                 }
                 else if (element.Power < 0 && preElement.Power >= 0)
                 {
@@ -67,7 +69,7 @@ namespace EngineeringMath.Component
                 preElement = element;
             }
             ConvertToBaseEquation = $"${CurUnitVar} * {localConvertToBaseFactor}";
-            ConvertFromBaseEquation = $"${BaseUnitVar} / {localConvertToBaseFactor}";            
+            ConvertFromBaseEquation = $"${BaseUnitVar} / {localConvertToBaseFactor}";
         }
 
         /// <summary>
@@ -81,10 +83,10 @@ namespace EngineeringMath.Component
             {
                 if (element.Unit is UnitComposite unitComp)
                 {
-                    foreach(UnitCompositeElement subEle in unitComp.BuildUnitElementList())
+                    foreach (UnitCompositeElement subEle in unitComp.BuildUnitElementList())
                     {
-                        elements.Add(new UnitCompositeElement( subEle.Unit, element.Power * subEle.Power));
-                    }                    
+                        elements.Add(new UnitCompositeElement(subEle.Unit, element.Power * subEle.Power));
+                    }
                 }
                 else
                 {
@@ -105,7 +107,7 @@ namespace EngineeringMath.Component
         protected UnitCompositeElement[] LookupUnits { get; set; }
 
 
-
+        public class NonAbsoluteUnitException : ArgumentException { }
 
         /// <summary>
         /// Category of units based on one or more units (ex: enthalpy or Area)
