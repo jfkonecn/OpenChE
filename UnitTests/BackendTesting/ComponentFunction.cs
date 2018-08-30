@@ -27,7 +27,7 @@ namespace BackendTesting
             areaPara.ParameterUnits.ItemAtSelectedIndex = MathManager.AllUnits.GetItemByFullName(LibraryResources.Area, siArea);
             lenPara.BindValue = 10;
 
-            Function fun = new Function("Test Function")
+            Function fun = new Function("Test Function", true)
             {
                 NextNode =
                 new FunctionQueueNode("Hello")

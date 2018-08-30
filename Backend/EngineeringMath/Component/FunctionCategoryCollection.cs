@@ -44,11 +44,11 @@ namespace EngineeringMath.Component
 
         internal static void BuildAllFunctions()
         {
-            _AllFunctions = new FunctionCategoryCollection(LibraryResources.AllFunctions)
+            _AllFunctions = new FunctionCategoryCollection(nameof(LibraryResources.AllFunctions))
             {
-                new FunctionCategory(LibraryResources.FluidDynamics)
+                new FunctionCategory(nameof(LibraryResources.FluidDynamics))
                 {
-                    new Function(LibraryResources.OrificePlate)
+                    new Function(nameof(LibraryResources.OrificePlate))
                     {
                         NextNode = new FunctionBranch(LibraryResources.ChangeOutputs)
                         {

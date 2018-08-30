@@ -155,6 +155,8 @@ namespace EngineeringMath.Component
         public static bool TryToFindCommonUnitSystem(UnitSystem left, UnitSystem right, out UnitSystem result)
         {
             result = left.FindCommonUnits(right);
+            if (result == null)
+                result = right.FindCommonUnits(left);
             return result != null;
         }
 
@@ -170,5 +172,7 @@ namespace EngineeringMath.Component
 
 
         private Func<UnitSystem, UnitSystem> FindCommonUnits { get; set; }
+
+        public class NoCommonUnitSystemFoundException : ArgumentException { }
     }
 }

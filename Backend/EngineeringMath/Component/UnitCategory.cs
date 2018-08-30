@@ -13,134 +13,58 @@ namespace EngineeringMath.Component
     {
         protected UnitCategory() : base()
         {
-           
+
         }
 
         /// <summary>
         /// Use this construtor when you want to make a unit category which is made up of other unit category
         /// NOTE: This construtor uses UnitCategoryCollection.AllUnits so make sure that all referenced units are already in the collection
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">NOTE: assumes name is a property name in LibraryResources if this object is not user defined</param>
         /// <param name="arr"></param>
         /// <param name="isUserDefined"></param>
-        public UnitCategory(string name, CompositeUnitElement[] arr, bool isUserDefined = false) : this(name, isUserDefined)
+        public UnitCategory(string name, UnitCategoryElement[] arr, bool isUserDefined = false) : this(name, isUserDefined)
         {
-            arr = arr.OrderBy(x => x.CategoryName).OrderBy(x => x.IsInverse).ToArray();
+            /*
+             * aditi sharma 2
+             * https://www.geeksforgeeks.org/combinations-from-n-arrays-picking-one-element-from-each-array/
+             */
+            int n = arr.Length;
+            int[] indices = new int[n];
+            for (int i = 0; i < n; i++)
+                indices[i] = 0;
 
-            Stack<UnitContructorContainer> oldStack = new Stack<UnitContructorContainer>();
-            Stack<UnitContructorContainer> newStack = new Stack<UnitContructorContainer>();
-
-            for (int i = 0; i < arr.Count(); i++)
+            while (true)
             {
-                UnitCategory cat = UnitCategoryCollection.AllUnits.GetCategoryByName(arr[i].CategoryName) as UnitCategory;
-                Unit baseUnit = cat.GetItemByFullName(cat.GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI));
-                while (newStack.Count > 0)
+                UnitComposite.UnitCompositeElement[] elements = new UnitComposite.UnitCompositeElement[n];
+                for (int i = 0; i < n; i++)
                 {
-                    oldStack.Push(newStack.Pop());
+                    
+                    elements[i] = new UnitComposite.UnitCompositeElement(arr[i].UnitCategory[indices[i]], arr[i].Power);
                 }
-                UnitContructorContainer oldContainer;
-
-                do
+                try
                 {
-                    if (i != 0)
-                    {
-                        oldContainer = oldStack.Pop();
-                    }
-                    else
-                    {
-                        oldContainer = new UnitContructorContainer();
-                    }
-                    foreach (Unit curUnit in cat.Children)
-                    {
-                        if (i == 0)
-                        {
-                            oldContainer.UnitFullName = string.Empty;
-                            oldContainer.UnitSymbol = string.Empty;
-                            oldContainer.ConvertToBaseFactor = 1;
-                            oldContainer.SysUnit = curUnit.UnitSystem;
-                            oldContainer.IsUserDefined = isUserDefined;
-                        }
+                    Children.Add(new UnitComposite(elements));
+                }
+                catch
+                {
+                    // do nothing
+                }
 
 
-
-                        // don't mix imperial with metric
-                        UnitContructorContainer newContainer = new UnitContructorContainer();
-                        if (!UnitSystem.TryToFindCommonUnitSystem(curUnit.UnitSystem, oldContainer.SysUnit, out newContainer.SysUnit))
-                            continue;
-
-                        double localConvertToBaseFactor = cat.ConvertUnit(baseUnit.FullName, curUnit.FullName, 1);
-
-                        // https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts
-                        string invStr = arr[i].IsInverse ? "\u207B" : string.Empty;
-
-                        string pwStr = string.Empty,
-                            localUnitName = string.Empty;
-                        switch (arr[i].power)
-                        {
-                            case ToPowerOf.Two:
-                                pwStr = "\u00B2";
-                                localUnitName = string.Format(LibraryResources.UnitSquared, curUnit.FullName);
-                                localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 2);
-                                break;
-                            case ToPowerOf.Three:
-                                pwStr = "\u00B3";
-                                localUnitName = string.Format(LibraryResources.UnitCubed, curUnit.FullName);
-                                localConvertToBaseFactor = Math.Pow(localConvertToBaseFactor, 3);
-                                break;
-                            case ToPowerOf.One:
-                                if (arr[i].IsInverse)
-                                {
-                                    pwStr = "\u00B9";
-                                }
-                                goto default;
-                            default:
-                                localUnitName = string.Copy(curUnit.FullName);
-                                break;
-                        }
-
-                        if (arr[i].IsInverse)
-                        {
-                            newContainer.ConvertToBaseFactor = oldContainer.ConvertToBaseFactor * localConvertToBaseFactor;
-                        }
-                        else
-                        {
-                            newContainer.ConvertToBaseFactor = oldContainer.ConvertToBaseFactor / localConvertToBaseFactor;
-                        }
+                int next = n - 1;
+                while (next >= 0 && (indices[next] + 1 >= arr[next].UnitCategory.Count))
+                    next--;
 
 
-                        localUnitName = arr[i].IsInverse ? string.Format(LibraryResources.UnitInversed, localUnitName) : localUnitName;
-                        newContainer.UnitFullName = string.Concat(oldContainer.UnitFullName, oldContainer.UnitFullName.Equals(string.Empty) ? string.Empty : "-", localUnitName);
-                        newContainer.UnitSymbol = string.Concat(oldContainer.UnitSymbol, $"{curUnit.Symbol}{invStr}{pwStr}");
+                if (next < 0)
+                    return;
 
-                        newStack.Push(newContainer);
-                    }
-                } while (oldStack.Count > 0);
+                indices[next]++;
 
-                
+                for (int i = next + 1; i < n; i++)
+                    indices[i] = 0;
             }
-
-
-
-
-
-            while(newStack.Count > 0)
-            {
-                UnitContructorContainer container = newStack.Pop();
-                if (container.SysUnit.Equals(UnitSystem.Metric.SI))
-                {
-                    Children.Add(new Unit(container.UnitFullName, container.UnitSymbol, container.SysUnit, isUserDefined, true));
-                }
-                else
-                {
-                    Children.Add(new Unit(
-                        container.UnitFullName,
-                        container.UnitSymbol, container.ConvertToBaseFactor, container.SysUnit, isUserDefined));
-                }
-                
-            }
-
-
-
         }
 
         public UnitCategory(string name, bool isUserDefined = false) : base(name, isUserDefined)
@@ -227,6 +151,9 @@ namespace EngineeringMath.Component
             return ConvertUnit(GetUnitFullNameByUnitSystem(UnitSystem.Metric.SI), desiredUnitFullName, curValue);
         }
 
+        public bool IsBaseUnit { get; set; }
+
+
         public class NoBaseUnitsException : Exception { }
         public class MoreThanOneBaseUnitException : Exception { }
 
@@ -247,46 +174,49 @@ namespace EngineeringMath.Component
         {
             public UnitsWithSameNameException(string unitName) : base(unitName) { }
         }
-
         /// <summary>
-        /// Used to build a collection of units which have no name, but are made up of several units (ex: enthalpy)
+        /// Category of units based on one or more units (ex: enthalpy or Area)
         /// </summary>
-        public struct CompositeUnitElement
+        public class UnitCategoryElement
         {
+            public UnitCategoryElement()
+            {
+                FinishUp();
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="categoryName">NOTE: assumes categoryName is a property name in LibraryResources if this object is not user defined</param>
+            /// <param name="power"></param>
+            /// <param name="isUserDefined"></param>
+            public UnitCategoryElement(string categoryName, int power, bool isUserDefined = false)
+            {
+                CategoryName = categoryName;
+                Power = power;
+                IsUserDefined = isUserDefined;
+                FinishUp();
+            }
+
+
+            private void FinishUp()
+            {
+                if (!IsUserDefined)
+                    CategoryName = (string)typeof(LibraryResources).GetProperty(CategoryName).GetValue(null, null);
+                UnitCategory = MathManager.AllUnits.GetCategoryByName(CategoryName);
+            }
             /// <summary>
             /// Category Name of the type of unit to be used
             /// </summary>
-            public string CategoryName;
+            public string CategoryName { get; protected set; }
             /// <summary>
-            /// The power the predefined unit should be raise to
+            /// The power the unit should be raise to
             /// </summary>
-            public ToPowerOf power;
-            /// <summary>
-            /// true when this unit will be raise to the negative power
-            /// </summary>
-            public bool IsInverse;
-        }
+            public int Power { get; }
 
-        /// <summary>
-        /// Contains all information required to build a unit
-        /// </summary>
-        public struct UnitContructorContainer
-        {
-            public string UnitFullName;
-            public string UnitSymbol;
-            public double ConvertToBaseFactor;
-            public UnitSystem SysUnit;
-            public bool IsUserDefined;
-        }
-
-        /// <summary>
-        /// Used only by the CompositeUnitElement
-        /// </summary>
-        public enum ToPowerOf
-        {
-            One,
-            Two,
-            Three
+            public bool IsUserDefined { get; }
+            [XmlIgnore]
+            public UnitCategory UnitCategory { get; protected set; }
         }
     }
 }

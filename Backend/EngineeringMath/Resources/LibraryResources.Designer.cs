@@ -592,6 +592,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to per.
+        /// </summary>
+        public static string Per {
+            get {
+                return ResourceManager.GetString("Per", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter a number between {0:G4} and {1:G4}..
         /// </summary>
         public static string Placeholder {
@@ -781,15 +790,6 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} Inversed.
-        /// </summary>
-        public static string UnitInversed {
-            get {
-                return ResourceManager.GetString("UnitInversed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Units.
         /// </summary>
         public static string Units {
@@ -804,6 +804,15 @@ namespace EngineeringMath.Resources {
         public static string UnitSquared {
             get {
                 return ResourceManager.GetString("UnitSquared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} to the {1}th power.
+        /// </summary>
+        public static string UnitToTheNthPower {
+            get {
+                return ResourceManager.GetString("UnitToTheNthPower", resourceCulture);
             }
         }
         

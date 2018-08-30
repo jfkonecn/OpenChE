@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EngineeringMath.Resources;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +14,23 @@ namespace EngineeringMath.Component
         protected Category() : base()
         {
             Children = new NotifyPropertySortedList<T, Category<T>>(this);
+            FinishUp();
         }
 
-        public Category(string name, bool isUserDefined = false) : this()
+        public Category(string name, bool isUserDefined = false)
         {
+            Children = new NotifyPropertySortedList<T, Category<T>>(this);
+            LibraryResourceName = isUserDefined ? string.Empty : name;
             Name = name;
-            IsUserDefined = isUserDefined;
+            FinishUp();
         }
+
+        private void FinishUp()
+        {
+            if(!LibraryResourceName.Equals(string.Empty))
+                Name = (string)typeof(LibraryResources).GetProperty(LibraryResourceName).GetValue(null, null);
+        }
+
 
         private string _Name;
         public string Name
@@ -33,7 +44,11 @@ namespace EngineeringMath.Component
         }
 
 
-        public bool IsUserDefined { get; set; }
+        public bool IsUserDefined { get { return LibraryResourceName.Equals(string.Empty); } }
+        /// <summary>
+        /// If the full name is a reference to LibraryResources then this string will equal the property name
+        /// </summary>
+        internal string LibraryResourceName { get; } = string.Empty;
 
 
         private NotifyPropertySortedList<T, Category<T>> _Children;

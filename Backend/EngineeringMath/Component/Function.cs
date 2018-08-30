@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using System.Linq;
+using EngineeringMath.Resources;
 
 namespace EngineeringMath.Component
 {
@@ -16,6 +17,8 @@ namespace EngineeringMath.Component
     {
         protected Function()
         {
+            if (!LibraryResourceFullName.Equals(string.Empty))
+                FullName = (string)typeof(LibraryResources).GetProperty(LibraryResourceFullName).GetValue(null, null);
             AllParameters = new List<IParameter>();
             AllSettings = new List<ISetting>();
 
@@ -31,9 +34,10 @@ namespace EngineeringMath.Component
                 return;
         }
 
-        public Function(string fullName) : this()
+        public Function(string fullName, bool isUserDefined = false) : this()
         {
-            FullName = fullName;
+            LibraryResourceFullName = isUserDefined ? string.Empty : fullName;
+            FullName = LibraryResourceFullName.Equals(string.Empty) ? fullName : (string)typeof(LibraryResources).GetProperty(LibraryResourceFullName).GetValue(null, null);
         }
 
 
@@ -270,6 +274,12 @@ namespace EngineeringMath.Component
                 OnPropertyChanged();
             }
         }
+
+        public bool IsUserDefined { get { return LibraryResourceFullName.Equals(string.Empty); } }
+        /// <summary>
+        /// If the full name is a reference to LibraryResources then this string will equal the property name
+        /// </summary>
+        internal string LibraryResourceFullName { get; } = string.Empty;
 
         [XmlIgnore]
         private Category<Function> ParentObject { get; set; }

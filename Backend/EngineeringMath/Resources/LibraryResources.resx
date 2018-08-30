@@ -248,10 +248,6 @@
     <value>{0} Cubed</value>
     <comment>Where {0} is the unit name</comment>
   </data>
-  <data name="UnitInversed" xml:space="preserve">
-    <value>{0} Inversed</value>
-    <comment>Where {0} is the unit name</comment>
-  </data>
   <data name="UnitSquared" xml:space="preserve">
     <value>{0} Squared</value>
     <comment>Where {0} is the unit name</comment>
@@ -394,5 +390,12 @@
   </data>
   <data name="Placeholder" xml:space="preserve">
     <value>Enter a number between {0:G4} and {1:G4}.</value>
+  </data>
+  <data name="UnitToTheNthPower" xml:space="preserve">
+    <value>{0} to the {1}th power</value>
+  </data>
+  <data name="Per" xml:space="preserve">
+    <value>per</value>
+    <comment>As in meters per second</comment>
   </data>
 </root>

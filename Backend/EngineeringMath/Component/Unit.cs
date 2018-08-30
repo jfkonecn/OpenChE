@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EngineeringMath.Resources;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
@@ -10,13 +11,14 @@ namespace EngineeringMath.Component
 
         protected Unit() : base()
         {
-            
+            if (!LibraryResourceFullName.Equals(string.Empty))
+                FullName =(string)typeof(LibraryResources).GetProperty(LibraryResourceFullName).GetValue(null, null);
         }
 
         /// <summary>
         /// Internally used constructor
         /// </summary>
-        /// <param name="fullName">as in meters cubed not as m3</param>
+        /// <param name="fullName">as in meters cubed not as m3 NOTE: assumes fullName is a property name in LibraryResources if this object is not user defined</param>
         /// <param name="symbol">as in m3 not meters cubed</param>
         /// <param name="convertToBaseEquation">        
         /// Equation which converts from this unit into the base unit
@@ -36,20 +38,20 @@ namespace EngineeringMath.Component
             UnitSystem unitSystem,
             bool isBaseUnit,
             bool isUserDefined,
-            bool absoluteScaleUnit) : this()
+            bool absoluteScaleUnit)
         {
             if (unitSystem == Component.UnitSystem.Metric.SI &&
                 !absoluteScaleUnit)
             {
                 throw new UnitSIUnitNotOnAbsoluteScaleException(fullName);
             }
-            FullName = fullName;
+            LibraryResourceFullName = isUserDefined ? string.Empty : fullName;
+            FullName = LibraryResourceFullName.Equals(string.Empty) ? fullName : (string)typeof(LibraryResources).GetProperty(LibraryResourceFullName).GetValue(null, null);
             Symbol = symbol;
             ConvertToBaseEquation = convertToBaseEquation;
             ConvertFromBaseEquation = convertFromBaseEquation;
             UnitSystem = unitSystem;
             IsBaseUnit = isBaseUnit;
-            IsUserDefined = isUserDefined;
             AbsoluteScaleUnit = absoluteScaleUnit;
         }
 
@@ -200,7 +202,12 @@ namespace EngineeringMath.Component
 
         public UnitSystem UnitSystem { get; set; }
         public bool IsBaseUnit { get; set; }
-        public bool IsUserDefined { get; set; }
+        public bool IsUserDefined { get { return LibraryResourceFullName.Equals(string.Empty); } }
+        /// <summary>
+        /// If the full name is a reference to LibraryResources then this string will equal the property name
+        /// </summary>
+        internal string LibraryResourceFullName { get; } = string.Empty;
+
         Category<Unit> IChildItem<Category<Unit>>.Parent { get => Parent; set => Parent = value; }
 
         string IChildItem<Category<Unit>>.Key => FullName;
