@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public interface IParameterContainerNode
+    public interface IParameterContainerNode : IChildItem<IParameterContainerNode>, ISettingOption
     {
         /// <summary>
         /// Finds the parameter with the name, paraVarName
@@ -31,5 +31,9 @@ namespace EngineeringMath.Component
         void ParameterAdded(IParameter parameter);
         void ParameterRemoved(IParameter parameter);
         void ParameterRemoved(IList<IParameter> parameters);
+
+        void ActivateStates();
+        void DeactivateStates();
+        bool IsOutput(string parameterVarName);
     }
 }

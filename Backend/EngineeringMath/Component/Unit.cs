@@ -123,21 +123,24 @@ namespace EngineeringMath.Component
 
 
         [XmlIgnore]
-        private Category<Unit> ParentObject { get; set; }
+        private Category<Unit> _Parent;
 
 
         public Category<Unit> Parent
         {
             get
             {
-                return this.ParentObject;
+                return _Parent;
             }
             internal set
             {
-                this.ParentObject = value;
+                IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
             }
         }
-
+        private void Parent_ParentChanged(object sender, EventArgs e)
+        {
+            OnParentChanged();
+        }
 
         private string _FullName;
         public string FullName
@@ -171,8 +174,12 @@ namespace EngineeringMath.Component
         /// </summary>
         public static readonly string BaseUnitVar = "baseUnit";
 
+        protected void OnParentChanged()
+        {
+            ParentChanged?.Invoke(this, EventArgs.Empty);
+        }
 
-
+        public event EventHandler<EventArgs> ParentChanged;
 
         public double ConvertToBase(double curUnit)
         {

@@ -30,7 +30,7 @@ namespace EngineeringMath.Component
             }
             set
             {
-                if (TopValue.Equals(value))
+                if (value != null && value.Equals(_TopValue))
                     return;
                 foreach(KeyValuePair<string, TValue> pair in _List)
                 {
@@ -41,15 +41,12 @@ namespace EngineeringMath.Component
                     }
                 }
 
-                TopValue = value;
-                if(TopValue == null)
-                {
-                    OnItemRemoved(value);
-                }
-                else
+                OnItemRemoved(_TopValue);
+                if (value != null)
                 {
                     OnItemAdded(value);
                 }
+                _TopValue = value;
                 OnPropertyChanged();
             }
         }

@@ -172,6 +172,13 @@ namespace EngineeringMath.Component
         public abstract string DisplayDetail { get; }
 
         private ParameterState _CurrentState = ParameterState.Inactive;
+
+        public event EventHandler<EventArgs> StateChanged;
+        private void OnStateChanged()
+        {
+            StateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public ParameterState CurrentState
         {
             get
@@ -180,29 +187,44 @@ namespace EngineeringMath.Component
             }
             set
             {
+                if (CurrentState == value)
+                    return;
                 _CurrentState = value;
+                OnStateChanged();
                 OnPropertyChanged();
             }
         }
 
         [XmlIgnore]
-        private IParameterContainerNode ParentObject { get; set; }
-
+        private IParameterContainerNode _Parent;
 
 
         public IParameterContainerNode Parent
         {
             get
             {
-                return this.ParentObject;
+                return _Parent;
             }
             internal set
             {
-                this.ParentObject = value;
+                IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
             }
         }
+        protected virtual void OnParentChanged()
+        {
+            ParentChanged?.Invoke(this, EventArgs.Empty);
+        }
+        private void Parent_ParentChanged(object sender, EventArgs e)
+        {
+            OnParentChanged();
+        }
+        public event EventHandler<EventArgs> ParentChanged;
+
         IParameterContainerNode IChildItem<IParameterContainerNode>.Parent { get => Parent; set => Parent = value; }
 
         string IChildItem<IParameterContainerNode>.Key => VarName;
+        [XmlIgnore]
+        public abstract SelectableList<Unit, Category<Unit>> ParameterUnits { get; protected set; }
+
     }
 }

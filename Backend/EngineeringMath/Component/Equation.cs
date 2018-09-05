@@ -14,8 +14,10 @@ namespace EngineeringMath.Component
 
         public Equation(IParameterContainerLeaf parameters)
         {
-            ParentObject = parameters;
+            Parent = parameters;
         }
+
+        
 
         /// <summary>
         /// Calculates the result of this equation
@@ -24,12 +26,12 @@ namespace EngineeringMath.Component
         /// <exception cref="ArgumentNullException"></exception>
         public double Evaluate()
         {
-            if (ParentObject == null)
+            if (Parent == null)
                 throw new ArgumentNullException();
 
             
 
-            return Evalutate(ParentObject.EquationExpression, (x) => { return ParentObject.FindParameter(x).BaseValue; });
+            return Evalutate(Parent.EquationExpression, (x) => { return Parent.FindParameter(x).BaseValue; });
         }
 
         /// <summary>
@@ -63,20 +65,28 @@ namespace EngineeringMath.Component
 
 
         [XmlIgnore]
-        private IParameterContainerLeaf ParentObject { get; set; }
+        protected IParameterContainerLeaf _Parent;
 
         public IParameterContainerLeaf Parent
         {
             get
             {
-                return this.ParentObject;
+                return _Parent;
             }
             internal set
             {
-                this.ParentObject = value;
+                IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
             }
         }
-
+        protected virtual void OnParentChanged()
+        {
+            ParentChanged?.Invoke(this, EventArgs.Empty);
+        }
+        private void Parent_ParentChanged(object sender, EventArgs e)
+        {
+            OnParentChanged();
+        }
+        public event EventHandler<EventArgs> ParentChanged;
         IParameterContainerLeaf IChildItem<IParameterContainerLeaf>.Parent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         string IChildItem<IParameterContainerLeaf>.Key => throw new NotImplementedException();

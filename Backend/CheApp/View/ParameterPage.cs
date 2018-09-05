@@ -43,19 +43,19 @@ namespace CheApp.View
                     para.BindValue = num;
             };
 
-            if (para is SIUnitParameter siPara)
+            if (para.ParameterUnits != null)
             {
                 Picker unitPicker = new Picker()
                 {
 
                 };
-                int temp = siPara.ParameterUnits.SelectedIndex;
+                int temp = para.ParameterUnits.SelectedIndex;
                 unitPicker.SetBinding(Picker.SelectedIndexProperty, 
-                    new Binding(nameof(siPara.ParameterUnits.SelectedIndex), source: siPara.ParameterUnits));
+                    new Binding(nameof(para.ParameterUnits.SelectedIndex), source: para.ParameterUnits));
                 unitPicker.SetBinding(Picker.ItemsSourceProperty, 
-                    new Binding(nameof(siPara.ParameterUnits.AllOptions), source: siPara.ParameterUnits));
+                    new Binding(nameof(para.ParameterUnits.AllOptions), source: para.ParameterUnits));
                 stack.Children.Add(unitPicker);
-                siPara.ParameterUnits.SelectedIndex = temp;
+                para.ParameterUnits.SelectedIndex = temp;
             }
         }
     }

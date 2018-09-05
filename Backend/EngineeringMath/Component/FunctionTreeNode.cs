@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension, IChildItem<IParameterContainerNode>, IParameterContainerNode, ISettingOption
+    public abstract class FunctionTreeNode : NotifyPropertyChangedExtension, IParameterContainerNode
     {
         protected FunctionTreeNode()
         {
@@ -26,7 +26,7 @@ namespace EngineeringMath.Component
         }
 
         [XmlIgnore]
-        protected IParameterContainerNode ParentObject { get; set; }
+        protected IParameterContainerNode _Parent;
 
 
 
@@ -34,42 +34,37 @@ namespace EngineeringMath.Component
         {
             get
             {
-                return this.ParentObject;
+                return _Parent;
             }
             internal set
             {
-                if (value.Equals(ParentObject))
-                    return;
-
-
-                if (ParentObject is FunctionTreeNode node)
-                {
-                    node.ParentChanged -= Parent_ParentChanged;
-                }
-
-                node = value as FunctionTreeNode;
-                if (node != null)
-                {
-                    node.ParentChanged += Parent_ParentChanged;
-                }
-
-                this.ParentObject = value;
-                OnParentChanged();
+                IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);                
             }
         }
 
+        private void Parent_StateChanged(object sender, EventArgs e)
+        {
+            OnStateChanged();
+        }
 
+        protected virtual void OnParentChanged()
+        {
+            ParentChanged?.Invoke(this, EventArgs.Empty);
+        }
         private void Parent_ParentChanged(object sender, EventArgs e)
         {
             OnParentChanged();
         }
+        public event EventHandler<EventArgs> ParentChanged;
+
+
 
 
 
 
         public virtual IParameter FindParameter(string paraVarName)
         {
-            return ParentObject.FindParameter(paraVarName);
+            return Parent.FindParameter(paraVarName);
         }
 
         public abstract void Calculate();
@@ -172,12 +167,7 @@ namespace EngineeringMath.Component
         public abstract bool IsOutput(string parameterName);
 
 
-        protected virtual void OnParentChanged()
-        {
-            ParentChanged?.Invoke(this, EventArgs.Empty);          
-        }
 
-        public event EventHandler<EventArgs> ParentChanged;
 
 
         protected virtual void OnStateChanged()

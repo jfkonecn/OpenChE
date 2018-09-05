@@ -9,6 +9,18 @@ namespace EngineeringMath.Component
     {
         public override string DisplayDetail => $"{string.Format("{0:G4}", BindValue)}";
 
+        public override SelectableList<Unit, Category<Unit>> ParameterUnits
+        {
+            get
+            {
+                return null;
+            }
+            protected set
+            {
+                return;
+            }
+        }
+
         protected UnitlessParameter() : base()
         {
 

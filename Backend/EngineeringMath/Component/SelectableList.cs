@@ -62,7 +62,7 @@ namespace EngineeringMath.Component
         {
             get
             {
-                if(SelectedIndex < 0 || SelectedIndex >= _List.Count)
+                if(SelectedIndex < 0 || SelectedIndex >= this.Count)
                 {
                     return null;
                 }
@@ -70,7 +70,7 @@ namespace EngineeringMath.Component
             }
             set
             {
-                if (SelectedIndex < 0 || SelectedIndex >= _List.Count)
+                if (SelectedIndex < 0 || SelectedIndex >= this.Count)
                 {
                     return;
                 }
@@ -85,8 +85,21 @@ namespace EngineeringMath.Component
                 throw new ArgumentException(value.ToString());
             }
         }
-
-        public SettingState CurrentState { get; internal set; }
+        private SettingState _CurrentState;
+        public SettingState CurrentState
+        {
+            get
+            {
+                return _CurrentState;
+            }
+            internal set
+            {
+                if (value == _CurrentState)
+                    return;
+                _CurrentState = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string Name { get; protected set; }
 
@@ -101,7 +114,12 @@ namespace EngineeringMath.Component
         {
             get
             {
-                return _List.Select((x) => { return x.Value.Name; }).ToList();
+                List<string> temp = new List<string>();
+                foreach (TValue item in this)
+                {
+                    temp.Add(item.Name);
+                }
+                return temp;
             }
         }
 

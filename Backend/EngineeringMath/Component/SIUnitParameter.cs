@@ -39,10 +39,10 @@ namespace EngineeringMath.Component
 
         private SelectableList<Unit, Category<Unit>> _ParameterUnits;
         [XmlIgnore]
-        public SelectableList<Unit, Category<Unit>> ParameterUnits
+        public override SelectableList<Unit, Category<Unit>> ParameterUnits
         {
             get { return _ParameterUnits; }
-            set
+            protected set
             {
                 if (_ParameterUnits != null)
                     _ParameterUnits.IndexChanged -= _ParameterUnits_IndexChanged;

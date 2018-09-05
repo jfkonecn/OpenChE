@@ -52,6 +52,9 @@ namespace EngineeringMath.Component
 
 
         private NotifyPropertySortedList<T, Category<T>> _Children;
+
+
+
         public NotifyPropertySortedList<T, Category<T>> Children
         {
             get { return _Children; }
@@ -76,20 +79,26 @@ namespace EngineeringMath.Component
         }
 
         [XmlIgnore]
-        private CategoryCollection<T> ParentObject { get; set; }
+        private CategoryCollection<T> _Parent;
 
 
         public CategoryCollection<T> Parent
         {
             get
             {
-                return this.ParentObject;
+                return _Parent;
             }
             internal set
             {
-                this.ParentObject = value;
+                IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value);
             }
         }
+
+        protected virtual void OnParentChanged()
+        {
+            ParentChanged?.Invoke(this, EventArgs.Empty);
+        }
+        public event EventHandler<EventArgs> ParentChanged;
 
         public int Count => Children.Count;
 

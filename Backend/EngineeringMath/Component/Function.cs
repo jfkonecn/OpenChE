@@ -282,24 +282,38 @@ namespace EngineeringMath.Component
         internal string LibraryResourceFullName { get; } = string.Empty;
 
         [XmlIgnore]
-        private Category<Function> ParentObject { get; set; }
+        private Category<Function> _Parent;
 
 
         public Category<Function> Parent
         {
             get
             {
-                return this.ParentObject;
+                return _Parent;
             }
             internal set
             {
-                this.ParentObject = value;
+                IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
             }
+        }
+        protected virtual void OnParentChanged()
+        {
+            ParentChanged?.Invoke(this, EventArgs.Empty);
+        }
+        private void Parent_ParentChanged(object sender, EventArgs e)
+        {
+            OnParentChanged();
         }
 
         Category<Function> IChildItem<Category<Function>>.Parent { get => Parent; set => Parent = value; }
 
         string IChildItem<Category<Function>>.Key => FullName;
+
+        IParameterContainerNode IChildItem<IParameterContainerNode>.Parent { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+        string IChildItem<IParameterContainerNode>.Key => throw new NotSupportedException();
+
+        string ISettingOption.Name => throw new NotSupportedException();
 
         #endregion
 
@@ -313,6 +327,19 @@ namespace EngineeringMath.Component
         public delegate void ErrorEventHandler(object sender, Exception e);
 
         public event EventHandler WasReset;
+        public event EventHandler<EventArgs> ParentChanged;
+
+        event EventHandler<EventArgs> IChildItemEvent.ParentChanged
+        {
+            add
+            {
+                return;
+            }
+            remove
+            {
+                return;
+            }
+        }
         #endregion
 
         public class ParameterNotFoundException : ArgumentException
@@ -326,6 +353,21 @@ namespace EngineeringMath.Component
         public override string ToString()
         {
             return FullName;
+        }
+
+        void IParameterContainerNode.ActivateStates()
+        {
+            throw new NotSupportedException();
+        }
+
+        void IParameterContainerNode.DeactivateStates()
+        {
+            throw new NotSupportedException();
+        }
+
+        bool IParameterContainerNode.IsOutput(string parameterVarName)
+        {
+            throw new NotSupportedException();
         }
     }
 }

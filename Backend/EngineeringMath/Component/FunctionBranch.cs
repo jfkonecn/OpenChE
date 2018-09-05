@@ -17,9 +17,9 @@ namespace EngineeringMath.Component
             OnStateChanged();
         }
 
-        private void Children_ItemAdded(object sender, ItemEventArgs<FunctionTreeNode> e)
+        private void Children_ItemAdded(object sender, ItemEventArgs<IParameterContainerNode> e)
         {
-            FunctionTreeNode node = e.ModifiedItem;
+            IParameterContainerNode node = e.ModifiedItem;
             if (node.Equals(Children.ItemAtSelectedIndex))
             {
                 node.ActivateStates();
@@ -48,11 +48,11 @@ namespace EngineeringMath.Component
 
         private void FinishBuilding()
         {
-            Children = new SelectableList<FunctionTreeNode, IParameterContainerNode>(Name, this);
+            Children = new SelectableList<IParameterContainerNode, IParameterContainerNode>(Name, this);
             Children.ItemAdded += Children_ItemAdded;
             Children.IndexChanged += Children_IndexChanged;
         }
-        public SelectableList<FunctionTreeNode, IParameterContainerNode> Children { get; protected set; }
+        public SelectableList<IParameterContainerNode, IParameterContainerNode> Children { get; protected set; }
 
         public override void Calculate()
         {
@@ -100,6 +100,22 @@ namespace EngineeringMath.Component
             }
         }
 
+        protected override void OnStateChanged()
+        {
+            base.OnStateChanged();
+            for (int i = 0; i < Children.Count; i++)
+            {
+                if (i == Children.SelectedIndex)
+                {
+                    Children[i].ActivateStates();
+                }
+                else
+                {
+                    Children[i].DeactivateStates();
+                }
+            }
+        }
+
         protected override void OnParentChanged()
         {
             base.OnParentChanged();
@@ -109,11 +125,11 @@ namespace EngineeringMath.Component
         }
 
 
-        public override bool IsOutput(string parameterName)
+        public override bool IsOutput(string parameterVarName)
         {
             if (Children.ItemAtSelectedIndex == null)
                 return false;
-            return Children.ItemAtSelectedIndex.IsOutput(parameterName);
+            return Children.ItemAtSelectedIndex.IsOutput(parameterVarName);
         }
     }
 }

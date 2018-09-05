@@ -31,7 +31,7 @@ namespace CheApp.View
                             {
                                 Children =
                                 {
-                                    FunctionPageStackLayout.Builder(LibraryResources.Settings, fun.AllSettings),
+                                    FunctionPageStackLayout.Builder(LibraryResources.Settings, fun.AllSettings, SettingState.Active),
                                     FunctionPageStackLayout.Builder(LibraryResources.Inputs, fun.AllParameters, ParameterState.Input),
                                     FunctionPageStackLayout.Builder(LibraryResources.Outputs, fun.AllParameters, ParameterState.Output)
                                 }
