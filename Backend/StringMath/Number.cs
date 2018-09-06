@@ -30,6 +30,11 @@ namespace StringMath
                     num = new Number(varFinder(matchStr));
                     return true;
                 }
+                else if (HelperFunctions.RegularExpressionParser(@"^\s*PI", ref equationString, out matchStr))
+                {
+                    num = new Number(Math.PI);
+                    return true;
+                }
             }
             num = null;
             return false;

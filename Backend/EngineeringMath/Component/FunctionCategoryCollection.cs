@@ -58,7 +58,7 @@ namespace EngineeringMath.Component
                                 new SIUnitParameter(LibraryResources.Density, "rho", LibraryResources.Density, minSIValue:0),
                                 new ReplaceableParameter(
                                     new SIUnitParameter(LibraryResources.InletPipeArea, "pArea", LibraryResources.Area, minSIValue:0),
-                                    new FunctionLeaf[] { new FunctionLeaf("dia ^ 2 * PI / 4", "#") { Parameters = { new SIUnitParameter("Diameter", "dia", LibraryResources.Length, 0) } } }),
+                                    new FunctionLeaf[] { new FunctionLeaf("$dia ^ 2 * PI / 4", "#") { Parameters = { new SIUnitParameter("Diameter", "dia", LibraryResources.Length, 0) } } }),
                                 new SIUnitParameter(LibraryResources.OrificeArea, "oArea", LibraryResources.Area, minSIValue:0),
                                 new SIUnitParameter(LibraryResources.PressureDrop, "deltaP", LibraryResources.Pressure, minSIValue:0),
                                 new SIUnitParameter(LibraryResources.VolumetricFlowRate, "Q", LibraryResources.VolumetricFlowRate, minSIValue:0)

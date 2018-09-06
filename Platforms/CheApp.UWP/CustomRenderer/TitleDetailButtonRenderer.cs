@@ -7,18 +7,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Xamarin.Forms;
+using XamCtrl = Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
+using WinCtrl = Windows.UI.Xaml.Controls;
 
-[assembly: ExportRenderer(typeof(Xamarin.Forms.Button), typeof(TitleDetailButtonRenderer))]
+[assembly: ExportRenderer(typeof(TitleDetailButton), typeof(TitleDetailButtonRenderer))]
 namespace CheApp.UWP.CustomRenderer
 {
     public class TitleDetailButtonRenderer : ButtonRenderer
     {
-        protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
+
+        protected override void OnElementChanged(ElementChangedEventArgs<XamCtrl.Button> e)
         {
             base.OnElementChanged(e);
-            
+
             if (Control?.Content is string text)
             {
                 var textBlock = new TextBlock

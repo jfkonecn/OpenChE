@@ -11,7 +11,7 @@ namespace CheApp.Controls
     {
         public TitleDetailButton() : base()
         {
-
+            
         }
         public TitleDetailButton(ISetting setting, SettingState state) : this((int)state)
         {

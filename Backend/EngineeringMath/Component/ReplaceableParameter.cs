@@ -146,7 +146,15 @@ namespace EngineeringMath.Component
             }
         }
 
-        public double BaseValue { get => ReplacingParameter.BaseValue; set => ReplacingParameter.BaseValue = value; }
+        public double BaseValue
+        {
+            get
+            {
+                ((IParameterContainerNode)this).Calculate();
+                return ReplacingParameter.BaseValue;
+            }
+            set => ReplacingParameter.BaseValue = value;
+        }
         public double BindValue { get => ReplacingParameter.BindValue; set => ReplacingParameter.BindValue = value; }
 
         public string DisplayName => ReplacingParameter.DisplayName;
@@ -240,10 +248,6 @@ namespace EngineeringMath.Component
             else if (OutputBranch.CurrentState == FunctionTreeNodeState.Active)
             {
                 OutputBranch.Calculate();
-            }
-            else
-            {
-                throw new Exception();
             }
         }
 
