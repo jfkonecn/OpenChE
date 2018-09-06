@@ -69,7 +69,6 @@ namespace EngineeringMath.Component
         public override void ActivateStates()
         {
             CurrentState = FunctionTreeNodeState.Active;
-
         }
 
 

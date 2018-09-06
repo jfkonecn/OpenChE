@@ -17,24 +17,31 @@ namespace EngineeringMath.Component
         private Equation FunctionEquation { get; set;}
 
 
-        public FunctionLeaf(string equationExpression, string outputParameterVarName) : this()
+        public FunctionLeaf(string equationExpression, string outputParameterVarName, string name = "") : this()
         {
             EquationExpression = equationExpression;
             OutputParameterVarName = outputParameterVarName;
+            Name = name;                
         }
 
-
+        private string _Name = string.Empty;
         public override string Name
         {
             get
             {
-                return string.Format(LibraryResources.SolveFor, FindParameter(OutputParameterVarName).DisplayName);
+                if (_Name == "")
+                    return string.Format(LibraryResources.SolveFor, FindParameter(OutputParameterVarName).DisplayName);
+
+                return _Name;
+
             }
             protected set
             {
-                throw new NotSupportedException();
+                if (_Name.Equals(value))
+                    return;
+                _Name = value;
+                OnPropertyChanged();
             }
-
         }
         public string OutputParameterVarName { get; set; }
 

@@ -132,8 +132,8 @@ namespace EngineeringMath.Component
 
             internal UnitCompositeElement(Unit unit, int power)
             {
-                UnitName = unit.IsUserDefined ? unit.FullName : unit.LibraryResourceFullName;
-                UnitCat = unit.Parent.IsUserDefined ? unit.Parent.Name : unit.Parent.LibraryResourceName;
+                UnitName = unit.FullName;
+                UnitCat = unit.Parent.Name;
                 Power = power;
                 UnitIsUserDefined = unit.IsUserDefined;
                 CatIsUserDefined = unit.Parent.IsUserDefined;

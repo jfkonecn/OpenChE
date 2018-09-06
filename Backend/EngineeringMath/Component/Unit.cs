@@ -11,14 +11,13 @@ namespace EngineeringMath.Component
 
         protected Unit() : base()
         {
-            if (!LibraryResourceFullName.Equals(string.Empty))
-                FullName =(string)typeof(LibraryResources).GetProperty(LibraryResourceFullName).GetValue(null, null);
+            
         }
 
         /// <summary>
         /// Internally used constructor
         /// </summary>
-        /// <param name="fullName">as in meters cubed not as m3 NOTE: assumes fullName is a property name in LibraryResources if this object is not user defined</param>
+        /// <param name="fullName">as in meters cubed not as m3</param>
         /// <param name="symbol">as in m3 not meters cubed</param>
         /// <param name="convertToBaseEquation">        
         /// Equation which converts from this unit into the base unit
@@ -45,8 +44,7 @@ namespace EngineeringMath.Component
             {
                 throw new UnitSIUnitNotOnAbsoluteScaleException(fullName);
             }
-            LibraryResourceFullName = isUserDefined ? string.Empty : fullName;
-            FullName = LibraryResourceFullName.Equals(string.Empty) ? fullName : (string)typeof(LibraryResources).GetProperty(LibraryResourceFullName).GetValue(null, null);
+            FullName = fullName;
             Symbol = symbol;
             ConvertToBaseEquation = convertToBaseEquation;
             ConvertFromBaseEquation = convertFromBaseEquation;
@@ -209,11 +207,8 @@ namespace EngineeringMath.Component
 
         public UnitSystem UnitSystem { get; set; }
         public bool IsBaseUnit { get; set; }
-        public bool IsUserDefined { get { return LibraryResourceFullName.Equals(string.Empty); } }
-        /// <summary>
-        /// If the full name is a reference to LibraryResources then this string will equal the property name
-        /// </summary>
-        internal string LibraryResourceFullName { get; } = string.Empty;
+        public bool IsUserDefined { get; }
+
 
         Category<Unit> IChildItem<Category<Unit>>.Parent { get => Parent; set => Parent = value; }
 

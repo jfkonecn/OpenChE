@@ -17,8 +17,6 @@ namespace EngineeringMath.Component
     {
         protected Function()
         {
-            if (!LibraryResourceFullName.Equals(string.Empty))
-                FullName = (string)typeof(LibraryResources).GetProperty(LibraryResourceFullName).GetValue(null, null);
             AllParameters = new List<IParameter>();
             AllSettings = new List<ISetting>();
 
@@ -36,8 +34,8 @@ namespace EngineeringMath.Component
 
         public Function(string fullName, bool isUserDefined = false) : this()
         {
-            LibraryResourceFullName = isUserDefined ? string.Empty : fullName;
-            FullName = LibraryResourceFullName.Equals(string.Empty) ? fullName : (string)typeof(LibraryResources).GetProperty(LibraryResourceFullName).GetValue(null, null);
+            FullName = fullName;
+            IsUserDefined = isUserDefined;
         }
 
 
@@ -119,6 +117,8 @@ namespace EngineeringMath.Component
 
         public void ParameterAdded(IParameter parameter)
         {
+            if (AllParameters.Contains(parameter))
+                return;
             AllParameters.Add(parameter);
         }
         public void ParameterRemoved(IParameter parameter)
@@ -275,11 +275,7 @@ namespace EngineeringMath.Component
             }
         }
 
-        public bool IsUserDefined { get { return LibraryResourceFullName.Equals(string.Empty); } }
-        /// <summary>
-        /// If the full name is a reference to LibraryResources then this string will equal the property name
-        /// </summary>
-        internal string LibraryResourceFullName { get; } = string.Empty;
+        public bool IsUserDefined { get; }
 
         [XmlIgnore]
         private Category<Function> _Parent;

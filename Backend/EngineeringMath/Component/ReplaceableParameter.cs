@@ -11,18 +11,18 @@ namespace EngineeringMath.Component
         public ReplaceableParameter(IParameter parameter, IEnumerable<IParameterContainerLeaf> leaves)
         {
             ReplacingParameter = parameter;
-            InputBranch = new FunctionBranch(string.Format(LibraryResources.ReplaceParameterName, parameter.DisplayName))
+            InputBranch = new FunctionBranch(parameter.DisplayName)
             {
                 Parent = this
             };
-            InputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.DontReplaceParameter, parameter.DisplayName); ;
+            InputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.UseDirectInput, parameter.DisplayName); ;
             InputBranch.Children.IndexChanged += Children_IndexChanged;
 
-            OutputBranch = new FunctionBranch(string.Format(LibraryResources.ReplaceParameterName, parameter.DisplayName))
+            OutputBranch = new FunctionBranch(parameter.DisplayName)
             {
                 Parent = this
             };
-            OutputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.DontReplaceParameter);
+            OutputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.UseDirectOutput);
             OutputBranch.Children.IndexChanged += Children_IndexChanged;
             foreach (IParameterContainerLeaf leaf in leaves)
                 AddReplacementNode(leaf);
@@ -36,6 +36,9 @@ namespace EngineeringMath.Component
             CurrentState = CurrentState;
         }
 
+
+        public static readonly string ReplacingStr = "#";
+
         /// <summary>
         /// Adds a node which either uses ReplacingParameter as an input or an output.
         /// The node must contain all references to other parameters within itself. This node will not be able to see parameters in other nodes.
@@ -44,23 +47,23 @@ namespace EngineeringMath.Component
         /// <param name="node"></param>
         public void AddReplacementNode(IParameterContainerLeaf node)
         {
-            string replacingStr = "#";
+            
 
-            if ((node.EquationExpression.Contains(replacingStr) && node.OutputParameterVarName.Equals(replacingStr)) ||
-                (!node.EquationExpression.Contains(replacingStr) && !node.OutputParameterVarName.Equals(replacingStr))
+            if ((node.EquationExpression.Contains(ReplacingStr) && node.OutputParameterVarName.Equals(ReplacingStr)) ||
+                (!node.EquationExpression.Contains(ReplacingStr) && !node.OutputParameterVarName.Equals(ReplacingStr))
                 )
             {
                 throw new ArgumentException("The expression must be an input XOR output");
             }
 
-            if (node.EquationExpression.Contains(replacingStr))
+            if (node.EquationExpression.Contains(ReplacingStr))
             {
-                node.EquationExpression = node.EquationExpression.Replace(replacingStr, ReplacingParameter.VarName);
+                node.EquationExpression = node.EquationExpression.Replace(ReplacingStr, $"${ReplacingParameter.VarName}");
                 OutputBranch.Children.Add(node);
             }
             else
             {
-                node.OutputParameterVarName = node.OutputParameterVarName.Replace(replacingStr, ReplacingParameter.VarName);
+                node.OutputParameterVarName = node.OutputParameterVarName.Replace(ReplacingStr, ReplacingParameter.VarName);
                 InputBranch.Children.Add(node);
             }
         }

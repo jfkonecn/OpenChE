@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using EngineeringMath.Resources;
 using System.Linq;
+using ReplaceableParaBld = EngineeringMath.Component.Builder.ReplaceableParameterBuilder;
 
 namespace EngineeringMath.Component
 {
@@ -44,11 +45,11 @@ namespace EngineeringMath.Component
 
         internal static void BuildAllFunctions()
         {
-            _AllFunctions = new FunctionCategoryCollection(nameof(LibraryResources.AllFunctions))
+            _AllFunctions = new FunctionCategoryCollection(LibraryResources.AllFunctions)
             {
-                new FunctionCategory(nameof(LibraryResources.FluidDynamics))
+                new FunctionCategory(LibraryResources.FluidDynamics)
                 {
-                    new Function(nameof(LibraryResources.OrificePlate))
+                    new Function(LibraryResources.OrificePlate)
                     {
                         NextNode = new FunctionBranch(LibraryResources.ChangeOutputs)
                         {
@@ -56,10 +57,8 @@ namespace EngineeringMath.Component
                             {
                                 new UnitlessParameter(LibraryResources.DischargeCoefficient, "dc", 0, 1),
                                 new SIUnitParameter(LibraryResources.Density, "rho", LibraryResources.Density, minSIValue:0),
-                                new ReplaceableParameter(
-                                    new SIUnitParameter(LibraryResources.InletPipeArea, "pArea", LibraryResources.Area, minSIValue:0),
-                                    new FunctionLeaf[] { new FunctionLeaf("$dia ^ 2 * PI / 4", "#") { Parameters = { new SIUnitParameter("Diameter", "dia", LibraryResources.Length, 0) } } }),
-                                new SIUnitParameter(LibraryResources.OrificeArea, "oArea", LibraryResources.Area, minSIValue:0),
+                                ReplaceableParaBld.AreaParameter(new SIUnitParameter(LibraryResources.InletPipeArea, "pArea", LibraryResources.Area, minSIValue:0)),
+                                ReplaceableParaBld.AreaParameter(new SIUnitParameter(LibraryResources.OrificeArea, "oArea", LibraryResources.Area, minSIValue:0)),
                                 new SIUnitParameter(LibraryResources.PressureDrop, "deltaP", LibraryResources.Pressure, minSIValue:0),
                                 new SIUnitParameter(LibraryResources.VolumetricFlowRate, "Q", LibraryResources.VolumetricFlowRate, minSIValue:0)
                             },

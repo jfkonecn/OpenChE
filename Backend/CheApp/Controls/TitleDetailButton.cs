@@ -49,9 +49,9 @@ namespace CheApp.Controls
                     Margin = 5;
                     break;
             }
-            CornerRadius = 75;
-            HeightRequest = CornerRadius * 2;
-            WidthRequest = CornerRadius * 2;
+            CornerRadius = 40;
+            HeightRequest = CornerRadius * 4;
+            WidthRequest = CornerRadius * 4;
             VerticalOptions = LayoutOptions.CenterAndExpand;
             HorizontalOptions = LayoutOptions.CenterAndExpand;
             VisibleState = visibleState;
@@ -83,8 +83,8 @@ typeof(int), typeof(TitleDetailButton), -1,
 propertyChanged: CurrentStatePropertyChanged);
         private static void CurrentStatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            TitleDetailButton frame = (TitleDetailButton)bindable;
-            frame.IsVisible = (int)newValue == frame.VisibleState;
+            TitleDetailButton btn = (TitleDetailButton)bindable;
+            btn.IsVisible = (int)newValue == btn.VisibleState;
         }
 
         public static readonly BindableProperty VisibleStateProperty = BindableProperty.Create(nameof(Detail),

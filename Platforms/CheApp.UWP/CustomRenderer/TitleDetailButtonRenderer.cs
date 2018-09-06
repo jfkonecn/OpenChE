@@ -21,16 +21,21 @@ namespace CheApp.UWP.CustomRenderer
         {
             base.OnElementChanged(e);
 
-            if (Control?.Content is string text)
+            if (Control != null)
             {
                 var textBlock = new TextBlock
                 {
-                    Text = text,
                     VerticalAlignment = VerticalAlignment.Center,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = Windows.UI.Xaml.TextAlignment.Center,
-                    TextWrapping = TextWrapping.WrapWholeWords
+                    TextWrapping = TextWrapping.WrapWholeWords,
+                    TextTrimming = TextTrimming.CharacterEllipsis
                 };
+                textBlock.SetBinding(TextBlock.TextProperty,binding: new Windows.UI.Xaml.Data.Binding()
+                {
+                    Source = Element,
+                    Path = new PropertyPath(nameof(Element.Text))
+                });
                 Control.Content = textBlock;
             }
         }

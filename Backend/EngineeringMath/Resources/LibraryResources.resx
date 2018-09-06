@@ -336,9 +336,6 @@
   <data name="DontReplaceParameter" xml:space="preserve">
     <value>Do not replace the parameter with a function</value>
   </data>
-  <data name="ReplaceParameterName" xml:space="preserve">
-    <value>Replace {0} with a function</value>
-  </data>
   <data name="ChangeOutputs" xml:space="preserve">
     <value>Change Output(s)</value>
   </data>
@@ -397,5 +394,20 @@
   <data name="Per" xml:space="preserve">
     <value>per</value>
     <comment>As in meters per second</comment>
+  </data>
+  <data name="Diameter" xml:space="preserve">
+    <value>Diameter</value>
+  </data>
+  <data name="AreaOfCircle" xml:space="preserve">
+    <value>area of a circle</value>
+  </data>
+  <data name="SolveUsingFunction" xml:space="preserve">
+    <value>Solve using {0}</value>
+  </data>
+  <data name="UseDirectInput" xml:space="preserve">
+    <value>Use Direct Input</value>
+  </data>
+  <data name="UseDirectOutput" xml:space="preserve">
+    <value>Use Direct Output</value>
   </data>
 </root>

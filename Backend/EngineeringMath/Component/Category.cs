@@ -14,21 +14,13 @@ namespace EngineeringMath.Component
         protected Category() : base()
         {
             Children = new NotifyPropertySortedList<T, Category<T>>(this);
-            FinishUp();
         }
 
         public Category(string name, bool isUserDefined = false)
         {
             Children = new NotifyPropertySortedList<T, Category<T>>(this);
-            LibraryResourceName = isUserDefined ? string.Empty : name;
+            IsUserDefined = isUserDefined;
             Name = name;
-            FinishUp();
-        }
-
-        private void FinishUp()
-        {
-            if(!LibraryResourceName.Equals(string.Empty))
-                Name = (string)typeof(LibraryResources).GetProperty(LibraryResourceName).GetValue(null, null);
         }
 
 
@@ -44,11 +36,7 @@ namespace EngineeringMath.Component
         }
 
 
-        public bool IsUserDefined { get { return LibraryResourceName.Equals(string.Empty); } }
-        /// <summary>
-        /// If the full name is a reference to LibraryResources then this string will equal the property name
-        /// </summary>
-        internal string LibraryResourceName { get; } = string.Empty;
+        public bool IsUserDefined { get; }
 
 
         private NotifyPropertySortedList<T, Category<T>> _Children;

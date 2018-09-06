@@ -88,6 +88,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to area of a circle.
+        /// </summary>
+        public static string AreaOfCircle {
+            get {
+                return ResourceManager.GetString("AreaOfCircle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Atmospheres.
         /// </summary>
         public static string Atmospheres {
@@ -165,6 +174,15 @@ namespace EngineeringMath.Resources {
         public static string Density {
             get {
                 return ResourceManager.GetString("Density", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diameter.
+        /// </summary>
+        public static string Diameter {
+            get {
+                return ResourceManager.GetString("Diameter", resourceCulture);
             }
         }
         
@@ -664,15 +682,6 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace {0} with a function.
-        /// </summary>
-        public static string ReplaceParameterName {
-            get {
-                return ResourceManager.GetString("ReplaceParameterName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Seconds.
         /// </summary>
         public static string Seconds {
@@ -732,6 +741,15 @@ namespace EngineeringMath.Resources {
         public static string SolveFor {
             get {
                 return ResourceManager.GetString("SolveFor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solve using {0}.
+        /// </summary>
+        public static string SolveUsingFunction {
+            get {
+                return ResourceManager.GetString("SolveUsingFunction", resourceCulture);
             }
         }
         
@@ -831,6 +849,24 @@ namespace EngineeringMath.Resources {
         public static string USCSFullName {
             get {
                 return ResourceManager.GetString("USCSFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Direct Input.
+        /// </summary>
+        public static string UseDirectInput {
+            get {
+                return ResourceManager.GetString("UseDirectInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Direct Output.
+        /// </summary>
+        public static string UseDirectOutput {
+            get {
+                return ResourceManager.GetString("UseDirectOutput", resourceCulture);
             }
         }
         
