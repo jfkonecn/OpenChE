@@ -32,7 +32,7 @@ namespace EngineeringMath.Resources.PVTTables
         {
             if (temperature < MinTemperature || temperature > MaxTemperature ||
                 pressure < MinPressure || pressure > MaxPressure ||
-                (pressure > 10e6 && temperature > 1073.15))
+                (pressure > 50e6 && temperature > 1073.15))
             {
                 return SteamEquationRegion.OutOfRange;
             }
@@ -40,6 +40,10 @@ namespace EngineeringMath.Resources.PVTTables
             if (temperature > (273.15 + 800))
             {
                 return SteamEquationRegion.Region5;
+            }
+            else if(temperature > (600 + 273.15))
+            {
+                return SteamEquationRegion.Region2;
             }
             else if (TryGetSatPressureUsingTemperature(temperature, out double satPressure))
             {
@@ -110,7 +114,7 @@ namespace EngineeringMath.Resources.PVTTables
                 return false;
             }
             double theta = temperature / 1;
-            pressure = (nBoundary34[0] + nBoundary34[1] * theta + nBoundary34[2] * Math.Pow(theta, 2));
+            pressure = (nBoundary34[0] + nBoundary34[1] * theta + nBoundary34[2] * Math.Pow(theta, 2)) * 1e6;
             return true;
         }
 
@@ -197,7 +201,7 @@ namespace EngineeringMath.Resources.PVTTables
 
             double pi = pressure / 1.0e6,
             tau = 540.0 / temperature;
-            return CreateVaporEntry(temperature, pressure, pi, tau, Region2IdealCoefficients, Region2ResidualCoefficients);
+            return CreateVaporEntry(temperature, pressure, pi, tau, Region2IdealCoefficients, Region2ResidualCoefficients, 0.5);
         }
         private readonly RegionCoefficients[] Region2IdealCoefficients = new RegionCoefficients[]
         {
@@ -370,8 +374,8 @@ namespace EngineeringMath.Resources.PVTTables
         private IThermoEntry Region5Equation(double temperature, double pressure)
         {
             double pi = pressure / 1.0e6,
-            tau = 2000 / temperature;
-            return CreateVaporEntry(temperature, pressure, pi, tau, Region5IdealCoefficients, Region5ResidualCoefficients);
+            tau = 1000 / temperature;
+            return CreateVaporEntry(temperature, pressure, pi, tau, Region5IdealCoefficients, Region5ResidualCoefficients, 0);
         }
         private readonly RegionCoefficients[] Region5IdealCoefficients = new RegionCoefficients[]
         {
@@ -393,7 +397,7 @@ namespace EngineeringMath.Resources.PVTTables
         };
         #endregion
         private IThermoEntry CreateVaporEntry(double temperature, double pressure, double pi, double tau, 
-            RegionCoefficients[] idealCoefficients, RegionCoefficients[] residualCoefficients)
+            RegionCoefficients[] idealCoefficients, RegionCoefficients[] residualCoefficients, double tauShift)
         {
             double gamma = Math.Log(pi),
                 gammaPi = 1 / pi,
@@ -410,12 +414,12 @@ namespace EngineeringMath.Resources.PVTTables
             }
             foreach (RegionCoefficients item in residualCoefficients)
             {
-                gamma += item.N * Math.Pow(pi, item.I) * Math.Pow(tau - 0.5, item.J);
-                gammaPi += item.N * item.I * Math.Pow(pi, item.I - 1) * Math.Pow(tau - 0.5, item.J);
-                gammaPiPi += item.N * item.I * (item.I - 1) * Math.Pow(pi, item.I - 2) * Math.Pow(tau - 0.5, item.J);
-                gammaTau += item.N * Math.Pow(pi, item.I) * item.J * Math.Pow(tau - 0.5, item.J - 1);
-                gammaTauTau += item.N * Math.Pow(pi, item.I) * item.J * (item.J - 1) * Math.Pow(tau - 0.5, item.J - 2);
-                gammaPiTau += item.N * item.I * Math.Pow(pi, item.I - 1) * item.J * Math.Pow(tau - 0.5, item.J - 1);
+                gamma += item.N * Math.Pow(pi, item.I) * Math.Pow(tau - tauShift, item.J);
+                gammaPi += item.N * item.I * Math.Pow(pi, item.I - 1) * Math.Pow(tau - tauShift, item.J);
+                gammaPiPi += item.N * item.I * (item.I - 1) * Math.Pow(pi, item.I - 2) * Math.Pow(tau - tauShift, item.J);
+                gammaTau += item.N * Math.Pow(pi, item.I) * item.J * Math.Pow(tau - tauShift, item.J - 1);
+                gammaTauTau += item.N * Math.Pow(pi, item.I) * item.J * (item.J - 1) * Math.Pow(tau - tauShift, item.J - 2);
+                gammaPiTau += item.N * item.I * Math.Pow(pi, item.I - 1) * item.J * Math.Pow(tau - tauShift, item.J - 1);
             }
 
             Region region = Region.Vapor;
@@ -445,8 +449,11 @@ namespace EngineeringMath.Resources.PVTTables
                 entropy = WaterGasConstant * (tau * gammaTau - gamma),
                 isochoricHeatCapacity = WaterGasConstant * (-Math.Pow(-tau, 2) * gammaTauTau + Math.Pow(gammaPi - tau * gammaPiTau, 2) / gammaPiPi),
                 isobaricHeatCapacity = WaterGasConstant * -Math.Pow(-tau, 2) * gammaTauTau,
-                speedOfSound = Math.Sqrt(WaterGasConstant * -Math.Pow(-tau, 2) * gammaTauTau);
-
+                speedOfSound = Math.Sqrt(WaterGasConstant * temperature * 
+                (1 + 2 * pi * gammaPi + Math.Pow(pi, 2) * Math.Pow(gammaPi, 2)) /
+                (1 - Math.Pow(pi, 2) * gammaPiPi + Math.Pow(1 + pi * gammaPi - tau * pi * gammaPiTau, 2) / (Math.Pow(tau, 2) * gammaTauTau)));
+            speedOfSound = Math.Sqrt(WaterGasConstant * temperature * 
+                ((Math.Pow(gammaPi, 2)) / ((Math.Pow(gammaPi - tau * gammaPiTau, 2) / (Math.Pow(tau, 2) * gammaTauTau)) - gammaPiPi)));
             return new ThermoEntry
                 (region, temperature, pressure,
                 specificVolume, internalEnergy, enthalpy,

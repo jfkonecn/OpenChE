@@ -69,6 +69,19 @@ namespace EngineeringMath.Resources.PVTTables
             double speedOfSound,
             double vaporFraction = 0, double liquidFraction = 0, double solidFraction = 0)
         {
+            // if the fraction is set, then we should throw an error to let people know that they made a mistake with the region
+            if (region == Region.Solid && solidFraction == 0)
+            {
+                solidFraction = 1;
+            }
+            else if (region == Region.Liquid && liquidFraction == 0)
+            {
+                liquidFraction = 1;
+            }
+            else if (region == Region.Vapor && vaporFraction == 0)
+            {
+                vaporFraction = 1;
+            }
             ValidateFractions(region, vaporFraction, liquidFraction, solidFraction);
             Region = region;
             VaporFraction = vaporFraction;
@@ -110,6 +123,7 @@ namespace EngineeringMath.Resources.PVTTables
             }
 
             Region temp = region;
+
 
             if(vaporFraction != 0 && liquidFraction != 0 && solidFraction != 0)
             {
