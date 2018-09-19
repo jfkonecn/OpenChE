@@ -11,63 +11,61 @@ namespace EngineeringMath.NumericalMethods.FiniteDifferenceFormulas
         /// <summary>
         /// Truncation Error O(step^2)
         /// </summary>
-        /// <param name="iMinus2">two steps back</param>
-        /// <param name="iMinus1">one step back</param>
-        /// <param name="i">point where the first derivative will be calculated</param>
+        /// <param name="x">The x value where the derivative will be calculated</param>
+        /// <param name="fx">Function which the derivative is being estimated for</param>
         /// <param name="step">the step between the points</param>
         /// <returns></returns>
-        public static double ThreePointBackward(double iMinus2, double iMinus1, double i, double step)
+        public static double ThreePointBackward(double x, Func<double, double> fx,  double step)
         {
-            return (iMinus2 - 4 * iMinus1 + 3 * i) / (2 * step);
+            return (fx(x - 2 * step) - 4 * fx(x - step) + 3 * fx(x)) / (2 * step);
         }
 
         /// <summary>
         /// Truncation Error O(step^2)
         /// </summary>
-        /// <param name="iMinus1">one step back from point where the first derivative will be calculated</param>
-        /// <param name="i1">one step forward from point where the first derivative will be calculated</param>
+        /// <param name="x">The x value where the derivative will be calculated</param>
+        /// <param name="fx">Function which the derivative is being estimated for</param>
         /// <param name="step">the step between the points</param>
         /// <returns></returns>
-        public static double TwoPointCentral(double iMinus1, double i1, double step)
+        public static double TwoPointCentral(double x, Func<double, double> fx, double step)
         {
-            return (i1 - iMinus1) / (2 * step);
+            return (fx(x + step) - fx(x - step)) / (2 * step);
         }
 
         /// <summary>
         /// Truncation Error O(step^2)
         /// </summary>
-        /// <param name="i">point where the first derivative will be calculated</param>
-        /// <param name="i1">one step forward</param>
-        /// <param name="i2">two steps forward</param>
+        /// <param name="x">The x value where the derivative will be calculated</param>
+        /// <param name="fx">Function which the derivative is being estimated for</param>
         /// <param name="step">the step between the points</param>
         /// <returns></returns>
-        public static double ThreePointForward(double i, double i1, double i2, double step)
+        public static double ThreePointForward(double x, Func<double, double> fx, double step)
         {
-            return (-3 * i + 4 * i1 - i2) / (2 * step);
+            return (-3 * fx(x) + 4 * fx(x + step) - fx(x + 2 * step)) / (2 * step);
         }
 
         /// <summary>
         /// Truncation Error O(step)
         /// </summary>
-        /// <param name="iMinus1">one step back from point where the first derivative will be calculated</param>
-        /// <param name="i">point where the first derivative will be calculated</param>
+        /// <param name="x">The x value where the derivative will be calculated</param>
+        /// <param name="fx">Function which the derivative is being estimated for</param>
         /// <param name="step">the step between the points</param>
         /// <returns></returns>
-        public static double TwoPointBackward(double iMinus1, double i, double step)
+        public static double TwoPointBackward(double x, Func<double, double> fx, double step)
         {
-            return (i - iMinus1) / step;
+            return (fx(x) - fx(x - step)) / step;
         }
 
         /// <summary>
         /// Truncation Error O(step)
         /// </summary>
-        /// <param name="i">point where the first derivative will be calculated</param>
-        /// <param name="i1">one step forward from point where the first derivative will be calculated</param>
+        /// <param name="x">The x value where the derivative will be calculated</param>
+        /// <param name="fx">Function which the derivative is being estimated for</param>
         /// <param name="step">the step between the points</param>
         /// <returns></returns>
-        public static double TwoPointForward(double i, double i1, double step)
+        public static double TwoPointForward(double x, Func<double, double> fx, double step)
         {
-            return (i1 - i) / step;
+            return (fx(x + step) - fx(x)) / step;
         }
     }
 }

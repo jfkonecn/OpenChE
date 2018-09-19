@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EngineeringMath.NumericalMethods;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -265,22 +266,17 @@ namespace EngineeringMath.Resources.PVTTables
         #region Region3Support
         private IThermoEntry Region3Equation(double temperature, double pressure)
         {
-            IThermoEntry
-                guess = Region3EquationHelper(temperature, 500);
-            const double maxErr = 1e-6;
-            // use newton's method to converge
-            double totalGuesses = 0;
-            while (Math.Abs(guess.Pressure - pressure) > maxErr && totalGuesses < 1e4)
+            double fx(double x)
             {
-                // used to find derivative of funciton
-                IThermoEntry refPoint = Region3EquationHelper(temperature, guess.Density + 1);
-                double fx = Math.Abs(guess.Pressure - pressure),
-                    fxPrime = (Math.Abs(refPoint.Pressure - pressure) - fx) / (refPoint.Density - guess.Density),
-                    density = guess.Density - fx / fxPrime;
-                guess = Region3EquationHelper(temperature, density);
-                totalGuesses++;
+                IThermoEntry thermoEntry = Region3EquationHelper(temperature, x);
+                if (thermoEntry == null)
+                    return double.NaN;
+                return thermoEntry.Pressure - pressure;
             }
-            return guess;
+            double density = NewtonsMethod.Solve(500, 1, fx);
+            if (double.IsNaN(density))
+                return null;
+            return Region3EquationHelper(temperature, density);
         }
 
         private IThermoEntry Region3EquationHelper(double temperature, double density)
@@ -509,24 +505,96 @@ namespace EngineeringMath.Resources.PVTTables
         public double CriticalTemperature => 647.096;
 
         public double CriticalPressure => 22.06e6;
-        public IThermoEntry GetThermoEntryAtEnthapyAndPressure(double enthalpy, double pressure)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enthalpy"></param>
+        /// <param name="pressure"></param>
+        /// <returns>null if an entry cannot be found</returns>
+        public IThermoEntry GetThermoEntryAtEnthalpyAndPressure(double enthalpy, double pressure)
         {
-            throw new NotImplementedException();
+            double fx(double x)
+            {
+                IThermoEntry thermoEntry = GetThermoEntryAtTemperatureAndPressure(x, pressure);
+                if (thermoEntry == null)
+                    return double.NaN;
+
+                return thermoEntry.Enthalpy- enthalpy;
+            }
+            double temperature = NewtonsMethod.Solve(500, 1, fx);
+            if (double.IsNaN(temperature))
+                return null;
+            return GetThermoEntryAtTemperatureAndPressure(temperature, pressure);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entropy"></param>
+        /// <param name="pressure"></param>
+        /// <returns>null if an entry cannot be found</returns>
         public IThermoEntry GetThermoEntryAtEntropyAndPressure(double entropy, double pressure)
         {
-            throw new NotImplementedException();
+            double fx(double x)
+            {
+                IThermoEntry thermoEntry = GetThermoEntryAtTemperatureAndPressure(x, pressure);
+                if (thermoEntry == null)
+                    return double.NaN;
+                return thermoEntry.Entropy - entropy;
+            }
+            double temperature = NewtonsMethod.Solve(300, 0.001, fx);
+            if (double.IsNaN(temperature))
+                return null;
+            return GetThermoEntryAtTemperatureAndPressure(temperature, pressure);
         }
 
-        public IThermoEntry GetThermoEntryAtSatPressure(double pressure, SaturationRegion phase)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pressure">between 0 and CriticalPressure (in K)</param>
+        /// <param name="phase">cannot be solid</param>
+        /// <returns></returns>
+        public IThermoEntry GetThermoEntryAtSatPressure(double satPressure, SaturationRegion phase)
         {
-            throw new NotImplementedException();
+            if (!TryGetSatTemperatureUsingPressure(satPressure, out double satTemp))
+            {
+                return null;
+            }
+            switch (phase)
+            {
+                case SaturationRegion.Liquid:
+                    return Region1Equation(satTemp, satPressure);
+                case SaturationRegion.Vapor:
+                    return Region2Equation(satTemp, satPressure);
+                case SaturationRegion.Solid:
+                default:
+                    return null;
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="satTemp">Must be between 273.15 and CriticalTemperature (in K)</param>
+        /// <param name="phase"></param>
+        /// <returns>null if out of range</returns>
         public IThermoEntry GetThermoEntryAtSatTemp(double satTemp, SaturationRegion phase)
         {
-            throw new NotImplementedException();
+            if(!TryGetSatPressureUsingTemperature(satTemp, out double satPressure))
+            {
+                return null;
+            }
+            
+            switch (phase)
+            {
+                case SaturationRegion.Liquid:
+                    return Region1Equation(satTemp, satPressure);
+                case SaturationRegion.Solid:
+                    return Region2Equation(satTemp, satPressure);
+                case SaturationRegion.Vapor:
+                default:
+                    return null;
+            }
         }
 
         /// <summary>

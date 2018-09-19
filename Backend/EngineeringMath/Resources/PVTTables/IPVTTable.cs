@@ -44,7 +44,7 @@ namespace EngineeringMath.Resources.PVTTables
         /// <param name="entropy">kJ/(kg*K)</param>
         /// <param name="pressure">Pa</param>
         /// <returns></returns>
-        IThermoEntry GetThermoEntryAtEnthapyAndPressure(double enthalpy, double pressure);
+        IThermoEntry GetThermoEntryAtEnthalpyAndPressure(double enthalpy, double pressure);
         /// <summary>
         /// In K
         /// </summary>
