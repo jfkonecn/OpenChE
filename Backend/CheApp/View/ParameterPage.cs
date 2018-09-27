@@ -1,4 +1,5 @@
-﻿using EngineeringMath.Component;
+﻿using CheApp.Controls;
+using EngineeringMath.Component;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +11,27 @@ namespace CheApp.View
 {
 	public class ParameterPage : ContentPage
 	{
-        public static ParameterPage Builder(IParameter parameter)
+        public static Page Builder(IParameter parameter)
         {
             if(parameter is INumericParameter numPara)
             {
                 return new ParameterPage(numPara);
             }
-
-            return new ParameterPage(null);
+            else if (parameter is IPickerParameter pickPara)
+            {
+                return SettingPage.Builder(pickPara);
+            }
+            return new ParameterPage((IParameter)null);
         }
 
-
-
-        private ParameterPage (INumericParameter para)
-		{
+        private ParameterPage(IParameter para)
+        {
             BindingContext = para;
             SetBinding(ContentPage.TitleProperty, new Binding(nameof(para.DisplayName)));
+        }
+
+        private ParameterPage (INumericParameter para) : this((IParameter)para)
+		{
             StackLayout stack = new StackLayout()
             {
                 Margin = 5
@@ -63,5 +69,7 @@ namespace CheApp.View
                 para.ParameterUnits.SelectedIndex = temp;
             }
         }
+
+
     }
 }

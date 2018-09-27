@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public interface IPickerParameter : IParameter
+    public interface IPickerParameter : IParameter, ISetting
     {
         int SelectedIndex { get; set; }
 
@@ -158,6 +158,10 @@ namespace EngineeringMath.Component
         public string SelectOptionStr { get { return OptionsList.SelectOptionStr; } }
 
         string IChildItem<IParameterContainerNode>.Key => VarName;
+
+        SettingState ISetting.CurrentState => OptionsList.CurrentState;
+
+        string ISetting.Name => DisplayName;
 
         public event EventHandler<EventArgs> StateChanged;
         public event EventHandler<ParentChangedEventArgs> ParentChanged;
