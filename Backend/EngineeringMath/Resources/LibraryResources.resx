@@ -410,4 +410,82 @@
   <data name="UseDirectOutput" xml:space="preserve">
     <value>Use Direct Output</value>
   </data>
+  <data name="Gas" xml:space="preserve">
+    <value>Gas</value>
+  </data>
+  <data name="Liquid" xml:space="preserve">
+    <value>Liquid</value>
+  </data>
+  <data name="LiquidVapor" xml:space="preserve">
+    <value>Liquid Vapor</value>
+  </data>
+  <data name="Solid" xml:space="preserve">
+    <value>Solid</value>
+  </data>
+  <data name="SolidLiquid" xml:space="preserve">
+    <value>Solid Liquid</value>
+  </data>
+  <data name="SolidLiquidVapor" xml:space="preserve">
+    <value>Solid Liquid Vapor</value>
+  </data>
+  <data name="SolidVapor" xml:space="preserve">
+    <value>Solid Vapor</value>
+  </data>
+  <data name="SupercriticalFluid" xml:space="preserve">
+    <value>Supercritical Fluid</value>
+  </data>
+  <data name="Vapor" xml:space="preserve">
+    <value>Vapor</value>
+  </data>
+  <data name="ThermoRegion" xml:space="preserve">
+    <value>Thermodynamic Region</value>
+  </data>
+  <data name="EnthalpyAndPressure" xml:space="preserve">
+    <value>Enthalpy and Pressure</value>
+  </data>
+  <data name="EntropyAndPressure" xml:space="preserve">
+    <value>Entropy and Pressure</value>
+  </data>
+  <data name="FindThermoDataWith" xml:space="preserve">
+    <value>Find thermodynamic data with</value>
+  </data>
+  <data name="InternalEnergy" xml:space="preserve">
+    <value>Internal Energy</value>
+  </data>
+  <data name="IsobaricHeatCapacity" xml:space="preserve">
+    <value>Isobaric Heat Capacity</value>
+  </data>
+  <data name="IsochoricHeatCapacity" xml:space="preserve">
+    <value>Isochoric Heat Capacity</value>
+  </data>
+  <data name="LiquidFraction" xml:space="preserve">
+    <value>Liquid Fraction</value>
+  </data>
+  <data name="SatPressure" xml:space="preserve">
+    <value>Saturation Pressure</value>
+  </data>
+  <data name="SatTemperature" xml:space="preserve">
+    <value>Saturation Temperature</value>
+  </data>
+  <data name="SolidFraction" xml:space="preserve">
+    <value>Solid Fraction</value>
+  </data>
+  <data name="SpeedOfSound" xml:space="preserve">
+    <value>Speed of Sound</value>
+  </data>
+  <data name="TemperatureAndPressure" xml:space="preserve">
+    <value>Temperature and Pressure</value>
+  </data>
+  <data name="VaporFraction" xml:space="preserve">
+    <value>Vapor Fraction</value>
+  </data>
+  <data name="Velocity" xml:space="preserve">
+    <value>Velocity</value>
+  </data>
+  <data name="SteamTable" xml:space="preserve">
+    <value>Steam Table</value>
+  </data>
+  <data name="Thermodynamics" xml:space="preserve">
+    <value>Thermodynamics</value>
+  </data>
 </root>

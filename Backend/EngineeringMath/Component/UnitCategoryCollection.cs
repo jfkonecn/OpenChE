@@ -127,6 +127,16 @@ namespace EngineeringMath.Component
                 }                
             };
 
+            _AllUnits.Children.Add(new UnitCategory(LibraryResources.Velocity,
+                new UnitCategory.UnitCategoryElement[]
+                {
+                    new UnitCategory.UnitCategoryElement(LibraryResources.Length, 1),
+                    new UnitCategory.UnitCategoryElement(LibraryResources.Time, -1)
+                })
+                {
+
+                });
+
             _AllUnits.Children.Add(
                 new UnitCategory(LibraryResources.IsothermalCompressibility,
                 new UnitCategory.UnitCategoryElement[]

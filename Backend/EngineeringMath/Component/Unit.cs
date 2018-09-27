@@ -1,4 +1,5 @@
-﻿using EngineeringMath.Resources;
+﻿using EngineeringMath.Component.CustomEventArgs;
+using EngineeringMath.Resources;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -135,9 +136,9 @@ namespace EngineeringMath.Component
                 IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
             }
         }
-        private void Parent_ParentChanged(object sender, EventArgs e)
+        private void Parent_ParentChanged(object sender, ParentChangedEventArgs e)
         {
-            OnParentChanged();
+            OnParentChanged(e);
         }
 
         private string _FullName;
@@ -172,12 +173,12 @@ namespace EngineeringMath.Component
         /// </summary>
         public static readonly string BaseUnitVar = "baseUnit";
 
-        protected void OnParentChanged()
+        protected void OnParentChanged(ParentChangedEventArgs e)
         {
-            ParentChanged?.Invoke(this, EventArgs.Empty);
+            ParentChanged?.Invoke(this, e);
         }
 
-        public event EventHandler<EventArgs> ParentChanged;
+        public event EventHandler<ParentChangedEventArgs> ParentChanged;
 
         public double ConvertToBase(double curUnit)
         {

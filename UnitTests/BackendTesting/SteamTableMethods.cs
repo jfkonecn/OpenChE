@@ -10,7 +10,7 @@ namespace BackendTesting
     [TestClass]
     public class SteamTableMethods
     {
-        private static readonly SteamTable SteamTable = new SteamTable();
+        private static readonly SteamTable SteamTable = SteamTable.Table;
         [TestMethod]
         public void PressureAndTemperature()
         {

@@ -1,4 +1,5 @@
-﻿using EngineeringMath.Resources;
+﻿using EngineeringMath.Component.CustomEventArgs;
+using EngineeringMath.Resources;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -82,11 +83,11 @@ namespace EngineeringMath.Component
             }
         }
 
-        protected virtual void OnParentChanged()
+        protected virtual void OnParentChanged(ParentChangedEventArgs e)
         {
-            ParentChanged?.Invoke(this, EventArgs.Empty);
+            ParentChanged?.Invoke(this, e);
         }
-        public event EventHandler<EventArgs> ParentChanged;
+        public event EventHandler<ParentChangedEventArgs> ParentChanged;
 
         public int Count => Children.Count;
 

@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using System.Linq;
 using EngineeringMath.Resources;
+using EngineeringMath.Component.CustomEventArgs;
 
 namespace EngineeringMath.Component
 {
@@ -292,13 +293,13 @@ namespace EngineeringMath.Component
                 IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
             }
         }
-        protected virtual void OnParentChanged()
+        protected virtual void OnParentChanged(ParentChangedEventArgs e)
         {
-            ParentChanged?.Invoke(this, EventArgs.Empty);
+            ParentChanged?.Invoke(this, e);
         }
-        private void Parent_ParentChanged(object sender, EventArgs e)
+        private void Parent_ParentChanged(object sender, ParentChangedEventArgs e)
         {
-            OnParentChanged();
+            OnParentChanged(e);
         }
 
         Category<Function> IChildItem<Category<Function>>.Parent { get => Parent; set => Parent = value; }
@@ -323,14 +324,15 @@ namespace EngineeringMath.Component
         public delegate void ErrorEventHandler(object sender, Exception e);
 
         public event EventHandler WasReset;
-        public event EventHandler<EventArgs> ParentChanged;
+        public event EventHandler<ParentChangedEventArgs> ParentChanged;
 
-        event EventHandler<EventArgs> IChildItemEvent.ParentChanged
+        event EventHandler<ParentChangedEventArgs> IChildItemEvent.ParentChanged
         {
             add
             {
                 return;
             }
+
             remove
             {
                 return;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EngineeringMath.Component.CustomEventArgs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
@@ -47,15 +48,15 @@ namespace EngineeringMath.Component
             OnStateChanged();
         }
 
-        protected virtual void OnParentChanged()
+        protected virtual void OnParentChanged(ParentChangedEventArgs e)
         {
-            ParentChanged?.Invoke(this, EventArgs.Empty);
+            ParentChanged?.Invoke(this, e);
         }
-        private void Parent_ParentChanged(object sender, EventArgs e)
+        private void Parent_ParentChanged(object sender, ParentChangedEventArgs e)
         {
-            OnParentChanged();
+            OnParentChanged(e);
         }
-        public event EventHandler<EventArgs> ParentChanged;
+        public event EventHandler<ParentChangedEventArgs> ParentChanged;
 
 
 
@@ -66,6 +67,7 @@ namespace EngineeringMath.Component
         {
             return Parent.FindParameter(paraVarName);
         }
+
 
         public abstract void Calculate();
 

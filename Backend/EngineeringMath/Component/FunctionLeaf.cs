@@ -49,7 +49,7 @@ namespace EngineeringMath.Component
 
         public override void Calculate()
         {
-            IParameter para = FindParameter(OutputParameterVarName);
+            INumericParameter para = (INumericParameter)FindParameter(OutputParameterVarName);
             para.BaseValue = FunctionEquation.Evaluate();
         }
 

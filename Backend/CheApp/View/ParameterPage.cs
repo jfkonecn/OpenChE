@@ -12,12 +12,17 @@ namespace CheApp.View
 	{
         public static ParameterPage Builder(IParameter parameter)
         {
-            return new ParameterPage(parameter);
+            if(parameter is INumericParameter numPara)
+            {
+                return new ParameterPage(numPara);
+            }
+
+            return new ParameterPage(null);
         }
 
 
 
-        private ParameterPage (IParameter para)
+        private ParameterPage (INumericParameter para)
 		{
             BindingContext = para;
             SetBinding(ContentPage.TitleProperty, new Binding(nameof(para.DisplayName)));

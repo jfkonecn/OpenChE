@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using EngineeringMath.Resources;
 using System.Linq;
 using ReplaceableParaBld = EngineeringMath.Component.Builder.ReplaceableParameterBuilder;
+using EngineeringMath.Component.Builder;
 
 namespace EngineeringMath.Component
 {
@@ -45,6 +46,11 @@ namespace EngineeringMath.Component
 
         internal static void BuildAllFunctions()
         {
+            VisitableNodeDirector dir = new VisitableNodeDirector()
+            {
+                NodeBuilder = PVTTableNodeBuilder.SteamTableBuilder()
+            };
+            dir.BuildNode(LibraryResources.SteamTable);
             _AllFunctions = new FunctionCategoryCollection(LibraryResources.AllFunctions)
             {
                 new FunctionCategory(LibraryResources.FluidDynamics)
@@ -72,6 +78,13 @@ namespace EngineeringMath.Component
                                 new FunctionLeaf("$dc * $pArea * Sqrt((2 * $deltaP) / ($rho * ($pArea ^ 2 / $oArea ^ 2 - 1)))", "Q")
                             }
                         }
+                    }
+                },
+                new FunctionCategory(LibraryResources.Thermodynamics)
+                {
+                    new Function(LibraryResources.SteamTable)
+                    {
+                        NextNode = dir.Node
                     }
                 }
             };

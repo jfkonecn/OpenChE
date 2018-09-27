@@ -1,4 +1,5 @@
-﻿using EngineeringMath.Resources;
+﻿using EngineeringMath.Component.CustomEventArgs;
+using EngineeringMath.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,16 +8,33 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-
-
-    public abstract class Parameter : NotifyPropertyChangedExtension, IParameter
+    /// <summary>
+    /// A parameter which represents a number input/output
+    /// </summary>
+    public interface INumericParameter : IParameter
     {
-        protected Parameter()
+
+        double BaseValue { get; set; }
+        double BindValue { get; set; }        
+        string Placeholder { get; }
+        double MinBaseValue { get; }
+        double MaxBaseValue { get; }
+        double MinBindValue { get; }
+        double MaxBindValue { get; }
+        /// <summary>
+        /// Can be null
+        /// </summary>
+        SelectableList<Unit, Category<Unit>> ParameterUnits { get; }
+    }
+
+    public abstract class NumericParameter : NotifyPropertyChangedExtension, INumericParameter
+    {
+        protected NumericParameter()
         {
 
         }
 
-        public Parameter(string displayName, string varName, double minBaseValue, double maxBaseValue)
+        public NumericParameter(string displayName, string varName, double minBaseValue, double maxBaseValue)
         {
             MinBaseValue = minBaseValue;
             MaxBaseValue = maxBaseValue;
@@ -75,7 +93,7 @@ namespace EngineeringMath.Component
             set
             {
                 double num = value;
-                if (num > MaxBindValue || num < MinBaseValue)
+                if (num > MaxBindValue || num < MinBindValue)
                 {
                     num = double.NaN;
                 }
@@ -210,15 +228,15 @@ namespace EngineeringMath.Component
                 IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
             }
         }
-        protected virtual void OnParentChanged()
+        protected virtual void OnParentChanged(ParentChangedEventArgs e)
         {
-            ParentChanged?.Invoke(this, EventArgs.Empty);
+            ParentChanged?.Invoke(this, e);
         }
-        private void Parent_ParentChanged(object sender, EventArgs e)
+        private void Parent_ParentChanged(object sender, ParentChangedEventArgs e)
         {
-            OnParentChanged();
+            OnParentChanged(e);
         }
-        public event EventHandler<EventArgs> ParentChanged;
+        public event EventHandler<ParentChangedEventArgs> ParentChanged;
 
         IParameterContainerNode IChildItem<IParameterContainerNode>.Parent { get => Parent; set => Parent = value; }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EngineeringMath.Component.CustomEventArgs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
@@ -61,10 +62,7 @@ namespace EngineeringMath.Component
 
         public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
         {
-            foreach (IParameter para in this.Parameters)
-            {
-                parameter.Add(para);
-            }
+            base.BuildLists(settings, parameter);
             settings.Add(Children);
 
             foreach(FunctionTreeNode node in Children)
@@ -77,6 +75,7 @@ namespace EngineeringMath.Component
         {
             base.DeactivateStates();
             Children.CurrentState = SettingState.Inactive;
+            // TODO: parallelize
             foreach (FunctionTreeNode node in Children)
             {
                 node.DeactivateStates();
@@ -87,6 +86,7 @@ namespace EngineeringMath.Component
         {
             base.ActivateStates();
             Children.CurrentState = SettingState.Active;
+            // TODO: parallelize
             foreach (FunctionTreeNode node in Children)
             {
                 if (Children.ItemAtSelectedIndex.Equals(node))
@@ -103,6 +103,7 @@ namespace EngineeringMath.Component
         protected override void OnStateChanged()
         {
             base.OnStateChanged();
+            // TODO: parallelize
             for (int i = 0; i < Children.Count; i++)
             {
                 if (i == Children.SelectedIndex)
@@ -116,12 +117,10 @@ namespace EngineeringMath.Component
             }
         }
 
-        protected override void OnParentChanged()
+        protected override void OnParentChanged(ParentChangedEventArgs e)
         {
-            base.OnParentChanged();
-            if (Parent == null)
-                return;
-            Parent.SettingAdded(Children);
+            base.OnParentChanged(e);
+            Parent?.SettingAdded(Children);
         }
 
 

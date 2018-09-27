@@ -143,22 +143,26 @@ namespace BackendTesting
             
             foreach (IParameter para in fun.InputParameters)
             {
-                para.BaseValue = paramValues[para.DisplayName];
+                if(para is INumericParameter numPara)
+                    numPara.BaseValue = paramValues[para.DisplayName];
             }
             foreach(IParameter para in fun.OutputParameters)
             {
-                para.BaseValue = double.NaN;
+                if (para is INumericParameter numPara)
+                    numPara.BaseValue = double.NaN;
             }
 
             fun.Solve.Execute(null);
             foreach (IParameter para in fun.InputParameters)
             {
-                Assert.AreEqual(paramValues[para.DisplayName], para.BaseValue, 1e-3);
+                if (para is INumericParameter numPara)
+                    Assert.AreEqual(paramValues[para.DisplayName], numPara.BaseValue, 1e-3);
                 paramsChecked = true;
             }
             foreach (IParameter para in fun.OutputParameters)
             {
-                Assert.AreEqual(paramValues[para.DisplayName], para.BaseValue, 1e-1, $"Output: {para.DisplayName}");
+                if (para is INumericParameter numPara)
+                    Assert.AreEqual(paramValues[para.DisplayName], numPara.BaseValue, 1e-1, $"Output: {para.DisplayName}");
                 paramsChecked = true;
             }
             if (!paramsChecked)

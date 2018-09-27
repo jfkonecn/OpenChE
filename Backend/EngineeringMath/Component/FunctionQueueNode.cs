@@ -25,6 +25,7 @@ namespace EngineeringMath.Component
 
         public override void Calculate()
         {
+            // TODO: parallelize
             foreach (PriorityFunctionBranch branch in Children.GetQueue())
             {
                 branch.Calculate();
@@ -37,6 +38,7 @@ namespace EngineeringMath.Component
             {
                 parameter.Add(para);
             }
+            // TODO: parallelize
             foreach (FunctionTreeNode node in Children)
             {
                 node.BuildLists(settings, parameter);
@@ -46,6 +48,7 @@ namespace EngineeringMath.Component
         public override void DeactivateStates()
         {
             base.DeactivateStates();
+            // TODO: parallelize
             foreach (FunctionTreeNode node in Children)
             {
                 node.DeactivateStates();
@@ -55,6 +58,7 @@ namespace EngineeringMath.Component
         public override void ActivateStates()
         {
             base.ActivateStates();
+            // TODO: parallelize
             foreach (FunctionTreeNode node in Children)
             {
                 node.ActivateStates();
@@ -65,6 +69,7 @@ namespace EngineeringMath.Component
         {
             foreach (FunctionTreeNode node in Children)
             {
+                // TODO: parallelize 
                 if (node.IsOutput(parameterName))
                 {
                     return true;

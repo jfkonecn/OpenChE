@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EngineeringMath.Component
 {
-    public class SIUnitParameter : Parameter
+    public class SIUnitParameter : NumericParameter
     {
         protected SIUnitParameter() : base()
         {

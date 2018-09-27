@@ -12,7 +12,7 @@ namespace EngineeringMath.Component.Builder
         /// </summary>
         /// <param name="para">Parameter which can be replaced</param>
         /// <returns></returns>
-        public static ReplaceableParameter AreaParameter(Parameter para)
+        public static ReplaceableParameter AreaParameter(NumericParameter para)
         {
             return new ReplaceableParameter(
                 para,

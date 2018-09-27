@@ -7,9 +7,9 @@ namespace EngineeringMath.Resources.PVTTables
 {
     public class SteamTable : IPVTTable
     {
+        public readonly static SteamTable Table = new SteamTable();
 
-
-        public SteamTable()
+        private SteamTable()
         {
 
         }

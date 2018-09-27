@@ -223,11 +223,29 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enthalpy and Pressure.
+        /// </summary>
+        public static string EnthalpyAndPressure {
+            get {
+                return ResourceManager.GetString("EnthalpyAndPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Entropy.
         /// </summary>
         public static string Entropy {
             get {
                 return ResourceManager.GetString("Entropy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entropy and Pressure.
+        /// </summary>
+        public static string EntropyAndPressure {
+            get {
+                return ResourceManager.GetString("EntropyAndPressure", resourceCulture);
             }
         }
         
@@ -246,6 +264,15 @@ namespace EngineeringMath.Resources {
         public static string Feet {
             get {
                 return ResourceManager.GetString("Feet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find thermodynamic data with.
+        /// </summary>
+        public static string FindThermoDataWith {
+            get {
+                return ResourceManager.GetString("FindThermoDataWith", resourceCulture);
             }
         }
         
@@ -273,6 +300,15 @@ namespace EngineeringMath.Resources {
         public static string Gallons {
             get {
                 return ResourceManager.GetString("Gallons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gas.
+        /// </summary>
+        public static string Gas {
+            get {
+                return ResourceManager.GetString("Gas", resourceCulture);
             }
         }
         
@@ -345,6 +381,33 @@ namespace EngineeringMath.Resources {
         public static string Inputs {
             get {
                 return ResourceManager.GetString("Inputs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal Energy.
+        /// </summary>
+        public static string InternalEnergy {
+            get {
+                return ResourceManager.GetString("InternalEnergy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Isobaric Heat Capacity.
+        /// </summary>
+        public static string IsobaricHeatCapacity {
+            get {
+                return ResourceManager.GetString("IsobaricHeatCapacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Isochoric Heat Capacity.
+        /// </summary>
+        public static string IsochoricHeatCapacity {
+            get {
+                return ResourceManager.GetString("IsochoricHeatCapacity", resourceCulture);
             }
         }
         
@@ -435,6 +498,33 @@ namespace EngineeringMath.Resources {
         public static string Length {
             get {
                 return ResourceManager.GetString("Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Liquid.
+        /// </summary>
+        public static string Liquid {
+            get {
+                return ResourceManager.GetString("Liquid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Liquid Fraction.
+        /// </summary>
+        public static string LiquidFraction {
+            get {
+                return ResourceManager.GetString("LiquidFraction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Liquid Vapor.
+        /// </summary>
+        public static string LiquidVapor {
+            get {
+                return ResourceManager.GetString("LiquidVapor", resourceCulture);
             }
         }
         
@@ -682,6 +772,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saturation Pressure.
+        /// </summary>
+        public static string SatPressure {
+            get {
+                return ResourceManager.GetString("SatPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturation Temperature.
+        /// </summary>
+        public static string SatTemperature {
+            get {
+                return ResourceManager.GetString("SatTemperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Seconds.
         /// </summary>
         public static string Seconds {
@@ -727,6 +835,51 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Solid.
+        /// </summary>
+        public static string Solid {
+            get {
+                return ResourceManager.GetString("Solid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solid Fraction.
+        /// </summary>
+        public static string SolidFraction {
+            get {
+                return ResourceManager.GetString("SolidFraction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solid Liquid.
+        /// </summary>
+        public static string SolidLiquid {
+            get {
+                return ResourceManager.GetString("SolidLiquid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solid Liquid Vapor.
+        /// </summary>
+        public static string SolidLiquidVapor {
+            get {
+                return ResourceManager.GetString("SolidLiquidVapor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solid Vapor.
+        /// </summary>
+        public static string SolidVapor {
+            get {
+                return ResourceManager.GetString("SolidVapor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Solve.
         /// </summary>
         public static string Solve {
@@ -763,11 +916,65 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Speed of Sound.
+        /// </summary>
+        public static string SpeedOfSound {
+            get {
+                return ResourceManager.GetString("SpeedOfSound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steam Table.
+        /// </summary>
+        public static string SteamTable {
+            get {
+                return ResourceManager.GetString("SteamTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supercritical Fluid.
+        /// </summary>
+        public static string SupercriticalFluid {
+            get {
+                return ResourceManager.GetString("SupercriticalFluid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temperature.
         /// </summary>
         public static string Temperature {
             get {
                 return ResourceManager.GetString("Temperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature and Pressure.
+        /// </summary>
+        public static string TemperatureAndPressure {
+            get {
+                return ResourceManager.GetString("TemperatureAndPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thermodynamics.
+        /// </summary>
+        public static string Thermodynamics {
+            get {
+                return ResourceManager.GetString("Thermodynamics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thermodynamic Region.
+        /// </summary>
+        public static string ThermoRegion {
+            get {
+                return ResourceManager.GetString("ThermoRegion", resourceCulture);
             }
         }
         
@@ -876,6 +1083,33 @@ namespace EngineeringMath.Resources {
         public static string USTons {
             get {
                 return ResourceManager.GetString("USTons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vapor.
+        /// </summary>
+        public static string Vapor {
+            get {
+                return ResourceManager.GetString("Vapor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vapor Fraction.
+        /// </summary>
+        public static string VaporFraction {
+            get {
+                return ResourceManager.GetString("VaporFraction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Velocity.
+        /// </summary>
+        public static string Velocity {
+            get {
+                return ResourceManager.GetString("Velocity", resourceCulture);
             }
         }
         

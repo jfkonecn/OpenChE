@@ -6,6 +6,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Data;
 using StringMath;
+using EngineeringMath.Component.CustomEventArgs;
 
 namespace EngineeringMath.Component
 {
@@ -31,7 +32,7 @@ namespace EngineeringMath.Component
 
             
 
-            return Evalutate(Parent.EquationExpression, (x) => { return Parent.FindParameter(x).BaseValue; });
+            return Evalutate(Parent.EquationExpression, (x) => { return ((INumericParameter)Parent.FindParameter(x)).BaseValue; });
         }
 
         /// <summary>
@@ -78,15 +79,15 @@ namespace EngineeringMath.Component
                 IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
             }
         }
-        protected virtual void OnParentChanged()
+        protected virtual void OnParentChanged(ParentChangedEventArgs e)
         {
-            ParentChanged?.Invoke(this, EventArgs.Empty);
+            ParentChanged?.Invoke(this, e);
         }
-        private void Parent_ParentChanged(object sender, EventArgs e)
+        private void Parent_ParentChanged(object sender, ParentChangedEventArgs e)
         {
-            OnParentChanged();
+            OnParentChanged(e);
         }
-        public event EventHandler<EventArgs> ParentChanged;
+        public event EventHandler<ParentChangedEventArgs> ParentChanged;
         IParameterContainerLeaf IChildItem<IParameterContainerLeaf>.Parent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         string IChildItem<IParameterContainerLeaf>.Key => throw new NotImplementedException();

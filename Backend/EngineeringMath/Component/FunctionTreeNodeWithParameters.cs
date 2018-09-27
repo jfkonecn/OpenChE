@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EngineeringMath.Component.CustomEventArgs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -60,6 +61,15 @@ namespace EngineeringMath.Component
             ParameterAdded(para);
         }
 
+        public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
+        {
+            foreach (IParameter para in this.Parameters)
+            {
+                parameter.Add(para);
+            }
+        }
+
+
         public override void DeactivateStates()
         {
             CurrentState = FunctionTreeNodeState.Inactive;
@@ -75,6 +85,7 @@ namespace EngineeringMath.Component
         protected override void OnStateChanged()
         {
             base.OnStateChanged();
+            // TODO: parallelize
             if (CurrentState == FunctionTreeNodeState.Active)
             {
                 foreach (IParameter para in Parameters)
@@ -102,9 +113,9 @@ namespace EngineeringMath.Component
             }
         }
 
-        protected override void OnParentChanged()
+        protected override void OnParentChanged(ParentChangedEventArgs e)
         {
-            base.OnParentChanged();
+            base.OnParentChanged(e);
             if (Parent != null)
             {
                 foreach (IParameter para in Parameters)

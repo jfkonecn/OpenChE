@@ -1,4 +1,5 @@
-﻿using EngineeringMath.Resources;
+﻿using EngineeringMath.Component.CustomEventArgs;
+using EngineeringMath.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,9 +7,9 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class ReplaceableParameter : NotifyPropertyChangedExtension, IParameter, IParameterContainerNode
+    public class ReplaceableParameter : NotifyPropertyChangedExtension, INumericParameter, IParameterContainerNode
     {
-        public ReplaceableParameter(IParameter parameter, IEnumerable<IParameterContainerLeaf> leaves)
+        public ReplaceableParameter(INumericParameter parameter, IEnumerable<IParameterContainerLeaf> leaves)
         {
             ReplacingParameter = parameter;
             InputBranch = new FunctionBranch(parameter.DisplayName)
@@ -72,8 +73,8 @@ namespace EngineeringMath.Component
         /// Returns a FunctionNullNode branch if ReplacingParameter is not an input or output
         /// </summary>
 
-        private IParameter _ReplacingParameter;
-        protected IParameter ReplacingParameter
+        private INumericParameter _ReplacingParameter;
+        protected INumericParameter ReplacingParameter
         {
             get
             {
@@ -213,27 +214,27 @@ namespace EngineeringMath.Component
         }
         IParameterContainerNode IChildItem<IParameterContainerNode>.Parent { get => Parent; set => Parent = value; }
 
-        private void Parent_ParentChanged(object sender, EventArgs e)
+        private void Parent_ParentChanged(object sender, ParentChangedEventArgs e)
         {
-            OnParentChanged();
+            OnParentChanged(e);
         }
 
-        protected void OnParentChanged()
+        protected void OnParentChanged(ParentChangedEventArgs e)
         {
             if (Parent != null)
             {
                 // leave in case we need to do something
             }
-            ParentChanged?.Invoke(this, EventArgs.Empty);
+            ParentChanged?.Invoke(this, e);
         }
 
-        public event EventHandler<EventArgs> ParentChanged;
+        public event EventHandler<ParentChangedEventArgs> ParentChanged;
 
         string IChildItem<IParameterContainerNode>.Key => ReplacingParameter.Key;
 
         string ISettingOption.Name => ReplacingParameter.DisplayName;
 
-        SelectableList<Unit, Category<Unit>> IParameter.ParameterUnits => ReplacingParameter.ParameterUnits;
+        SelectableList<Unit, Category<Unit>> INumericParameter.ParameterUnits => ReplacingParameter.ParameterUnits;
 
         IParameter IParameterContainerNode.FindParameter(string paraVarName)
         {

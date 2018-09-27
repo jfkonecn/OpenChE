@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EngineeringMath.NumericalMethods.FiniteDifferenceFormulas
 {
-    public class FirstDerivative
+    public static class FirstDerivative
     {
         /// <summary>
         /// Truncation Error O(step^2)
