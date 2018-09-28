@@ -42,20 +42,14 @@ namespace EngineeringMath.Component
                     
                     elements[i] = new UnitComposite.UnitCompositeElement(arr[i].UnitCategory[indices[i]], arr[i].Power);
                 }
-                try
+                if(UnitComposite.TryBuildUnitComposite(out UnitComposite unitComp, elements))
                 {
-                    Children.Add(new UnitComposite(elements));
+                    Children.Add(unitComp);
                 }
-                catch
-                {
-                    // do nothing
-                }
-
 
                 int next = n - 1;
                 while (next >= 0 && (indices[next] + 1 >= arr[next].UnitCategory.Count))
                     next--;
-
 
                 if (next < 0)
                     return;

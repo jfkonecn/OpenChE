@@ -10,20 +10,34 @@ namespace EngineeringMath.Component
     {
         protected UnitComposite() : base()
         {
-            FinishUp();
+            Exception e = FinishUp();
+            if (e != null)
+                throw e;
         }
 
-        public UnitComposite(params UnitCompositeElement[] lookupUnits)
+        private UnitComposite(params UnitCompositeElement[] lookupUnits)
         {
             LookupUnits = lookupUnits;
-            FinishUp();
         }
 
 
+        public static bool TryBuildUnitComposite(out UnitComposite unitComposite, params UnitCompositeElement[] lookupUnits)
+        {
+            unitComposite = new UnitComposite(lookupUnits);
+            Exception e = unitComposite.FinishUp();
+            if(e != null)
+            {
+                unitComposite = null;
+                return false;
+            }
+            return true;
+        }
 
-
-
-        private void FinishUp()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>If an exception occured then it is returned else it is null</returns>
+        private Exception FinishUp()
         {
             List<UnitCompositeElement> elements = BuildUnitElementList();
             FullName = string.Empty;
@@ -38,9 +52,9 @@ namespace EngineeringMath.Component
             {
                 Unit curUnit = element.Unit;
                 if (!UnitSystem.TryToFindCommonUnitSystem(UnitSystem, curUnit.UnitSystem, out UnitSystem temp))
-                    throw new UnitSystem.NoCommonUnitSystemFoundException();
+                    return new UnitSystem.NoCommonUnitSystemFoundException();
                 if (!curUnit.AbsoluteScaleUnit)
-                    throw new NonAbsoluteUnitException();
+                    return new NonAbsoluteUnitException();
                 UnitSystem = temp;
                 if (preElement == null)
                 {
@@ -70,6 +84,7 @@ namespace EngineeringMath.Component
             }
             ConvertToBaseEquation = $"${CurUnitVar} * {localConvertToBaseFactor}";
             ConvertFromBaseEquation = $"${BaseUnitVar} / {localConvertToBaseFactor}";
+            return null;
         }
 
         /// <summary>
