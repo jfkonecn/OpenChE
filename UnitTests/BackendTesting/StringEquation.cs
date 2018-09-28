@@ -22,8 +22,28 @@ namespace BackendTesting
                 Assert.AreEqual(x + y, EquationParser.Evaluate($"{x} +{y}"), 1e-3);
                 Assert.AreEqual(x + y, EquationParser.Evaluate($"{x}+{y}"), 1e-3);
             }
-            Assert.ThrowsException<SyntaxException>(() => { EquationParser.Evaluate("1 + 4 +"); });
-            Assert.ThrowsException<SyntaxException>(() => { EquationParser.Evaluate("*-+1 + 4"); });
+
+            try
+            {
+                EquationParser.Evaluate("1 + 4 +");
+                Assert.Fail();
+            }
+            catch(SyntaxException)
+            {
+                
+            }
+            try
+            {
+                EquationParser.Evaluate("*-+1 + 4");
+                Assert.Fail();
+            }
+            catch (SyntaxException)
+            {
+
+            }
+            // these lines of code keep stopping the debugger
+            //Assert.ThrowsException<SyntaxException>(() => { EquationParser.Evaluate("1 + 4 +"); });
+            //Assert.ThrowsException<SyntaxException>(() => { EquationParser.Evaluate("*-+1 + 4"); });
         }
 
         [TestMethod]

@@ -179,6 +179,7 @@ namespace EngineeringMath.Component
         /// </summary>
         public class UnitCategoryElement
         {
+
             public UnitCategoryElement()
             {
                 FinishUp();
@@ -198,6 +199,13 @@ namespace EngineeringMath.Component
                 FinishUp();
             }
 
+            public UnitCategoryElement(UnitCategory unitCategory, int power, bool isUserDefined = false) 
+            {
+                CategoryName = unitCategory.Name;
+                Power = power;
+                IsUserDefined = isUserDefined;
+                UnitCategory = unitCategory;
+            }
 
             private void FinishUp()
             {
