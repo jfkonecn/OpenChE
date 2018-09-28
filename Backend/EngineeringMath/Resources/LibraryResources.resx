@@ -488,4 +488,16 @@
   <data name="Thermodynamics" xml:space="preserve">
     <value>Thermodynamics</value>
   </data>
+  <data name="BernoullisEquation" xml:space="preserve">
+    <value>Bernoullis Equation</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="InletBlank" xml:space="preserve">
+    <value>Inlet {0}</value>
+  </data>
+  <data name="OutletBlank" xml:space="preserve">
+    <value>Outlet {0}</value>
+  </data>
 </root>

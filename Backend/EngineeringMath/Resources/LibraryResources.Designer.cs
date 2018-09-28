@@ -115,6 +115,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bernoullis Equation.
+        /// </summary>
+        public static string BernoullisEquation {
+            get {
+                return ResourceManager.GetString("BernoullisEquation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to British Thermal Units.
         /// </summary>
         public static string BTU {
@@ -322,6 +331,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Height.
+        /// </summary>
+        public static string Height {
+            get {
+                return ResourceManager.GetString("Height", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Horsepower.
         /// </summary>
         public static string Horsepower {
@@ -363,6 +381,15 @@ namespace EngineeringMath.Resources {
         public static string Inches {
             get {
                 return ResourceManager.GetString("Inches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inlet {0}.
+        /// </summary>
+        public static string InletBlank {
+            get {
+                return ResourceManager.GetString("InletBlank", resourceCulture);
             }
         }
         
@@ -678,6 +705,15 @@ namespace EngineeringMath.Resources {
         public static string Ounces {
             get {
                 return ResourceManager.GetString("Ounces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outlet {0}.
+        /// </summary>
+        public static string OutletBlank {
+            get {
+                return ResourceManager.GetString("OutletBlank", resourceCulture);
             }
         }
         

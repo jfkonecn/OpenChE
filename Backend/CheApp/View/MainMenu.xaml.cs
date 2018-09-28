@@ -23,12 +23,11 @@ namespace CheApp.View
 
         private void MasterPageList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            var item = e.SelectedItem as MasterPageItem;
-            if (item != null)
+            if (e.SelectedItem is MasterPageItem item)
             {
                 Page temp = (Page)Activator.CreateInstance(item.TargetType);
                 temp.BindingContext = item.BindingContext;
-                Detail = temp;
+                Detail = new NavigationPage(temp);
                 masterPage.masterPageList.SelectedItem = null;
                 IsPresented = false;
             }
