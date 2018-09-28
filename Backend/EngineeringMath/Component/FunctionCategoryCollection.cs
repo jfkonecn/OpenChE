@@ -7,6 +7,8 @@ using EngineeringMath.Resources;
 using System.Linq;
 using ReplaceableParaBld = EngineeringMath.Component.Builder.ReplaceableParameterBuilder;
 using EngineeringMath.Component.Builder;
+using System.Threading;
+using System.Diagnostics;
 
 namespace EngineeringMath.Component
 {
@@ -40,22 +42,46 @@ namespace EngineeringMath.Component
                 {
                     BuildAllFunctions();
                 }
-                return _AllFunctions;
+                lock (LockAllFunctions)
+                {
+                    return _AllFunctions;
+                }                
             }
         }
 
-        internal static void BuildAllFunctions()
+        private static readonly object LockAllFunctions = new object();
+
+        private static Thread CreateFunctionBuilderThread(string catName, string funName, Func<Function> buildFunction)
         {
-            VisitableNodeDirector dir = new VisitableNodeDirector()
+            Thread thread = new Thread(() =>
             {
-                NodeBuilder = PVTTableNodeBuilder.SteamTableBuilder()
-            };
-            dir.BuildNode(LibraryResources.SteamTable);
-            _AllFunctions = new FunctionCategoryCollection(LibraryResources.AllFunctions)
-            {
-                new FunctionCategory(LibraryResources.FluidDynamics)
+                Function function = buildFunction();
+                lock (LockAllFunctions)
                 {
-                    new Function(LibraryResources.OrificePlate)
+                    Category<Function> funCat = _AllFunctions.Children.SingleOrDefault((x) => x.Name == catName);
+                    if (funCat == null)
+                    {
+                        funCat = new Category<Function>(catName, false);
+                        _AllFunctions.Add(funCat);
+                    }
+                    funCat.Add(function);
+                }
+            })
+            {
+                Name = funName
+            };
+            thread.Start();
+            return thread;
+        }
+
+        private static Thread CreateOrificePlateFunction()
+        {
+            return CreateFunctionBuilderThread(
+                LibraryResources.FluidDynamics, 
+                LibraryResources.OrificePlate, 
+                () => 
+                {
+                    return new Function(LibraryResources.OrificePlate)
                     {
                         NextNode = new FunctionBranch(LibraryResources.ChangeOutputs)
                         {
@@ -78,16 +104,44 @@ namespace EngineeringMath.Component
                                 new FunctionLeaf("$dc * $pArea * Sqrt((2 * $deltaP) / ($rho * ($pArea ^ 2 / $oArea ^ 2 - 1)))", "Q")
                             }
                         }
-                    }
-                },
-                new FunctionCategory(LibraryResources.Thermodynamics)
+                    };
+                });
+        }
+
+        private static Thread CreateSteamTableFunction()
+        {
+            return CreateFunctionBuilderThread(
+                LibraryResources.Thermodynamics, 
+                LibraryResources.SteamTable,
+                () =>
                 {
-                    new Function(LibraryResources.SteamTable)
+                    VisitableNodeDirector dir = new VisitableNodeDirector()
+                    {
+                        NodeBuilder = PVTTableNodeBuilder.SteamTableBuilder()
+                    };
+                    dir.BuildNode(LibraryResources.SteamTable);
+                    return new Function(LibraryResources.SteamTable)
                     {
                         NextNode = dir.Node
-                    }
-                }
+                    };
+                });
+        }
+
+        internal static void BuildAllFunctions()
+        {
+            _AllFunctions = new FunctionCategoryCollection(LibraryResources.AllFunctions);
+            List<Thread> threads = new List<Thread>
+            {
+                CreateSteamTableFunction(),
+                CreateOrificePlateFunction()
             };
+            foreach (Thread thread in threads)
+            {
+                thread.Join();
+            }
+            // update the search results
+            _AllFunctions.SearchKeyword = string.Empty;
+            _AllFunctions.Search.Execute(null);
         }
     }
 }

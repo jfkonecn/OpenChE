@@ -36,7 +36,7 @@ namespace EngineeringMath.Component
         }
 
 
-        private static readonly System.Object LockAllUnits = new System.Object();
+        private static readonly object LockAllUnits = new object();
 
         public new UnitCategory GetCategoryByName(string catName)
         {
