@@ -25,12 +25,12 @@ namespace EngineeringMath.Component
         {
             get
             {
-                if(_AllUnits == null)
+                lock (BuildingAllUnits)
                 {
-                    BuildAllUnits();
-                }
-                lock (LockAllUnits)
-                {
+                    if (_AllUnits == null)
+                    {
+                        BuildAllUnits();
+                    }
                     return _AllUnits;
                 }                
             }
@@ -38,6 +38,7 @@ namespace EngineeringMath.Component
 
 
         private static readonly object LockAllUnits = new object();
+        private static readonly object BuildingAllUnits = new object();
 
         public new UnitCategory GetCategoryByName(string catName)
         {

@@ -33,9 +33,10 @@ namespace EngineeringMath.Component
                 return;
         }
 
-        public Function(string fullName, bool isUserDefined = false) : this()
+        public Function(string fullName, string categoryName, bool isUserDefined = false) : this()
         {
             FullName = fullName;
+            CategoryName = categoryName;
             IsUserDefined = isUserDefined;
         }
 
@@ -183,6 +184,16 @@ namespace EngineeringMath.Component
             }
         }
 
+        private string _CategoryName;
+        public string CategoryName
+        {
+            get { return _CategoryName; }
+            set
+            {
+                _CategoryName = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private Command _Solve;

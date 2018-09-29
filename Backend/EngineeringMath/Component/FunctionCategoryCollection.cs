@@ -9,6 +9,7 @@ using ReplaceableParaBld = EngineeringMath.Component.Builder.ReplaceableParamete
 using EngineeringMath.Component.Builder;
 using System.Threading;
 using System.Diagnostics;
+using EngineeringMath.Component.DefaultFunctions;
 
 namespace EngineeringMath.Component
 {
@@ -38,12 +39,12 @@ namespace EngineeringMath.Component
         {
             get
             {
-                if (_AllFunctions == null)
+                lock (BuildingAllFunctions)
                 {
-                    BuildAllFunctions();
-                }
-                lock (LockAllFunctions)
-                {
+                    if (_AllFunctions == null)
+                    {
+                        BuildAllFunctions();
+                    }
                     return _AllFunctions;
                 }                
             }
@@ -51,134 +52,46 @@ namespace EngineeringMath.Component
 
         private static readonly object LockAllFunctions = new object();
 
-        private static Thread CreateFunctionBuilderThread(string catName, string funName, Func<Function> buildFunction)
-        {
-            Thread thread = new Thread(() =>
-            {
-                Function function = buildFunction();
-                lock (LockAllFunctions)
-                {
-                    Category<Function> funCat = _AllFunctions.Children.SingleOrDefault((x) => x.Name == catName);
-                    if (funCat == null)
-                    {
-                        funCat = new Category<Function>(catName, false);
-                        _AllFunctions.Add(funCat);
-                    }
-                    funCat.Add(function);
-                }
-            })
-            {
-                Name = funName
-            };
-            thread.Start();
-            return thread;
-        }
+        private static readonly object BuildingAllFunctions = new object();
 
-        private static Thread CreateOrificePlateFunction()
-        {
-            return CreateFunctionBuilderThread(
-                LibraryResources.FluidDynamics, 
-                LibraryResources.OrificePlate, 
-                () => 
-                {
-                    return new Function(LibraryResources.OrificePlate)
-                    {
-                        NextNode = new FunctionBranch(LibraryResources.ChangeOutputs)
-                        {
-                            Parameters =
-                            {
-                                new UnitlessParameter(LibraryResources.DischargeCoefficient, "dc", 0, 1),
-                                new SIUnitParameter(LibraryResources.Density, "rho", LibraryResources.Density, minSIValue:0),
-                                ReplaceableParaBld.AreaParameter(new SIUnitParameter(LibraryResources.InletPipeArea, "pArea", LibraryResources.Area, minSIValue:0)),
-                                ReplaceableParaBld.AreaParameter(new SIUnitParameter(LibraryResources.OrificeArea, "oArea", LibraryResources.Area, minSIValue:0)),
-                                new SIUnitParameter(LibraryResources.PressureDrop, "deltaP", LibraryResources.Pressure, minSIValue:0),
-                                new SIUnitParameter(LibraryResources.VolumetricFlowRate, "Q", LibraryResources.VolumetricFlowRate, minSIValue:0)
-                            },
-                            Children =
-                            {
-                                new FunctionLeaf("$Q / ($pArea * Sqrt((2 * $deltaP) / ($rho * ($pArea ^ 2 / $oArea ^ 2 - 1))))", "dc"),
-                                new FunctionLeaf("(2 * $deltaP) / ((($Q  / ($dc * $pArea)) ^ 2) * ($pArea ^ 2 / $oArea ^ 2 - 1))", "rho"),
-                                new FunctionLeaf("Sqrt(1 / ((1 / $oArea ^ 2) - ((2 * $deltaP * $dc ^ 2) / ($Q ^ 2 * $rho))))", "pArea"),
-                                new FunctionLeaf("Sqrt(1 / ((1 / $pArea ^ 2) + ((2 * $deltaP * $dc ^ 2) / ($Q ^ 2 * $rho))))", "oArea"),
-                                new FunctionLeaf("(($Q / ($dc * $pArea)) ^ 2 * ($rho * ($pArea ^ 2 / $oArea ^ 2 - 1))) / 2", "deltaP"),
-                                new FunctionLeaf("$dc * $pArea * Sqrt((2 * $deltaP) / ($rho * ($pArea ^ 2 / $oArea ^ 2 - 1)))", "Q")
-                            }
-                        }
-                    };
-                });
-        }
-        private static Thread CreateBernoullisEquationFunction()
-        {
-            return CreateFunctionBuilderThread(
-                LibraryResources.FluidDynamics,
-                LibraryResources.BernoullisEquation,
-                () =>
-                {
-                    return new Function(LibraryResources.BernoullisEquation)
-                    {
-                        NextNode = new FunctionBranch(LibraryResources.ChangeOutputs)
-                        {
-                            Parameters =
-                            {
-                                new SIUnitParameter(string.Format(LibraryResources.InletBlank, LibraryResources.Velocity), 
-                                "uin", LibraryResources.Velocity, minSIValue:0),
-                                new SIUnitParameter(string.Format(LibraryResources.OutletBlank, LibraryResources.Velocity),
-                                "uout", LibraryResources.Velocity, minSIValue:0),
-                                new SIUnitParameter(string.Format(LibraryResources.InletBlank, LibraryResources.Pressure),
-                                "pin", LibraryResources.Pressure, minSIValue:0),
-                                new SIUnitParameter(string.Format(LibraryResources.OutletBlank, LibraryResources.Pressure),
-                                "pout", LibraryResources.Pressure, minSIValue:0),
-                                new SIUnitParameter(string.Format(LibraryResources.InletBlank, LibraryResources.Height),
-                                "hin", LibraryResources.Length, minSIValue:0),
-                                new SIUnitParameter(string.Format(LibraryResources.OutletBlank, LibraryResources.Height),
-                                "hout", LibraryResources.Length, minSIValue:0),
-                                new SIUnitParameter(LibraryResources.Density,
-                                "rho", LibraryResources.Density, minSIValue:0)
-                            },
-                            Children =
-                            {
-                                new FunctionLeaf("$rho * ($pin / $rho + 9.81 * ($hin - $hout) + ($uin ^ 2 - $uout ^ 2) / 2)", "pout")
-                            }
-                        }
-                    };
-                });
-        }
-
-        private static Thread CreateSteamTableFunction()
-        {
-            return CreateFunctionBuilderThread(
-                LibraryResources.Thermodynamics, 
-                LibraryResources.SteamTable,
-                () =>
-                {
-                    VisitableNodeDirector dir = new VisitableNodeDirector()
-                    {
-                        NodeBuilder = PVTTableNodeBuilder.SteamTableBuilder()
-                    };
-                    dir.BuildNode(LibraryResources.SteamTable);
-                    return new Function(LibraryResources.SteamTable)
-                    {
-                        NextNode = dir.Node
-                    };
-                });
-        }
 
         internal static void BuildAllFunctions()
         {
+
             _AllFunctions = new FunctionCategoryCollection(LibraryResources.AllFunctions);
-            List<Thread> threads = new List<Thread>
+            List<Thread> threads = new List<Thread>();
+
+            IEnumerable<Type> types = from type in typeof(OrificePlate).Assembly.GetTypes()
+                                      where type.Namespace != null
+                                      where type.Namespace.Equals(typeof(OrificePlate).Namespace)
+                                      where type.BaseType != null
+                                      where type.BaseType.Equals(typeof(Function))
+                                      select type;
+            foreach (Type type in types)
             {
-                CreateSteamTableFunction(),
-                CreateOrificePlateFunction(),
-                CreateBernoullisEquationFunction()
-            };
+                Thread thread = new Thread(() =>
+                {
+                    Function fun = (Function)Activator.CreateInstance(type);
+                    lock (LockAllFunctions)
+                    {
+                        if(!_AllFunctions.TryGetValue(fun.CategoryName, out Category<Function> funCat))
+                        {
+                            funCat = new Category<Function>(fun.CategoryName, false);
+                            _AllFunctions.Add(funCat);
+                        }
+                        funCat.Add(fun);
+                    }
+                })
+                {
+                    Name = type.Name
+                };
+                thread.Start();
+                threads.Add(thread);
+            }
             foreach (Thread thread in threads)
             {
                 thread.Join();
             }
-            // update the search results
-            _AllFunctions.SearchKeyword = string.Empty;
-            _AllFunctions.Search.Execute(null);
         }
     }
 }
