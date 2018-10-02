@@ -34,6 +34,6 @@ namespace EngineeringMath.Component
 
         void ActivateStates();
         void DeactivateStates();
-        bool IsOutput(string parameterVarName);
+        ParameterState DetermineState(string paraVarName);
     }
 }

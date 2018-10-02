@@ -42,14 +42,7 @@ namespace EngineeringMath.Component
             switch (CurrentState)
             {
                 case FunctionTreeNodeState.Active:
-                    if (IsOutput(para.VarName))
-                    {
-                        para.CurrentState = ParameterState.Output;
-                    }
-                    else
-                    {
-                        para.CurrentState = ParameterState.Input;
-                    }
+                    para.CurrentState = DetermineState(para.VarName);
                     break;
                 case FunctionTreeNodeState.Inactive:
                     para.CurrentState = ParameterState.Inactive;
@@ -90,14 +83,7 @@ namespace EngineeringMath.Component
             {
                 foreach (IParameter para in Parameters)
                 {
-                    if (IsOutput(para.VarName))
-                    {
-                        para.CurrentState = ParameterState.Output;
-                    }
-                    else
-                    {
-                        para.CurrentState = ParameterState.Input;
-                    }
+                    para.CurrentState = DetermineState(para.VarName);
                 }
             }
             else if (CurrentState == FunctionTreeNodeState.Inactive)

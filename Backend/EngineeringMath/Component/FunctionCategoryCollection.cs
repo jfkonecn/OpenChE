@@ -92,6 +92,7 @@ namespace EngineeringMath.Component
             {
                 thread.Join();
             }
+            _AllFunctions.Search.Execute(null);
         }
     }
 }

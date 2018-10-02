@@ -11,11 +11,7 @@ namespace EngineeringMath.Component
 {
     public interface IPickerParameter : IParameter, ISetting
     {
-        int SelectedIndex { get; set; }
 
-        IList<string> AllOptions { get; }
-
-        string SelectOptionStr { get; }
 
     }
     public class PickerParameter<T> : NotifyPropertyChangedExtension, IPickerParameter

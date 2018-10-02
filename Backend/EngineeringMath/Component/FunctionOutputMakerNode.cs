@@ -39,9 +39,9 @@ namespace EngineeringMath.Component
             return;
         }
 
-        public override bool IsOutput(string parameterVarName)
+        public override ParameterState DetermineState(string parameterVarName)
         {
-            return OutputParameterNames.Contains(parameterVarName);
+            return OutputParameterNames.Contains(parameterVarName) ? ParameterState.Output : ParameterState.Input;
         }
     }
 }

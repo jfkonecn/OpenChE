@@ -71,9 +71,9 @@ namespace EngineeringMath.Component
             base.ActivateStates();
         }
 
-        public override bool IsOutput(string parameterName)
+        public override ParameterState DetermineState(string parameterName)
         {
-            return OutputParameterVarName.Equals(parameterName);
+            return OutputParameterVarName.Equals(parameterName) ? ParameterState.Output : ParameterState.Input;
         }
     }
 }

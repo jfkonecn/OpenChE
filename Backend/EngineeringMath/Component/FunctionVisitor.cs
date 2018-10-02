@@ -20,16 +20,16 @@ namespace EngineeringMath.Component
         /// <param name="isOutputFun">called when isOuputFun is called</param>
         public FunctionVisitor(string name, 
             Action<IParameterContainerNode> calculateAct, 
-            Func<IParameterContainerNode, string, bool> isOutputFun)
+            Func<IParameterContainerNode, string, ParameterState> determineStateFun)
         {
             Name = name ?? string.Empty;
             CalculateAct = calculateAct ?? throw new ArgumentNullException(nameof(calculateAct));
-            IsOutputFun = isOutputFun ?? throw new ArgumentNullException(nameof(isOutputFun));
+            DetermineStateFun = determineStateFun ?? throw new ArgumentNullException(nameof(determineStateFun));
         }
 
 
         protected Action<IParameterContainerNode> CalculateAct { get; }
-        protected Func<IParameterContainerNode, string, bool> IsOutputFun { get; }
+        protected Func<IParameterContainerNode, string, ParameterState> DetermineStateFun { get; }
 
 
 
@@ -38,9 +38,9 @@ namespace EngineeringMath.Component
             CalculateAct(this);
         }
 
-        public override bool IsOutput(string varName)
+        public override ParameterState DetermineState(string varName)
         {
-            return IsOutputFun(this, varName);
+            return DetermineStateFun(this, varName);
         }
 
     }

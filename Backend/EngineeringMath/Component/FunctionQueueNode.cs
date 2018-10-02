@@ -65,17 +65,18 @@ namespace EngineeringMath.Component
             }
         }
 
-        public override bool IsOutput(string parameterName)
+        public override ParameterState DetermineState(string parameterName)
         {
             foreach (FunctionTreeNode node in Children)
             {
                 // TODO: parallelize 
-                if (node.IsOutput(parameterName))
+                ParameterState state = node.DetermineState(parameterName);
+                if (state != ParameterState.Inactive)
                 {
-                    return true;
+                    return state;
                 }
             }
-            return false;
+            return ParameterState.Inactive;
         }
     }
 }

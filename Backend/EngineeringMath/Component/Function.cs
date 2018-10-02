@@ -374,7 +374,7 @@ namespace EngineeringMath.Component
             throw new NotSupportedException();
         }
 
-        bool IParameterContainerNode.IsOutput(string parameterVarName)
+        ParameterState IParameterContainerNode.DetermineState(string parameterVarName)
         {
             throw new NotSupportedException();
         }

@@ -124,11 +124,11 @@ namespace EngineeringMath.Component
         }
 
 
-        public override bool IsOutput(string parameterVarName)
+        public override ParameterState DetermineState(string parameterVarName)
         {
             if (Children.ItemAtSelectedIndex == null)
-                return false;
-            return Children.ItemAtSelectedIndex.IsOutput(parameterVarName);
+                return ParameterState.Inactive;
+            return Children.ItemAtSelectedIndex.DetermineState(parameterVarName);
         }
     }
 }

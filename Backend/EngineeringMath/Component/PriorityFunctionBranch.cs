@@ -45,9 +45,9 @@ namespace EngineeringMath.Component
             NextNode.ActivateStates();
         }
 
-        public override bool IsOutput(string parameterName)
+        public override ParameterState DetermineState(string paraVarName)
         {
-            return NextNode.IsOutput(parameterName);
+            return NextNode.DetermineState(paraVarName);
         }
     }
 }

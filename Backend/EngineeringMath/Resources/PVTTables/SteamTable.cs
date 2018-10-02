@@ -273,7 +273,7 @@ namespace EngineeringMath.Resources.PVTTables
                     return double.NaN;
                 return thermoEntry.Pressure - pressure;
             }
-            double density = NewtonsMethod.Solve(500, 1, fx);
+            double density = NewtonsMethod.Solve(500, 1, fx, minX: 0);
             if (double.IsNaN(density))
                 return null;
             return Region3EquationHelper(temperature, density);
@@ -521,7 +521,7 @@ namespace EngineeringMath.Resources.PVTTables
 
                 return thermoEntry.Enthalpy- enthalpy;
             }
-            double temperature = NewtonsMethod.Solve(500, 1, fx);
+            double temperature = NewtonsMethod.Solve(500, 1, fx, minX: MinTemperature, maxX: MaxTemperature);
             if (double.IsNaN(temperature))
                 return null;
             return GetThermoEntryAtTemperatureAndPressure(temperature, pressure);
@@ -542,7 +542,7 @@ namespace EngineeringMath.Resources.PVTTables
                     return double.NaN;
                 return thermoEntry.Entropy - entropy;
             }
-            double temperature = NewtonsMethod.Solve(300, 0.001, fx);
+            double temperature = NewtonsMethod.Solve(300, 0.001, fx, minX: MinTemperature, maxX: MaxTemperature);
             if (double.IsNaN(temperature))
                 return null;
             return GetThermoEntryAtTemperatureAndPressure(temperature, pressure);

@@ -315,7 +315,7 @@ namespace EngineeringMath.Component
             throw new NotImplementedException();
         }
 
-        bool IParameterContainerNode.IsOutput(string parameterVarName)
+        ParameterState IParameterContainerNode.DetermineState(string parameterVarName)
         {
             throw new NotImplementedException();
         }

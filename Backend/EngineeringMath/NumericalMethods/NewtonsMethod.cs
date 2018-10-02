@@ -14,7 +14,7 @@ namespace EngineeringMath.NumericalMethods
         /// <param name="fx"></param>
         /// <param name="fxPrime"></param>
         /// <returns>first x value found where f(x) == 0 if max guesses reached then NaN is returned</returns>
-        public static double Solve(double startingX, Func<double, double> fx, Func<double, double> fxPrime)
+        public static double Solve(double startingX, Func<double, double> fx, Func<double, double> fxPrime, double minX = double.MinValue, double maxX = double.MaxValue)
         {
             double curX = startingX,
                 fxResult = fx(curX),
@@ -25,10 +25,10 @@ namespace EngineeringMath.NumericalMethods
             {
                 fxResult = fx(curX);
                 curX = curX - fxResult / fxPrime(curX);
+                curX = curX < minX ? minX : curX;
+                curX = curX > maxX ? maxX : curX;
                 totalGuesses++;
             }
-            if (totalGuesses == maxGuesses)
-                return double.NaN;
             return curX;
         }
         /// <summary>
@@ -38,9 +38,20 @@ namespace EngineeringMath.NumericalMethods
         /// <param name="step"></param>
         /// <param name="fx"></param>
         /// <returns></returns>
-        public static double Solve(double startingX, double step, Func<double, double> fx)
+        public static double Solve(double startingX, double step, Func<double, double> fx, double minX = double.MinValue, double maxX = double.MaxValue)
         {
-            return Solve(startingX, fx, (x) => { return FirstDerivative.TwoPointCentral(x, fx, step); });
+            return Solve(startingX, fx, (x) => 
+            {
+                if(minX >= x - step || double.IsNaN(x - step))
+                {
+                    return FirstDerivative.ThreePointForward(x, fx, step);
+                }
+                if (maxX <= x + step || double.IsNaN(x + step))
+                {
+                    return FirstDerivative.ThreePointBackward(x, fx, step);
+                }
+                return FirstDerivative.TwoPointCentral(x, fx, step);
+            }, minX, maxX);
         }
     }
 }

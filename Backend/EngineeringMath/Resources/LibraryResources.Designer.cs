@@ -817,6 +817,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saturation Region.
+        /// </summary>
+        public static string SatRegion {
+            get {
+                return ResourceManager.GetString("SatRegion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saturation Temperature.
         /// </summary>
         public static string SatTemperature {

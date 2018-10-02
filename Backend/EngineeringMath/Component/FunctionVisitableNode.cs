@@ -47,12 +47,13 @@ namespace EngineeringMath.Component
             NextNode?.BuildLists(settings, parameter);
         }
 
-        public override bool IsOutput(string parameterName)
+        public override ParameterState DetermineState(string paraVarName)
         {
             FunctionVisitor visitor = VisitorOptions.ItemAtSelectedIndex;
-            bool isOutput = visitor == null ? false : visitor.IsOutput(parameterName);
-            isOutput = isOutput || (NextNode == null ? false : NextNode.IsOutput(parameterName));
-            return isOutput;
+            ParameterState state = visitor == null ? ParameterState.Inactive : visitor.DetermineState(paraVarName);
+            if(state == ParameterState.Inactive && NextNode != null)
+                state = NextNode.DetermineState(paraVarName);
+            return state;
         }
 
         protected override void OnParentChanged(ParentChangedEventArgs e)

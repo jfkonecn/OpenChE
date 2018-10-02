@@ -18,10 +18,11 @@ namespace EngineeringMath.Component.Builder
         {
             Table = table;
             Header = name;
+            SatRegionBuilder = new PickerParameterSetting<SaturationRegion>(BuildDisplayName(LibraryResources.SatRegion), "satRegion", BuildSaturationRegionOptions());
             NodeSettings = new Dictionary<string, NodeBuilderParameterSetting>()
             {
                 { nameof(IThermoEntry.Region),
-                    new PickerParameterSetting<SaturationRegion>(BuildDisplayName(LibraryResources.ThermoRegion), "region", BuildRegionOptions()) },
+                    new PickerParameterSetting<Region>(BuildDisplayName(LibraryResources.ThermoRegion), "region", BuildRegionOptions()) },
                 { nameof(IThermoEntry.VaporFraction),
                     new UnitlessParameterSetting(BuildDisplayName(LibraryResources.VaporFraction), "xv", 0, 1) },
                 { nameof(IThermoEntry.LiquidFraction),
@@ -65,6 +66,12 @@ namespace EngineeringMath.Component.Builder
                 if (setting.UseThisParameter && setting.AutoBuildParameter)
                     Node.Parameters.Add(setting.BuildParameter());
             }
+            if (CheckIfBeingUsed(nameof(Region)))
+            {
+                SatRegionParameter = SatRegionBuilder.BuildParameter() as PickerParameter<SaturationRegion>;
+                Node.Parameters.Add(SatRegionParameter);
+            }
+                
         }
 
         public override void BuildVisitorOptions()
@@ -78,12 +85,16 @@ namespace EngineeringMath.Component.Builder
                 buildSPreTemp = CheckIfBeingUsed(nameof(IThermoEntry.Entropy), nameof(IThermoEntry.Pressure)),
                 buildHPreTemp = CheckIfBeingUsed(nameof(IThermoEntry.Enthalpy), nameof(IThermoEntry.Pressure));
 
+            FunctionVisitor satPressureVisitor = BuildSatPressureVisitor(),
+                satTemperatureVisitor = BuildSatTempVisitor();
+
+
             if (buildTempAndPre)
                 Node.VisitorOptions.Add(BuildTempAndPreVisitor());
             if (buildSatPre)
-                Node.VisitorOptions.Add(BuildSatPressureVisitor());
+                Node.VisitorOptions.Add(satPressureVisitor);
             if (buildSatTemp)
-                Node.VisitorOptions.Add(BuildSatTempVisitor());
+                Node.VisitorOptions.Add(satTemperatureVisitor);
             if (buildSPreTemp)
                 Node.VisitorOptions.Add(BuildEntropyAndPressureVisitor());
             if (buildHPreTemp)
@@ -101,7 +112,17 @@ namespace EngineeringMath.Component.Builder
                     IThermoEntry entry = Table.GetThermoEntryAtTemperatureAndPressure(T.BaseValue, P.BaseValue);
                     SetOutputParameters(ctx, entry, T, P);
                 },
-                IsOutput(nameof(IThermoEntry.Temperature), nameof(IThermoEntry.Pressure)));
+                DetermineState(
+                    new NodeBuilderParameterSetting[] 
+                    {
+                        NodeSettings[nameof(IThermoEntry.Temperature)],
+                        NodeSettings[nameof(IThermoEntry.Pressure)]
+                    },
+                    new NodeBuilderParameterSetting[]
+                    {
+                        SatRegionBuilder
+                    }
+                ));
         }
 
 
@@ -111,11 +132,20 @@ namespace EngineeringMath.Component.Builder
                 (ctx) =>
                 {
                     NumericParameter P = (NumericParameter)FindParameter(nameof(IThermoEntry.Pressure));
-                    PickerParameter<SaturationRegion> reg = (PickerParameter<SaturationRegion>)FindParameter(nameof(IThermoEntry.Region));
-                    IThermoEntry entry = Table.GetThermoEntryAtSatPressure(P.BaseValue, reg.ItemAtSelectedIndex);
-                    SetOutputParameters(ctx, entry, P, reg);
+                    IThermoEntry entry = Table.GetThermoEntryAtSatPressure(P.BaseValue, SatRegionParameter.ItemAtSelectedIndex);
+                    SetOutputParameters(ctx, entry, P, SatRegionParameter);
                 },
-                IsOutput(nameof(IThermoEntry.Region), nameof(IThermoEntry.Pressure)));
+                DetermineState(
+                    new NodeBuilderParameterSetting[]
+                    {
+                        SatRegionBuilder,
+                        NodeSettings[nameof(IThermoEntry.Pressure)]
+                    },
+                    new NodeBuilderParameterSetting[]
+                    {                        
+                        NodeSettings[nameof(IThermoEntry.Region)]
+                    }
+                ));
         }
 
         private FunctionVisitor BuildSatTempVisitor()
@@ -124,11 +154,19 @@ namespace EngineeringMath.Component.Builder
                 (ctx) =>
                 {
                     NumericParameter T = (NumericParameter)FindParameter(nameof(IThermoEntry.Temperature));
-                    PickerParameter<SaturationRegion> reg = (PickerParameter<SaturationRegion>)FindParameter(nameof(IThermoEntry.Region));
-                    IThermoEntry entry = Table.GetThermoEntryAtSatPressure(T.BaseValue, reg.ItemAtSelectedIndex);
-                    SetOutputParameters(ctx, entry, T, reg);
+                    IThermoEntry entry = Table.GetThermoEntryAtSatTemp(T.BaseValue, SatRegionParameter.ItemAtSelectedIndex);
+                    SetOutputParameters(ctx, entry, T, SatRegionParameter);
                 },
-                IsOutput(nameof(IThermoEntry.Region), nameof(IThermoEntry.Temperature)));
+                DetermineState(
+                    new NodeBuilderParameterSetting[]
+                    {
+                        SatRegionBuilder,
+                        NodeSettings[nameof(IThermoEntry.Temperature)]
+                    },
+                    new NodeBuilderParameterSetting[]
+                    {
+                        NodeSettings[nameof(IThermoEntry.Region)]
+                    }));
         }
 
         private FunctionVisitor BuildEntropyAndPressureVisitor()
@@ -141,7 +179,17 @@ namespace EngineeringMath.Component.Builder
                     IThermoEntry entry = Table.GetThermoEntryAtEntropyAndPressure(S.BaseValue, P.BaseValue);
                     SetOutputParameters(ctx, entry, S, P);
                 },
-                IsOutput(nameof(IThermoEntry.Entropy), nameof(IThermoEntry.Pressure)));
+                DetermineState(
+                    new NodeBuilderParameterSetting[]
+                    {
+                        NodeSettings[nameof(IThermoEntry.Entropy)],
+                        NodeSettings[nameof(IThermoEntry.Pressure)]
+                    },
+                    new NodeBuilderParameterSetting[]
+                    {
+                        SatRegionBuilder
+                    }
+                ));
         }
 
         private FunctionVisitor BuildEnthalpyAndPressureVisitor()
@@ -154,7 +202,17 @@ namespace EngineeringMath.Component.Builder
                     IThermoEntry entry = Table.GetThermoEntryAtEnthalpyAndPressure(H.BaseValue, P.BaseValue);
                     SetOutputParameters(ctx, entry, H, P);
                 },
-                IsOutput(nameof(IThermoEntry.Enthalpy), nameof(IThermoEntry.Pressure)));
+                DetermineState(
+                    new NodeBuilderParameterSetting[]
+                    {
+                        NodeSettings[nameof(IThermoEntry.Enthalpy)],
+                        NodeSettings[nameof(IThermoEntry.Pressure)]
+                    },
+                    new NodeBuilderParameterSetting[]
+                    {
+                        SatRegionBuilder
+                    }
+                ));
         }
 
 
@@ -174,19 +232,23 @@ namespace EngineeringMath.Component.Builder
         }
 
 
-        private Func<IParameterContainerNode, string, bool> IsOutput(params string[] nodeSettingsKeysForInputs)
+        private Func<IParameterContainerNode, string, ParameterState> DetermineState(
+            NodeBuilderParameterSetting[] inputArr,
+            NodeBuilderParameterSetting[] inactiveArr)
         {
             return (ctx, varName) =>             
             {
-                foreach (KeyValuePair<string, NodeBuilderParameterSetting> pair in NodeSettings)
+                foreach(NodeBuilderParameterSetting setting in inputArr)
                 {
-                    if (pair.Value.VarName.Equals(varName))
-                    {
-                        return !IsInput(pair.Value, nodeSettingsKeysForInputs);
-                    }
-                        
+                    if (setting.VarName.Equals(varName))
+                        return ParameterState.Input;
                 }
-                return false;
+                foreach(NodeBuilderParameterSetting setting in inactiveArr)
+                {
+                    if (setting.VarName.Equals(varName))
+                        return ParameterState.Inactive;
+                }
+                return ParameterState.Output;
             };           
         }
 
@@ -218,6 +280,12 @@ namespace EngineeringMath.Component.Builder
         /// <returns></returns>
         private void SetOutputParameters(IParameterContainerNode ctx, IThermoEntry entry, params IParameter[] inputParameters)
         {
+            if (null == entry)
+                entry = new ThermoEntry(Region.SupercriticalFluid, 
+                    double.NaN, double.NaN, double.NaN, 
+                    double.NaN, double.NaN, double.NaN, 
+                    double.NaN, double.NaN, double.NaN, 
+                    0, 0, 0);
             foreach (KeyValuePair<string, NodeBuilderParameterSetting> pair in NodeSettings)
             {
                 if (!pair.Value.UseThisParameter)
@@ -246,9 +314,13 @@ namespace EngineeringMath.Component.Builder
             {
                 numPara.BaseValue = (double)entry.GetType().GetProperty(propName).GetValue(entry, null);
             }
-            else if (parameter is PickerParameter<SaturationRegion> regPara && setting is PickerParameterSetting<SaturationRegion> satSet)
+            else if (parameter is PickerParameter<SaturationRegion> satRegPara && setting is PickerParameterSetting<SaturationRegion> satSet)
             {
-                regPara.ItemAtSelectedIndex = (SaturationRegion)entry.GetType().GetProperty(propName).GetValue(entry, null);
+                satRegPara.ItemAtSelectedIndex = (SaturationRegion)entry.GetType().GetProperty(propName).GetValue(entry, null);
+            }
+            else if (parameter is PickerParameter<Region> regPara && setting is PickerParameterSetting<Region> regSet)
+            {
+                regPara.ItemAtSelectedIndex = (Region)entry.GetType().GetProperty(propName).GetValue(entry, null);
             }
             else
             {
@@ -258,13 +330,34 @@ namespace EngineeringMath.Component.Builder
 
         public IPVTTable Table { get; }
         private string Header { get; }
-        /// <summary>
-        /// Where the key is the property name taken from IThermoEntry
-        /// </summary>
+
+        private PickerParameterSetting<SaturationRegion> SatRegionBuilder { get; } 
+        private PickerParameter<SaturationRegion> SatRegionParameter { get; set; }
+
+
+    /// <summary>
+    /// Where the key is the property name taken from IThermoEntry
+    /// </summary>
         public Dictionary<string, NodeBuilderParameterSetting> NodeSettings { get; }
 
 
-        private static PickerParameterOption<SaturationRegion>[] BuildRegionOptions()
+        private static PickerParameterOption<Region>[] BuildRegionOptions()
+        {
+            return new PickerParameterOption<Region>[]
+            {
+                new PickerParameterOption<Region>(LibraryResources.SupercriticalFluid, Region.SupercriticalFluid),
+                new PickerParameterOption<Region>(LibraryResources.Gas, Region.Gas),
+                new PickerParameterOption<Region>(LibraryResources.Vapor, Region.Vapor),
+                new PickerParameterOption<Region>(LibraryResources.Liquid, Region.Liquid),
+                new PickerParameterOption<Region>(LibraryResources.Solid, Region.Solid),
+                new PickerParameterOption<Region>(LibraryResources.SolidLiquid, Region.SolidLiquid),
+                new PickerParameterOption<Region>(LibraryResources.LiquidVapor, Region.LiquidVapor),
+                new PickerParameterOption<Region>(LibraryResources.SolidVapor, Region.SolidVapor),
+                new PickerParameterOption<Region>(LibraryResources.SolidLiquidVapor, Region.SolidLiquidVapor)
+            };
+        }
+
+        private static PickerParameterOption<SaturationRegion>[] BuildSaturationRegionOptions()
         {
             return new PickerParameterOption<SaturationRegion>[]
             {

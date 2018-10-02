@@ -162,11 +162,11 @@ namespace EngineeringMath.Component
         }
 
         /// <summary>
-        /// Searches each active leaf node to determine if the parameter name is being used as an output
+        /// Searches each active nodes to determine if the varName's state
         /// </summary>
-        /// <param name="parameterName"></param>
+        /// <param name="varName"></param>
         /// <returns></returns>
-        public abstract bool IsOutput(string parameterName);
+        public abstract ParameterState DetermineState(string paraVarName);
 
 
 

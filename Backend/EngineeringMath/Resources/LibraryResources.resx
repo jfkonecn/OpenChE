@@ -500,4 +500,7 @@
   <data name="OutletBlank" xml:space="preserve">
     <value>Outlet {0}</value>
   </data>
+  <data name="SatRegion" xml:space="preserve">
+    <value>Saturation Region</value>
+  </data>
 </root>

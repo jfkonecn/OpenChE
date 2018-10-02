@@ -5,7 +5,8 @@ using System.Text;
 using EngineeringMath.Component;
 using EngineeringMath;
 using EngineeringMath.Resources;
-
+using EngineeringMath.Resources.PVTTables;
+using System.Reflection;
 
 namespace BackendTesting
 {
@@ -60,16 +61,40 @@ namespace BackendTesting
         [TestMethod]
         public void OrificePlate()
         {
-            RunFunctionSolveTest(LibraryResources.FluidDynamics, LibraryResources.OrificePlate, new Dictionary<string, double>()
+            RunFunctionSolveTest(LibraryResources.FluidDynamics, LibraryResources.OrificePlate, new Dictionary<string, object>()
             {
-                { LibraryResources.DischargeCoefficient, 0.7 },
-                { LibraryResources.Density, 1000 },
-                { LibraryResources.InletPipeArea, 10 * 10 * Math.PI / 4.0 },
-                { LibraryResources.OrificeArea,  8 * 8 * Math.PI / 4.0 },
-                { LibraryResources.PressureDrop, 10 },
-                { LibraryResources.VolumetricFlowRate, 6.476 }
+                { "dc", 0.7 },
+                { "rho", 1000.0 },
+                { "pArea", 10 * 10 * Math.PI / 4.0 },
+                { "oArea",  8 * 8 * Math.PI / 4.0 },
+                { "deltaP", 10.0 },
+                { "Q", 6.476 }
             });
         }
+
+        [TestMethod]
+        public void SteamTable()
+        {
+            RunFunctionSolveTest(LibraryResources.Thermodynamics, LibraryResources.SteamTable, new Dictionary<string, object>()
+            {
+                { "region", Region.Liquid },
+                { "satRegion", SaturationRegion.Liquid },
+                { "xv", 0.0 },
+                { "xl", 1.0 },
+                { "xs", 0.0 },
+                { "T", 393.361545936488 },
+                { "P", 0.2e6 },
+                { "Vs", 0.00106051840643552 },
+                { "U", 504471.741847973 },
+                { "H", 504683.84552926 },
+                { "S", 1530.0982011075 },
+                { "cv", 3666.99397284121 },
+                { "cp", 4246.73524917536 },
+                { "u", 1520.69128792808 },
+                { "rho", 1 / 0.00106051840643552 }
+            });
+        }
+
 
         /// <summary>
         /// Runs the same parameter values for each setting to make sure the function is solving correctly 
@@ -77,7 +102,7 @@ namespace BackendTesting
         /// <param name="paramValues">where the key is the display name of the parameter and the double is its value</param>
         /// <param name="funCat"></param>
         /// <param name="funName"></param>
-        private void RunFunctionSolveTest(string funCat, string funName, Dictionary<string, double> paramValues)
+        private void RunFunctionSolveTest(string funCat, string funName, Dictionary<string, object> paramValues)
         {
             Function fun;
             if (MathManager.AllFunctions.TryGetValue(funCat, out Category<Function> cat))
@@ -137,36 +162,85 @@ namespace BackendTesting
             }
         }
 
-        private void CheckFunctionWithCurrentSettings(Function fun, Dictionary<string, double> paramValues)
+        private void CheckFunctionWithCurrentSettings(Function fun, Dictionary<string, object> paramValues)
         {
-            bool paramsChecked = false;
-            
-            foreach (IParameter para in fun.InputParameters)
+
+            foreach (IParameter para in fun.AllParameters)
             {
-                if(para is INumericParameter numPara)
-                    numPara.BaseValue = paramValues[para.DisplayName];
+                if(paramValues.ContainsKey(para.VarName))
+                    SetParameter(para, paramValues[para.VarName]);
             }
-            foreach(IParameter para in fun.OutputParameters)
+            fun.Solve.Execute(null);
+            foreach (IParameter para in fun.AllParameters)
             {
-                if (para is INumericParameter numPara)
+                if (paramValues.ContainsKey(para.VarName))
+                    CheckParameter(para, paramValues[para.VarName]);
+            }
+        }
+
+        private void SetParameter(IParameter para, object obj)
+        {
+            if (para is INumericParameter numPara && obj is double num)
+            {
+                if (para.CurrentState != ParameterState.Output)
+                {
+                    numPara.BaseValue = num;
+                }
+                else
+                {
                     numPara.BaseValue = double.NaN;
+                }
+                return;
             }
 
-            fun.Solve.Execute(null);
-            foreach (IParameter para in fun.InputParameters)
+            try
             {
-                if (para is INumericParameter numPara)
-                    Assert.AreEqual(paramValues[para.DisplayName], numPara.BaseValue, 1e-3);
-                paramsChecked = true;
+                PropertyInfo property = para.GetType().GetProperty(nameof(PickerParameter<string>.ItemAtSelectedIndex));
+                if (para.CurrentState != ParameterState.Output)
+                {
+                    property.SetValue(para, obj);
+                }
+                else
+                {
+                    property.SetValue(para, null);
+                }
+                return;
             }
-            foreach (IParameter para in fun.OutputParameters)
+            catch
             {
-                if (para is INumericParameter numPara)
-                    Assert.AreEqual(paramValues[para.DisplayName], numPara.BaseValue, 1e-1, $"Output: {para.DisplayName}");
-                paramsChecked = true;
+                throw new Exception($"Parameter {para.DisplayName} type, {para.GetType()}, " +
+                    $"does not match with the corresponding paramValue type {obj.GetType()}");
             }
-            if (!paramsChecked)
-                Assert.Fail();
+
+        }
+        private void CheckParameter(IParameter para, object obj)
+        {
+            if (para is INumericParameter numPara && obj is double num)
+            {
+                AssertFractionDifference(num, numPara.BaseValue, 1e-3, numPara.DisplayName);
+                return;
+            }
+
+            try
+            {
+                PropertyInfo property = para.GetType().GetProperty(nameof(PickerParameter<string>.ItemAtSelectedIndex));
+                Assert.AreEqual(obj, property.GetValue(para));                
+                return;
+            }
+            catch(AssertFailedException e)
+            {
+                throw e;
+            }
+            catch
+            {
+                throw new Exception($"Parameter {para.DisplayName} type, {para.GetType()}, " +
+                    $"does not match with the corresponding paramValue type {obj.GetType()}");
+            }
+        }
+        private void AssertFractionDifference(double expected, double actual, double maxFracErr, string msg)
+        {
+            double delta = expected * maxFracErr;
+            Assert.AreEqual(expected, actual, delta, msg);                
         }
     }
 }

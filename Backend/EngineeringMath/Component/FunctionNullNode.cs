@@ -44,7 +44,7 @@ namespace EngineeringMath.Component
             throw new NotSupportedException();
         }
 
-        public override bool IsOutput(string parameterName)
+        public override ParameterState DetermineState(string parameterName)
         {
             throw new NotSupportedException();
         }
