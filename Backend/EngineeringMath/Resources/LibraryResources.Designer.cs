@@ -160,6 +160,24 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Convert From.
+        /// </summary>
+        public static string ConvertFrom {
+            get {
+                return ResourceManager.GetString("ConvertFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Convert To.
+        /// </summary>
+        public static string ConvertTo {
+            get {
+                return ResourceManager.GetString("ConvertTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Correction Coefficient.
         /// </summary>
         public static string CorrectionCoefficient {
@@ -1078,6 +1096,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unit Converter.
+        /// </summary>
+        public static string UnitConverter {
+            get {
+                return ResourceManager.GetString("UnitConverter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Cubed.
         /// </summary>
         public static string UnitCubed {
@@ -1110,6 +1137,15 @@ namespace EngineeringMath.Resources {
         public static string UnitToTheNthPower {
             get {
                 return ResourceManager.GetString("UnitToTheNthPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit Type.
+        /// </summary>
+        public static string UnitType {
+            get {
+                return ResourceManager.GetString("UnitType", resourceCulture);
             }
         }
         
@@ -1155,6 +1191,15 @@ namespace EngineeringMath.Resources {
         public static string USTons {
             get {
                 return ResourceManager.GetString("USTons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Utility.
+        /// </summary>
+        public static string Utility {
+            get {
+                return ResourceManager.GetString("Utility", resourceCulture);
             }
         }
         

@@ -512,4 +512,19 @@
   <data name="PressureHead" xml:space="preserve">
     <value>Pressure Head</value>
   </data>
+  <data name="ConvertFrom" xml:space="preserve">
+    <value>Convert From</value>
+  </data>
+  <data name="ConvertTo" xml:space="preserve">
+    <value>Convert To</value>
+  </data>
+  <data name="UnitConverter" xml:space="preserve">
+    <value>Unit Converter</value>
+  </data>
+  <data name="UnitType" xml:space="preserve">
+    <value>Unit Type</value>
+  </data>
+  <data name="Utility" xml:space="preserve">
+    <value>Utility</value>
+  </data>
 </root>
