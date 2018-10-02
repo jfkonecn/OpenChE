@@ -160,6 +160,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Correction Coefficient.
+        /// </summary>
+        public static string CorrectionCoefficient {
+            get {
+                return ResourceManager.GetString("CorrectionCoefficient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Days.
         /// </summary>
         public static string Days {
@@ -745,6 +754,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pitot Tube.
+        /// </summary>
+        public static string PitotTube {
+            get {
+                return ResourceManager.GetString("PitotTube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter a number between {0:G4} and {1:G4}..
         /// </summary>
         public static string Placeholder {
@@ -795,6 +813,15 @@ namespace EngineeringMath.Resources {
         public static string PressureDrop {
             get {
                 return ResourceManager.GetString("PressureDrop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pressure Head.
+        /// </summary>
+        public static string PressureHead {
+            get {
+                return ResourceManager.GetString("PressureHead", resourceCulture);
             }
         }
         

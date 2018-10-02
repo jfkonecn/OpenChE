@@ -503,4 +503,13 @@
   <data name="SatRegion" xml:space="preserve">
     <value>Saturation Region</value>
   </data>
+  <data name="CorrectionCoefficient" xml:space="preserve">
+    <value>Correction Coefficient</value>
+  </data>
+  <data name="PitotTube" xml:space="preserve">
+    <value>Pitot Tube</value>
+  </data>
+  <data name="PressureHead" xml:space="preserve">
+    <value>Pressure Head</value>
+  </data>
 </root>

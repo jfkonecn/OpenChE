@@ -29,8 +29,14 @@ namespace EngineeringMath.Component.DefaultFunctions
                                 "rho", LibraryResources.Density, minSIValue:0)
                             },
                 Children =
-                            {
-                                new FunctionLeaf("$rho * ($pin / $rho + 9.81 * ($hin - $hout) + ($uin ^ 2 - $uout ^ 2) / 2)", "pout")
+                            {                                
+                                new FunctionLeaf("Sqrt(2 * ($uout ^ 2 / 2 + 9.81 * ($hout - $hin) + ($pout - $pin) / $rho))", "uin"),
+                                new FunctionLeaf("Sqrt(2 * ($uin ^ 2 / 2 + 9.81 * ($hin - $hout) + ($pin - $pout) / $rho))", "uout"),
+                                new FunctionLeaf("$rho * ($pout / $rho + 9.81 * ($hout - $hin) + ($uout ^ 2 - $uin ^ 2) / 2)", "pin"),
+                                new FunctionLeaf("$rho * ($pin / $rho + 9.81 * ($hin - $hout) + ($uin ^ 2 - $uout ^ 2) / 2)", "pout"),                                
+                                new FunctionLeaf("(($pout - $pin) / $rho + ($uout ^ 2 - $uin ^ 2) / 2) / 9.81 + $hout", "hin"),
+                                new FunctionLeaf("(($pin - $pout) / $rho + ($uin ^ 2 - $uout ^ 2) / 2) / 9.81 + $hin", "hout"),
+                                new FunctionLeaf("($pout - $pin) / (0.5 * ($uin ^ 2 - $uout ^ 2) + 9.81 * ($hin - $hout))", "rho")
                             }
             };
         }

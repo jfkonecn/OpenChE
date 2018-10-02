@@ -58,42 +58,9 @@ namespace BackendTesting
             
         }
 
-        [TestMethod]
-        public void OrificePlate()
-        {
-            RunFunctionSolveTest(LibraryResources.FluidDynamics, LibraryResources.OrificePlate, new Dictionary<string, object>()
-            {
-                { "dc", 0.7 },
-                { "rho", 1000.0 },
-                { "pArea", 10 * 10 * Math.PI / 4.0 },
-                { "oArea",  8 * 8 * Math.PI / 4.0 },
-                { "deltaP", 10.0 },
-                { "Q", 6.476 }
-            });
-        }
 
-        [TestMethod]
-        public void SteamTable()
-        {
-            RunFunctionSolveTest(LibraryResources.Thermodynamics, LibraryResources.SteamTable, new Dictionary<string, object>()
-            {
-                { "region", Region.Liquid },
-                { "satRegion", SaturationRegion.Liquid },
-                { "xv", 0.0 },
-                { "xl", 1.0 },
-                { "xs", 0.0 },
-                { "T", 393.361545936488 },
-                { "P", 0.2e6 },
-                { "Vs", 0.00106051840643552 },
-                { "U", 504471.741847973 },
-                { "H", 504683.84552926 },
-                { "S", 1530.0982011075 },
-                { "cv", 3666.99397284121 },
-                { "cp", 4246.73524917536 },
-                { "u", 1520.69128792808 },
-                { "rho", 1 / 0.00106051840643552 }
-            });
-        }
+
+
 
 
         /// <summary>
@@ -102,7 +69,7 @@ namespace BackendTesting
         /// <param name="paramValues">where the key is the display name of the parameter and the double is its value</param>
         /// <param name="funCat"></param>
         /// <param name="funName"></param>
-        private void RunFunctionSolveTest(string funCat, string funName, Dictionary<string, object> paramValues)
+        public static void RunFunctionSolveTest(string funCat, string funName, Dictionary<string, object> paramValues)
         {
             Function fun;
             if (MathManager.AllFunctions.TryGetValue(funCat, out Category<Function> cat))
@@ -127,6 +94,7 @@ namespace BackendTesting
             if(preStack.Count == 0)
             {
                 CheckFunctionWithCurrentSettings(fun, paramValues);
+                return;
             }
 
 
@@ -162,7 +130,7 @@ namespace BackendTesting
             }
         }
 
-        private void CheckFunctionWithCurrentSettings(Function fun, Dictionary<string, object> paramValues)
+        private static void CheckFunctionWithCurrentSettings(Function fun, Dictionary<string, object> paramValues)
         {
 
             foreach (IParameter para in fun.AllParameters)
@@ -178,7 +146,7 @@ namespace BackendTesting
             }
         }
 
-        private void SetParameter(IParameter para, object obj)
+        private static void SetParameter(IParameter para, object obj)
         {
             if (para is INumericParameter numPara && obj is double num)
             {
@@ -213,7 +181,7 @@ namespace BackendTesting
             }
 
         }
-        private void CheckParameter(IParameter para, object obj)
+        private static void CheckParameter(IParameter para, object obj)
         {
             if (para is INumericParameter numPara && obj is double num)
             {
@@ -237,7 +205,7 @@ namespace BackendTesting
                     $"does not match with the corresponding paramValue type {obj.GetType()}");
             }
         }
-        private void AssertFractionDifference(double expected, double actual, double maxFracErr, string msg)
+        private static void AssertFractionDifference(double expected, double actual, double maxFracErr, string msg)
         {
             double delta = expected * maxFracErr;
             Assert.AreEqual(expected, actual, delta, msg);                

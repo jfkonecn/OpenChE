@@ -14,11 +14,25 @@ namespace CheApp.View
         public FunctionPage(Function fun)
         {
             BindingContext = fun;
-            Button solveBtn = new Button();
-            solveBtn.Text = LibraryResources.Solve;
-            solveBtn.FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button));
+            Button solveBtn = new Button
+            {
+                Text = LibraryResources.Solve,
+                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Button))
+            };
             solveBtn.SetBinding(Button.CommandProperty, new Binding(nameof(fun.Solve)));
             SetBinding(ContentPage.TitleProperty, new Binding(nameof(fun.FullName)));
+
+            StackLayout stack = new StackLayout()
+            {
+
+            };
+            if (fun.AllSettings.Count > 0)
+            {
+                stack.Children.Add(FunctionPageStackLayout.Builder(LibraryResources.Settings, fun.AllSettings, SettingState.Active));
+            }
+            stack.Children.Add(FunctionPageStackLayout.Builder(LibraryResources.Inputs, fun.AllParameters, ParameterState.Input));
+            stack.Children.Add(FunctionPageStackLayout.Builder(LibraryResources.Outputs, fun.AllParameters, ParameterState.Output));
+
             this.Content = new StackLayout()
             {
                 Margin = 5,
@@ -26,16 +40,8 @@ namespace CheApp.View
                 {
                     new ScrollView()
                     {                        
-                        Content =
-                            new StackLayout
-                            {
-                                Children =
-                                {
-                                    FunctionPageStackLayout.Builder(LibraryResources.Settings, fun.AllSettings, SettingState.Active),
-                                    FunctionPageStackLayout.Builder(LibraryResources.Inputs, fun.AllParameters, ParameterState.Input),
-                                    FunctionPageStackLayout.Builder(LibraryResources.Outputs, fun.AllParameters, ParameterState.Output)
-                                }
-                            }
+                        Content = stack
+
                     },                
                     solveBtn
                 }
