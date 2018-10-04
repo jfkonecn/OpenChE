@@ -273,7 +273,7 @@ namespace EngineeringMath.Resources.PVTTables
                     return double.NaN;
                 return thermoEntry.Pressure - pressure;
             }
-            double density = NewtonsMethod.Solve(500, 1, fx, minX: 0);
+            double density = NewtonsMethod.Solve(500, 1, fx, minX: 0, maxX: MaxTemperatureGivenPressure(pressure));
             if (double.IsNaN(density))
                 return null;
             return Region3EquationHelper(temperature, density);
@@ -513,6 +513,14 @@ namespace EngineeringMath.Resources.PVTTables
         /// <returns>null if an entry cannot be found</returns>
         public IThermoEntry GetThermoEntryAtEnthalpyAndPressure(double enthalpy, double pressure)
         {
+            IThermoEntry liqEntry = GetThermoEntryAtSatPressure(pressure, SaturationRegion.Liquid),
+                vapEntry = GetThermoEntryAtSatPressure(pressure, SaturationRegion.Vapor);
+            if (vapEntry != null && liqEntry != null &&
+                vapEntry.Enthalpy >= enthalpy && liqEntry.Enthalpy <= enthalpy)
+            {
+                return ThermoEntry.BuildLiquidVaporEntry(vapEntry, liqEntry, (vapEntry.Enthalpy - enthalpy) / (vapEntry.Enthalpy - liqEntry.Enthalpy));
+            }
+
             double fx(double x)
             {
                 IThermoEntry thermoEntry = GetThermoEntryAtTemperatureAndPressure(x, pressure);
@@ -521,7 +529,7 @@ namespace EngineeringMath.Resources.PVTTables
 
                 return thermoEntry.Enthalpy- enthalpy;
             }
-            double temperature = NewtonsMethod.Solve(500, 1, fx, minX: MinTemperature, maxX: MaxTemperature);
+            double temperature = NewtonsMethod.Solve(500, 1, fx, minX: MinTemperature, maxX: MaxTemperatureGivenPressure(pressure));
             if (double.IsNaN(temperature))
                 return null;
             return GetThermoEntryAtTemperatureAndPressure(temperature, pressure);
@@ -535,6 +543,14 @@ namespace EngineeringMath.Resources.PVTTables
         /// <returns>null if an entry cannot be found</returns>
         public IThermoEntry GetThermoEntryAtEntropyAndPressure(double entropy, double pressure)
         {
+            IThermoEntry liqEntry = GetThermoEntryAtSatPressure(pressure, SaturationRegion.Liquid),
+                vapEntry = GetThermoEntryAtSatPressure(pressure, SaturationRegion.Vapor);
+            if(vapEntry != null && liqEntry != null &&
+                vapEntry.Entropy >= entropy && liqEntry.Entropy <= entropy)
+            {
+                return ThermoEntry.BuildLiquidVaporEntry(vapEntry, liqEntry, (vapEntry.Entropy - entropy) /(vapEntry.Entropy - liqEntry.Entropy));
+            }
+
             double fx(double x)
             {
                 IThermoEntry thermoEntry = GetThermoEntryAtTemperatureAndPressure(x, pressure);
@@ -542,7 +558,7 @@ namespace EngineeringMath.Resources.PVTTables
                     return double.NaN;
                 return thermoEntry.Entropy - entropy;
             }
-            double temperature = NewtonsMethod.Solve(300, 0.001, fx, minX: MinTemperature, maxX: MaxTemperature);
+            double temperature = NewtonsMethod.Solve(300, 0.0001, fx, minX: MinTemperature, maxX: MaxTemperatureGivenPressure(pressure));
             if (double.IsNaN(temperature))
                 return null;
             return GetThermoEntryAtTemperatureAndPressure(temperature, pressure);
@@ -628,6 +644,17 @@ namespace EngineeringMath.Resources.PVTTables
                     break;
             }
             return thermoEntry;
+        }
+
+        /// <summary>
+        /// The model is undefined when the pressure is greater than 50 MPa AND the temperature is greater than 800
+        /// </summary>
+        /// <param name="pressure"></param>
+        private double MaxTemperatureGivenPressure(double pressure)
+        {
+            if (pressure > 50e6)
+                return 800 + 273.15;
+            return MaxTemperature;
         }
 
         public double MaxPressure { get; } = 100e6;

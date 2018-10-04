@@ -20,24 +20,24 @@ namespace EngineeringMath.Component
         /// 
         /// </summary>
         /// <param name="name"></param>
-        public FunctionVisitableNode(string name) : this()
+        protected FunctionVisitableNode(string name) : this()
         {
             Name = name;
         }
 
-
-        internal void VisitorOptions_IndexChanged(object sender, EventArgs e)
+        public FunctionVisitableNode(string name, FunctionVisitor visitor) : this(name)
         {
-            OnStateChanged();
+            Visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
+            Visitor.Parent = this;
         }
 
-        public SelectableList<FunctionVisitor, IParameterContainerNode> VisitorOptions { get; internal set; }
+        public FunctionVisitor Visitor { get; protected set; }
 
         public FunctionTreeNode NextNode { get; set; }
 
         public override void Calculate()
         {
-            VisitorOptions?.ItemAtSelectedIndex?.Calculate();
+            Visitor?.Calculate();
             NextNode?.Calculate();
         }
 
@@ -49,27 +49,25 @@ namespace EngineeringMath.Component
 
         public override ParameterState DetermineState(string paraVarName)
         {
-            FunctionVisitor visitor = VisitorOptions.ItemAtSelectedIndex;
-            ParameterState state = visitor == null ? ParameterState.Inactive : visitor.DetermineState(paraVarName);
+            ParameterState state = Visitor == null ? ParameterState.Inactive : Visitor.DetermineState(paraVarName);
             if(state == ParameterState.Inactive && NextNode != null)
                 state = NextNode.DetermineState(paraVarName);
             return state;
         }
 
-        protected override void OnParentChanged(ParentChangedEventArgs e)
+        public override void ActivateStates()
         {
-            base.OnParentChanged(e);
-            Parent?.SettingAdded(VisitorOptions);
+            base.ActivateStates();
+            Visitor?.ActivateStates();
+            NextNode?.ActivateStates();
         }
 
-        protected override void OnStateChanged()
+        public override void DeactivateStates()
         {
-            base.OnStateChanged();            
-            for (int i = 0; i < VisitorOptions.Count; i++)
-            {
-                VisitorOptions[i].DeactivateStates();
-            }
-            VisitorOptions.ItemAtSelectedIndex.ActivateStates();
+            base.DeactivateStates();
+            Visitor?.DeactivateStates();
+            NextNode?.DeactivateStates();
         }
+
     }
 }

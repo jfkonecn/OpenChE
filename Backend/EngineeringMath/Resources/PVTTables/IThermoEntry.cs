@@ -10,15 +10,15 @@ namespace EngineeringMath.Resources.PVTTables
         /// <summary>
         /// between 0 and 1
         /// </summary>
-        double VaporFraction { get; }
+        double VaporMassFraction { get; }
         /// <summary>
         /// between 0 and 1
         /// </summary>
-        double LiquidFraction { get; }
+        double LiquidMassFraction { get; }
         /// <summary>
         /// between 0 and 1
         /// </summary>
-        double SolidFraction { get; }
+        double SolidMassFraction { get; }
         /// <summary>
         /// In Kelvin
         /// </summary>

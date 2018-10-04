@@ -119,6 +119,10 @@ namespace BackendTesting
 
             EnthalpyAndPressure(Region.Gas, 823.15, 14e6, 0.024763222774, 3114.302136294585e3, 3460.987255128561e3,
                 6.564768889364e3, 1.892708832325e3, 2.666558503968e3, 666.050616844223, 0, 0, 0);
+
+            EnthalpyAndPressure(Region.LiquidVapor, 318.957548207023, 10e3, 11.8087122249855, 1999135.82661328,
+                2117222.94886314, 6.6858e3, 1966.28009225455, 2377.86300751001, 655.005141924186,
+                0.804912447078132, 0.195087552921867, 0);
         }
 
         public void EnthalpyAndPressure(Region region, double temperature,
@@ -149,20 +153,24 @@ namespace BackendTesting
 
             EntropyAndPressure(Region.Gas, 823.15, 14e6, 0.024763222774, 3114.302136294585e3, 3460.987255128561e3,
                 6.564768889364e3, 1.892708832325e3, 2.666558503968e3, 666.050616844223, 0, 0, 0);
+
+            EntropyAndPressure(Region.LiquidVapor, 318.957548207023, 10e3, 11.8087122249855, 1999135.82661328,
+                2117222.94886314, 6.6858e3, 1966.28009225455, 2377.86300751001, 655.005141924186, 
+                0.804912447078132, 0.195087552921867, 0);
         }
 
         public void EntropyAndPressure(Region region, double temperature,
             double pressure, double specificVolume, double internalEnergy, double enthalpy,
             double entropy, double isochoricHeatCapacity, double isobaricHeatCapacity,
             double speedOfSound,
-            double vaporFraction, double liquidFraction, double solidFraction)
+            double vaporMassFraction, double liquidMassFraction, double solidMassFraction)
         {
             IThermoEntry entry = SteamTable.GetThermoEntryAtEntropyAndPressure(entropy, pressure);
             CheckEntryValues(entry, region, temperature,
             pressure, specificVolume, internalEnergy, enthalpy,
             entropy, isochoricHeatCapacity, isobaricHeatCapacity,
             speedOfSound,
-            vaporFraction, liquidFraction, solidFraction);
+            vaporMassFraction, liquidMassFraction, solidMassFraction);
         }
 
         private void CheckEntryValues(IThermoEntry entry, SaturationRegion region, double temperature,
@@ -212,9 +220,9 @@ namespace BackendTesting
             Assert.AreEqual(isochoricHeatCapacity, entry.IsochoricHeatCapacity, maxErr);
             Assert.AreEqual(isobaricHeatCapacity, entry.IsobaricHeatCapacity, maxErr);
             Assert.AreEqual(speedOfSound, entry.SpeedOfSound, maxErr);
-            Assert.AreEqual(vaporFraction, entry.VaporFraction, maxErr);
-            Assert.AreEqual(liquidFraction, entry.LiquidFraction, maxErr);
-            Assert.AreEqual(solidFraction, entry.SolidFraction, maxErr);
+            Assert.AreEqual(vaporFraction, entry.VaporMassFraction, maxErr);
+            Assert.AreEqual(liquidFraction, entry.LiquidMassFraction, maxErr);
+            Assert.AreEqual(solidFraction, entry.SolidMassFraction, maxErr);
         }
     }
 }

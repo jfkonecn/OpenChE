@@ -11,13 +11,17 @@ namespace BackendTesting.FunctionTests
     {
         private void RunUtilitySolveTest(string funName, Dictionary<string, object> paramValues)
         {
-            ComponentFunction.RunFunctionSolveTest(LibraryResources.UnitConverter, funName, paramValues);
+            ComponentFunction.RunFunctionSolveTest(LibraryResources.Utility, funName, paramValues);
         }
 
         [TestMethod]
         public void UnitConverter()
         {
-            
+            RunUtilitySolveTest(LibraryResources.UnitConverter, new Dictionary<string, object>()
+            {
+                { "in", 100.0 },
+                { "out", 100.0 }
+            });
         }
     }
 }

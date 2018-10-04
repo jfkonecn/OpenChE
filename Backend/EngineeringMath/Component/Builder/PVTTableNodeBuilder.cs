@@ -10,53 +10,71 @@ namespace EngineeringMath.Component.Builder
     {
         public static PVTTableNodeBuilder SteamTableBuilder()
         {
-            return new PVTTableNodeBuilder(SteamTable.Table, LibraryResources.SteamTable);
+            return new PVTTableNodeBuilder(SteamTable.Table, LibraryResources.SteamTable, "steamTable");
         }
 
 
-        public PVTTableNodeBuilder(IPVTTable table, string name)
+        public PVTTableNodeBuilder(IPVTTable table, string name, string varNamePrefix)
         {
             Table = table;
             Header = name;
-            SatRegionBuilder = new PickerParameterSetting<SaturationRegion>(BuildDisplayName(LibraryResources.SatRegion), "satRegion", BuildSaturationRegionOptions());
+            PrefixVarName = varNamePrefix;
+            SatRegionBuilder = new PickerParameterSetting<SaturationRegion>(BuildDisplayName(LibraryResources.SatRegion), 
+                BuildVarName("satRegion"), BuildSaturationRegionOptions());
             NodeSettings = new Dictionary<string, NodeBuilderParameterSetting>()
             {
                 { nameof(IThermoEntry.Region),
-                    new PickerParameterSetting<Region>(BuildDisplayName(LibraryResources.ThermoRegion), "region", BuildRegionOptions()) },
-                { nameof(IThermoEntry.VaporFraction),
-                    new UnitlessParameterSetting(BuildDisplayName(LibraryResources.VaporFraction), "xv", 0, 1) },
-                { nameof(IThermoEntry.LiquidFraction),
-                    new UnitlessParameterSetting(BuildDisplayName(LibraryResources.LiquidFraction), "xl", 0, 1) },
-                { nameof(IThermoEntry.SolidFraction),
-                    new UnitlessParameterSetting(BuildDisplayName(LibraryResources.SolidFraction), "xs", 0, 1) },
+                    new PickerParameterSetting<Region>(BuildDisplayName(LibraryResources.ThermoRegion), BuildVarName("region"), BuildRegionOptions()) },
+                { nameof(IThermoEntry.VaporMassFraction),
+                    new UnitlessParameterSetting(BuildDisplayName(LibraryResources.VaporFraction), BuildVarName("xv"), 0, 1) },
+                { nameof(IThermoEntry.LiquidMassFraction),
+                    new UnitlessParameterSetting(BuildDisplayName(LibraryResources.LiquidFraction), BuildVarName("xl"), 0, 1) },
+                { nameof(IThermoEntry.SolidMassFraction),
+                    new UnitlessParameterSetting(BuildDisplayName(LibraryResources.SolidFraction), BuildVarName("xs"), 0, 1) },
                 { nameof(IThermoEntry.Temperature),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.Temperature), "T", LibraryResources.Temperature, 
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.Temperature), BuildVarName("T"), LibraryResources.Temperature, 
                     Table.MinTemperature, Table.MaxTemperature) },
                 { nameof(IThermoEntry.Pressure),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.Pressure), "P", LibraryResources.Pressure, 
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.Pressure), BuildVarName("P"), LibraryResources.Pressure, 
                     Table.MinPressure, Table.MaxPressure) },
                 { nameof(IThermoEntry.SpecificVolume),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.SpecificVolume), "Vs", LibraryResources.SpecificVolume) },
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.SpecificVolume), BuildVarName("Vs"), LibraryResources.SpecificVolume) },
                 { nameof(IThermoEntry.InternalEnergy),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.InternalEnergy), "U", LibraryResources.Energy) },
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.InternalEnergy), BuildVarName("U"), LibraryResources.Energy) },
                 { nameof(IThermoEntry.Enthalpy),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.Enthalpy), "H", LibraryResources.Enthalpy) },
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.Enthalpy), BuildVarName("H"), LibraryResources.Enthalpy) },
                 { nameof(IThermoEntry.Entropy),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.Entropy), "S", LibraryResources.Entropy) },
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.Entropy), BuildVarName("S"), LibraryResources.Entropy) },
                 { nameof(IThermoEntry.IsobaricHeatCapacity),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.IsobaricHeatCapacity), "cp", LibraryResources.Entropy) },
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.IsobaricHeatCapacity), BuildVarName("cp"), LibraryResources.Entropy) },
                 { nameof(IThermoEntry.IsochoricHeatCapacity),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.IsochoricHeatCapacity), "cv", LibraryResources.Entropy) },
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.IsochoricHeatCapacity), BuildVarName("cv"), LibraryResources.Entropy) },
                 { nameof(IThermoEntry.SpeedOfSound),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.Velocity), "u", LibraryResources.Velocity) },
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.Velocity), BuildVarName("u"), LibraryResources.Velocity) },
                 { nameof(IThermoEntry.Density),
-                    new SIParameterSetting(BuildDisplayName(LibraryResources.Density), "rho", LibraryResources.Density) }
+                    new SIParameterSetting(BuildDisplayName(LibraryResources.Density), BuildVarName("rho"), LibraryResources.Density) }
             };
         }
 
         private string BuildDisplayName(string detail)
         {
             return $"{Header}: {detail}";
+        }
+        private string BuildVarName(string baseVarName)
+        {
+            return $"{PrefixVarName}_{baseVarName}";
+        }
+
+        public override void BuildNode(string name)
+        {
+            if(BuildVisitorFunction != null)
+            {
+                Node = new FunctionVisitableNode(name, BuildVisitorFunction(this));
+                return;
+            }
+            FunctionSelectableVisitableNode visNode = new FunctionSelectableVisitableNode(name);
+            BuildVisitorOptions(ref visNode);
+            Node = visNode;
         }
 
         public override void BuildParameters()
@@ -71,13 +89,17 @@ namespace EngineeringMath.Component.Builder
                 SatRegionParameter = SatRegionBuilder.BuildParameter() as PickerParameter<SaturationRegion>;
                 Node.Parameters.Add(SatRegionParameter);
             }
+            if(Node is FunctionSelectableVisitableNode selNode)
+            {
+                selNode.VisitorOptions.SelectedIndex = 0;
+            }
                 
         }
 
-        public override void BuildVisitorOptions()
+        private void BuildVisitorOptions(ref FunctionSelectableVisitableNode node)
         {
-            Node.VisitorOptions = 
-                new SelectableList<FunctionVisitor, IParameterContainerNode>(BuildDisplayName(LibraryResources.FindThermoDataWith), Node);
+            node.VisitorOptions = 
+                new SelectableList<FunctionVisitor, IParameterContainerNode>(BuildDisplayName(LibraryResources.FindThermoDataWith), node);
 
             bool buildTempAndPre = CheckIfBeingUsed(nameof(IThermoEntry.Temperature), nameof(IThermoEntry.Pressure)),
                 buildSatPre = CheckIfBeingUsed(nameof(IThermoEntry.Region), nameof(IThermoEntry.Pressure)),
@@ -85,132 +107,128 @@ namespace EngineeringMath.Component.Builder
                 buildSPreTemp = CheckIfBeingUsed(nameof(IThermoEntry.Entropy), nameof(IThermoEntry.Pressure)),
                 buildHPreTemp = CheckIfBeingUsed(nameof(IThermoEntry.Enthalpy), nameof(IThermoEntry.Pressure));
 
-            FunctionVisitor satPressureVisitor = BuildSatPressureVisitor(),
-                satTemperatureVisitor = BuildSatTempVisitor();
-
-
             if (buildTempAndPre)
-                Node.VisitorOptions.Add(BuildTempAndPreVisitor());
+                node.VisitorOptions.Add(BuildTempAndPreVisitor(this));
             if (buildSatPre)
-                Node.VisitorOptions.Add(satPressureVisitor);
+                node.VisitorOptions.Add(BuildSatPressureVisitor(this));
             if (buildSatTemp)
-                Node.VisitorOptions.Add(satTemperatureVisitor);
+                node.VisitorOptions.Add(BuildSatTempVisitor(this));
             if (buildSPreTemp)
-                Node.VisitorOptions.Add(BuildEntropyAndPressureVisitor());
+                node.VisitorOptions.Add(BuildEntropyAndPressureVisitor(this));
             if (buildHPreTemp)
-                Node.VisitorOptions.Add(BuildEnthalpyAndPressureVisitor());
+                node.VisitorOptions.Add(BuildEnthalpyAndPressureVisitor(this));
 
         }
 
-        private FunctionVisitor BuildTempAndPreVisitor()
+        public static FunctionVisitor BuildTempAndPreVisitor(PVTTableNodeBuilder builder)
         {
             return new FunctionVisitor(LibraryResources.TemperatureAndPressure,
                 (ctx) =>
                 {
-                    NumericParameter T = (NumericParameter)FindParameter(nameof(IThermoEntry.Temperature)),
-                    P = (NumericParameter)FindParameter(nameof(IThermoEntry.Pressure));
-                    IThermoEntry entry = Table.GetThermoEntryAtTemperatureAndPressure(T.BaseValue, P.BaseValue);
-                    SetOutputParameters(ctx, entry, T, P);
+                    NumericParameter T = (NumericParameter)builder.FindParameter(nameof(IThermoEntry.Temperature)),
+                    P = (NumericParameter)builder.FindParameter(nameof(IThermoEntry.Pressure));
+                    IThermoEntry entry = builder.Table.GetThermoEntryAtTemperatureAndPressure(T.BaseValue, P.BaseValue);
+                    builder.SetOutputParameters(ctx, entry, T, P);
                 },
-                DetermineState(
+                builder.DetermineState(
                     new NodeBuilderParameterSetting[] 
                     {
-                        NodeSettings[nameof(IThermoEntry.Temperature)],
-                        NodeSettings[nameof(IThermoEntry.Pressure)]
+                        builder.NodeSettings[nameof(IThermoEntry.Temperature)],
+                        builder.NodeSettings[nameof(IThermoEntry.Pressure)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
-                        SatRegionBuilder
+                        builder.SatRegionBuilder
                     }
                 ));
         }
 
 
-        private FunctionVisitor BuildSatPressureVisitor()
+        public static FunctionVisitor BuildSatPressureVisitor(PVTTableNodeBuilder builder)
         {
             return new FunctionVisitor(LibraryResources.SatPressure,
                 (ctx) =>
                 {
-                    NumericParameter P = (NumericParameter)FindParameter(nameof(IThermoEntry.Pressure));
-                    IThermoEntry entry = Table.GetThermoEntryAtSatPressure(P.BaseValue, SatRegionParameter.ItemAtSelectedIndex);
-                    SetOutputParameters(ctx, entry, P, SatRegionParameter);
+                    NumericParameter P = (NumericParameter)builder.FindParameter(nameof(IThermoEntry.Pressure));
+                    IThermoEntry entry = builder.Table.GetThermoEntryAtSatPressure(P.BaseValue, builder.SatRegionParameter.ItemAtSelectedIndex);
+                    builder.SetOutputParameters(ctx, entry, P, builder.SatRegionParameter);
                 },
-                DetermineState(
+                builder.DetermineState(
                     new NodeBuilderParameterSetting[]
                     {
-                        SatRegionBuilder,
-                        NodeSettings[nameof(IThermoEntry.Pressure)]
+                        builder.SatRegionBuilder,
+                        builder.NodeSettings[nameof(IThermoEntry.Pressure)]
                     },
                     new NodeBuilderParameterSetting[]
-                    {                        
-                        NodeSettings[nameof(IThermoEntry.Region)]
+                    {
+                        builder.NodeSettings[nameof(IThermoEntry.Region)]
                     }
                 ));
         }
 
-        private FunctionVisitor BuildSatTempVisitor()
+        public static FunctionVisitor BuildSatTempVisitor(PVTTableNodeBuilder builder)
         {
             return new FunctionVisitor(LibraryResources.SatTemperature,
                 (ctx) =>
                 {
-                    NumericParameter T = (NumericParameter)FindParameter(nameof(IThermoEntry.Temperature));
-                    IThermoEntry entry = Table.GetThermoEntryAtSatTemp(T.BaseValue, SatRegionParameter.ItemAtSelectedIndex);
-                    SetOutputParameters(ctx, entry, T, SatRegionParameter);
+                    NumericParameter T = (NumericParameter)builder.FindParameter(nameof(IThermoEntry.Temperature));
+                    IThermoEntry entry = builder.Table.GetThermoEntryAtSatTemp(T.BaseValue, builder.SatRegionParameter.ItemAtSelectedIndex);
+                    builder.SetOutputParameters(ctx, entry, T, builder.SatRegionParameter);
                 },
-                DetermineState(
+                builder.DetermineState(
                     new NodeBuilderParameterSetting[]
                     {
-                        SatRegionBuilder,
-                        NodeSettings[nameof(IThermoEntry.Temperature)]
+                        builder.SatRegionBuilder,
+                        builder.NodeSettings[nameof(IThermoEntry.Temperature)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
-                        NodeSettings[nameof(IThermoEntry.Region)]
+                        builder.NodeSettings[nameof(IThermoEntry.Region)]
                     }));
         }
 
-        private FunctionVisitor BuildEntropyAndPressureVisitor()
+        private static FunctionVisitor BuildEntropyAndPressureVisitor(PVTTableNodeBuilder builder)
         {
             return new FunctionVisitor(LibraryResources.EntropyAndPressure,
                 (ctx) =>
                 {
-                    NumericParameter S = (NumericParameter)FindParameter(nameof(IThermoEntry.Entropy)),
-                    P = (NumericParameter)FindParameter(nameof(IThermoEntry.Pressure));
-                    IThermoEntry entry = Table.GetThermoEntryAtEntropyAndPressure(S.BaseValue, P.BaseValue);
-                    SetOutputParameters(ctx, entry, S, P);
+                    NumericParameter S = (NumericParameter)builder.FindParameter(nameof(IThermoEntry.Entropy)),
+                    P = (NumericParameter)builder.FindParameter(nameof(IThermoEntry.Pressure));
+                    IThermoEntry entry = builder.Table.GetThermoEntryAtEntropyAndPressure(S.BaseValue, P.BaseValue);
+                    builder.SetOutputParameters(ctx, entry, S, P);
                 },
-                DetermineState(
+                builder.DetermineState(
                     new NodeBuilderParameterSetting[]
                     {
-                        NodeSettings[nameof(IThermoEntry.Entropy)],
-                        NodeSettings[nameof(IThermoEntry.Pressure)]
+                        builder.NodeSettings[nameof(IThermoEntry.Entropy)],
+                        builder.NodeSettings[nameof(IThermoEntry.Pressure)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
-                        SatRegionBuilder
+                        builder.SatRegionBuilder
                     }
                 ));
         }
 
-        private FunctionVisitor BuildEnthalpyAndPressureVisitor()
+        private static FunctionVisitor BuildEnthalpyAndPressureVisitor(PVTTableNodeBuilder builder)
         {
             return new FunctionVisitor(LibraryResources.EnthalpyAndPressure,
                 (ctx) =>
                 {
-                    NumericParameter H = (NumericParameter)FindParameter(nameof(IThermoEntry.Enthalpy)),
-                    P = (NumericParameter)FindParameter(nameof(IThermoEntry.Pressure));
-                    IThermoEntry entry = Table.GetThermoEntryAtEnthalpyAndPressure(H.BaseValue, P.BaseValue);
-                    SetOutputParameters(ctx, entry, H, P);
+                    NumericParameter H = (NumericParameter)builder.FindParameter(nameof(IThermoEntry.Enthalpy)),
+                    P = (NumericParameter)builder.FindParameter(nameof(IThermoEntry.Pressure));
+                    IThermoEntry entry = builder.Table.GetThermoEntryAtEnthalpyAndPressure(H.BaseValue, P.BaseValue);
+                    builder.SetOutputParameters(ctx, entry, H, P);
                 },
-                DetermineState(
+                builder.DetermineState(
                     new NodeBuilderParameterSetting[]
                     {
-                        NodeSettings[nameof(IThermoEntry.Enthalpy)],
-                        NodeSettings[nameof(IThermoEntry.Pressure)]
+                        builder.NodeSettings[nameof(IThermoEntry.Enthalpy)],
+                        builder.NodeSettings[nameof(IThermoEntry.Pressure)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
-                        SatRegionBuilder
+                        builder.SatRegionBuilder
                     }
                 ));
         }
@@ -328,16 +346,22 @@ namespace EngineeringMath.Component.Builder
             }
         }
 
-        public IPVTTable Table { get; }
+        public IPVTTable Table { get; internal set; }
         private string Header { get; }
+        private string PrefixVarName { get; }
+        /// <summary>
+        /// If this is null the builder will auto-build a selection of visitor else only the visitor created by this function will be used
+        /// </summary>
+        public Func<PVTTableNodeBuilder, FunctionVisitor> BuildVisitorFunction { get; set; } = null;
+
 
         private PickerParameterSetting<SaturationRegion> SatRegionBuilder { get; } 
         private PickerParameter<SaturationRegion> SatRegionParameter { get; set; }
 
 
-    /// <summary>
-    /// Where the key is the property name taken from IThermoEntry
-    /// </summary>
+        /// <summary>
+        /// Where the key is the property name taken from IThermoEntry
+        /// </summary>
         public Dictionary<string, NodeBuilderParameterSetting> NodeSettings { get; }
 
 

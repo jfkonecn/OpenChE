@@ -40,44 +40,20 @@ namespace EngineeringMath.Component.DefaultFunctions
         [XmlIgnore]
         private SIUnitParameter OutPara { get; } = new SIUnitParameter(LibraryResources.ConvertTo, "out", LibraryResources.Length);
 
-        private class UnitOptions : NotifyPropertyChangedExtension, ISetting
+        private class UnitOptions : ParentlessSetting<UnitCategory>
         {
-            private int _SelectedIndex = 0;
-            public int SelectedIndex
-            {
-                get
-                {
-                    return _SelectedIndex;
-                }
-                set
-                {
-                    _SelectedIndex = value;
-                    OnIndexChanged();
-                    OnPropertyChanged(nameof(ItemAtSelectedIndex));
-                    OnPropertyChanged(nameof(SelectOptionStr));
-                    OnPropertyChanged();
-                }
-            }
-            protected void OnIndexChanged()
-            {
-                IndexChanged?.Invoke(this, EventArgs.Empty);
-            }
-            public event EventHandler IndexChanged;
-
-            public UnitCategory ItemAtSelectedIndex
+            public override UnitCategory ItemAtSelectedIndex
             {
                 get
                 {
                     return MathManager.AllUnits.GetCategoryByName(SelectOptionStr);
                 }
             }
-            public IList<string> AllOptions => MathManager.AllUnits.Children.Select((x) => x.Name).ToList();
+            public override IList<string> AllOptions => MathManager.AllUnits.Children.Select((x) => x.Name).ToList();
 
-            public SettingState CurrentState { get; internal set; } = SettingState.Active;
+            public override string SelectOptionStr => AllOptions[SelectedIndex];
 
-            public string SelectOptionStr => AllOptions[SelectedIndex];
-
-            public string Name => LibraryResources.UnitType;
+            public override string Name => LibraryResources.UnitType;
         }
     }
 }

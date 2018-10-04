@@ -6,7 +6,7 @@ namespace EngineeringMath.Component.Builder
 {
     public class VisitableNodeDirector
     {
-        public PVTTableNodeBuilder NodeBuilder { get; set; }
+        public VisitableNodeBuilder NodeBuilder { get; set; }
 
         public FunctionVisitableNode Node { get { return NodeBuilder?.Node; } }
 
@@ -14,12 +14,8 @@ namespace EngineeringMath.Component.Builder
         {
             if (NodeBuilder == null)
                 return;
-            if(Node != null)
-                Node.VisitorOptions.IndexChanged -= Node.VisitorOptions_IndexChanged;
             NodeBuilder.BuildNode(name);
             NodeBuilder.BuildParameters();
-            NodeBuilder.BuildVisitorOptions();
-            Node.VisitorOptions.IndexChanged += Node.VisitorOptions_IndexChanged;
         }
     }
 }

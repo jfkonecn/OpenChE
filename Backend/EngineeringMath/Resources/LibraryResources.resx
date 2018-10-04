@@ -512,11 +512,23 @@
   <data name="PressureHead" xml:space="preserve">
     <value>Pressure Head</value>
   </data>
+  <data name="CarnotCycle" xml:space="preserve">
+    <value>Carnot Cycle</value>
+  </data>
   <data name="ConvertFrom" xml:space="preserve">
     <value>Convert From</value>
   </data>
   <data name="ConvertTo" xml:space="preserve">
     <value>Convert To</value>
+  </data>
+  <data name="RankineCycle" xml:space="preserve">
+    <value>Rankine Cycle</value>
+  </data>
+  <data name="RegenerativeCycle" xml:space="preserve">
+    <value>Regenerative Cycle</value>
+  </data>
+  <data name="ThermoCycle" xml:space="preserve">
+    <value>Thermodynamic Cycle</value>
   </data>
   <data name="UnitConverter" xml:space="preserve">
     <value>Unit Converter</value>
@@ -526,5 +538,23 @@
   </data>
   <data name="Utility" xml:space="preserve">
     <value>Utility</value>
+  </data>
+  <data name="Species" xml:space="preserve">
+    <value>Species</value>
+  </data>
+  <data name="Water" xml:space="preserve">
+    <value>Water</value>
+  </data>
+  <data name="Boiler" xml:space="preserve">
+    <value>Boiler</value>
+  </data>
+  <data name="Condenser" xml:space="preserve">
+    <value>Condenser</value>
+  </data>
+  <data name="Pump" xml:space="preserve">
+    <value>Pump</value>
+  </data>
+  <data name="Turbine" xml:space="preserve">
+    <value>Turbine</value>
   </data>
 </root>
