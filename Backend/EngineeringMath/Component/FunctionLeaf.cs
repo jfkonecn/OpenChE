@@ -2,27 +2,30 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+using EngineeringMath.Component.CustomEventArgs;
 using EngineeringMath.Resources;
+using static EngineeringMath.Component.Function;
 
 namespace EngineeringMath.Component
 {
-    public class FunctionLeaf : FunctionTreeNodeWithParameters, IParameterContainerLeaf
+    public class FunctionLeaf : FunctionTreeNodeWithParameters, IParameterContainerNode
     {
         protected FunctionLeaf() : base()
         {
-            FunctionEquation = new Equation(this);
+
         }
 
-        [XmlIgnore]
-        private Equation FunctionEquation { get; set;}
+        
 
 
         public FunctionLeaf(string equationExpression, string outputParameterVarName, string name = "") : this()
         {
-            EquationExpression = equationExpression;
             OutputParameterVarName = outputParameterVarName;
+            FunctionEquation = new Equation(equationExpression);
             Name = name;                
         }
+
+        protected Equation FunctionEquation { get; set; }
 
         private string _Name = string.Empty;
         public override string Name
@@ -45,12 +48,22 @@ namespace EngineeringMath.Component
         }
         public string OutputParameterVarName { get; set; }
 
-        public string EquationExpression { get; set; }
+        public string EquationExpression
+        {
+            get
+            {
+                return FunctionEquation.EquationExpression;
+            }
+            set
+            {
+                FunctionEquation.EquationExpression = value;
+            }
+        }
 
         public override void Calculate()
         {
             INumericParameter para = (INumericParameter)FindParameter(OutputParameterVarName);
-            para.BaseValue = FunctionEquation.Evaluate();
+            para.BaseValue = FunctionEquation.Evaluate((x) => { return ((INumericParameter)FindParameter(x)).BaseValue; });
         }
 
         public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
@@ -73,7 +86,11 @@ namespace EngineeringMath.Component
 
         public override ParameterState DetermineState(string parameterName)
         {
-            return OutputParameterVarName.Equals(parameterName) ? ParameterState.Output : ParameterState.Input;
+            if (OutputParameterVarName.Equals(parameterName))
+                return ParameterState.Output;
+            if (FunctionEquation.IsInput(parameterName))
+                return ParameterState.Input;
+            return ParameterState.Inactive;
         }
     }
 }

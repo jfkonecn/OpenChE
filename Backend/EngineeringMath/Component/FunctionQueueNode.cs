@@ -7,25 +7,80 @@ namespace EngineeringMath.Component
 {
     public class FunctionQueueNode : FunctionTreeNodeWithParameters
     {
-        protected FunctionQueueNode() : base()
+        public FunctionQueueNode() : base()
         {
             Children = new QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode>(this);
+            Name = string.Empty;
+        }
+        private QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode> _Children;
+        public QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode> Children
+        {
+            get
+            {
+                return _Children;
+            }
+            protected set
+            {
+                if ((value == null && _Children == null)
+                    || (value != null && value.Equals(_Children)))
+                    return;
+                if(_Children != null)
+                {
+                    _Children.ItemAdded -= Children_ItemAdded;
+                    _Children.ItemRemoved -= Children_ItemRemoved;
+                    _Children.ItemsCleared -= Children_ItemsCleared;
+                }
+                    
+                _Children = value;
+                if (_Children != null)
+                {
+                    _Children.ItemAdded += Children_ItemAdded;
+                    _Children.ItemRemoved += Children_ItemRemoved;
+                    _Children.ItemsCleared += Children_ItemsCleared;
+                }                   
+
+            }
         }
 
-        internal FunctionQueueNode(Function fun, string name) : this(name)
+        private void Children_ItemsCleared(object sender, ItemEventArgs<IList<PriorityFunctionBranch>> e)
         {
-            Parent = fun;
+            if (CurrentState == FunctionTreeNodeState.Active)
+            {
+                ActivateStates();
+            }
+            else
+            {
+                DeactivateStates();
+            }
         }
 
-        public FunctionQueueNode(string name) : this()
+        private void Children_ItemRemoved(object sender, ItemEventArgs<PriorityFunctionBranch> e)
         {
-            Name = name;
+            if(CurrentState == FunctionTreeNodeState.Active)
+            {
+                ActivateStates();
+            }
+            else
+            {
+                DeactivateStates();
+            }
         }
-        public QueuingSortedList<PriorityFunctionBranch, IParameterContainerNode> Children { get; protected set; }
+
+        private void Children_ItemAdded(object sender, ItemEventArgs<PriorityFunctionBranch> e)
+        {
+            if (CurrentState == FunctionTreeNodeState.Active)
+            {
+                ActivateStates();
+            }
+            else
+            {
+                DeactivateStates();
+            }
+        }
 
         public override void Calculate()
         {
-            // TODO: parallelize
+            // TODO: parallelize if the priority is the same
             foreach (PriorityFunctionBranch branch in Children.GetQueue())
             {
                 branch.Calculate();
@@ -67,7 +122,7 @@ namespace EngineeringMath.Component
 
         public override ParameterState DetermineState(string parameterName)
         {
-            foreach (FunctionTreeNode node in Children)
+            foreach (FunctionTreeNode node in Children.GetQueue())
             {
                 // TODO: parallelize 
                 ParameterState state = node.DetermineState(parameterName);

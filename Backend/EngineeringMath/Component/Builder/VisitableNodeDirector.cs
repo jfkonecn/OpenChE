@@ -8,7 +8,7 @@ namespace EngineeringMath.Component.Builder
     {
         public VisitableNodeBuilder NodeBuilder { get; set; }
 
-        public FunctionVisitableNode Node { get { return NodeBuilder?.Node; } }
+        public FunctionVisitableNodeLeaf Node { get { return NodeBuilder?.Node; } }
 
         public void BuildNode(string name)
         {

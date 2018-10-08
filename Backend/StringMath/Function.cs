@@ -18,7 +18,9 @@ namespace StringMath
             }
             else
             {
-                MethodInfo = typeof(Math).GetMethod(methodName);
+                MethodInfo = typeof(Math).GetMethod(methodName, new Type[] { typeof(double) });
+                if(MethodInfo == null)
+                    MethodInfo = typeof(Math).GetMethod(methodName);
             }
 
 

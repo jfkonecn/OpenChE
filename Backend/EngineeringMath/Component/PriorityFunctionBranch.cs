@@ -9,14 +9,15 @@ namespace EngineeringMath.Component
         protected PriorityFunctionBranch() : base()
         {
             NextNode.Parent = this;
+            Name = string.Empty;
         }
 
-        public PriorityFunctionBranch(string name, uint priority, FunctionTreeNode nextNode) : base()
+        public PriorityFunctionBranch(uint priority, FunctionTreeNode nextNode) : base()
         {
-            Name = name;
-            NextNode = nextNode;
+            NextNode = nextNode ?? throw new ArgumentNullException(nameof(nextNode));
             NextNode.Parent = this;
             Priority = priority;
+            Name = Guid.NewGuid().ToString();
         }
         public uint Priority { get; protected set; }
 

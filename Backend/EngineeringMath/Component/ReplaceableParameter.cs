@@ -9,7 +9,7 @@ namespace EngineeringMath.Component
 {
     public class ReplaceableParameter : NotifyPropertyChangedExtension, INumericParameter, IParameterContainerNode
     {
-        public ReplaceableParameter(INumericParameter parameter, IEnumerable<IParameterContainerLeaf> leaves)
+        public ReplaceableParameter(INumericParameter parameter, IEnumerable<FunctionLeaf> leaves)
         {
             ReplacingParameter = parameter;
             InputBranch = new FunctionBranch(parameter.DisplayName)
@@ -25,7 +25,7 @@ namespace EngineeringMath.Component
             };
             OutputBranch.Children.TopValue = new FunctionOutputMakerNode(LibraryResources.UseDirectOutput);
             OutputBranch.Children.IndexChanged += Children_IndexChanged;
-            foreach (IParameterContainerLeaf leaf in leaves)
+            foreach (FunctionLeaf leaf in leaves)
                 AddReplacementNode(leaf);
 
             RefreshState();
@@ -46,7 +46,7 @@ namespace EngineeringMath.Component
         /// To reference the ReplacingParameter in the EquationExpression or OutputParameterName simply use "#" (without quotes)
         /// </summary>
         /// <param name="node"></param>
-        public void AddReplacementNode(IParameterContainerLeaf node)
+        public void AddReplacementNode(FunctionLeaf node)
         {
             
 

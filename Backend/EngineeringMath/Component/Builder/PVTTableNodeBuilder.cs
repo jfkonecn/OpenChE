@@ -3,6 +3,7 @@ using EngineeringMath.Resources.PVTTables;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace EngineeringMath.Component.Builder
 {
@@ -14,14 +15,14 @@ namespace EngineeringMath.Component.Builder
         }
 
 
-        public PVTTableNodeBuilder(IPVTTable table, string name, string varNamePrefix)
+        public PVTTableNodeBuilder(IPVTTable table, string header, string varNamePrefix)
         {
             Table = table;
-            Header = name;
+            Header = header;
             PrefixVarName = varNamePrefix;
             SatRegionBuilder = new PickerParameterSetting<SaturationRegion>(BuildDisplayName(LibraryResources.SatRegion), 
                 BuildVarName("satRegion"), BuildSaturationRegionOptions());
-            NodeSettings = new Dictionary<string, NodeBuilderParameterSetting>()
+            ParameterSettingsDic = new Dictionary<string, NodeBuilderParameterSetting>()
             {
                 { nameof(IThermoEntry.Region),
                     new PickerParameterSetting<Region>(BuildDisplayName(LibraryResources.ThermoRegion), BuildVarName("region"), BuildRegionOptions()) },
@@ -64,12 +65,11 @@ namespace EngineeringMath.Component.Builder
         {
             return $"{PrefixVarName}_{baseVarName}";
         }
-
         public override void BuildNode(string name)
         {
             if(BuildVisitorFunction != null)
             {
-                Node = new FunctionVisitableNode(name, BuildVisitorFunction(this));
+                Node = new FunctionVisitableNodeLeaf(name, BuildVisitorFunction(this));
                 return;
             }
             FunctionSelectableVisitableNode visNode = new FunctionSelectableVisitableNode(name);
@@ -79,7 +79,7 @@ namespace EngineeringMath.Component.Builder
 
         public override void BuildParameters()
         {
-            foreach (NodeBuilderParameterSetting setting in NodeSettings.Values)
+            foreach (NodeBuilderParameterSetting setting in ParameterSettingsDic.Values)
             {
                 if (setting.UseThisParameter && setting.AutoBuildParameter)
                     Node.Parameters.Add(setting.BuildParameter());
@@ -133,8 +133,8 @@ namespace EngineeringMath.Component.Builder
                 builder.DetermineState(
                     new NodeBuilderParameterSetting[] 
                     {
-                        builder.NodeSettings[nameof(IThermoEntry.Temperature)],
-                        builder.NodeSettings[nameof(IThermoEntry.Pressure)]
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Temperature)],
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Pressure)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
@@ -157,11 +157,11 @@ namespace EngineeringMath.Component.Builder
                     new NodeBuilderParameterSetting[]
                     {
                         builder.SatRegionBuilder,
-                        builder.NodeSettings[nameof(IThermoEntry.Pressure)]
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Pressure)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
-                        builder.NodeSettings[nameof(IThermoEntry.Region)]
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Region)]
                     }
                 ));
         }
@@ -179,15 +179,15 @@ namespace EngineeringMath.Component.Builder
                     new NodeBuilderParameterSetting[]
                     {
                         builder.SatRegionBuilder,
-                        builder.NodeSettings[nameof(IThermoEntry.Temperature)]
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Temperature)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
-                        builder.NodeSettings[nameof(IThermoEntry.Region)]
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Region)]
                     }));
         }
 
-        private static FunctionVisitor BuildEntropyAndPressureVisitor(PVTTableNodeBuilder builder)
+        public static FunctionVisitor BuildEntropyAndPressureVisitor(PVTTableNodeBuilder builder)
         {
             return new FunctionVisitor(LibraryResources.EntropyAndPressure,
                 (ctx) =>
@@ -200,8 +200,8 @@ namespace EngineeringMath.Component.Builder
                 builder.DetermineState(
                     new NodeBuilderParameterSetting[]
                     {
-                        builder.NodeSettings[nameof(IThermoEntry.Entropy)],
-                        builder.NodeSettings[nameof(IThermoEntry.Pressure)]
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Entropy)],
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Pressure)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
@@ -210,7 +210,7 @@ namespace EngineeringMath.Component.Builder
                 ));
         }
 
-        private static FunctionVisitor BuildEnthalpyAndPressureVisitor(PVTTableNodeBuilder builder)
+        public static FunctionVisitor BuildEnthalpyAndPressureVisitor(PVTTableNodeBuilder builder)
         {
             return new FunctionVisitor(LibraryResources.EnthalpyAndPressure,
                 (ctx) =>
@@ -223,8 +223,8 @@ namespace EngineeringMath.Component.Builder
                 builder.DetermineState(
                     new NodeBuilderParameterSetting[]
                     {
-                        builder.NodeSettings[nameof(IThermoEntry.Enthalpy)],
-                        builder.NodeSettings[nameof(IThermoEntry.Pressure)]
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Enthalpy)],
+                        builder.ParameterSettingsDic[nameof(IThermoEntry.Pressure)]
                     },
                     new NodeBuilderParameterSetting[]
                     {
@@ -243,7 +243,7 @@ namespace EngineeringMath.Component.Builder
         {
             foreach(string name in nodeSettingsKeys)
             {
-                if(!NodeSettings[name].UseThisParameter)
+                if(!ParameterSettingsDic[name].UseThisParameter)
                     return false;
             }
             return true;
@@ -266,6 +266,10 @@ namespace EngineeringMath.Component.Builder
                     if (setting.VarName.Equals(varName))
                         return ParameterState.Inactive;
                 }
+                NodeBuilderParameterSetting temp 
+                    = ParameterSettings.SingleOrDefault((x) => { return x.VarName.Equals(varName); });
+                if(temp == null)
+                    return ParameterState.Inactive;
                 return ParameterState.Output;
             };           
         }
@@ -274,7 +278,7 @@ namespace EngineeringMath.Component.Builder
         {
             foreach (string name in nodeSettingsKeysForInputs)
             {
-                if (NodeSettings[name].Equals(setting))
+                if (ParameterSettingsDic[name].Equals(setting))
                 {
                     return true;
                 }
@@ -286,7 +290,7 @@ namespace EngineeringMath.Component.Builder
 
         private IParameter FindParameter(string nodeSettingsKey)
         {
-            string varName = NodeSettings[nodeSettingsKey].VarName;
+            string varName = ParameterSettingsDic[nodeSettingsKey].VarName;
             return Node.FindParameter(varName);
         }
 
@@ -304,7 +308,7 @@ namespace EngineeringMath.Component.Builder
                     double.NaN, double.NaN, double.NaN, 
                     double.NaN, double.NaN, double.NaN, 
                     0, 0, 0);
-            foreach (KeyValuePair<string, NodeBuilderParameterSetting> pair in NodeSettings)
+            foreach (KeyValuePair<string, NodeBuilderParameterSetting> pair in ParameterSettingsDic)
             {
                 if (!pair.Value.UseThisParameter)
                     continue;
@@ -346,24 +350,33 @@ namespace EngineeringMath.Component.Builder
             }
         }
 
+        public override Dictionary<string, IParameter> BuildNonautoBuildParameters()
+        {
+            Dictionary<string, IParameter> dic = base.BuildNonautoBuildParameters();
+            if (dic.ContainsKey(ParameterSettingsDic[nameof(IThermoEntry.Region)].VarName))
+                dic.Add($"{SatRegionBuilder.VarName}", SatRegionBuilder.BuildParameter());
+            return dic;
+        }
+
         public IPVTTable Table { get; internal set; }
-        private string Header { get; }
-        private string PrefixVarName { get; }
+        public string Header { get; }
+        public string PrefixVarName { get; }
         /// <summary>
         /// If this is null the builder will auto-build a selection of visitor else only the visitor created by this function will be used
         /// </summary>
         public Func<PVTTableNodeBuilder, FunctionVisitor> BuildVisitorFunction { get; set; } = null;
 
 
-        private PickerParameterSetting<SaturationRegion> SatRegionBuilder { get; } 
+        public PickerParameterSetting<SaturationRegion> SatRegionBuilder { get; } 
         private PickerParameter<SaturationRegion> SatRegionParameter { get; set; }
 
 
         /// <summary>
         /// Where the key is the property name taken from IThermoEntry
         /// </summary>
-        public Dictionary<string, NodeBuilderParameterSetting> NodeSettings { get; }
+        public Dictionary<string, NodeBuilderParameterSetting> ParameterSettingsDic { get; }
 
+        public override IEnumerable<NodeBuilderParameterSetting> ParameterSettings => ParameterSettingsDic.Values;
 
         private static PickerParameterOption<Region>[] BuildRegionOptions()
         {

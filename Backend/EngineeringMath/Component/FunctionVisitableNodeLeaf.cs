@@ -10,9 +10,9 @@ namespace EngineeringMath.Component
     /// <summary>
     /// Calculate function calls 
     /// </summary>
-    public class FunctionVisitableNode : FunctionTreeNodeWithParameters
+    public class FunctionVisitableNodeLeaf : FunctionTreeNodeWithParameters
     {
-        protected FunctionVisitableNode() : base()
+        protected FunctionVisitableNodeLeaf() : base()
         {
         }
 
@@ -20,12 +20,12 @@ namespace EngineeringMath.Component
         /// 
         /// </summary>
         /// <param name="name"></param>
-        protected FunctionVisitableNode(string name) : this()
+        protected FunctionVisitableNodeLeaf(string name) : this()
         {
             Name = name;
         }
 
-        public FunctionVisitableNode(string name, FunctionVisitor visitor) : this(name)
+        public FunctionVisitableNodeLeaf(string name, FunctionVisitor visitor) : this(name)
         {
             Visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
             Visitor.Parent = this;
@@ -33,25 +33,20 @@ namespace EngineeringMath.Component
 
         public FunctionVisitor Visitor { get; protected set; }
 
-        public FunctionTreeNode NextNode { get; set; }
 
         public override void Calculate()
         {
             Visitor?.Calculate();
-            NextNode?.Calculate();
         }
 
         public override void BuildLists(List<ISetting> settings, List<IParameter> parameter)
         {
             base.BuildLists(settings, parameter);
-            NextNode?.BuildLists(settings, parameter);
         }
 
         public override ParameterState DetermineState(string paraVarName)
         {
             ParameterState state = Visitor == null ? ParameterState.Inactive : Visitor.DetermineState(paraVarName);
-            if(state == ParameterState.Inactive && NextNode != null)
-                state = NextNode.DetermineState(paraVarName);
             return state;
         }
 
@@ -59,14 +54,12 @@ namespace EngineeringMath.Component
         {
             base.ActivateStates();
             Visitor?.ActivateStates();
-            NextNode?.ActivateStates();
         }
 
         public override void DeactivateStates()
         {
             base.DeactivateStates();
             Visitor?.DeactivateStates();
-            NextNode?.DeactivateStates();
         }
 
     }

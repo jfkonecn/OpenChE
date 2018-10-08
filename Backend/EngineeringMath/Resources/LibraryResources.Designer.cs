@@ -268,6 +268,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Efficiency.
+        /// </summary>
+        public static string Efficiency {
+            get {
+                return ResourceManager.GetString("Efficiency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Energy.
         /// </summary>
         public static string Energy {
@@ -1177,6 +1186,15 @@ namespace EngineeringMath.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Turbine Liquid.
+        /// </summary>
+        public static string TurbineLiq {
+            get {
+                return ResourceManager.GetString("TurbineLiq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unit Converter.
         /// </summary>
         public static string UnitConverter {
@@ -1353,6 +1371,15 @@ namespace EngineeringMath.Resources {
         public static string Watt {
             get {
                 return ResourceManager.GetString("Watt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work.
+        /// </summary>
+        public static string Work {
+            get {
+                return ResourceManager.GetString("Work", resourceCulture);
             }
         }
     }

@@ -10,12 +10,16 @@ using EngineeringMath.Component.CustomEventArgs;
 
 namespace EngineeringMath.Component
 {
-    public class Equation : IChildItem<IParameterContainerLeaf>
+    public class Equation
     {
-
-        public Equation(IParameterContainerLeaf parameters)
+        protected Equation()
         {
-            Parent = parameters;
+
+        }
+
+        public Equation(string equationExpression)
+        {
+            EquationExpression = equationExpression;
         }
 
         
@@ -23,16 +27,29 @@ namespace EngineeringMath.Component
         /// <summary>
         /// Calculates the result of this equation
         /// </summary>
+        /// <param name="findParameter">Passes the varName found in the equation expression and expects the return of its value</param>
         /// <returns>Result of the equation</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public double Evaluate()
+        public double Evaluate(Func<string, double> findParameter)
+        {      
+            return Evaluate(EquationExpression, findParameter);
+        }
+
+
+        /// <summary>
+        /// Extracts all of the varNames found in the passed equation expression
+        /// </summary>
+        /// <param name="equation"></param>
+        /// <returns></returns>                  
+        public static List<string> GetInputList(string equation)
         {
-            if (Parent == null)
-                throw new ArgumentNullException();
-
-            
-
-            return Evalutate(Parent.EquationExpression, (x) => { return ((INumericParameter)Parent.FindParameter(x)).BaseValue; });
+            List<string> list = new List<string>();
+            EquationParser.Evaluate(equation, (x) => 
+            {
+                list.Add(x);
+                return double.NaN;
+            });
+            return list;
         }
 
         /// <summary>
@@ -48,7 +65,7 @@ namespace EngineeringMath.Component
             {
                 dic.Add(keyPair.Key, keyPair.Value);
             }
-            return Evalutate(equation, (string name) => { return dic[name]; });
+            return Evaluate(equation, (string name) => { return dic[name]; });
         }
 
         /// <summary>
@@ -57,39 +74,47 @@ namespace EngineeringMath.Component
         /// <param name="equation"></param>
         /// <param name="getParaValue">Given the name of a parameter the calculation value is returned</param>
         /// <returns></returns>
-        private static double Evalutate(string equation, Func<string, double> getParaValue)
+        private static double Evaluate(string equation, Func<string, double> getParaValue)
         {
-
             return EquationParser.Evaluate(equation, getParaValue);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="equation"></param>
+        /// <returns></returns>
+        public bool IsInput(string varName)
+        {
+            return InputParameterVarNames.Contains(varName);
+        }
 
         [XmlIgnore]
-        protected IParameterContainerLeaf _Parent;
+        public List<string> InputParameterVarNames { get; protected set; } = new List<string>();
 
-        public IParameterContainerLeaf Parent
+        private string _EquationExpression = string.Empty;
+        public string EquationExpression
         {
             get
             {
-                return _Parent;
+                return _EquationExpression;
             }
-            internal set
+            set
             {
-                IChildItemDefaults.DefaultSetParent(ref _Parent, OnParentChanged, value, Parent_ParentChanged);
+                if (_EquationExpression.Equals(value))
+                    return;
+                _EquationExpression = value;
+                try
+                {
+                    InputParameterVarNames = GetInputList(EquationExpression);
+                }
+                catch
+                {
+                    InputParameterVarNames = new List<string>();
+                }
+                
             }
         }
-        protected virtual void OnParentChanged(ParentChangedEventArgs e)
-        {
-            ParentChanged?.Invoke(this, e);
-        }
-        private void Parent_ParentChanged(object sender, ParentChangedEventArgs e)
-        {
-            OnParentChanged(e);
-        }
-        public event EventHandler<ParentChangedEventArgs> ParentChanged;
-        IParameterContainerLeaf IChildItem<IParameterContainerLeaf>.Parent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        string IChildItem<IParameterContainerLeaf>.Key => throw new NotImplementedException();
     }
 }

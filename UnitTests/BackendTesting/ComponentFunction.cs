@@ -31,12 +31,11 @@ namespace BackendTesting
             Function fun = new Function("Test Function", "My Cat", true)
             {
                 NextNode =
-                new FunctionQueueNode("Hello")
+                new FunctionQueueNode()
                 {
                     Children =
                     {
-                        new PriorityFunctionBranch(
-                            "Hello", 1,
+                        new PriorityFunctionBranch(1,
                             new FunctionLeaf($"$r * $r * {Math.PI}", "a")
                                 {
                                     Parameters =

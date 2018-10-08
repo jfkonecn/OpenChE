@@ -557,4 +557,13 @@
   <data name="Turbine" xml:space="preserve">
     <value>Turbine</value>
   </data>
+  <data name="TurbineLiq" xml:space="preserve">
+    <value>Turbine Liquid</value>
+  </data>
+  <data name="Efficiency" xml:space="preserve">
+    <value>Efficiency</value>
+  </data>
+  <data name="Work" xml:space="preserve">
+    <value>Work</value>
+  </data>
 </root>

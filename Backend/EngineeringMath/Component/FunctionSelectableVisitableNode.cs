@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EngineeringMath.Component
 {
-    public class FunctionSelectableVisitableNode : FunctionVisitableNode
+    public class FunctionSelectableVisitableNode : FunctionVisitableNodeLeaf
     {
         protected FunctionSelectableVisitableNode() : base()
         {
