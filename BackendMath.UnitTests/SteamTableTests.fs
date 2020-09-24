@@ -67,20 +67,6 @@ module SteamTableTests =
                       SpeedOfSound =  666.05<Speed>;
                       V = 2.476e-2<SpecificVolume>;
                       Rho =  40.38<Density>; })
-            //yield  ({ T = 499.15<Temperature>;
-            //          P = 8.6e6<Pressure>;
-            //          PhaseInfo =  { VaporFraction = 0.0;
-            //                          LiquidFraction = 0.0;
-            //                          SolidFraction = 0.0;
-            //                          PhaseRegion = PhaseRegion.PureRegion Gas; };
-            //          InternalEnergy =  3114.3e3<J / kg>;
-            //          H =  3460.98e3<Enthalpy>;
-            //          S = 6.56e3<Entropy>;
-            //          Cv = 1.89e3<IsochoricHeatCapacity>;
-            //          Cp =  2.66e3<IsobaricHeatCapacity>;
-            //          SpeedOfSound =  666.05<Speed>;
-            //          V = 2.476e-2<SpecificVolume>;
-            //          Rho =  40.38<Density>; })
         ] 
 
     let validSatData =
