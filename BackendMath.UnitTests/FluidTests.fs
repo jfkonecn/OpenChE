@@ -1,7 +1,7 @@
 ﻿namespace EngineeringMath.UnitTests
 
 open NUnit.Framework
-open EngineeringMath.Fluids
+open EngineeringMath.Fluids.BernoullisEquation
 open EngineeringMath
 open System
 

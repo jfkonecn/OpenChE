@@ -1,75 +1,76 @@
-﻿namespace EngineeringMath
-
+﻿namespace EngineeringMath.Fluids
+open EngineeringMath
+open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open System
 
-module Fluids =
+module BernoullisEquation =
     type DischargeCoefficient = DischargeCoefficient of float
     module DischargeCoefficient =
         let value (DischargeCoefficient x) = x
     type BernoulliResult = {
-        vIn:float<Velocity>
-        vOut:float<Velocity>
-        hIn:float<Length>
-        hOut:float<Length>
-        pIn:float<Pressure>
-        pOut:float<Pressure>
-        rho:float<Density>
+        vIn:float<m/s>
+        vOut:float<m/s>
+        hIn:float<m>
+        hOut:float<m>
+        pIn:float<Pa>
+        pOut:float<Pa>
+        rho:float<kg/m^3>
     }
     type SolveForVIn = {
-        vOut:float<Velocity>
-        hIn:float<Length>
-        hOut:float<Length>
-        pIn:float<Pressure>
-        pOut:float<Pressure>
-        rho:float<Density>
+        vOut:float<m/s>
+        hIn:float<m>
+        hOut:float<m>
+        pIn:float<Pa>
+        pOut:float<Pa>
+        rho:float<kg/m^3>
     }
     type SolveForVOut = {
-        vIn:float<Velocity>
-        hIn:float<Length>
-        hOut:float<Length>
-        pIn:float<Pressure>
-        pOut:float<Pressure>
-        rho:float<Density>
+        vIn:float<m/s>
+        hIn:float<m>
+        hOut:float<m>
+        pIn:float<Pa>
+        pOut:float<Pa>
+        rho:float<kg/m^3>
     }
     type SolveForHIn = {
-        vIn:float<Velocity>
-        vOut:float<Velocity>
-        hOut:float<Length>
-        pIn:float<Pressure>
-        pOut:float<Pressure>
-        rho:float<Density>
+        vIn:float<m/s>
+        vOut:float<m/s>
+        hOut:float<m>
+        pIn:float<Pa>
+        pOut:float<Pa>
+        rho:float<kg/m^3>
     }
     type SolveForHOut = {
-        vIn:float<Velocity>
-        vOut:float<Velocity>
-        hIn:float<Length>
-        pIn:float<Pressure>
-        pOut:float<Pressure>
-        rho:float<Density>
+        vIn:float<m/s>
+        vOut:float<m/s>
+        hIn:float<m>
+        pIn:float<Pa>
+        pOut:float<Pa>
+        rho:float<kg/m^3>
     }
     type SolveForPIn = {
-        vIn:float<Velocity>
-        vOut:float<Velocity>
-        hIn:float<Length>
-        hOut:float<Length>
-        pOut:float<Pressure>
-        rho:float<Density>
+        vIn:float<m/s>
+        vOut:float<m/s>
+        hIn:float<m>
+        hOut:float<m>
+        pOut:float<Pa>
+        rho:float<kg/m^3>
     }
     type SolveForPOut = {
-        vIn:float<Velocity>
-        vOut:float<Velocity>
-        hIn:float<Length>
-        hOut:float<Length>
-        pIn:float<Pressure>
-        rho:float<Density>
+        vIn:float<m/s>
+        vOut:float<m/s>
+        hIn:float<m>
+        hOut:float<m>
+        pIn:float<Pa>
+        rho:float<kg/m^3>
     }
     type SolveForDensity = {
-        vIn:float<Velocity>
-        vOut:float<Velocity>
-        hIn:float<Length>
-        hOut:float<Length>
-        pIn:float<Pressure>
-        pOut:float<Pressure>
+        vIn:float<m/s>
+        vOut:float<m/s>
+        hIn:float<m>
+        hOut:float<m>
+        pIn:float<Pa>
+        pOut:float<Pa>
     }
 
     type BernoulliArgument = 
@@ -80,6 +81,8 @@ module Fluids =
         | SolveForPIn of SolveForPIn
         | SolveForPOut of SolveForPOut
         | SolveForDensity of SolveForDensity
+
+
 
     let bernoullisEquation (args:BernoulliArgument) =
         let g = float PhysicalConstants.Gravity
@@ -172,3 +175,7 @@ module Fluids =
         | { pOut=x } when (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
         | { rho=x } when float x <= 0.0 || (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
         | _ -> Ok result
+
+
+    let orificPlate =
+        ()
