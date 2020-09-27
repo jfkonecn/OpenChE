@@ -2,122 +2,120 @@
 
 open System
 open NUnit.Framework
-open EngineeringMath.SteamProperties
-open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open EngineeringMath
-open EngineeringMath.Thermo
+open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 
 [<TestFixture>]
 module SteamTableTests =
     let validData =
         [
-            yield  ({ T = 750.0<Temperature>;
-                      P = 78.3e6<Pressure>;
+            yield  ({ T = 750.0<K>;
+                      P = 78.3e6<Pa>;
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 0.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = PhaseRegion.PureRegion SupercriticalFluid; };
-                      InternalEnergy =  2102.06e3<J / kg>;
-                      H =  2258.68e3<Enthalpy>;
-                      S = 4.469e3<Entropy>;
-                      Cv = 2.71e3<IsochoricHeatCapacity>;
-                      Cp =  6.34e3<IsobaricHeatCapacity>;
-                      SpeedOfSound =  760.69<Speed>;
-                      V = 2e-3<SpecificVolume>;
-                      Rho =  500.0<Density>; })
-            yield  ({ T = 473.15<Temperature>;
-                      P = 40e6<Pressure>;
+                                      PhaseRegion = SupercriticalFluid; };
+                      U =  2102.06e3<J / kg>;
+                      H =  2258.68e3<J / kg>;
+                      S = 4.469e3<J / (kg * K)>;
+                      Cv = 2.71e3<J / (kg * K)>;
+                      Cp =  6.34e3<J / (kg * K)>;
+                      SpeedOfSound =  760.69<m / s>;
+                      V = 2e-3<m ^ 3 / kg>;
+                      Rho =  500.0<kg / m ^ 3>; })
+            yield  ({ T = 473.15<K>;
+                      P = 40e6<Pa>;
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 1.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = PhaseRegion.PureRegion Liquid; };
-                      InternalEnergy =  825.22e3<J / kg>;
-                      H =  870.12e3<Enthalpy>;
-                      S = 2.275e3<Entropy>;
-                      Cv = 3.29e3<IsochoricHeatCapacity>;
-                      Cp =  4.315e3<IsobaricHeatCapacity>;
-                      SpeedOfSound =  1457.4<Speed>;
-                      V = 1.122e-3<SpecificVolume>;
-                      Rho =  890.9<Density>; })
-            yield  ({ T = 2000.0<Temperature>;
-                      P = 30e6<Pressure>;
+                                      PhaseRegion = Liquid; };
+                      U =  825.22e3<J / kg>;
+                      H =  870.12e3<J / kg>;
+                      S = 2.275e3<J / (kg * K)>;
+                      Cv = 3.29e3<J / (kg * K)>;
+                      Cp =  4.315e3<J / (kg * K)>;
+                      SpeedOfSound =  1457.4<m / s>;
+                      V = 1.122e-3<m ^ 3 / kg>;
+                      Rho =  890.9<kg / m ^ 3>; })
+            yield  ({ T = 2000.0<K>;
+                      P = 30e6<Pa>;
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 0.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = PhaseRegion.PureRegion SupercriticalFluid; };
-                      InternalEnergy =  5637.07e3<J / kg>;
-                      H =  6571.22e3<Enthalpy>;
-                      S = 8.53e3<Entropy>;
-                      Cv = 2.39e3<IsochoricHeatCapacity>;
-                      Cp =  2.88e3<IsobaricHeatCapacity>;
-                      SpeedOfSound =  1067.36<Speed>;
-                      V = 3.114e-2<SpecificVolume>;
-                      Rho =  32.11<Density>; })
-            yield  ({ T = 823.15<Temperature>;
-                      P = 14e6<Pressure>;
+                                      PhaseRegion = SupercriticalFluid; };
+                      U =  5637.07e3<J / kg>;
+                      H =  6571.22e3<J / kg>;
+                      S = 8.53e3<J / (kg * K)>;
+                      Cv = 2.39e3<J / (kg * K)>;
+                      Cp =  2.88e3<J / (kg * K)>;
+                      SpeedOfSound =  1067.36<m / s>;
+                      V = 3.114e-2<m ^ 3 / kg>;
+                      Rho =  32.11<kg / m ^ 3>; })
+            yield  ({ T = 823.15<K>;
+                      P = 14e6<Pa>;
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 0.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = PhaseRegion.PureRegion Gas; };
-                      InternalEnergy =  3114.3e3<J / kg>;
-                      H =  3460.98e3<Enthalpy>;
-                      S = 6.56e3<Entropy>;
-                      Cv = 1.89e3<IsochoricHeatCapacity>;
-                      Cp =  2.66e3<IsobaricHeatCapacity>;
-                      SpeedOfSound =  666.05<Speed>;
-                      V = 2.476e-2<SpecificVolume>;
-                      Rho =  40.38<Density>; })
+                                      PhaseRegion = Gas; };
+                      U =  3114.3e3<J / kg>;
+                      H =  3460.98e3<J / kg>;
+                      S = 6.56e3<J / (kg * K)>;
+                      Cv = 1.89e3<J / (kg * K)>;
+                      Cp =  2.66e3<J / (kg * K)>;
+                      SpeedOfSound =  666.05<m / s>;
+                      V = 2.476e-2<m ^ 3 / kg>;
+                      Rho =  40.38<kg / m ^ 3>; })
         ] 
 
     let validSatData =
         [
-            yield  ({ T = 393.3<Temperature>;
-                      P = 0.2e6<Pressure>;
+            yield  ({ T = 393.3<K>;
+                      P = 0.2e6<Pa>;
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 1.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = PhaseRegion.PureRegion Liquid; };
-                      InternalEnergy =  504471.74<J / kg>;
-                      H =  504683.84<Enthalpy>;
-                      S = 1530.09<Entropy>;
-                      Cv = 3666.9<IsochoricHeatCapacity>;
-                      Cp =  4246.7<IsobaricHeatCapacity>;
-                      SpeedOfSound =  1520.6<Speed>;
-                      V = 1.0605e-3<SpecificVolume>;
-                      Rho =  942.93<Density>; })
-            yield  ({ T = 393.3<Temperature>;
-                      P = 0.2e6<Pressure>;
+                                      PhaseRegion = Liquid; };
+                      U =  504471.74<J / kg>;
+                      H =  504683.84<J / kg>;
+                      S = 1530.09<J / (kg * K)>;
+                      Cv = 3666.9<J / (kg * K)>;
+                      Cp =  4246.7<J / (kg * K)>;
+                      SpeedOfSound =  1520.6<m / s>;
+                      V = 1.0605e-3<m ^ 3 / kg>;
+                      Rho =  942.93<kg / m  ^ 3>; })
+            yield  ({ T = 393.3<K>;
+                      P = 0.2e6<Pa>;
                       PhaseInfo =  { VaporFraction = 1.0;
                                       LiquidFraction = 0.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = PhaseRegion.PureRegion Vapor; };
-                      InternalEnergy =  2529094.32<J / kg>;
-                      H =  2706241.34<Enthalpy>;
-                      S = 7126.85<Entropy>;
-                      Cv = 1615.96<IsochoricHeatCapacity>;
-                      Cp =  2175.22<IsobaricHeatCapacity>;
-                      SpeedOfSound =  481.88<Speed>;
-                      V = 8.857e-1<SpecificVolume>;
-                      Rho =  1.129<Density>; })
+                                      PhaseRegion = Vapor; };
+                      U =  2529094.32<J / kg>;
+                      H =  2706241.34<J / kg>;
+                      S = 7126.85<J / (kg * K)>;
+                      Cv = 1615.96<J / (kg * K)>;
+                      Cp =  2175.22<J / (kg * K)>;
+                      SpeedOfSound =  481.88<m / s>;
+                      V = 8.857e-1<m ^ 3 / kg>;
+                      Rho =  1.129<kg / m ^ 3>; })
 
         ] 
 
     let validCompositeData =
         [
-            yield  ({ T = 318.95<Temperature>;
-                      P = 10e3<Pressure>;
+            yield  ({ T = 318.95<K>;
+                      P = 10e3<Pa>;
                       PhaseInfo =  { VaporFraction = 0.805;
                                       LiquidFraction = 0.195;
                                       SolidFraction = 0.0;
                                       PhaseRegion = PhaseRegion.LiquidVapor; };
-                      InternalEnergy =  1999135.82<J / kg>;
-                      H =  2117222.94<Enthalpy>;
-                      S = 6.6858e3<Entropy>;
-                      Cv = 1966.28<IsochoricHeatCapacity>;
-                      Cp =  2377.86<IsobaricHeatCapacity>;
-                      SpeedOfSound =  655.0<Speed>;
-                      V = 5.177e-3<SpecificVolume>;
-                      Rho =  193.16<Density>; })
+                      U =  1999135.82<J / kg>;
+                      H =  2117222.94<J / kg>;
+                      S = 6.6858e3<J / (kg * K)>;
+                      Cv = 1966.28<J / (kg * K)>;
+                      Cp =  2377.86<J / (kg * K)>;
+                      SpeedOfSound =  655.0<m / s>;
+                      V = 5.177e-3<m ^ 3 / kg>;
+                      Rho =  193.16<kg / m ^ 3>; })
         ] 
 
     let validPtData = validData |> List.map (fun (e) -> TestCaseData(e, TestName=(sprintf "%.0f Pa, %.0f K" e.P e.T)))
@@ -138,7 +136,7 @@ module SteamTableTests =
         isWithin "PhaseInfo.LiquidFraction" e.PhaseInfo.LiquidFraction a.PhaseInfo.LiquidFraction
         isWithin "PhaseInfo.SolidFraction" e.PhaseInfo.SolidFraction a.PhaseInfo.SolidFraction
         Assert.AreEqual(e.PhaseInfo.PhaseRegion, a.PhaseInfo.PhaseRegion, "Phase Region")
-        isWithin "InternalEnergy" e.InternalEnergy a.InternalEnergy
+        isWithin "InternalEnergy" e.U a.U
         isWithin "Enthalpy" e.H a.H
         isWithin "Entropy" e.S a.S
         isWithin "Cv" e.Cv a.Cv
@@ -204,14 +202,14 @@ module SteamTableTests =
                 | Ok x -> checkEnthalpyEntropyQueries x
                 | Error _ -> ()
 
-    type isentropicAssertion = { wetVaporT:float<K>; wetVaporP:float<Pa>; wetVaporH:float<Enthalpy>; vaporQuality:float}
+    type isentropicAssertion = { wetVaporT:float<K>; wetVaporP:float<Pa>; wetVaporH:float<J / kg>; vaporQuality:float}
     let isentropicExpansionData =
         [
             yield  ({inletVaporT=300.0<K>; inletVaporP=10.0<Pa>; outletP=10.0<Pa>})
         ] |> List.map (fun (e) -> TestCaseData(e, TestName=(sprintf "Isentropic Expansion %.0f Pa, %.0f K" e.inletVaporP e.inletVaporT)))
 
     [<TestCaseSource("isentropicExpansionData")>]
-    let IsentropicExpansionShouldWork (query:IsentropicExpansionQuery) =
+    let IsentropicExpansionShouldWork (query:ValidatedIsentropicExpansionQuery) =
         match (performSteamQuery (AsyncPtvQuery (isentropicExpansion query))) |> Async.RunSynchronously with
         | Ok x -> ()
         | Error e -> Assert.Fail(sprintf "Unexpected error: %A" e) 
@@ -219,43 +217,43 @@ module SteamTableTests =
     [<Test>]
     let RankineCycleShouldWork() =
         let args = { 
-            RankineArgs.boilerT= 773.15<K>; 
-            boilerP= 8600e3<Pressure>; 
-            condenserP= 10e3<Pressure>;
+            ValidatedRankineArgs.boilerT= 773.15<K>; 
+            boilerP= 8600e3<Pa>; 
+            condenserP= 10e3<Pa>;
             powerRequirement= 80e6<W>;
             turbineEfficiency= 0.75;
             pumpEfficiency= 0.75; }
 
-        let expectedBoilerPtv = { T = 773.15<Temperature>;
-                                  P = 8.6e6<Pressure>;
+        let expectedBoilerPtv = { T = 773.15<K>;
+                                  P = 8.6e6<Pa>;
                                   PhaseInfo =  { VaporFraction = 0.0;
                                                   LiquidFraction = 0.0;
                                                   SolidFraction = 0.0;
-                                                  PhaseRegion = PhaseRegion.PureRegion Gas; };
-                                  InternalEnergy =  3059796.86<J / kg>;
-                                  H =  3392157.80<Enthalpy>;
-                                  S = 6685.87<Entropy>;
-                                  Cv = 1820.19<IsochoricHeatCapacity>;
-                                  Cp =  2507.52<IsobaricHeatCapacity>;
-                                  SpeedOfSound =  651.85<Speed>;
-                                  V = 0.0386<SpecificVolume>;
-                                  Rho =  25.87<Density>; }
+                                                  PhaseRegion = Gas; };
+                                  U =  3059796.86<J / kg>;
+                                  H =  3392157.80<J / kg>;
+                                  S = 6685.87<J / (kg * K)>;
+                                  Cv = 1820.19<J / (kg * K)>;
+                                  Cp =  2507.52<J / (kg * K)>;
+                                  SpeedOfSound =  651.85<m / s>;
+                                  V = 0.0386<m ^ 3 / kg>;
+                                  Rho =  25.87<kg / m ^ 3>; }
 
-        let expectedCondenserPtv = { T = 318.95<Temperature>;
-                                     P = 1e4<Pressure>;
+        let expectedCondenserPtv = { T = 318.95<K>;
+                                     P = 1e4<Pa>;
                                      PhaseInfo =  { VaporFraction = 0.805;
                                                      LiquidFraction = 0.195;
                                                      SolidFraction = 0.0;
                                                      PhaseRegion = PhaseRegion.LiquidVapor; };
-                                     InternalEnergy =  2e6<J / kg>;
-                                     H =  2117246.34<Enthalpy>;
-                                     S = 6685.87<Entropy>;
-                                     Cv = 1966.25<IsochoricHeatCapacity>;
-                                     Cp =  2377.84<IsobaricHeatCapacity>;
-                                     SpeedOfSound =  654.99<Speed>;
-                                     V = 11.80<SpecificVolume>;
-                                     Rho =  193.15<Density>; }
-        let assertIsExpected (a:CycleResult) =
+                                     U =  2e6<J / kg>;
+                                     H =  2117246.34<J / kg>;
+                                     S = 6685.87<J / (kg * K)>;
+                                     Cv = 1966.25<J / (kg * K)>;
+                                     Cp =  2377.84<J / (kg * K)>;
+                                     SpeedOfSound =  654.99<m / s>;
+                                     V = 11.80<m ^ 3 / kg>;
+                                     Rho =  193.15<kg / m ^ 3>; }
+        let assertIsExpected (a:ValidatedCycleResult) =
             isWithin "condenserSteamQuality" 0.8051 a.condenserSteamQuality
             isWithin "pumpWork" 11.6e3<J/kg> a.pumpWork
             isWithin "boilerWork" 3189e3<J/kg> a.boilerWork
@@ -278,9 +276,9 @@ module SteamTableTests =
     [<Test>]
     let RegenerativeCycleShouldWork() =
         let args = { 
-            RegenerativeCycleArgs.boilerT= 773.15<K>; 
-            boilerP= 8600e3<Pressure>; 
-            condenserP= 10e3<Pressure>;
+            ValidatedRegenerativeCycleArgs.boilerT= 773.15<K>; 
+            boilerP= 8600e3<Pa>; 
+            condenserP= 10e3<Pa>;
             inletBoilerT= 499.15<K>;
             powerRequirement= 80e6<W>;
             stages=5;
@@ -288,36 +286,36 @@ module SteamTableTests =
             turbineEfficiency= 0.75;
             pumpEfficiency= 0.75; }
 
-        let expectedBoilerPtv = { T = 773.15<Temperature>;
-                                  P = 8.6e6<Pressure>;
+        let expectedBoilerPtv = { T = 773.15<K>;
+                                  P = 8.6e6<Pa>;
                                   PhaseInfo =  { VaporFraction = 0.0;
                                                   LiquidFraction = 0.0;
                                                   SolidFraction = 0.0;
-                                                  PhaseRegion = PhaseRegion.PureRegion Gas; };
-                                  InternalEnergy =  3059796.86<J / kg>;
-                                  H =  3392157.80<Enthalpy>;
-                                  S = 6685.87<Entropy>;
-                                  Cv = 1820.19<IsochoricHeatCapacity>;
-                                  Cp =  2507.52<IsobaricHeatCapacity>;
-                                  SpeedOfSound =  651.85<Speed>;
-                                  V = 0.0386<SpecificVolume>;
-                                  Rho =  25.87<Density>; }
+                                                  PhaseRegion = Gas; };
+                                  U =  3059796.86<J / kg>;
+                                  H =  3392157.80<J / kg>;
+                                  S = 6685.87<J / (kg * K)>;
+                                  Cv = 1820.19<J / (kg * K)>;
+                                  Cp =  2507.52<J / (kg * K)>;
+                                  SpeedOfSound =  651.85<m / s>;
+                                  V = 0.0386<m ^ 3 / kg>;
+                                  Rho =  25.87<kg / m ^ 3>; }
 
-        let expectedCondenserPtv = { T = 324.0<Temperature>;
-                                     P = 1.3486e4<Pressure>;
+        let expectedCondenserPtv = { T = 324.0<K>;
+                                     P = 1.3486e4<Pa>;
                                      PhaseInfo =  { VaporFraction = 0.91;
                                                      LiquidFraction = 0.0886;
                                                      SolidFraction = 0.0;
                                                      PhaseRegion = PhaseRegion.LiquidVapor; };
-                                     InternalEnergy =  2.247e6<J / kg>;
-                                     H =  2.383e6<Enthalpy>;
-                                     S = 7395.4<Entropy>;
-                                     Cv = 1695.3<IsochoricHeatCapacity>;
-                                     Cp =  2148.9<IsobaricHeatCapacity>;
-                                     SpeedOfSound =  542.1<Speed>;
-                                     V = 10.09<SpecificVolume>;
-                                     Rho =  87.6<Density>; }
-        let assertIsExpected (a:CycleResult) =
+                                     U =  2.247e6<J / kg>;
+                                     H =  2.383e6<J / kg>;
+                                     S = 7395.4<J / (kg * K)>;
+                                     Cv = 1695.3<J / (kg * K)>;
+                                     Cp =  2148.9<J / (kg * K)>;
+                                     SpeedOfSound =  542.1<m / s>;
+                                     V = 10.09<m ^ 3 / kg>;
+                                     Rho =  87.6<kg / m ^ 3>; }
+        let assertIsExpected (a:ValidatedCycleResult) =
             isWithin "condenserSteamQuality" 0.911 a.condenserSteamQuality
             isWithin "pumpWork" 11.6e3<J/kg> a.pumpWork
             isWithin "boilerWork" 2620.0e3<J/kg> a.boilerWork

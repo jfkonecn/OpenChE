@@ -2,6 +2,7 @@
 
 open NUnit.Framework
 open EngineeringMath.Fluids.BernoullisEquation
+open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open EngineeringMath
 open System
 
@@ -24,22 +25,22 @@ module FluidTests =
     [<Test>]
     let ``Should Work for simple case`` () =
         let args = BernoulliArgument.SolveForVIn {
-            vOut=10.0<Velocity>
-            hIn=10.0<Length>
-            hOut=9.0<Length>
-            pIn=100.0<Pressure>
-            pOut=20410.0<Pressure>
-            rho=1000.0<Density>
+            vOut=10.0<m / s>
+            hIn=10.0<m>
+            hOut=9.0<m>
+            pIn=100.0<Pa>
+            pOut=20410.0<Pa>
+            rho=1000.0<kg / m ^ 3>
         } 
         let actualResult = bernoullisEquation args
         let expected = {
-            vIn=11.0<Velocity>
-            vOut=10.0<Velocity>
-            hIn=10.0<Length>
-            hOut=9.0<Length>
-            pIn=100.0<Pressure>
-            pOut=20410.0<Pressure>
-            rho=1000.0<Density>
+            vIn=11.0<m / s>
+            vOut=10.0<m / s>
+            hIn=10.0<m>
+            hOut=9.0<m>
+            pIn=100.0<Pa>
+            pOut=20410.0<Pa>
+            rho=1000.0<kg / m ^ 3>
         }
         match actualResult with
         | Ok actual -> assertBernoulliResultsAreEqual expected actual

@@ -1,5 +1,6 @@
 ﻿namespace EngineeringMath
 open EngineeringMath.AssetFiles
+open EngineeringMath.Common
 open FSharp.Data
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open System.Threading.Tasks
@@ -9,29 +10,29 @@ open Thermo
 module SteamProperties =
 
     type private SpecificRegionPoint = private {
-        temperature: float<Temperature>
-        pressure: float<Pressure>
-        tau: float
-        pi: float
-        gamma: float
-        gammaPi: float
-        gammaPiPi: float
-        gammaTau: float
-        gammaTauTau: float
-        gammaPiTau: float
+        T: float<K>
+        P: float<Pa>
+        Tau: float
+        Pi: float
+        Gamma: float
+        GammaPi: float
+        GammaPiPi: float
+        GammaTau: float
+        GammaTauTau: float
+        GammaPiTau: float
     }
     
     type private SpecificRegion3Point = private {
-        temperature: float<Temperature>
-        pressure: float<Pressure>
-        tau: float
-        delta: float
-        phi: float
-        phiDelta: float
-        phiDeltaDelta: float
-        phiTau: float
-        phiTauTau: float
-        phiDeltaTau: float
+        T: float<K>
+        P: float<Pa>
+        Tau: float
+        Delta: float
+        Phi: float
+        PhiDelta: float
+        PhiDeltaDelta: float
+        PhiTau: float
+        PhiTauTau: float
+        PhiDeltaTau: float
     }
     
     
@@ -96,7 +97,7 @@ module SteamProperties =
             let tryParse fileName opt =
                 match opt with
                 |Some contents -> AsyncResult.ofAsync (Async.map mapRegionCsv contents)
-                |None -> AsyncResult.ofError (UiMessage.FailToLoadFile fileName)
+                |None -> AsyncResult.ofError (DomainError.FailToLoadFile fileName)
             getAssetFileContents fileName
             |> tryParse fileName
 
@@ -106,7 +107,7 @@ module SteamProperties =
         let mapReg3Points (x) =
             match (Seq.toList x) with
             | (_, _, n0)::tail -> AsyncResult.ofSuccess (Region3Points.Points (n0, (List.toSeq tail)))
-            | _ -> AsyncResult.ofError (UiMessage.FailToLoadFile "Region3.csv")
+            | _ -> AsyncResult.ofError (DomainError.FailToLoadFile "Region3.csv")
 
         asyncResult {
             let! reg14 = loadRegionPoints "Region1and4.csv" (fun x -> Region1And4Point.IJNPoint x)
@@ -177,7 +178,7 @@ module SteamProperties =
                 | (p, _, Some satP, _) when p = satP -> Ok (ptPoint, Region4)
                 | (p, _, _, Some b34P) when p < b34P -> Ok (ptPoint, Region2)
                 | (p, _, _, Some b34P) when p >= b34P -> Ok (ptPoint, Region3)
-                | _ -> Error UiMessage.OutOfRange
+                | _ -> Error DomainError.OutOfRange
 
             let performSaturationQuery pOpt tOpt region =
                 let satPOpt = Option.bind getSaturationPressure tOpt
@@ -190,7 +191,7 @@ module SteamProperties =
                 match (getPtOpt(), region) with
                 | (Some point, Liquid) -> Ok (point, Region1)
                 | (Some point, Vapor) -> Ok (point, Region2)
-                | _ -> Error UiMessage.OutOfRange
+                | _ -> Error DomainError.OutOfRange
 
             match query with
             | BasicPtvEntryQuery.PtQuery (p, t) when p > 50e6<Pa> && p <= 100e6<Pa> && t >= 273.15<K> && t <= 800.0<K> + 273.15<K> -> 
@@ -202,60 +203,60 @@ module SteamProperties =
             | BasicPtvEntryQuery.SatTempQuery (t, region) when t >= 273.15<K> && t <= 2000.0<K> + 273.15<K> -> 
                 (performSaturationQuery None (Some t) region)
             | _ -> 
-                Error UiMessage.OutOfRange
+                Error DomainError.OutOfRange
 
         let createRegionQueryFunction (AllRegionPoints.AllPoints (reg14, regIdeal2, regRes2, reg3, nReg34, nReg4, regIdeal5, regRes5)) =
             let createPvtEntry (p:SpecificRegionPoint, validPhaseInfo) =
                 let R = float waterGasConstant
-                let phaseInfo = ValidatedPhaseInfo.value validPhaseInfo
+                let phaseInfo = validPhaseInfo
                 let speedOfSound =
-                    let a = ((p.gammaPi - p.tau * p.gammaPiTau) ** 2.0)
-                    let b = (((p.gammaPi ** 2.0)) / ((a / ((p.tau ** 2.0) * p.gammaTauTau)) - p.gammaPiPi))
-                    sqrt(R * (float p.temperature) * b) * 1.0<Speed>
-                let v = (p.pi * (p.gammaPi * R * (float p.temperature)) / (float p.pressure)) * 1.0<SpecificVolume>
-                { PtvEntry.P = p.pressure;
-                  T = p.temperature;
+                    let a = ((p.GammaPi - p.Tau * p.GammaPiTau) ** 2.0)
+                    let b = (((p.GammaPi ** 2.0)) / ((a / ((p.Tau ** 2.0) * p.GammaTauTau)) - p.GammaPiPi))
+                    sqrt(R * (float p.T) * b) * 1.0<Speed>
+                let v = (p.Pi * (p.GammaPi * R * (float p.T)) / (float p.P)) * 1.0<SpecificVolume>
+                { ValidatedPtvEntry.P = p.P;
+                  T = p.T;
                   PhaseInfo = phaseInfo;
-                  InternalEnergy = R * (float p.temperature) * (p.tau * p.gammaTau - p.pi * p.gammaPi) * 1.0<J / kg>;
-                  H = R * (float p.temperature) * p.tau * p.gammaTau * 1.0<Enthalpy>;
-                  S = R * (p.tau * p.gammaTau - p.gamma) * 1.0<Entropy>;
-                  Cv = R * (-((-p.tau) ** 2.0) * p.gammaTauTau + ((p.gammaPi - p.tau * p.gammaPiTau) ** 2.0) / p.gammaPiPi) * 1.0<IsochoricHeatCapacity>;
-                  Cp = R * -((-p.tau) ** 2.0) * p.gammaTauTau * 1.0<IsobaricHeatCapacity>;
+                  U = R * (float p.T) * (p.Tau * p.GammaTau - p.Pi * p.GammaPi) * 1.0<J / kg>;
+                  H = R * (float p.T) * p.Tau * p.GammaTau * 1.0<Enthalpy>;
+                  S = R * (p.Tau * p.GammaTau - p.Gamma) * 1.0<Entropy>;
+                  Cv = R * (-((-p.Tau) ** 2.0) * p.GammaTauTau + ((p.GammaPi - p.Tau * p.GammaPiTau) ** 2.0) / p.GammaPiPi) * 1.0<IsochoricHeatCapacity>;
+                  Cp = R * -((-p.Tau) ** 2.0) * p.GammaTauTau * 1.0<IsobaricHeatCapacity>;
                   SpeedOfSound = speedOfSound;
                   V = v;
                   Rho = 1.0 / v; }
             let gibbsMethod (ptPoint:PtPoint) =
                 let state = {
-                    pressure = ptPoint.pressure;
-                    temperature = ptPoint.temperature;
-                    pi = (float ptPoint.pressure) / 16.53e6;
-                    tau = 1386.0 / (float ptPoint.temperature);
-                    gamma = 0.0;
-                    gammaPi = 0.0;
-                    gammaPiPi = 0.0;
-                    gammaTau = 0.0;
-                    gammaTauTau = 0.0;
-                    gammaPiTau = 0.0;
+                    P = ptPoint.pressure;
+                    T = ptPoint.temperature;
+                    Pi = (float ptPoint.pressure) / 16.53e6;
+                    Tau = 1386.0 / (float ptPoint.temperature);
+                    Gamma = 0.0;
+                    GammaPi = 0.0;
+                    GammaPiPi = 0.0;
+                    GammaTau = 0.0;
+                    GammaTauTau = 0.0;
+                    GammaPiTau = 0.0;
                 }
                 let (+) state x = 
                     let (Region1And4Point.IJNPoint (I i, J j, N n)) = x
-                    let pi = state.pi
-                    let tau = state.tau
-                    { pi = state.pi;
-                      tau = state.tau;
-                      gamma = state.gamma + (n * ((7.1 - pi) ** i) * ((tau - 1.222) ** j));
-                      gammaPi = state.gammaPi + (-n * i * ((7.1 - pi) ** (i - 1.0)) * ((tau - 1.222) ** j));
-                      gammaPiPi = state.gammaPiPi + (n * i * (i - 1.0) * ((7.1 - pi) ** (i - 2.0)) * ((tau - 1.222) ** j));
-                      gammaTau = state.gammaTau + (n * j * ((7.1 - pi) ** i) * ((tau - 1.222) ** (j - 1.0)));
-                      gammaTauTau = state.gammaTauTau + (n * j * (j - 1.0) * ((7.1 - pi) ** i) * ((tau - 1.222) ** (j - 2.0)));
-                      gammaPiTau = state.gammaPiTau + (-n * i * j * ((7.1 - pi) ** (i - 1.0)) * ((tau - 1.222) ** (j - 1.0)));
-                      pressure = state.pressure;
-                      temperature = state.temperature; }
+                    let pi = state.Pi
+                    let tau = state.Tau
+                    { Pi = state.Pi;
+                      Tau = state.Tau;
+                      Gamma = state.Gamma + (n * ((7.1 - pi) ** i) * ((tau - 1.222) ** j));
+                      GammaPi = state.GammaPi + (-n * i * ((7.1 - pi) ** (i - 1.0)) * ((tau - 1.222) ** j));
+                      GammaPiPi = state.GammaPiPi + (n * i * (i - 1.0) * ((7.1 - pi) ** (i - 2.0)) * ((tau - 1.222) ** j));
+                      GammaTau = state.GammaTau + (n * j * ((7.1 - pi) ** i) * ((tau - 1.222) ** (j - 1.0)));
+                      GammaTauTau = state.GammaTauTau + (n * j * (j - 1.0) * ((7.1 - pi) ** i) * ((tau - 1.222) ** (j - 2.0)));
+                      GammaPiTau = state.GammaPiTau + (-n * i * j * ((7.1 - pi) ** (i - 1.0)) * ((tau - 1.222) ** (j - 1.0)));
+                      P = state.P;
+                      T = state.T; }
 
                 let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" PureRegion.Liquid
                 match phaseInfoResult with
                 | Ok phaseInfo -> Ok (((Seq.fold (+) state reg14), phaseInfo) |> createPvtEntry)
-                | Error _ -> Error UiMessage.OutOfRange
+                | Error _ -> Error DomainError.OutOfRange
                 
 
             let vaporMethod (ptPoint:PtPoint) tau tauShift regionPoints =
@@ -264,48 +265,48 @@ module SteamProperties =
                 let sumIdeal state =
                     let (+) (state:SpecificRegionPoint) x = 
                         let (J j, N n) = x
-                        let tau = state.tau
-                        { pi = state.pi;
-                          tau = state.tau;
-                          gamma = state.gamma + (n * (tau ** j));
-                          gammaPi = state.gammaPi;
-                          gammaPiPi = state.gammaPiPi;
-                          gammaTau = state.gammaTau + (n * j * (tau ** (j - 1.0)));
-                          gammaTauTau = state.gammaTauTau + (n * j * (j - 1.0) * (tau ** (j - 2.0)));
-                          gammaPiTau = state.gammaPiTau;
-                          pressure = state.pressure;
-                          temperature = state.temperature; }
+                        let tau = state.Tau
+                        { Pi = state.Pi;
+                          Tau = state.Tau;
+                          Gamma = state.Gamma + (n * (tau ** j));
+                          GammaPi = state.GammaPi;
+                          GammaPiPi = state.GammaPiPi;
+                          GammaTau = state.GammaTau + (n * j * (tau ** (j - 1.0)));
+                          GammaTauTau = state.GammaTauTau + (n * j * (j - 1.0) * (tau ** (j - 2.0)));
+                          GammaPiTau = state.GammaPiTau;
+                          P = state.P;
+                          T = state.T; }
                     Seq.fold (+) state ideal
 
                 let sumResidual state =
                     let (+) state x = 
                         let (I i, J j, N n) = x
-                        let pi = state.pi
-                        let tau = state.tau
-                        { pi = state.pi;
-                          tau = state.tau;
-                          gamma = state.gamma + (n * (pi ** i) * ((tau - tauShift) ** j));
-                          gammaPi = state.gammaPi + (n * i * (pi ** (i - 1.0)) * ((tau - tauShift) ** j));
-                          gammaPiPi = state.gammaPiPi + (n * i * (i - 1.0) * (pi ** (i - 2.0)) * ((tau - tauShift) ** j));
-                          gammaTau = state.gammaTau + (n * (pi ** i) * j * ((tau - tauShift) ** (j - 1.0)));
-                          gammaTauTau = state.gammaTauTau + (n * (pi ** i) * j * (j - 1.0) * ((tau - tauShift) ** (j - 2.0)));
-                          gammaPiTau = state.gammaPiTau + (n * i * (pi ** (i - 1.0)) * j * ((tau - tauShift) ** (j - 1.0)));
-                          pressure = state.pressure;
-                          temperature = state.temperature; }
+                        let pi = state.Pi
+                        let tau = state.Tau
+                        { Pi = state.Pi;
+                          Tau = state.Tau;
+                          Gamma = state.Gamma + (n * (pi ** i) * ((tau - tauShift) ** j));
+                          GammaPi = state.GammaPi + (n * i * (pi ** (i - 1.0)) * ((tau - tauShift) ** j));
+                          GammaPiPi = state.GammaPiPi + (n * i * (i - 1.0) * (pi ** (i - 2.0)) * ((tau - tauShift) ** j));
+                          GammaTau = state.GammaTau + (n * (pi ** i) * j * ((tau - tauShift) ** (j - 1.0)));
+                          GammaTauTau = state.GammaTauTau + (n * (pi ** i) * j * (j - 1.0) * ((tau - tauShift) ** (j - 2.0)));
+                          GammaPiTau = state.GammaPiTau + (n * i * (pi ** (i - 1.0)) * j * ((tau - tauShift) ** (j - 1.0)));
+                          P = state.P;
+                          T = state.T; }
                     Seq.fold (+) state residual
 
                 let pi = (float ptPoint.pressure) / 1.0e6
                 let state = {
-                    pressure = ptPoint.pressure;
-                    temperature = ptPoint.temperature;
-                    pi = pi;
-                    tau = tau;
-                    gamma = log(pi);
-                    gammaPi = 1.0 / pi;
-                    gammaPiPi = -1.0 / (pi ** 2.0);
-                    gammaTau = 0.0;
-                    gammaTauTau = 0.0;
-                    gammaPiTau = 0.0;
+                    P = ptPoint.pressure;
+                    T = ptPoint.temperature;
+                    Pi = pi;
+                    Tau = tau;
+                    Gamma = log(pi);
+                    GammaPi = 1.0 / pi;
+                    GammaPiPi = -1.0 / (pi ** 2.0);
+                    GammaTau = 0.0;
+                    GammaTauTau = 0.0;
+                    GammaPiTau = 0.0;
                 }
                 
                 let phase = match (ptPoint.temperature, ptPoint.pressure) with
@@ -317,7 +318,7 @@ module SteamProperties =
 
                 match phaseInfoResult with
                 | Ok phaseInfo -> Ok (((sumIdeal state |> sumResidual), phaseInfo) |> createPvtEntry)
-                | Error _ -> Error UiMessage.OutOfRange
+                | Error _ -> Error DomainError.OutOfRange
 
             let region3Method (ptPoint:PtPoint) =
                 let calculateSpecificPoint density =
@@ -325,71 +326,71 @@ module SteamProperties =
                     let (Region3Points.Points (N n1, reg3Seq)) = reg3
                     let delta = density / 322.0<Density>
                     let state = {
-                        pressure = ptPoint.pressure;
-                        temperature = ptPoint.temperature;
-                        tau = 647.096 / (float ptPoint.temperature);
-                        delta = delta;
-                        phi = n1 * log(delta);
-                        phiDelta = n1 / delta;
-                        phiDeltaDelta = -n1 / (delta ** 2.0);
-                        phiTau = 0.0;
-                        phiTauTau = 0.0;
-                        phiDeltaTau = 0.0;
+                        P = ptPoint.pressure;
+                        T = ptPoint.temperature;
+                        Tau = 647.096 / (float ptPoint.temperature);
+                        Delta = delta;
+                        Phi = n1 * log(delta);
+                        PhiDelta = n1 / delta;
+                        PhiDeltaDelta = -n1 / (delta ** 2.0);
+                        PhiTau = 0.0;
+                        PhiTauTau = 0.0;
+                        PhiDeltaTau = 0.0;
                     }
                     let (+) state x = 
                         let (I i, J j, N n) = x
-                        let delta = state.delta
-                        let tau = state.tau
-                        { pressure = ptPoint.pressure;
-                          temperature = ptPoint.temperature;
-                          tau = tau;
-                          delta = delta;
-                          phi = state.phi + (n * (delta ** i) * (tau ** j));
-                          phiDelta = state.phiDelta + (n * i * (delta ** (i - 1.0)) * (tau ** j));
-                          phiDeltaDelta = state.phiDeltaDelta + (n * i * (i - 1.0) * (delta ** (i - 2.0)) * (tau ** j));
-                          phiTau = state.phiTau + (n * (delta ** i) * j * (tau ** (j - 1.0)));
-                          phiTauTau = state.phiTauTau + (n * (delta ** i) * j * (j - 1.0) * (tau ** (j - 2.0)));
-                          phiDeltaTau = state.phiDeltaTau + (n * i * (delta ** (i - 1.0)) * j * (tau ** (j - 1.0))); }
+                        let delta = state.Delta
+                        let tau = state.Tau
+                        { P = ptPoint.pressure;
+                          T = ptPoint.temperature;
+                          Tau = tau;
+                          Delta = delta;
+                          Phi = state.Phi + (n * (delta ** i) * (tau ** j));
+                          PhiDelta = state.PhiDelta + (n * i * (delta ** (i - 1.0)) * (tau ** j));
+                          PhiDeltaDelta = state.PhiDeltaDelta + (n * i * (i - 1.0) * (delta ** (i - 2.0)) * (tau ** j));
+                          PhiTau = state.PhiTau + (n * (delta ** i) * j * (tau ** (j - 1.0)));
+                          PhiTauTau = state.PhiTauTau + (n * (delta ** i) * j * (j - 1.0) * (tau ** (j - 2.0)));
+                          PhiDeltaTau = state.PhiDeltaTau + (n * i * (delta ** (i - 1.0)) * j * (tau ** (j - 1.0))); }
                     Seq.fold (+) state reg3Seq
 
 
 
 
                 let calculatePressure density p =
-                    (p.phiDelta * p.delta * (float density) * (float waterGasConstant) * (float p.temperature)) * 1.0<Pressure>
+                    (p.PhiDelta * p.Delta * (float density) * (float waterGasConstant) * (float p.T)) * 1.0<Pressure>
                  
 
 
                 let createPtvEntry density p =
                     let R = float waterGasConstant
                     let speedOfSound = 
-                        let c = ((p.tau ** 2.0) * p.phiTauTau)
-                        let b = ((p.delta * p.phiDelta - p.delta * p.tau * p.phiDeltaTau) ** 2.0) 
-                        let a = 2.0 * p.delta * p.phiDelta + (p.delta ** 2.0) * p.phiDeltaDelta
-                        sqrt((a - b / c) * R * (float p.temperature)) * 1.0<Speed>
+                        let c = ((p.Tau ** 2.0) * p.PhiTauTau)
+                        let b = ((p.Delta * p.PhiDelta - p.Delta * p.Tau * p.PhiDeltaTau) ** 2.0) 
+                        let a = 2.0 * p.Delta * p.PhiDelta + (p.Delta ** 2.0) * p.PhiDeltaDelta
+                        sqrt((a - b / c) * R * (float p.T)) * 1.0<Speed>
                     
                     let cp =    
-                        let a = -(p.tau ** 2.0) * p.phiTauTau
-                        let b = ((p.delta * p.phiDelta - p.delta * p.tau * p.phiDeltaTau) ** 2.0)
-                        let c = (2.0 * p.delta * p.phiDelta + (p.delta ** 2.0) * p.phiDeltaDelta) 
+                        let a = -(p.Tau ** 2.0) * p.PhiTauTau
+                        let b = ((p.Delta * p.PhiDelta - p.Delta * p.Tau * p.PhiDeltaTau) ** 2.0)
+                        let c = (2.0 * p.Delta * p.PhiDelta + (p.Delta ** 2.0) * p.PhiDeltaDelta) 
                         (a + (b / c)) * R * 1.0<IsobaricHeatCapacity>
 
                     let temperature = ptPoint.temperature
                     let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" PureRegion.SupercriticalFluid
                     match phaseInfoResult with
                     | Ok phaseInfo -> Ok { 
-                        PtvEntry.P = calculatePressure density p;
+                        ValidatedPtvEntry.P = calculatePressure density p;
                         T = temperature;
-                        PhaseInfo = ValidatedPhaseInfo.value phaseInfo;
-                        InternalEnergy = p.tau * p.phiTau * R * (float temperature) * 1.0<J / kg>;
-                        H = (p.tau * p.phiTau + p.delta * p.phiDelta) * R * (float temperature) * 1.0<Enthalpy>;
-                        S = (p.tau * p.phiTau - p.phi) * R * 1.0<Entropy>;
-                        Cv = -(p.tau ** 2.0) * p.phiTauTau * R * 1.0<IsochoricHeatCapacity>;
+                        PhaseInfo = phaseInfo;
+                        U = p.Tau * p.PhiTau * R * (float temperature) * 1.0<J / kg>;
+                        H = (p.Tau * p.PhiTau + p.Delta * p.PhiDelta) * R * (float temperature) * 1.0<Enthalpy>;
+                        S = (p.Tau * p.PhiTau - p.Phi) * R * 1.0<Entropy>;
+                        Cv = -(p.Tau ** 2.0) * p.PhiTauTau * R * 1.0<IsochoricHeatCapacity>;
                         Cp = cp;
                         SpeedOfSound = speedOfSound;
                         V = 1.0 / density;
                         Rho = density; }
-                    | Error _ -> Error UiMessage.OutOfRange
+                    | Error _ -> Error DomainError.OutOfRange
                     
 
                 let solver density = calculateSpecificPoint density |> calculatePressure density |> fun x -> float (x - ptPoint.pressure)
@@ -397,7 +398,7 @@ module SteamProperties =
                 let result = (NumericalMethods.Zeros.newton (fun x -> solver (x * 1.0<Density>)) 1.0)
                 match result with
                 | Ok density -> calculateSpecificPoint (density * 1.0<Density>) |> createPtvEntry (density * 1.0<Density>)
-                | Error ConvergeError.MaxIterationsReached -> Error UiMessage.FailedToConverge
+                | Error ConvergeError.MaxIterationsReached -> Error DomainError.FailedToConverge
             fun query ->
                 let regionResult = resolveRegion (query, (Seq.toArray nReg34), (Seq.toArray nReg4))
                 let reg2IdealValue (Region2IdealPoint.JNPoint (n, j)) =

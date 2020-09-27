@@ -23,6 +23,7 @@
     <Compile Include="Thermo.fs" />
     <Compile Include="SteamProperties.fs" />
     <Compile Include="Fluids.fs" />
+    <Compile Include="LibraryTypes.fs" />
     <Compile Include="Library.fs" />
   </ItemGroup>
 

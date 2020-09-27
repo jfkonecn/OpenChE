@@ -1,4 +1,4 @@
-﻿namespace EngineeringMath
+﻿namespace EngineeringMath.Common
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open System
 
@@ -29,18 +29,19 @@ type PhaseRegion = PureRegion of PureRegion|SolidLiquid|LiquidVapor|SolidVapor|S
 type MassFraction = private MassFraction of Fraction
 type VaporQuality = private VaporQuality of Fraction
 
-type PhaseInfo = {
-    VaporFraction: float
-    LiquidFraction: float
-    SolidFraction: float
+
+type ValidatedPhaseInfo = private {
+    VaporFraction: MassFraction
+    LiquidFraction: MassFraction
+    SolidFraction: MassFraction
     PhaseRegion: PhaseRegion
 }
 
-type PtvEntry = {
+type ValidatedPtvEntry = {
     T: float<Temperature>
     P: float<Pressure>
-    PhaseInfo: PhaseInfo
-    InternalEnergy: float<J / kg>
+    PhaseInfo: ValidatedPhaseInfo
+    U: float<J / kg>
     H: float<Enthalpy>
     S: float<Entropy>
     Cv: float<IsochoricHeatCapacity>
@@ -53,14 +54,9 @@ type PtvEntry = {
 
 
 
-type ValidatedPhaseInfo = private {
-    VaporFraction: MassFraction
-    LiquidFraction: MassFraction
-    SolidFraction: MassFraction
-    PhaseRegion: PhaseRegion
-}
 
-type UiMessage = 
+
+type DomainError = 
     |OutOfRange
     |NotEnoughArguments
     |FailToLoadFile of string
@@ -91,16 +87,13 @@ module VaporQuality =
 
     let value (VaporQuality f) = Fraction.value f
 
+    let fractionValue (VaporQuality q) = q
+
     let create fieldName f = 
         Result.map VaporQuality (Fraction.create fieldName f)
 
 module ValidatedPhaseInfo =
-    let value x = {
-        PhaseInfo.VaporFraction = (MassFraction.value x.VaporFraction);
-        LiquidFraction = (MassFraction.value x.LiquidFraction);
-        SolidFraction = (MassFraction.value x.SolidFraction);
-        PhaseRegion = x.PhaseRegion;
-    }
+
 
     let create fieldName region vaporFraction liquidFraction solidFraction =
         let sum = [vaporFraction; liquidFraction; solidFraction] |> List.reduce (+)

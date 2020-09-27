@@ -1,5 +1,5 @@
 ﻿namespace EngineeringMath.Fluids
-open EngineeringMath
+open EngineeringMath.Common
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open System
 
@@ -92,7 +92,7 @@ module BernoullisEquation =
                              vIn= sqrt(
                                      2.0 * (((float x.vOut ** 2.0) / 2.0 + g * float x.hOut + float x.pOut / float x.rho) -
                                          (g * float x.hIn + float x.pIn / float x.rho))
-                                     ) * 1.0<Velocity>
+                                     ) * 1.0<m / s>
                              vOut=x.vOut
                              hIn=x.hIn
                              hOut=x.hOut
@@ -105,7 +105,7 @@ module BernoullisEquation =
                              vOut= sqrt(
                                      2.0 * (((float x.vIn ** 2.0) / 2.0 + g * float x.hIn + float x.pIn / float x.rho) -
                                          (g * float x.hOut + float x.pOut / float x.rho))
-                                     ) * 1.0<Velocity>
+                                     ) * 1.0<m / s>
                              hIn=x.hIn
                              hOut=x.hOut
                              pIn=x.pIn
@@ -116,7 +116,7 @@ module BernoullisEquation =
                              vIn=x.vIn
                              vOut=x.vOut
                              hIn= (1.0 / g) * (((float x.vOut ** 2.0) / 2.0 + g * float x.hOut + float x.pOut / float x.rho) -
-                                     ((float x.vIn ** 2.0) / 2.0 + float x.pIn / float x.rho)) * 1.0<Length>
+                                     ((float x.vIn ** 2.0) / 2.0 + float x.pIn / float x.rho)) * 1.0<m>
                              hOut=x.hOut
                              pIn=x.pIn
                              pOut=x.pOut
@@ -127,7 +127,7 @@ module BernoullisEquation =
                              vOut=x.vOut
                              hIn=x.hIn
                              hOut= (1.0 / g) * (((float x.vIn ** 2.0) / 2.0 + g * float x.hIn + float x.pIn / float x.rho) -
-                                     ((float x.vOut ** 2.0) / 2.0 + float x.pOut / float x.rho)) * 1.0<Length>
+                                     ((float x.vOut ** 2.0) / 2.0 + float x.pOut / float x.rho)) * 1.0<m>
                              pIn=x.pIn
                              pOut=x.pOut
                              rho=x.rho
@@ -138,7 +138,7 @@ module BernoullisEquation =
                              hIn=x.hIn
                              hOut=x.hOut
                              pIn= float x.rho * (((float x.vOut ** 2.0) / 2.0 + g * float x.hOut + float x.pOut / float x.rho) -
-                                     ((float x.vIn ** 2.0) / 2.0 + g * float x.hIn)) * 1.0<Pressure>
+                                     ((float x.vIn ** 2.0) / 2.0 + g * float x.hIn)) * 1.0<Pa>
                              pOut=x.pOut
                              rho=x.rho
                          }
@@ -149,7 +149,7 @@ module BernoullisEquation =
                              hOut=x.hOut
                              pIn=x.pIn
                              pOut= float x.rho * (((float x.vIn ** 2.0) / 2.0 + g * float x.hIn + float x.pIn / float x.rho) -
-                                     ((float x.vOut ** 2.0) / 2.0 + g * float x.hOut)) * 1.0<Pressure>
+                                     ((float x.vOut ** 2.0) / 2.0 + g * float x.hOut)) * 1.0<Pa>
                              rho=x.rho
                          }
                      | (SolveForDensity x) -> {
@@ -161,19 +161,19 @@ module BernoullisEquation =
                              pOut=x.pOut
                              rho= (float x.pOut - float x.pIn) /
                                      (((float x.vIn ** 2.0) / 2.0 + g * float x.hIn) -
-                                         ((float x.vOut ** 2.0) / 2.0 + g * float x.hOut)) * 1.0<Density>
+                                         ((float x.vOut ** 2.0) / 2.0 + g * float x.hOut)) * 1.0<kg / m ^ 3>
                          }
 
         let isOutOfRange x =
             Double.IsInfinity(x) || Double.IsNaN(x) || x < 0.0
         match result with
-        | { vIn=x } when (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
-        | { vOut=x } when (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
-        | { hIn=x } when (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
-        | { hOut=x } when (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
-        | { pIn=x } when (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
-        | { pOut=x } when (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
-        | { rho=x } when float x <= 0.0 || (isOutOfRange (float x)) -> Error UiMessage.OutOfRange
+        | { vIn=x } when (isOutOfRange (float x)) -> Error DomainError.OutOfRange
+        | { vOut=x } when (isOutOfRange (float x)) -> Error DomainError.OutOfRange
+        | { hIn=x } when (isOutOfRange (float x)) -> Error DomainError.OutOfRange
+        | { hOut=x } when (isOutOfRange (float x)) -> Error DomainError.OutOfRange
+        | { pIn=x } when (isOutOfRange (float x)) -> Error DomainError.OutOfRange
+        | { pOut=x } when (isOutOfRange (float x)) -> Error DomainError.OutOfRange
+        | { rho=x } when float x <= 0.0 || (isOutOfRange (float x)) -> Error DomainError.OutOfRange
         | _ -> Ok result
 
 
