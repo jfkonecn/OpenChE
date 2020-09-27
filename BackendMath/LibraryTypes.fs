@@ -1,7 +1,7 @@
 ﻿namespace EngineeringMath
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 
-
+type PureRegion = SupercriticalFluid|Gas|Vapor|Liquid|Solid
 type PhaseRegion = 
     | SupercriticalFluid
     | Gas
@@ -50,6 +50,16 @@ type UiMessage =
     |FailToLoadFile of string
     |FailedToConverge
 
+type RegenerativeCycleArgs = { 
+    inletBoilerT:float<K>;
+    boilerT:float<K>; 
+    boilerP:float<Pa>; 
+    condenserP:float<Pa>;
+    powerRequirement:float<W>;
+    stages:int;
+    minTemperatureDelta:float<K>;
+    turbineEfficiency:float;
+    pumpEfficiency:float; }
 
 type RankineArgs = { 
     boilerT:float<K>; 
@@ -58,6 +68,7 @@ type RankineArgs = {
     powerRequirement:float<W>;
     turbineEfficiency:float;
     pumpEfficiency:float; }
+
 type CycleResult = {
     boilerPtv:PtvEntry; 
     condenserPtv:PtvEntry; 
@@ -73,17 +84,6 @@ type CycleResult = {
     condenserHeatTransferRate:float<J/s>;
 }
 
-type RegenerativeCycleArgs = { 
-    inletBoilerT:float<K>;
-    boilerT:float<K>; 
-    boilerP:float<Pa>; 
-    condenserP:float<Pa>;
-    powerRequirement:float<W>;
-    stages:int;
-    minTemperatureDelta:float<K>;
-    turbineEfficiency:float;
-    pumpEfficiency:float; }
-
 type IsentropicExpansionQuery = { inletVaporT:float<K>; inletVaporP:float<Pa>; outletP:float<Pa> }
 type IsentropicExpansionResult = { 
     vaporPtv:PtvEntry; 
@@ -91,3 +91,17 @@ type IsentropicExpansionResult = {
     satVapor:PtvEntry; 
     satLiquid:PtvEntry; 
     vaporQuality:float }
+
+
+type PtvEntryQuery = 
+    | PtQuery of float<Pa> * float<K>
+    | SatTempQuery of float<K> * PureRegion 
+    | SatPreQuery of float<Pa> * PureRegion 
+    | EnthalpyQuery of float<J / kg> * float<Pa>
+    | EntropyQuery of float<J / (kg * K)> * float<Pa>
+
+type ThermoTableAction =
+    | PerformPtvEntryQuery of (PtvEntryQuery -> PtvEntry)
+    | CalculateRankineCycle of (RankineArgs -> CycleResult)
+    | CalculateRegenerativeCycle of (RegenerativeCycleArgs -> CycleResult)
+    | CalculateIsentropicExpansion of (IsentropicExpansionQuery -> IsentropicExpansionResult)

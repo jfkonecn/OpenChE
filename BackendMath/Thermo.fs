@@ -7,13 +7,13 @@ open NumericalMethods
 open EngineeringMath.Common
 
 
-type BasicPtvEntryQuery = 
+type ValidatedBasicPtvEntryQuery = 
     |PtQuery of float<Pressure> * float<Temperature>
-    |SatTempQuery of float<Temperature> * PureRegion 
-    |SatPreQuery of float<Pressure> * PureRegion 
+    |SatTempQuery of float<Temperature> * ValidatedPureRegion 
+    |SatPreQuery of float<Pressure> * ValidatedPureRegion 
 
-type PtvEntryQuery = 
-    |BasicPtvEntryQuery of BasicPtvEntryQuery
+type ValidatedPtvEntryQuery = 
+    |BasicPtvEntryQuery of ValidatedBasicPtvEntryQuery
     |EnthalpyQuery of float<Enthalpy> * float<Pressure>
     |EntropyQuery of float<Entropy> * float<Pressure>
 
@@ -25,7 +25,7 @@ type ValidatedIsentropicExpansionResult = {
     satLiquid:ValidatedPtvEntry; 
     vaporQuality:Fraction }
 
-type PvtTableReader = BasicPtvEntryQuery -> Result<ValidatedPtvEntry, DomainError>
+type PvtTableReader = ValidatedBasicPtvEntryQuery -> Result<ValidatedPtvEntry, DomainError>
 type PtvQuery<'a> = PvtTableReader -> Result<'a, DomainError>
 type AsyncPtvQuery<'a> = PvtTableReader -> AsyncResult<'a, DomainError>
 type PvtQueryHandler<'a> = 
@@ -68,13 +68,13 @@ type ValidatedRegenerativeCycleArgs = {
 
 module Thermo =
 
-    let performPtvEntryQuery (query:PtvEntryQuery) (tableReader:PvtTableReader) = 
+    let performPtvEntryQuery (query:ValidatedPtvEntryQuery) (tableReader:PvtTableReader) = 
         let handleNonTableQuery p targetValue getTargetValue =
             let interpolateEntry liquidEntry vaporEntry liqFrac =
                 let vaporFrac = 1.0 - liqFrac
                 let interpolateEntryProperty getProperty =
                     (getProperty(liquidEntry) * liqFrac) + (getProperty(vaporEntry) * vaporFrac)
-                match (ValidatedPhaseInfo.create "phaseInfo" PhaseRegion.LiquidVapor vaporFrac liqFrac 0.0) with
+                match (ValidatedPhaseInfo.create "phaseInfo" ValidatedPhaseRegion.LiquidVapor vaporFrac liqFrac 0.0) with
                 | (Ok info) -> Ok { 
                     ValidatedPtvEntry.P = (interpolateEntryProperty (fun x -> float x.P)) * 1.0<Pressure>;
                     T = (interpolateEntryProperty (fun x -> float x.T)) * 1.0<Temperature>;
@@ -90,8 +90,8 @@ module Thermo =
                 | Error _ -> Error DomainError.OutOfRange 
 
 
-            let liqEntry =  tableReader (BasicPtvEntryQuery.SatPreQuery (p, PureRegion.Liquid))
-            let vaporEntry = tableReader (BasicPtvEntryQuery.SatPreQuery (p, PureRegion.Vapor))
+            let liqEntry =  tableReader (ValidatedBasicPtvEntryQuery.SatPreQuery (p, ValidatedPureRegion.Liquid))
+            let vaporEntry = tableReader (ValidatedBasicPtvEntryQuery.SatPreQuery (p, ValidatedPureRegion.Vapor))
             let resolve liq vap =
                 let mergeLiqVapor =
                     let liqFrac = (getTargetValue(vap) - targetValue) / (getTargetValue(vap) - getTargetValue(liq))
@@ -105,22 +105,22 @@ module Thermo =
                 let satPointResult = resolve <!> liqEntry <*> vaporEntry
                 let tryAssumingNotSaturated() =
                     let solver t =
-                        let x = match tableReader (BasicPtvEntryQuery.PtQuery (p, (t * 1.0<Temperature>))) with
+                        let x = match tableReader (ValidatedBasicPtvEntryQuery.PtQuery (p, (t * 1.0<Temperature>))) with
                                 |Ok x -> (getTargetValue x)
                                 |Error _ -> float nan
                         x - targetValue
 
                     match NumericalMethods.Zeros.newton solver 300.0 with
-                        |Ok t -> tableReader (BasicPtvEntryQuery.PtQuery (p, t * 1.0<Temperature>))
+                        |Ok t -> tableReader (ValidatedBasicPtvEntryQuery.PtQuery (p, t * 1.0<Temperature>))
                         |Error ConvergeError.MaxIterationsReached -> Error DomainError.FailedToConverge
                 return! match satPointResult with
                         | Ok (Ok x) -> Ok x
                         | _ -> tryAssumingNotSaturated()
             }
         match query with
-        | (PtvEntryQuery.BasicPtvEntryQuery q) -> tableReader q 
-        | (PtvEntryQuery.EnthalpyQuery (e, p)) -> (handleNonTableQuery p (float e) (fun x -> float x.H))
-        | (PtvEntryQuery.EntropyQuery (e, p)) -> (handleNonTableQuery p (float e) (fun x -> float x.S))
+        | (ValidatedPtvEntryQuery.BasicPtvEntryQuery q) -> tableReader q 
+        | (ValidatedPtvEntryQuery.EnthalpyQuery (e, p)) -> (handleNonTableQuery p (float e) (fun x -> float x.H))
+        | (ValidatedPtvEntryQuery.EntropyQuery (e, p)) -> (handleNonTableQuery p (float e) (fun x -> float x.S))
 
 
     let isentropicExpansion (query:ValidatedIsentropicExpansionQuery) tableReader =
@@ -133,8 +133,8 @@ module Thermo =
                     }
                 )
 
-            let satVaporTask = Task.Run(fun () -> tableReader (SatPreQuery (query.outletP, PureRegion.Vapor)))
-            let satLiqTask = Task.Run(fun () -> tableReader (SatPreQuery (query.outletP, PureRegion.Liquid)))
+            let satVaporTask = Task.Run(fun () -> tableReader (SatPreQuery (query.outletP, ValidatedPureRegion.Vapor)))
+            let satLiqTask = Task.Run(fun () -> tableReader (SatPreQuery (query.outletP, ValidatedPureRegion.Liquid)))
         
 
             let! _ = Task.WhenAll(satVaporTask, satLiqTask, vaporTask) |> Async.AwaitTask |> AsyncResult.ofAsync
@@ -242,8 +242,8 @@ module Thermo =
             let boilerPtvTask = Task.Run(fun () -> tableReader (PtQuery (args.boilerP, args.boilerT)))
             let condenserTask = Task.Run(fun () -> 
                 result {
-                    let! condenserPtv = tableReader (SatPreQuery (args.condenserP, PureRegion.Liquid))
-                    let! pumpPtv = tableReader (SatTempQuery (condenserPtv.T, PureRegion.Liquid))
+                    let! condenserPtv = tableReader (SatPreQuery (args.condenserP, ValidatedPureRegion.Liquid))
+                    let! pumpPtv = tableReader (SatTempQuery (condenserPtv.T, ValidatedPureRegion.Liquid))
                     let step = 0.5<Temperature>
                     let! imin1 = tableReader (PtQuery (condenserPtv.P, condenserPtv.T - step))
                     let! imin2 = tableReader (PtQuery (condenserPtv.P, condenserPtv.T - (2.0 * step)))
@@ -267,7 +267,7 @@ module Thermo =
                 let calculateStageProperties () =
                     asyncResult {
                         let! exitCoolingLiquid = AsyncResult.ofResult (tableReader (PtQuery (inletCoolingLiquid.P, inletCoolingLiquid.T + stageTempDelta)))
-                        let! exitCondensate = AsyncResult.ofResult (tableReader (SatTempQuery (exitCoolingLiquid.T + args.minTemperatureDelta, PureRegion.Liquid)))
+                        let! exitCondensate = AsyncResult.ofResult (tableReader (SatTempQuery (exitCoolingLiquid.T + args.minTemperatureDelta, ValidatedPureRegion.Liquid)))
                         let! isenExpansion = (isentropicExpansion {inletVaporT=inletVapor.T; inletVaporP=inletVapor.P; outletP=exitCondensate.P} tableReader)
                         let workProduced = (inletVapor.H - isenExpansion.wetVaporPtv.H) * (Fraction.value args.turbineEfficiency)
                         let! exitVapor = AsyncResult.ofResult (performPtvEntryQuery (EnthalpyQuery (inletVapor.H - workProduced, exitCondensate.P)) tableReader )

@@ -24,8 +24,8 @@ open System
 type Fraction = private Fraction of float
 
 
-type PureRegion = SupercriticalFluid|Gas|Vapor|Liquid|Solid
-type PhaseRegion = PureRegion of PureRegion|SolidLiquid|LiquidVapor|SolidVapor|SolidLiquidVapor
+type ValidatedPureRegion = SupercriticalFluid|Gas|Vapor|Liquid|Solid
+type ValidatedPhaseRegion = PureRegion of ValidatedPureRegion|SolidLiquid|LiquidVapor|SolidVapor|SolidLiquidVapor
 type MassFraction = private MassFraction of Fraction
 type VaporQuality = private VaporQuality of Fraction
 
@@ -34,7 +34,7 @@ type ValidatedPhaseInfo = private {
     VaporFraction: MassFraction
     LiquidFraction: MassFraction
     SolidFraction: MassFraction
-    PhaseRegion: PhaseRegion
+    PhaseRegion: ValidatedPhaseRegion
 }
 
 type ValidatedPtvEntry = {
@@ -57,10 +57,10 @@ type ValidatedPtvEntry = {
 
 
 type DomainError = 
-    |OutOfRange
-    |NotEnoughArguments
-    |FailToLoadFile of string
-    |FailedToConverge
+    | OutOfRange
+    | NotEnoughArguments
+    | FailToLoadFile of string
+    | FailedToConverge
 
 
 
@@ -116,8 +116,8 @@ module ValidatedPhaseInfo =
 
     let createAsPure fieldName region = 
         match region with
-            | (Vapor) -> create fieldName (PhaseRegion.PureRegion region) 1.0 0.0 0.0
-            | (Liquid) -> create fieldName (PhaseRegion.PureRegion region) 0.0 1.0 0.0
-            | (Solid) -> create fieldName (PhaseRegion.PureRegion region) 0.0 0.0 1.0
+            | (Vapor) -> create fieldName (ValidatedPhaseRegion.PureRegion region) 1.0 0.0 0.0
+            | (Liquid) -> create fieldName (ValidatedPhaseRegion.PureRegion region) 0.0 1.0 0.0
+            | (Solid) -> create fieldName (ValidatedPhaseRegion.PureRegion region) 0.0 0.0 1.0
             | (Gas)
-            | (SupercriticalFluid) -> create fieldName (PhaseRegion.PureRegion region) 0.0 0.0 0.0
+            | (SupercriticalFluid) -> create fieldName (ValidatedPhaseRegion.PureRegion region) 0.0 0.0 0.0

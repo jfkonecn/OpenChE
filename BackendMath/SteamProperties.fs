@@ -194,13 +194,13 @@ module SteamProperties =
                 | _ -> Error DomainError.OutOfRange
 
             match query with
-            | BasicPtvEntryQuery.PtQuery (p, t) when p > 50e6<Pa> && p <= 100e6<Pa> && t >= 273.15<K> && t <= 800.0<K> + 273.15<K> -> 
+            | ValidatedBasicPtvEntryQuery.PtQuery (p, t) when p > 50e6<Pa> && p <= 100e6<Pa> && t >= 273.15<K> && t <= 800.0<K> + 273.15<K> -> 
                 (performNonSaturationQuery p t)
-            | BasicPtvEntryQuery.PtQuery (p, t) when p >= 0.0<Pa> && p <= 50e6<Pa> && t >= 273.15<K> && t <= 2000.0<K> + 273.15<K> -> 
+            | ValidatedBasicPtvEntryQuery.PtQuery (p, t) when p >= 0.0<Pa> && p <= 50e6<Pa> && t >= 273.15<K> && t <= 2000.0<K> + 273.15<K> -> 
                 (performNonSaturationQuery p t)
-            | BasicPtvEntryQuery.SatPreQuery (p, region) when p >= 0.0<Pa> && p <= 100e6<Pa> -> 
+            | ValidatedBasicPtvEntryQuery.SatPreQuery (p, region) when p >= 0.0<Pa> && p <= 100e6<Pa> -> 
                 (performSaturationQuery (Some p) None region)
-            | BasicPtvEntryQuery.SatTempQuery (t, region) when t >= 273.15<K> && t <= 2000.0<K> + 273.15<K> -> 
+            | ValidatedBasicPtvEntryQuery.SatTempQuery (t, region) when t >= 273.15<K> && t <= 2000.0<K> + 273.15<K> -> 
                 (performSaturationQuery None (Some t) region)
             | _ -> 
                 Error DomainError.OutOfRange
@@ -253,7 +253,7 @@ module SteamProperties =
                       P = state.P;
                       T = state.T; }
 
-                let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" PureRegion.Liquid
+                let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" ValidatedPureRegion.Liquid
                 match phaseInfoResult with
                 | Ok phaseInfo -> Ok (((Seq.fold (+) state reg14), phaseInfo) |> createPvtEntry)
                 | Error _ -> Error DomainError.OutOfRange
@@ -310,9 +310,9 @@ module SteamProperties =
                 }
                 
                 let phase = match (ptPoint.temperature, ptPoint.pressure) with
-                            | (t, p) when t > criticalTemperature && p > criticalPressure -> PureRegion.SupercriticalFluid
-                            | (t, p) when t > criticalTemperature && p <= criticalPressure -> PureRegion.Gas
-                            | _ -> PureRegion.Vapor
+                            | (t, p) when t > criticalTemperature && p > criticalPressure -> ValidatedPureRegion.SupercriticalFluid
+                            | (t, p) when t > criticalTemperature && p <= criticalPressure -> ValidatedPureRegion.Gas
+                            | _ -> ValidatedPureRegion.Vapor
 
                 let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" phase
 
@@ -376,7 +376,7 @@ module SteamProperties =
                         (a + (b / c)) * R * 1.0<IsobaricHeatCapacity>
 
                     let temperature = ptPoint.temperature
-                    let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" PureRegion.SupercriticalFluid
+                    let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" ValidatedPureRegion.SupercriticalFluid
                     match phaseInfoResult with
                     | Ok phaseInfo -> Ok { 
                         ValidatedPtvEntry.P = calculatePressure density p;
