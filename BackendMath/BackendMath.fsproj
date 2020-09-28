@@ -18,7 +18,8 @@
     <Compile Include="Result.fs" />
     <Compile Include="ConstrainedType.fs" />
     <Compile Include="NumericalMethods.fs" />
-    <Compile Include="Types.fs" />
+    <Compile Include="CommonTypes.fs" />
+    <Compile Include="InternalTypes.fs" />
     <Compile Include="AssetFiles.fs" />
     <Compile Include="Thermo.fs" />
     <Compile Include="SteamProperties.fs" />

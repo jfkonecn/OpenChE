@@ -1,6 +1,7 @@
 ﻿namespace EngineeringMath.Common
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open System
+open EngineeringMath
 
 
 
@@ -24,20 +25,19 @@ open System
 type Fraction = private Fraction of float
 
 
-type ValidatedPureRegion = SupercriticalFluid|Gas|Vapor|Liquid|Solid
-type ValidatedPhaseRegion = PureRegion of ValidatedPureRegion|SolidLiquid|LiquidVapor|SolidVapor|SolidLiquidVapor
+
 type MassFraction = private MassFraction of Fraction
 type VaporQuality = private VaporQuality of Fraction
 
 
-type ValidatedPhaseInfo = private {
+type ValidatedPhaseInfo = internal {
     VaporFraction: MassFraction
     LiquidFraction: MassFraction
     SolidFraction: MassFraction
-    PhaseRegion: ValidatedPhaseRegion
+    PhaseRegion: PhaseRegion
 }
 
-type ValidatedPtvEntry = {
+type ValidatedPtvEntry = internal {
     T: float<Temperature>
     P: float<Pressure>
     PhaseInfo: ValidatedPhaseInfo
@@ -56,7 +56,7 @@ type ValidatedPtvEntry = {
 
 
 
-type DomainError = 
+type internal DomainError = 
     | OutOfRange
     | NotEnoughArguments
     | FailToLoadFile of string
@@ -66,7 +66,7 @@ type DomainError =
 
 
 module PhysicalConstants =
-    let Gravity = 9.81<Acceleration>
+    let Gravity = 9.81<m / s ^ 2>
     
 
 module Fraction =
@@ -116,8 +116,8 @@ module ValidatedPhaseInfo =
 
     let createAsPure fieldName region = 
         match region with
-            | (Vapor) -> create fieldName (ValidatedPhaseRegion.PureRegion region) 1.0 0.0 0.0
-            | (Liquid) -> create fieldName (ValidatedPhaseRegion.PureRegion region) 0.0 1.0 0.0
-            | (Solid) -> create fieldName (ValidatedPhaseRegion.PureRegion region) 0.0 0.0 1.0
+            | (Vapor) -> create fieldName (PhaseRegion.PureRegion region) 1.0 0.0 0.0
+            | (Liquid) -> create fieldName (PhaseRegion.PureRegion region) 0.0 1.0 0.0
+            | (Solid) -> create fieldName (PhaseRegion.PureRegion region) 0.0 0.0 1.0
             | (Gas)
-            | (SupercriticalFluid) -> create fieldName (ValidatedPhaseRegion.PureRegion region) 0.0 0.0 0.0
+            | (SupercriticalFluid) -> create fieldName (PhaseRegion.PureRegion region) 0.0 0.0 0.0

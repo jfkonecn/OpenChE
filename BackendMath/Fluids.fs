@@ -84,7 +84,7 @@ module BernoullisEquation =
 
 
 
-    let bernoullisEquation (args:BernoulliArgument) =
+    let internal bernoullisEquation (args:BernoulliArgument) =
         let g = float PhysicalConstants.Gravity
 
         let result = match args with

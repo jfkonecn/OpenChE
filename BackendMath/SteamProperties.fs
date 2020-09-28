@@ -120,7 +120,7 @@ module SteamProperties =
             let! regRes5 = loadRegionPoints "Region5Residual.csv" (fun x -> Region5ResidualPoint.IJNPoint x)
             return AllRegionPoints.AllPoints (reg14, regIdeal2, regRes2, reg3, nReg34, nReg4, regIdeal5, regRes5)
         }
-    let performSteamQuery (queryHandler:PvtQueryHandler<'a>) =
+    let internal performSteamQuery (queryHandler:PvtQueryHandler<'a>) : AsyncResult<'a, DomainError> =
 
         let resolveRegion (query, nReg34:array<Region34BoundaryPoint>, reg4Points:array<Region4Point>) =
             let getReg4NPoint i = 
@@ -253,7 +253,7 @@ module SteamProperties =
                       P = state.P;
                       T = state.T; }
 
-                let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" ValidatedPureRegion.Liquid
+                let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" PureRegion.Liquid
                 match phaseInfoResult with
                 | Ok phaseInfo -> Ok (((Seq.fold (+) state reg14), phaseInfo) |> createPvtEntry)
                 | Error _ -> Error DomainError.OutOfRange
@@ -310,9 +310,9 @@ module SteamProperties =
                 }
                 
                 let phase = match (ptPoint.temperature, ptPoint.pressure) with
-                            | (t, p) when t > criticalTemperature && p > criticalPressure -> ValidatedPureRegion.SupercriticalFluid
-                            | (t, p) when t > criticalTemperature && p <= criticalPressure -> ValidatedPureRegion.Gas
-                            | _ -> ValidatedPureRegion.Vapor
+                            | (t, p) when t > criticalTemperature && p > criticalPressure -> PureRegion.SupercriticalFluid
+                            | (t, p) when t > criticalTemperature && p <= criticalPressure -> PureRegion.Gas
+                            | _ -> PureRegion.Vapor
 
                 let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" phase
 
@@ -376,7 +376,7 @@ module SteamProperties =
                         (a + (b / c)) * R * 1.0<IsobaricHeatCapacity>
 
                     let temperature = ptPoint.temperature
-                    let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" ValidatedPureRegion.SupercriticalFluid
+                    let phaseInfoResult = ValidatedPhaseInfo.createAsPure "phaseInfo" PureRegion.SupercriticalFluid
                     match phaseInfoResult with
                     | Ok phaseInfo -> Ok { 
                         ValidatedPtvEntry.P = calculatePressure density p;

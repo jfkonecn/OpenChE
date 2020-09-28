@@ -1,17 +1,8 @@
 ﻿namespace EngineeringMath
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
+open EngineeringMath.Common
 
-type PureRegion = SupercriticalFluid|Gas|Vapor|Liquid|Solid
-type PhaseRegion = 
-    | SupercriticalFluid
-    | Gas
-    | Vapor
-    | Liquid
-    | Solid
-    | SolidLiquid
-    | LiquidVapor
-    | SolidVapor
-    | SolidLiquidVapor
+
 
 type PhaseInfo = {
     VaporFraction: float
@@ -100,8 +91,40 @@ type PtvEntryQuery =
     | EnthalpyQuery of float<J / kg> * float<Pa>
     | EntropyQuery of float<J / (kg * K)> * float<Pa>
 
-type ThermoTableAction =
-    | PerformPtvEntryQuery of (PtvEntryQuery -> PtvEntry)
-    | CalculateRankineCycle of (RankineArgs -> CycleResult)
-    | CalculateRegenerativeCycle of (RegenerativeCycleArgs -> CycleResult)
-    | CalculateIsentropicExpansion of (IsentropicExpansionQuery -> IsentropicExpansionResult)
+type PerformPtvEntryQuery = PtvEntryQuery -> AsyncResult<PtvEntry, UiMessage>
+type CalculateRankineCycle = RankineArgs -> AsyncResult<CycleResult, UiMessage>
+type CalculateRegenerativeCycle = RegenerativeCycleArgs -> AsyncResult<CycleResult, UiMessage>
+type CalculateIsentropicExpansion = IsentropicExpansionQuery -> AsyncResult<IsentropicExpansionResult, UiMessage>
+
+
+
+
+module UiMessage =
+    let internal mapFromDomainError (x:DomainError) =
+        match x with
+        | DomainError.OutOfRange -> UiMessage.OutOfRange
+        | DomainError.NotEnoughArguments -> UiMessage.NotEnoughArguments
+        | (DomainError.FailToLoadFile f) -> UiMessage.FailToLoadFile f
+        | DomainError.FailedToConverge -> UiMessage.OutOfRange
+
+module PhaseInfo =
+    let mapFromValidatedPhaseInfo (x:ValidatedPhaseInfo) =
+        { VaporFraction = (MassFraction.value x.VaporFraction);
+        LiquidFraction = (MassFraction.value x.LiquidFraction);
+        SolidFraction = (MassFraction.value x.SolidFraction);
+        PhaseRegion = x.PhaseRegion; }
+
+
+module PtvEntry =
+    let mapFromValidatedEntry (x:ValidatedPtvEntry)=
+        { PtvEntry.T = x.T;
+        P = x.P;
+        PhaseInfo = PhaseInfo.mapFromValidatedPhaseInfo x.PhaseInfo;
+        U =  x.U;
+        H =  x.H;
+        S = x.S;
+        Cv = x.Cv;
+        Cp =  x.Cp;
+        SpeedOfSound =  x.SpeedOfSound;
+        V = x.V;
+        Rho =  x.Rho; }

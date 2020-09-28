@@ -14,7 +14,7 @@ module SteamTableTests =
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 0.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = SupercriticalFluid; };
+                                      PhaseRegion = PureRegion SupercriticalFluid; };
                       U =  2102.06e3<J / kg>;
                       H =  2258.68e3<J / kg>;
                       S = 4.469e3<J / (kg * K)>;
@@ -28,7 +28,7 @@ module SteamTableTests =
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 1.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = Liquid; };
+                                      PhaseRegion = PureRegion Liquid; };
                       U =  825.22e3<J / kg>;
                       H =  870.12e3<J / kg>;
                       S = 2.275e3<J / (kg * K)>;
@@ -42,7 +42,7 @@ module SteamTableTests =
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 0.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = SupercriticalFluid; };
+                                      PhaseRegion = PureRegion SupercriticalFluid; };
                       U =  5637.07e3<J / kg>;
                       H =  6571.22e3<J / kg>;
                       S = 8.53e3<J / (kg * K)>;
@@ -56,7 +56,7 @@ module SteamTableTests =
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 0.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = Gas; };
+                                      PhaseRegion = PureRegion Gas; };
                       U =  3114.3e3<J / kg>;
                       H =  3460.98e3<J / kg>;
                       S = 6.56e3<J / (kg * K)>;
@@ -74,7 +74,7 @@ module SteamTableTests =
                       PhaseInfo =  { VaporFraction = 0.0;
                                       LiquidFraction = 1.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = Liquid; };
+                                      PhaseRegion = PureRegion Liquid; };
                       U =  504471.74<J / kg>;
                       H =  504683.84<J / kg>;
                       S = 1530.09<J / (kg * K)>;
@@ -88,7 +88,7 @@ module SteamTableTests =
                       PhaseInfo =  { VaporFraction = 1.0;
                                       LiquidFraction = 0.0;
                                       SolidFraction = 0.0;
-                                      PhaseRegion = Vapor; };
+                                      PhaseRegion = PureRegion Vapor; };
                       U =  2529094.32<J / kg>;
                       H =  2706241.34<J / kg>;
                       S = 7126.85<J / (kg * K)>;
@@ -217,7 +217,7 @@ module SteamTableTests =
     [<Test>]
     let RankineCycleShouldWork() =
         let args = { 
-            ValidatedRankineArgs.boilerT= 773.15<K>; 
+            RankineArgs.boilerT= 773.15<K>; 
             boilerP= 8600e3<Pa>; 
             condenserP= 10e3<Pa>;
             powerRequirement= 80e6<W>;
@@ -229,7 +229,7 @@ module SteamTableTests =
                                   PhaseInfo =  { VaporFraction = 0.0;
                                                   LiquidFraction = 0.0;
                                                   SolidFraction = 0.0;
-                                                  PhaseRegion = Gas; };
+                                                  PhaseRegion = PureRegion Gas; };
                                   U =  3059796.86<J / kg>;
                                   H =  3392157.80<J / kg>;
                                   S = 6685.87<J / (kg * K)>;
@@ -244,7 +244,7 @@ module SteamTableTests =
                                      PhaseInfo =  { VaporFraction = 0.805;
                                                      LiquidFraction = 0.195;
                                                      SolidFraction = 0.0;
-                                                     PhaseRegion = PhaseRegion.LiquidVapor; };
+                                                     PhaseRegion = LiquidVapor; };
                                      U =  2e6<J / kg>;
                                      H =  2117246.34<J / kg>;
                                      S = 6685.87<J / (kg * K)>;
@@ -291,7 +291,7 @@ module SteamTableTests =
                                   PhaseInfo =  { VaporFraction = 0.0;
                                                   LiquidFraction = 0.0;
                                                   SolidFraction = 0.0;
-                                                  PhaseRegion = Gas; };
+                                                  PhaseRegion = PureRegion Gas; };
                                   U =  3059796.86<J / kg>;
                                   H =  3392157.80<J / kg>;
                                   S = 6685.87<J / (kg * K)>;
@@ -306,7 +306,7 @@ module SteamTableTests =
                                      PhaseInfo =  { VaporFraction = 0.91;
                                                      LiquidFraction = 0.0886;
                                                      SolidFraction = 0.0;
-                                                     PhaseRegion = PhaseRegion.LiquidVapor; };
+                                                     PhaseRegion = LiquidVapor; };
                                      U =  2.247e6<J / kg>;
                                      H =  2.383e6<J / kg>;
                                      S = 7395.4<J / (kg * K)>;
