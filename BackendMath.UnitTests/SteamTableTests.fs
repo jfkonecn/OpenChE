@@ -148,20 +148,13 @@ module SteamTableTests =
     [<TestCaseSource("validPtData")>]
     let ShouldGetExpectedSteamEntry (ptvEntry:PtvEntry) =
            
-        match (performSteamQuery (PtvQuery (performPtvEntryQuery (PtvEntryQuery.BasicPtvEntryQuery (PtQuery (ptvEntry.P, ptvEntry.T)))))) |> Async.RunSynchronously with
-        | Ok x -> assertPtvAreEqual ptvEntry x
-        | Error e -> Assert.Fail(sprintf "Unexpected error: %A" e) 
-
-    [<TestCaseSource("validPtData")>]
-    let ShouldGetExpectedSaturatedPressureSteamEntry (ptvEntry:PtvEntry) =
-           
-        match (performSteamQuery (PtvQuery (performPtvEntryQuery (PtvEntryQuery.BasicPtvEntryQuery (PtQuery (ptvEntry.P, ptvEntry.T)))))) |> Async.RunSynchronously with
+        match (SteamTable.performPtvEntryQuery (PtQuery (ptvEntry.P, ptvEntry.T))) |> Async.RunSynchronously with
         | Ok x -> assertPtvAreEqual ptvEntry x
         | Error e -> Assert.Fail(sprintf "Unexpected error: %A" e) 
 
     [<TestCaseSource("validSatTempData")>]
     let ShouldGetExpectedSaturatedTemperatureSteamEntry (ptvEntry:PtvEntry) =
-        let performQuery t r = match (performSteamQuery (PtvQuery (performPtvEntryQuery (PtvEntryQuery.BasicPtvEntryQuery (SatTempQuery (t, r)))))) |> Async.RunSynchronously with
+        let performQuery t r = match (SteamTable.performPtvEntryQuery (SatTempQuery (t, r))) |> Async.RunSynchronously with
                                | Ok x -> assertPtvAreEqual ptvEntry x
                                | Error e -> Assert.Fail(sprintf "Unexpected error: %A" e)
         
@@ -171,13 +164,13 @@ module SteamTableTests =
 
     [<TestCaseSource("validEnthalpyData")>]
     let ShouldGetExpectedEnthalpySteamEntry (ptvEntry:PtvEntry) =
-        match (performSteamQuery (PtvQuery (performPtvEntryQuery (EnthalpyQuery (ptvEntry.H, ptvEntry.P))))) |> Async.RunSynchronously with
+        match (SteamTable.performPtvEntryQuery (EnthalpyQuery (ptvEntry.H, ptvEntry.P))) |> Async.RunSynchronously with
         | Ok x -> assertPtvAreEqual ptvEntry x
         | Error e -> Assert.Fail(sprintf "Unexpected error: %A" e) 
 
     [<TestCaseSource("validEntropyData")>]
     let ShouldGetExpectedEntropySteamEntry (ptvEntry:PtvEntry) =
-        match (performSteamQuery (PtvQuery (performPtvEntryQuery (EntropyQuery (ptvEntry.S, ptvEntry.P))))) |> Async.RunSynchronously with
+        match (SteamTable.performPtvEntryQuery (EntropyQuery (ptvEntry.S, ptvEntry.P))) |> Async.RunSynchronously with
         | Ok x -> assertPtvAreEqual ptvEntry x
         | Error e -> Assert.Fail(sprintf "Unexpected error: %A" e) 
 
@@ -192,12 +185,12 @@ module SteamTableTests =
             | (Error _, Ok _) -> Assert.Fail "Expected an error got and success"
 
         let checkEnthalpyEntropyQueries ptvEntry =
-            let enthalpyResult = performSteamQuery (PtvQuery (performPtvEntryQuery (EnthalpyQuery (ptvEntry.H, ptvEntry.P)))) |> Async.RunSynchronously
+            let enthalpyResult = SteamTable.performPtvEntryQuery (EnthalpyQuery (ptvEntry.H, ptvEntry.P)) |> Async.RunSynchronously
             assertSameResult (Ok ptvEntry) enthalpyResult
-            let entropyResult = performSteamQuery (PtvQuery (performPtvEntryQuery (EntropyQuery (ptvEntry.S, ptvEntry.P)))) |> Async.RunSynchronously
+            let entropyResult = SteamTable.performPtvEntryQuery (EntropyQuery (ptvEntry.S, ptvEntry.P)) |> Async.RunSynchronously
             assertSameResult (Ok ptvEntry) entropyResult
 
-        let ptEntry = performSteamQuery (PtvQuery (performPtvEntryQuery (PtvEntryQuery.BasicPtvEntryQuery (PtQuery (p, t))))) |> Async.RunSynchronously
+        let ptEntry = SteamTable.performPtvEntryQuery (PtQuery (p, t)) |> Async.RunSynchronously
         match ptEntry with
                 | Ok x -> checkEnthalpyEntropyQueries x
                 | Error _ -> ()

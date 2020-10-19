@@ -7,7 +7,7 @@ open EngineeringMath.Thermo
 
 
 module SteamTable =
-    let PerformPtvEntryQuery (q:PtvEntryQuery) =
+    let performPtvEntryQuery (q:PtvEntryQuery) =
         match q with
         | PtvEntryQuery.PtQuery (p, t) -> 
             SteamProperties.performSteamQuery (PtvQuery (performPtvEntryQuery (ValidatedPtvEntryQuery.BasicPtvEntryQuery (ValidatedBasicPtvEntryQuery.PtQuery (p, t)))))
